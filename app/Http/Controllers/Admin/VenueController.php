@@ -163,12 +163,7 @@ class VenueController extends Controller
             $user = auth()->user();
             $eventDays = $this->getUserAccessibleEventDays($user);
 
-            // Debug log
-            Log::info('Venue create form accessed', [
-                'user_id' => auth()->id(),
-                'event_days_count' => $eventDays->count(),
-                'event_days' => $eventDays->toArray()
-            ]);
+
 
             $selectedEventDay = null;
             if ($request->filled('event_day_id')) {
@@ -189,11 +184,6 @@ class VenueController extends Controller
             // Clean event days data
             $cleanedEventDays = $this->sanitizeEventDaysCollection($eventDays);
             $cleanedSelectedEventDay = $selectedEventDay ? $this->createSafeEventDayArray($selectedEventDay) : null;
-
-            Log::info('Cleaned event days', [
-                'cleaned_count' => count($cleanedEventDays),
-                'selected_day' => $cleanedSelectedEventDay
-            ]);
 
             if ($request->wantsJson()) {
                 return response()->json([
@@ -236,12 +226,6 @@ class VenueController extends Controller
     public function store(Request $request)
     {
         try {
-            // Debug log
-            Log::info('Venue store request received', [
-                'request_data' => $request->all(),
-                'user_id' => auth()->id()
-            ]);
-
             // Validation rules
             $validatedData = $request->validate([
                 'event_day_id' => 'required|exists:event_days,id',
@@ -251,8 +235,6 @@ class VenueController extends Controller
                 'color' => 'nullable|string|regex:/^#[0-9A-Fa-f]{6}$/',
                 'sort_order' => 'nullable|integer|min:0',
             ]);
-
-            Log::info('Venue validation passed', ['validated_data' => $validatedData]);
 
             // Clean input data for UTF-8 safety
             foreach (['name', 'display_name'] as $field) {
@@ -264,10 +246,6 @@ class VenueController extends Controller
             // Check if user has access to this event day
             $eventDay = EventDay::with('event.organization')->findOrFail($validatedData['event_day_id']);
             
-            Log::info('Event day found', [
-                'event_day' => $eventDay->toArray()
-            ]);
-
             $this->authorize('create', [Venue::class, $eventDay]);
 
             DB::beginTransaction();
@@ -277,12 +255,13 @@ class VenueController extends Controller
                 $validatedData['display_name'] = $validatedData['name'];
             }
 
-            Log::info('About to create venue', ['final_data' => $validatedData]);
+            // Set sort_order to 0 if not provided or null (database constraint)
+            if (!isset($validatedData['sort_order']) || $validatedData['sort_order'] === null || $validatedData['sort_order'] === '') {
+                $validatedData['sort_order'] = 0;
+            }
 
             // Create venue
             $venue = Venue::create($validatedData);
-
-            Log::info('Venue created', ['venue_id' => $venue->id]);
 
             // Load relationships for response
             $venue->load(['eventDay.event.organization']);
@@ -291,8 +270,6 @@ class VenueController extends Controller
 
             Log::info('Venue created successfully', [
                 'venue_id' => $venue->id,
-                'venue_name' => $venue->name,
-                'event_day_id' => $venue->event_day_id,
                 'created_by' => auth()->id()
             ]);
 
@@ -517,6 +494,11 @@ class VenueController extends Controller
                 $validatedData['display_name'] = $validatedData['name'];
             }
 
+            // Set sort_order to 0 if not provided or null (database constraint)
+            if (!isset($validatedData['sort_order']) || $validatedData['sort_order'] === null || $validatedData['sort_order'] === '') {
+                $validatedData['sort_order'] = 0;
+            }
+
             // Update venue
             $venue->update($validatedData);
 
@@ -524,7 +506,6 @@ class VenueController extends Controller
 
             Log::info('Venue updated successfully', [
                 'venue_id' => $venue->id,
-                'venue_name' => $venue->name,
                 'updated_by' => auth()->id()
             ]);
 
@@ -579,75 +560,6 @@ class VenueController extends Controller
     }
 
     /**
-     * Duplicate the specified venue
-     */
-    public function duplicate(Request $request, Venue $venue)
-    {
-        try {
-            $this->authorize('create', [Venue::class, $venue->eventDay]);
-
-            DB::beginTransaction();
-
-            // Create a copy of the venue
-            $duplicatedVenue = $venue->replicate();
-            
-            // Modify the name to indicate it's a copy
-            $duplicatedVenue->name = $venue->name . ' (Kopya)';
-            $duplicatedVenue->display_name = ($venue->display_name ?? $venue->name) . ' (Kopya)';
-            
-            // Reset some fields
-            $duplicatedVenue->sort_order = null; // Will be auto-assigned
-            
-            // Save the duplicated venue
-            $duplicatedVenue->save();
-
-            // Load relationships for response
-            $duplicatedVenue->load(['eventDay.event.organization']);
-
-            DB::commit();
-
-            Log::info('Venue duplicated successfully', [
-                'original_venue_id' => $venue->id,
-                'duplicated_venue_id' => $duplicatedVenue->id,
-                'duplicated_by' => auth()->id()
-            ]);
-
-            if ($request->wantsJson()) {
-                $cleanVenue = $this->createSafeVenueArray($duplicatedVenue);
-                return response()->json([
-                    'success' => true,
-                    'data' => $cleanVenue,
-                    'message' => 'Salon başarıyla kopyalandı.'
-                ], 201);
-            }
-
-            return redirect()
-                ->route('admin.venues.show', $duplicatedVenue)
-                ->with('success', 'Salon başarıyla kopyalandı.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            Log::error('Venue duplication failed', [
-                'venue_id' => $venue->id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'user_id' => auth()->id()
-            ]);
-
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Salon kopyalanırken bir hata oluştu.',
-                    'error' => config('app.debug') ? $e->getMessage() : null
-                ], 500);
-            }
-
-            return back()
-                ->withErrors('Salon kopyalanırken bir hata oluştu.');
-        }
-    }
-
-    /**
      * Remove the specified venue from storage
      */
     public function destroy(Request $request, Venue $venue)
@@ -680,7 +592,6 @@ class VenueController extends Controller
 
             Log::info('Venue deleted successfully', [
                 'venue_id' => $venueId,
-                'venue_name' => $venueName,
                 'deleted_by' => auth()->id()
             ]);
 
@@ -738,42 +649,21 @@ class VenueController extends Controller
      */
     private function getUserAccessibleEventDays($user)
     {
-        Log::info('Getting accessible event days for user', [
-            'user_id' => $user->id,
-            'user_role' => $user->role,
-            'is_admin' => $user->isAdmin()
-        ]);
-
         if ($user->isAdmin()) {
-            $eventDays = EventDay::with('event.organization')->get();
-            Log::info('Admin user - returning all event days', [
-                'count' => $eventDays->count(),
-                'event_days' => $eventDays->toArray()
-            ]);
-            return $eventDays;
+            return EventDay::with('event.organization')->get();
         }
 
         $organizationIds = $user->organizations()->pluck('organizations.id');
-        Log::info('Non-admin user organizations', [
-            'organization_ids' => $organizationIds->toArray()
-        ]);
-
-        $eventDays = EventDay::with('event.organization')
+        
+        return EventDay::with('event.organization')
             ->whereHas('event', function ($q) use ($organizationIds) {
                 $q->whereIn('organization_id', $organizationIds);
             })
             ->get();
-
-        Log::info('Filtered event days for user', [
-            'count' => $eventDays->count(),
-            'event_days' => $eventDays->toArray()
-        ]);
-
-        return $eventDays;
     }
 
     /**
-     * AGGRESSIVE UTF-8 cleaning function - Ana sorun çözücü
+     * Clean UTF-8 string for safe database storage
      */
     private function aggressiveUtf8Clean(?string $string): ?string
     {
@@ -781,47 +671,23 @@ class VenueController extends Controller
             return $string;
         }
 
-        // Step 1: Remove null bytes and control characters
+        // Basic cleaning: remove null bytes and control characters
         $cleaned = str_replace(["\0", "\x00"], '', $string);
         $cleaned = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $cleaned);
         
-        // Step 2: Force UTF-8 encoding multiple times
+        // Ensure UTF-8 encoding
         $cleaned = mb_convert_encoding($cleaned, 'UTF-8', 'UTF-8');
         
-        // Step 3: Use iconv for additional cleaning
-        $cleaned = iconv('UTF-8', 'UTF-8//IGNORE', $cleaned);
+        // Remove common problematic characters
+        $cleaned = str_replace([
+            "\u{FEFF}", // BOM
+            "\u{200B}", // Zero width space
+            "\u{FFFD}", // Replacement character
+        ], '', $cleaned);
         
-        // Step 4: Remove problematic Unicode characters
-        $problematicChars = [
-            "\u{FEFF}" => '', // BOM
-            "\u{200B}" => '', // Zero width space
-            "\u{200C}" => '', // Zero width non-joiner
-            "\u{200D}" => '', // Zero width joiner
-            "\u{2060}" => '', // Word joiner
-            "\u{FFFD}" => '', // Replacement character
-            "\u{FFF9}" => '', // Interlinear annotation anchor
-            "\u{FFFA}" => '', // Interlinear annotation separator
-            "\u{FFFB}" => '', // Interlinear annotation terminator
-        ];
-
-        foreach ($problematicChars as $char => $replacement) {
-            $cleaned = str_replace($char, $replacement, $cleaned);
-        }
-
-        // Step 5: Use filter_var for additional cleaning
-        $cleaned = filter_var($cleaned, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
-        
-        // Step 6: Final UTF-8 validation and conversion
+        // Final validation
         if (!mb_check_encoding($cleaned, 'UTF-8')) {
             $cleaned = mb_convert_encoding($cleaned, 'UTF-8', 'auto');
-        }
-        
-        // Step 7: Use preg_replace to remove any remaining non-printable chars
-        $cleaned = preg_replace('/[^\P{C}\s]/u', '', $cleaned);
-        
-        // Step 8: Final safety check
-        if (!is_string($cleaned) || !mb_check_encoding($cleaned, 'UTF-8')) {
-            $cleaned = 'Temizlenmemiş Metin';
         }
         
         return trim($cleaned);

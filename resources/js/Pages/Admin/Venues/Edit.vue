@@ -965,7 +965,7 @@ const formatDate = (dateString) => {
 
 // Methods
 const updateVenue = () => {
-    form.put(route("admin.venues.update", props.venue.id), {
+    form.patch(route("admin.venues.update", props.venue.id), {
         onSuccess: () => {
             // Success message will be handled by the backend
         },
