@@ -579,6 +579,75 @@ class VenueController extends Controller
     }
 
     /**
+     * Duplicate the specified venue
+     */
+    public function duplicate(Request $request, Venue $venue)
+    {
+        try {
+            $this->authorize('create', [Venue::class, $venue->eventDay]);
+
+            DB::beginTransaction();
+
+            // Create a copy of the venue
+            $duplicatedVenue = $venue->replicate();
+            
+            // Modify the name to indicate it's a copy
+            $duplicatedVenue->name = $venue->name . ' (Kopya)';
+            $duplicatedVenue->display_name = ($venue->display_name ?? $venue->name) . ' (Kopya)';
+            
+            // Reset some fields
+            $duplicatedVenue->sort_order = null; // Will be auto-assigned
+            
+            // Save the duplicated venue
+            $duplicatedVenue->save();
+
+            // Load relationships for response
+            $duplicatedVenue->load(['eventDay.event.organization']);
+
+            DB::commit();
+
+            Log::info('Venue duplicated successfully', [
+                'original_venue_id' => $venue->id,
+                'duplicated_venue_id' => $duplicatedVenue->id,
+                'duplicated_by' => auth()->id()
+            ]);
+
+            if ($request->wantsJson()) {
+                $cleanVenue = $this->createSafeVenueArray($duplicatedVenue);
+                return response()->json([
+                    'success' => true,
+                    'data' => $cleanVenue,
+                    'message' => 'Salon başarıyla kopyalandı.'
+                ], 201);
+            }
+
+            return redirect()
+                ->route('admin.venues.show', $duplicatedVenue)
+                ->with('success', 'Salon başarıyla kopyalandı.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('Venue duplication failed', [
+                'venue_id' => $venue->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->id()
+            ]);
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Salon kopyalanırken bir hata oluştu.',
+                    'error' => config('app.debug') ? $e->getMessage() : null
+                ], 500);
+            }
+
+            return back()
+                ->withErrors('Salon kopyalanırken bir hata oluştu.');
+        }
+    }
+
+    /**
      * Remove the specified venue from storage
      */
     public function destroy(Request $request, Venue $venue)
