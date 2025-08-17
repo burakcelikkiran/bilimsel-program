@@ -467,7 +467,8 @@ Route::middleware([
 
         Route::resource('venues', VenueController::class);
         Route::prefix('venues')->name('venues.')->group(function () {
-            // Mevcut venue actions
+            // Venue actions
+            Route::get('/{venue}/delete-preview', [VenueController::class, 'deletePreview'])->name('delete-preview');
             Route::post('/{venue}/duplicate', [VenueController::class, 'duplicate'])->name('duplicate');
             Route::patch('/{venue}/toggle-status', [VenueController::class, 'toggleStatus'])->name('toggle-status');
             Route::patch('/sort-order', [VenueController::class, 'updateSortOrder'])->name('update-sort-order');

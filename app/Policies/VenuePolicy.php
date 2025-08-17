@@ -73,12 +73,7 @@ class VenuePolicy
      */
     public function delete(User $user, Venue $venue): bool
     {
-        // Aktif oturumları olan venue silinemez
-        if ($venue->programSessions()->exists()) {
-            return false;
-        }
-
-        // Admin tüm venue'ları silebilir
+        // Admin tüm venue'ları silebilir (cascade delete ile)
         if ($user->isAdmin()) {
             return true;
         }

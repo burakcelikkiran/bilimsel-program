@@ -560,6 +560,68 @@ class VenueController extends Controller
     }
 
     /**
+     * Get venue delete preview data
+     */
+    public function deletePreview(Request $request, Venue $venue)
+    {
+        try {
+            $this->authorize('delete', $venue);
+
+            // Get related sessions with event information
+            $sessions = $venue->programSessions()
+                ->with(['venue.eventDay.event:id,name', 'venue.eventDay:id,event_id,display_name,date'])
+                ->select('id', 'title', 'venue_id', 'start_time', 'end_time')
+                ->get();
+
+            $sessionCount = $sessions->count();
+
+            // Check if user can manage sessions (for cascade delete)
+            $canCascadeDelete = $sessionCount > 0 && 
+                ($request->user()->isAdmin() || 
+                 $request->user()->can('manageSessions', $venue));
+
+            return response()->json([
+                'success' => true,
+                'venue' => [
+                    'id' => $venue->id,
+                    'name' => $venue->name,
+                    'display_name' => $venue->display_name,
+                    'capacity' => $venue->capacity,
+                    'color' => $venue->color,
+                ],
+                'sessions' => $sessions->map(function ($session) {
+                    return [
+                        'id' => $session->id,
+                        'name' => $session->title,
+                        'start_time' => $session->start_time,
+                        'end_time' => $session->end_time,
+                        'event_day' => $session->venue && $session->venue->eventDay ? [
+                            'name' => $session->venue->eventDay->display_name,
+                            'date' => $session->venue->eventDay->date,
+                            'event' => $session->venue->eventDay->event ? [
+                                'name' => $session->venue->eventDay->event->name
+                            ] : null
+                        ] : null
+                    ];
+                }),
+                'session_count' => $sessionCount,
+                'can_cascade_delete' => $canCascadeDelete,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Venue delete preview failed', [
+                'venue_id' => $venue->id,
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Salon bilgileri yüklenirken bir hata oluştu.'
+            ], 500);
+        }
+    }
+
+    /**
      * Remove the specified venue from storage
      */
     public function destroy(Request $request, Venue $venue)
@@ -571,15 +633,44 @@ class VenueController extends Controller
 
             // Check if venue has any program sessions
             $sessionCount = $venue->programSessions()->count();
-            if ($sessionCount > 0) {
-                if ($request->wantsJson()) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => "Bu salon silinemez çünkü {$sessionCount} adet oturum içeriyor. Önce oturumları silin."
-                    ], 422);
-                }
+            $cascadeDelete = $request->boolean('cascade_delete', false);
+            $confirmCascade = $request->boolean('confirm_cascade', false);
 
-                return back()->withErrors("Bu salon silinemez çünkü {$sessionCount} adet oturum içeriyor. Önce oturumları silin.");
+            if ($sessionCount > 0) {
+                // If cascade delete is requested and confirmed
+                if ($cascadeDelete && $confirmCascade) {
+                    // Check if user can manage sessions
+                    if (!$request->user()->isAdmin() && !$request->user()->can('manageSessions', $venue)) {
+                        if ($request->wantsJson()) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Bu salon\'un oturumlarını silmek için yetkiniz yok.'
+                            ], 403);
+                        }
+                        return back()->withErrors('Bu salon\'un oturumlarını silmek için yetkiniz yok.');
+                    }
+
+                    // Delete all program sessions first
+                    $deletedSessions = $venue->programSessions()->get();
+                    $venue->programSessions()->delete();
+
+                    Log::info('Venue sessions deleted via cascade', [
+                        'venue_id' => $venue->id,
+                        'session_count' => $sessionCount,
+                        'deleted_sessions' => $deletedSessions->pluck('id')->toArray(),
+                        'user_id' => auth()->id()
+                    ]);
+                } else {
+                    // Return error if sessions exist but cascade delete not requested
+                    if ($request->wantsJson()) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => "Bu salon silinemez çünkü {$sessionCount} adet oturum içeriyor. Önce oturumları silin."
+                        ], 422);
+                    }
+
+                    return back()->withErrors("Bu salon silinemez çünkü {$sessionCount} adet oturum içeriyor. Önce oturumları silin.");
+                }
             }
 
             $venueName = $venue->name;
@@ -711,6 +802,9 @@ class VenueController extends Controller
                 'program_sessions_count' => $venue->program_sessions_count ?? 0,
                 'created_at' => $venue->created_at?->toISOString(),
                 'updated_at' => $venue->updated_at?->toISOString(),
+                // Permission fields
+                'can_delete' => auth()->user()->can('delete', $venue),
+                'can_edit' => auth()->user()->can('update', $venue),
             ];
 
             // Clean related data
@@ -738,6 +832,9 @@ class VenueController extends Controller
                     'program_sessions_count' => 0,
                     'created_at' => null,
                     'updated_at' => null,
+                    // Permission fields
+                    'can_delete' => auth()->user()->can('delete', $venue),
+                    'can_edit' => auth()->user()->can('update', $venue),
                 ];
             }
 
