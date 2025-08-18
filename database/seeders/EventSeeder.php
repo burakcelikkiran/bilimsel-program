@@ -108,7 +108,7 @@ class EventSeeder extends Seeder
                 Event::create([
                     'organization_id' => $organization->id,
                     'name' => $eventData['name'],
-                    'slug' => Str::slug($eventData['name']),
+                    'slug' => Event::createSlugFromTurkish($eventData['name']),
                     'description' => $eventData['description'],
                     'start_date' => $eventData['start_date'],
                     'end_date' => $eventData['end_date'],

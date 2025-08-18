@@ -201,7 +201,7 @@ class UpdateEventRequest extends FormRequest
         // Auto-generate slug if not provided and name changed
         if (!$this->has('slug') && $this->has('name') && $this->name !== $event->name) {
             $this->merge([
-                'slug' => \Illuminate\Support\Str::slug($this->name),
+                'slug' => \App\Models\Event::createSlugFromTurkish($this->name),
             ]);
         }
 

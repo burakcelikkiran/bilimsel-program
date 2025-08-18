@@ -151,7 +151,7 @@ class TimelineController extends Controller
             default:
                 $timelineData = $this->formatTimelineData($event);
                 // JSON için dosyayı indirmek için response header'ları ayarla
-                $fileName = Str::slug($event->name) . '_timeline_' . now()->format('Y-m-d') . '.json';
+                $fileName = Event::createSlugFromTurkish($event->name) . '_timeline_' . now()->format('Y-m-d') . '.json';
 
                 return response()->json($timelineData, 200, [
                     'Content-Type' => 'application/json',

@@ -191,7 +191,7 @@ class FileUploadController extends Controller
             $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = $file->getClientOriginalExtension();
             
-            $filename = time() . '_' . Str::slug($originalName) . '.' . $extension;
+            $filename = time() . '_' . Event::createSlugFromTurkish($originalName) . '.' . $extension;
             $path = "presentations/{$fileType}s/" . $filename;
 
             // Store file

@@ -15,6 +15,7 @@ class Organization extends Model
     protected $fillable = [
         'name',
         'description',
+        'slug',
         'logo',
         'contact_email',
         'contact_phone',
@@ -139,6 +140,27 @@ class Organization extends Model
     public function getRouteKeyName(): string
     {
         return 'id';
+    }
+
+    /**
+     * Create URL-friendly slug from Turkish text
+     */
+    public static function createSlugFromTurkish(string $text): string
+    {
+        // Türkçe karakterleri dönüştür
+        $turkishChars = [
+            'ş' => 's', 'Ş' => 'S',
+            'ğ' => 'g', 'Ğ' => 'G',
+            'ü' => 'u', 'Ü' => 'U',
+            'ö' => 'o', 'Ö' => 'O',
+            'ı' => 'i', 'İ' => 'I',
+            'ç' => 'c', 'Ç' => 'C'
+        ];
+
+        $text = strtr($text, $turkishChars);
+        
+        // Laravel'in slug metodunu kullan
+        return \Illuminate\Support\Str::slug($text);
     }
 
     /**

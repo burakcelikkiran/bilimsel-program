@@ -187,7 +187,7 @@ class Sponsor extends Model
 
     public static function generateUniqueSlug(string $name, int $organizationId, ?int $excludeId = null): string
     {
-        $baseSlug = Str::slug($name);
+        $baseSlug = static::createSlugFromTurkish($name);
         $slug = $baseSlug;
         $counter = 1;
 
@@ -200,5 +200,26 @@ class Sponsor extends Model
         }
 
         return $slug;
+    }
+
+    /**
+     * Create URL-friendly slug from Turkish text
+     */
+    public static function createSlugFromTurkish(string $text): string
+    {
+        // Türkçe karakterleri dönüştür
+        $turkishChars = [
+            'ş' => 's', 'Ş' => 'S',
+            'ğ' => 'g', 'Ğ' => 'G',
+            'ü' => 'u', 'Ü' => 'U',
+            'ö' => 'o', 'Ö' => 'O',
+            'ı' => 'i', 'İ' => 'I',
+            'ç' => 'c', 'Ç' => 'C'
+        ];
+
+        $text = strtr($text, $turkishChars);
+        
+        // Laravel'in slug metodunu kullan
+        return Str::slug($text);
     }
 }

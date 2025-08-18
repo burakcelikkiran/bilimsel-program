@@ -119,7 +119,7 @@ class StoreVenueRequest extends FormRequest
         // Auto-generate slug if not provided
         if (empty($this->slug) && !empty($this->name)) {
             $this->merge([
-                'slug' => \Illuminate\Support\Str::slug($this->name)
+                'slug' => \App\Models\Venue::createSlugFromTurkish($this->name)
             ]);
         }
 

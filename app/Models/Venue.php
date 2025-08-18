@@ -111,7 +111,28 @@ class Venue extends Model
 
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = Str::slug(trim($value));
+        $this->attributes['name'] = static::createSlugFromTurkish(trim($value));
+    }
+
+    /**
+     * Create URL-friendly slug from Turkish text
+     */
+    public static function createSlugFromTurkish(string $text): string
+    {
+        // Türkçe karakterleri dönüştür
+        $turkishChars = [
+            'ş' => 's', 'Ş' => 'S',
+            'ğ' => 'g', 'Ğ' => 'G',
+            'ü' => 'u', 'Ü' => 'U',
+            'ö' => 'o', 'Ö' => 'O',
+            'ı' => 'i', 'İ' => 'I',
+            'ç' => 'c', 'Ç' => 'C'
+        ];
+
+        $text = strtr($text, $turkishChars);
+        
+        // Laravel'in slug metodunu kullan
+        return Str::slug($text);
     }
 
     public function setColorAttribute($value)

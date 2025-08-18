@@ -199,7 +199,7 @@ class Event extends Model
 
     public function setSlugAttribute($value)
     {
-        $this->attributes['slug'] = Str::slug($value);
+        $this->attributes['slug'] = static::createSlugFromTurkish($value);
     }
 
     /**
@@ -277,7 +277,7 @@ class Event extends Model
      */
     public static function generateUniqueSlug(string $name, ?string $currentSlug = null): string
     {
-        $slug = Str::slug($name);
+        $slug = static::createSlugFromTurkish($name);
         $originalSlug = $slug;
         $counter = 1;
 
@@ -290,6 +290,27 @@ class Event extends Model
         }
 
         return $slug;
+    }
+
+    /**
+     * Create URL-friendly slug from Turkish text
+     */
+    public static function createSlugFromTurkish(string $text): string
+    {
+        // Türkçe karakterleri dönüştür
+        $turkishChars = [
+            'ş' => 's', 'Ş' => 'S',
+            'ğ' => 'g', 'Ğ' => 'G',
+            'ü' => 'u', 'Ü' => 'U',
+            'ö' => 'o', 'Ö' => 'O',
+            'ı' => 'i', 'İ' => 'I',
+            'ç' => 'c', 'Ç' => 'C'
+        ];
+
+        $text = strtr($text, $turkishChars);
+        
+        // Laravel'in slug metodunu kullan
+        return Str::slug($text);
     }
 
     /**

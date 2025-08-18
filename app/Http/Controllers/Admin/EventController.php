@@ -1434,7 +1434,7 @@ class EventController extends Controller
                 'exportDate' => now(),
             ]);
 
-            $filename = Str::slug($event->name) . '-program-' . now()->format('Y-m-d') . '.pdf';
+            $filename = Event::createSlugFromTurkish($event->name) . '-program-' . now()->format('Y-m-d') . '.pdf';
 
             return $pdf->download($filename);
         } catch (\Exception $e) {
@@ -1487,7 +1487,7 @@ class EventController extends Controller
             ];
         }
 
-        $filename = Str::slug($event->name) . '-program-' . now()->format('Y-m-d') . '.xlsx';
+        $filename = Event::createSlugFromTurkish($event->name) . '-program-' . now()->format('Y-m-d') . '.xlsx';
 
         try {
             return (new \Rap2hpoutre\FastExcel\FastExcel($data))->download($filename);

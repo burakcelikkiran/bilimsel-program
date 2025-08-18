@@ -724,7 +724,29 @@ const calculateDuration = (startDate, endDate) => {
 
 const generateSlug = (name) => {
     if (!name) return "";
-    return name
+
+    // Türkçe karakterleri dönüştür
+    const turkishChars = {
+        ş: "s",
+        Ş: "S",
+        ğ: "g",
+        Ğ: "G",
+        ü: "u",
+        Ü: "U",
+        ö: "o",
+        Ö: "O",
+        ı: "i",
+        İ: "I",
+        ç: "c",
+        Ç: "C",
+    };
+
+    let slug = name;
+    for (const [turkish, latin] of Object.entries(turkishChars)) {
+        slug = slug.replaceAll(turkish, latin);
+    }
+
+    return slug
         .toLowerCase()
         .replace(/[^a-z0-9\s-]/g, "")
         .replace(/\s+/g, "-")
