@@ -118,27 +118,6 @@
                                             {{ event.name }}
                                         </option>
                                     </select>
-                                    <!-- Debug Info -->
-                                    <div
-                                        v-if="debugMode"
-                                        class="mt-2 p-2 bg-blue-50 rounded text-xs"
-                                    >
-                                        <strong>DEBUG:</strong><br />
-                                        selectedEventId: {{ selectedEventId
-                                        }}<br />
-                                        events.length: {{ events.length }}<br />
-                                        events:
-                                        {{
-                                            JSON.stringify(
-                                                events.map((e) => ({
-                                                    id: e.id,
-                                                    name: e.name,
-                                                })),
-                                                null,
-                                                2
-                                            )
-                                        }}
-                                    </div>
                                 </div>
 
                                 <!-- Event Day Selection -->
@@ -177,27 +156,6 @@
                                             }})
                                         </option>
                                     </select>
-                                    <!-- Debug Info -->
-                                    <div
-                                        v-if="debugMode"
-                                        class="mt-2 p-2 bg-blue-50 rounded text-xs"
-                                    >
-                                        <strong>DEBUG:</strong><br />
-                                        selectedEventDayId:
-                                        {{ selectedEventDayId }}<br />
-                                        availableEventDays.length:
-                                        {{ availableEventDays.length }}<br />
-                                        isLoadingEventDays:
-                                        {{ isLoadingEventDays }}<br />
-                                        availableEventDays:
-                                        {{
-                                            JSON.stringify(
-                                                availableEventDays,
-                                                null,
-                                                2
-                                            )
-                                        }}
-                                    </div>
                                 </div>
 
                                 <!-- Venue Selection -->
@@ -244,39 +202,7 @@
                                     >
                                         {{ errors.venue_id }}
                                     </p>
-                                    <!-- Debug Info -->
-                                    <div
-                                        v-if="debugMode"
-                                        class="mt-2 p-2 bg-blue-50 rounded text-xs"
-                                    >
-                                        <strong>DEBUG:</strong><br />
-                                        selectedEventDayId:
-                                        {{ selectedEventDayId }}<br />
-                                        availableVenues.length:
-                                        {{ availableVenues.length }}<br />
-                                        isLoadingVenues: {{ isLoadingVenues
-                                        }}<br />
-                                        availableVenues:
-                                        {{
-                                            JSON.stringify(
-                                                availableVenues,
-                                                null,
-                                                2
-                                            )
-                                        }}
-                                    </div>
                                 </div>
-                            </div>
-
-                            <!-- Debug Toggle Button -->
-                            <div class="mt-4">
-                                <button
-                                    type="button"
-                                    @click="debugMode = !debugMode"
-                                    class="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-                                >
-                                    {{ debugMode ? "Debug Kapat" : "Debug Aç" }}
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -1018,7 +944,6 @@ const availableCategories = ref(props.categories || []);
 const isLoadingEventDays = ref(false);
 const isLoadingVenues = ref(false);
 const isLoadingCategories = ref(false);
-const debugMode = ref(true); // Debug modu - geçici olarak aktif
 
 // Güvenli data access ile tarih formatını da düzeltelim
 const safeProgramSession = computed(() => {
@@ -1605,7 +1530,7 @@ input[type="checkbox"]:checked {
 }
 
 input[type="checkbox"]:focus {
-    ring-color: rgb(107 114 128);
+    --tw-ring-color: rgb(107 114 128);
 }
 
 .transition-colors {
