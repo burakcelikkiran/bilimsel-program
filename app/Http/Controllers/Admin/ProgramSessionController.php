@@ -737,20 +737,22 @@ class ProgramSessionController extends Controller
                 ->values(); // Re-index
         }
 
-        // Session types
+        // Session types - same as in create method
         $sessionTypes = [
-            ['value' => 'presentation', 'label' => 'Sunum'],
-            ['value' => 'panel', 'label' => 'Panel'],
-            ['value' => 'workshop', 'label' => 'Atölye'],
-            ['value' => 'break', 'label' => 'Ara'],
+            ['value' => 'main', 'label' => 'Ana Oturum'],
+            ['value' => 'satellite', 'label' => 'Uydu Sempozyumu'],
+            ['value' => 'oral_presentation', 'label' => 'Sözlü Bildiri'],
             ['value' => 'special', 'label' => 'Özel Oturum'],
+            ['value' => 'break', 'label' => 'Ara'],
         ];
 
-        // Moderator titles
+        // Moderator titles - same as in create method
         $moderatorTitles = [
-            ['value' => 'moderator', 'label' => 'Moderatör'],
-            ['value' => 'chair', 'label' => 'Başkan'],
-            ['value' => 'co-chair', 'label' => 'Eş Başkan'],
+            ['value' => 'Oturum Başkanı', 'label' => 'Oturum Başkanı'],
+            ['value' => 'Oturum Başkanları', 'label' => 'Oturum Başkanları'],
+            ['value' => 'Kolaylaştırıcı', 'label' => 'Kolaylaştırıcı'],
+            ['value' => 'Moderatör', 'label' => 'Moderatör'],
+            ['value' => 'Başkan', 'label' => 'Başkan'],
         ];
 
         // Add current session data with proper time formatting
@@ -832,10 +834,26 @@ class ProgramSessionController extends Controller
             'selectedVenueId' => $programSession->venue_id,
         ];
 
+        // Debug authorization and user data
+        \Log::info('🔍 ProgramSession Edit - Authorization Debug:', [
+            'session_id' => $programSession->id,
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'user_email' => $user->email,
+            'is_admin' => $user->isAdmin(),
+            'session_organization_id' => $programSession->venue->eventDay->event->organization_id,
+            'session_organization_name' => $programSession->venue->eventDay->event->organization->name,
+            'user_organizations' => $user->organizations()->get(['organizations.id', 'organizations.name', 'role'])->toArray(),
+            'can_update' => $user->can('update', $programSession),
+        ]);
+        
         // Debug backend data with counts
         \Log::info('🔍 ProgramSession Edit - Backend Data:', [
             'session_id' => $programSession->id,
             'title' => $programSession->title,
+            'session_type' => $programSession->session_type,
+            'session_type_display' => $programSession->session_type_display,
+            'is_break' => $programSession->is_break,
             'venues_count' => $venues->count(),
             'participants_count' => $participants->count(),
             'sponsors_count' => $sponsors->count(),
@@ -846,6 +864,7 @@ class ProgramSessionController extends Controller
             'venue_id' => $programSession->venue_id,
             'moderator_ids' => $formData['programSession']['moderator_ids'],
             'category_ids' => $formData['programSession']['category_ids'],
+            'formData_session_type' => $formData['programSession']['session_type'],
         ]);
 
         return Inertia::render('Admin/ProgramSessions/Edit', $formData);
@@ -856,12 +875,26 @@ class ProgramSessionController extends Controller
      */
     public function update(UpdateProgramSessionRequest $request, ProgramSession $programSession)
     {
+        // Debug form submission
+        \Log::info('🔄 ProgramSession Update - Request received:', [
+            'session_id' => $programSession->id,
+            'user_id' => auth()->id(),
+            'request_data' => $request->all(),
+            'validated_pending' => 'about to validate...'
+        ]);
+        
         $this->authorize('update', $programSession);
+        
+        \Log::info('✅ Authorization passed for update');
 
         DB::beginTransaction();
 
         try {
             $data = $request->validated();
+            
+            \Log::info('✅ Validation passed:', [
+                'validated_data' => $data
+            ]);
 
             // Update session
             $programSession->update($data);

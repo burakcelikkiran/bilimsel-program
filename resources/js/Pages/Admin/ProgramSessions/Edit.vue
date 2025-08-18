@@ -1044,38 +1044,96 @@ const canSubmit = computed(() => {
     );
 });
 
-// Simple reactive form
+// Simple reactive form - Initialize with empty values first
 const form = reactive({
-    title: safeProgramSession.value.title,
-    description: safeProgramSession.value.description,
-    start_time: safeProgramSession.value.start_time,
-    end_time: safeProgramSession.value.end_time,
-    session_type: safeProgramSession.value.session_type,
-    moderator_title: safeProgramSession.value.moderator_title,
-    sponsor_id: safeProgramSession.value.sponsor_id,
-    is_break: safeProgramSession.value.is_break,
-    venue_id: safeProgramSession.value.venue_id,
-    moderator_ids: [...safeProgramSession.value.moderator_ids],
-    category_ids: [...safeProgramSession.value.category_ids],
+    title: "",
+    description: "",
+    start_time: "",
+    end_time: "",
+    session_type: "",
+    moderator_title: "",
+    sponsor_id: null,
+    is_break: false,
+    venue_id: null,
+    moderator_ids: [],
+    category_ids: [],
 });
+
+// Function to initialize form with actual data
+const initializeForm = () => {
+    const sessionData = safeProgramSession.value;
+
+    console.log("🔥 Initializing form with session data:", {
+        "props.programSession": props.programSession,
+        "sessionData.session_type": sessionData.session_type,
+        "sessionData.venue_id": sessionData.venue_id,
+        "sessionData.venue": sessionData.venue,
+        sessionData: sessionData,
+    });
+
+    form.title = sessionData.title;
+    form.description = sessionData.description;
+    form.start_time = sessionData.start_time;
+    form.end_time = sessionData.end_time;
+    form.session_type = sessionData.session_type;
+    form.moderator_title = sessionData.moderator_title;
+    form.sponsor_id = sessionData.sponsor_id;
+    form.is_break = sessionData.is_break;
+    form.venue_id = sessionData.venue_id;
+    form.moderator_ids = [...sessionData.moderator_ids];
+    form.category_ids = [...sessionData.category_ids];
+
+    // Also initialize cascade selection values from backend props
+    if (props.selectedEventId) {
+        selectedEventId.value = props.selectedEventId;
+        console.log(
+            "✅ Set selectedEventId from props:",
+            props.selectedEventId
+        );
+    }
+
+    if (props.selectedEventDayId) {
+        selectedEventDayId.value = props.selectedEventDayId;
+        console.log(
+            "✅ Set selectedEventDayId from props:",
+            props.selectedEventDayId
+        );
+    }
+
+    if (props.eventDays && props.eventDays.length > 0) {
+        availableEventDays.value = props.eventDays;
+        console.log(
+            "✅ Set availableEventDays from props:",
+            props.eventDays.length,
+            "days"
+        );
+    }
+
+    if (props.venues && props.venues.length > 0) {
+        availableVenues.value = props.venues;
+        console.log(
+            "✅ Set availableVenues from props:",
+            props.venues.length,
+            "venues"
+        );
+    }
+
+    console.log("✅ Form initialized with session_type:", form.session_type);
+    console.log(
+        "✅ Cascade values set - eventId:",
+        selectedEventId.value,
+        "dayId:",
+        selectedEventDayId.value,
+        "venueId:",
+        form.venue_id
+    );
+};
 
 // Processing state
 const processing = ref(false);
 
-// Original form values for reset
-const originalForm = {
-    title: safeProgramSession.value.title,
-    description: safeProgramSession.value.description,
-    start_time: safeProgramSession.value.start_time,
-    end_time: safeProgramSession.value.end_time,
-    session_type: safeProgramSession.value.session_type,
-    moderator_title: safeProgramSession.value.moderator_title,
-    sponsor_id: safeProgramSession.value.sponsor_id,
-    is_break: safeProgramSession.value.is_break,
-    venue_id: safeProgramSession.value.venue_id,
-    moderator_ids: [...safeProgramSession.value.moderator_ids],
-    category_ids: [...safeProgramSession.value.category_ids],
-};
+// Original form values for reset - will be set in onMounted
+let originalForm = {};
 
 // Breadcrumbs
 const breadcrumbs = computed(() => {
@@ -1500,20 +1558,81 @@ onBeforeUnmount(() => {
 
 // Lifecycle
 onMounted(() => {
-    console.log(
-        "✅ ProgramSession edit form with full cascade selection loaded"
-    );
-    console.log("📋 Props:", {
-        sessionId: sessionId.value,
-        events: props.events?.length,
-        venues: props.venues?.length,
-        participants: props.participants?.length,
-        sponsors: props.sponsors?.length,
-        categories: props.categories?.length,
+    console.log("🚀 ProgramSession Edit page mounted with ALL props:", {
+        programSession: props.programSession,
+        selectedEventId: props.selectedEventId,
+        selectedEventDayId: props.selectedEventDayId,
+        selectedVenueId: props.selectedVenueId,
+        events: props.events,
+        eventDays: props.eventDays,
+        venues: props.venues,
+        sponsors: props.sponsors,
+        participants: props.participants,
+        categories: props.categories,
+        sessionTypes: props.sessionTypes,
+        moderatorTitles: props.moderatorTitles,
+        sponsors_count: props.sponsors?.length,
+        participants_count: props.participants?.length,
+        sessionTypes_count: props.sessionTypes?.length,
     });
+
+    console.log("🎯 Backend ProgramSession Data:", {
+        id: props.programSession?.id,
+        title: props.programSession?.title,
+        session_type: props.programSession?.session_type,
+        venue_id: props.programSession?.venue_id,
+        start_time: props.programSession?.start_time,
+        end_time: props.programSession?.end_time,
+        moderator_ids: props.programSession?.moderator_ids,
+        sponsor_id: props.programSession?.sponsor_id,
+        is_break: props.programSession?.is_break,
+    });
+
+    // Initialize form with actual data
+    initializeForm();
+
+    console.log("🔥 Form State After Initialization:", {
+        title: form.title,
+        session_type: form.session_type,
+        venue_id: form.venue_id,
+        start_time: form.start_time,
+        end_time: form.end_time,
+        moderator_ids: form.moderator_ids,
+        sponsor_id: form.sponsor_id,
+        is_break: form.is_break,
+    });
+
+    console.log("🎛️ Cascade Selection State After Initialization:", {
+        selectedEventId: selectedEventId.value,
+        selectedEventDayId: selectedEventDayId.value,
+        availableEventDays: availableEventDays.value,
+        availableVenues: availableVenues.value,
+    });
+
+    // Set original form values after initialization
+    originalForm = {
+        title: form.title,
+        description: form.description,
+        start_time: form.start_time,
+        end_time: form.end_time,
+        session_type: form.session_type,
+        moderator_title: form.moderator_title,
+        sponsor_id: form.sponsor_id,
+        is_break: form.is_break,
+        venue_id: form.venue_id,
+        moderator_ids: [...form.moderator_ids],
+        category_ids: [...form.category_ids],
+    };
 
     // Initialize cascade selections
     initializeCascadeSelections();
+
+    console.log("🔧 After Cascade Initialization:", {
+        selectedEventId: selectedEventId.value,
+        selectedEventDayId: selectedEventDayId.value,
+        availableEventDays: availableEventDays.value?.length,
+        availableVenues: availableVenues.value?.length,
+    });
 
     // Enable debug mode in development
     if (import.meta.env.DEV) {
