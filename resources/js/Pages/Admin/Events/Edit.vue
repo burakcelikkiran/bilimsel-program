@@ -109,7 +109,7 @@
                                 <!-- Event Name with Slug Preview -->
                                 <div class="lg:col-span-2">
                                     <label
-                                        for="name"
+                                        for="title"
                                         class="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2"
                                     >
                                         Etkinlik Adı *
@@ -119,31 +119,31 @@
                                         >
                                     </label>
                                     <input
-                                        id="name"
-                                        v-model="form.name"
+                                        id="title"
+                                        v-model="form.title"
                                         type="text"
                                         required
                                         class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200"
                                         :class="
-                                            errors.name
+                                            errors.title
                                                 ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
                                                 : ''
                                         "
                                         placeholder="Örn: 25. Ulusal Pediatri Kongresi"
                                     />
                                     <p
-                                        v-if="errors.name"
+                                        v-if="errors.title"
                                         class="mt-1 text-xs text-red-600 flex items-center"
                                     >
                                         <ExclamationCircleIcon
                                             class="h-3 w-3 mr-1"
                                         />
-                                        {{ errors.name }}
+                                        {{ errors.title }}
                                     </p>
 
                                     <!-- Enhanced Corporate Slug Preview -->
                                     <div
-                                        v-if="form.name"
+                                        v-if="form.title"
                                         class="mt-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600"
                                     >
                                         <div class="flex items-center text-sm">
@@ -157,7 +157,7 @@
                                             <code
                                                 class="bg-white dark:bg-gray-700 px-2 py-1 rounded text-gray-700 dark:text-gray-200 font-mono text-xs font-medium"
                                             >
-                                                {{ generateSlug(form.name) }}
+                                                {{ generateSlug(form.title) }}
                                             </code>
                                         </div>
                                     </div>
@@ -684,7 +684,7 @@ const breadcrumbs = computed(() => [
 
 // Form state
 const form = reactive({
-    name: props.event?.name || "",
+    title: props.event?.name || "",
     description: props.event?.description || "",
     start_date: props.event?.start_date || "",
     end_date: props.event?.end_date || "",
@@ -697,7 +697,7 @@ const processing = ref(false);
 
 // Store original values
 const originalForm = {
-    name: props.event?.name || "",
+    title: props.event?.name || "",
     description: props.event?.description || "",
     start_date: props.event?.start_date || "",
     end_date: props.event?.end_date || "",

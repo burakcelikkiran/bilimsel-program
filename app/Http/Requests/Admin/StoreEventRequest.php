@@ -93,6 +93,7 @@ class StoreEventRequest extends FormRequest
             'social_links.linkedin' => 'nullable|url|max:500',
             'social_links.instagram' => 'nullable|url|max:500',
             'social_links.youtube' => 'nullable|url|max:500',
+            'auto_create_days' => 'boolean',
             'settings' => 'nullable|array',
             'settings.allow_public_access' => 'boolean',
             'settings.require_registration' => 'boolean',
@@ -127,6 +128,7 @@ class StoreEventRequest extends FormRequest
             'logo' => 'logo',
             'is_published' => 'yayında',
             'is_featured' => 'öne çıkarılmış',
+            'auto_create_days' => 'günleri otomatik oluştur',
             'social_links.facebook' => 'Facebook adresi',
             'social_links.twitter' => 'Twitter adresi',
             'social_links.linkedin' => 'LinkedIn adresi',
@@ -189,6 +191,7 @@ class StoreEventRequest extends FormRequest
         $this->merge([
             'is_published' => $this->boolean('is_published', false),
             'is_featured' => $this->boolean('is_featured', false),
+            'auto_create_days' => $this->boolean('auto_create_days', true),
             'timezone' => $this->timezone ?? 'Europe/Istanbul',
         ]);
 

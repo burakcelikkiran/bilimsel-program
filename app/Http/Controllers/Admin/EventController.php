@@ -396,11 +396,10 @@ class EventController extends Controller
                 $data['slug'] = Event::generateUniqueSlug($data['name']);
             }
 
-            $event = Event::create($data);
+            // created_by'ı set et
+            $data['created_by'] = auth()->id();
 
-            // created_by'ı sonradan assign et
-            $event->created_by = auth()->id();
-            $event->save();
+            $event = Event::create($data);
 
             // Auto create days if requested
             if (!empty($data['auto_create_days']) && $event->start_date && $event->end_date) {
@@ -429,34 +428,24 @@ class EventController extends Controller
     /**
      * Auto create event days based on start and end dates
      */
-    private function autoCreateEventDays($event)
+    private function autoCreateEventDays(Event $event): void
     {
         try {
-            $currentDate = $event->start_date->copy();
-            $dayNumber = 1;
-
-            while ($currentDate <= $event->end_date) {
-                EventDay::create([
-                    'event_id' => $event->id,
-                    'title' => $dayNumber . '. Gün',
-                    'date' => $currentDate,
-                    'sort_order' => $dayNumber,
-                    'is_active' => true,
-                ]);
-
-                $currentDate->addDay();
-                $dayNumber++;
-            }
-
+            $eventDaysData = $event->generateEventDaysData();
+            
+            // Bulk insert for better performance
+            EventDay::insert($eventDaysData);
+            
             Log::info('Auto-created event days', [
                 'event_id' => $event->id,
-                'days_created' => $dayNumber - 1
+                'days_created' => count($eventDaysData)
             ]);
         } catch (\Exception $e) {
-            Log::warning('Auto create event days failed', [
+            Log::error('Auto create event days failed', [
                 'event_id' => $event->id,
                 'error' => $e->getMessage()
             ]);
+            throw $e; // Re-throw to be caught by transaction
         }
     }
 

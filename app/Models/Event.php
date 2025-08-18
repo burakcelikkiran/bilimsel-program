@@ -293,6 +293,35 @@ class Event extends Model
     }
 
     /**
+     * Generate event days data array for bulk insert
+     */
+    public function generateEventDaysData(): array
+    {
+        $startDate = $this->start_date;
+        $endDate = $this->end_date;
+        $totalDays = $startDate->diffInDays($endDate) + 1;
+        
+        $eventDays = [];
+        $currentDate = $startDate->copy();
+        
+        for ($dayNumber = 1; $dayNumber <= $totalDays; $dayNumber++) {
+            $eventDays[] = [
+                'event_id' => $this->id,
+                'display_name' => $totalDays > 1 ? "{$dayNumber}. Gün" : $this->name,
+                'date' => $currentDate->toDateString(),
+                'sort_order' => $dayNumber,
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+            
+            $currentDate->addDay();
+        }
+        
+        return $eventDays;
+    }
+
+    /**
      * JSON representation
      */
     public function toArray(): array

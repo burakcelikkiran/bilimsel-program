@@ -31,12 +31,27 @@ class UpdateEventRequest extends FormRequest
         $event = $this->route('event');
 
         return [
+            'organization_id' => [
+                'required',
+                'exists:organizations,id',
+                function ($attribute, $value, $fail) {
+                    $user = auth()->user();
+                    if (!$user->isAdmin() && !$user->organizations()->where('organizations.id', $value)->exists()) {
+                        $fail('Bu organizasyona etkinlik ekleyemezsiniz.');
+                    }
+                },
+            ],
+            'name' => [
+                'sometimes',
+                'string',
+                'max:255',
+            ],
             'title' => [
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('events', 'title')
-                    ->where('organization_id', $event->organization_id)
+                Rule::unique('events', 'name')
+                    ->where('organization_id', $this->organization_id ?? $event->organization_id)
                     ->ignore($event->id),
             ],
             'slug' => [
@@ -99,6 +114,7 @@ class UpdateEventRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'organization_id' => 'organizasyon',
             'title' => 'etkinlik başlığı',
             'slug' => 'etkinlik kısa adı',
             'description' => 'açıklama',
@@ -138,6 +154,8 @@ class UpdateEventRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'organization_id.required' => 'Organizasyon seçimi zorunludur.',
+            'organization_id.exists' => 'Seçilen organizasyon bulunamadı.',
             'title.required' => 'Etkinlik başlığı zorunludur.',
             'title.unique' => 'Bu organizasyonda aynı isimde bir etkinlik zaten var.',
             'slug.unique' => 'Bu organizasyonda aynı slug zaten kullanılıyor.',
@@ -170,6 +188,27 @@ class UpdateEventRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $event = $this->route('event');
+        
+        // If title is provided, use it as the name for validation
+        if ($this->has('title') && !$this->has('name')) {
+            $this->merge([
+                'name' => $this->title
+            ]);
+        }
+        
+        // Set default values
+        $this->merge([
+            'is_published' => $this->boolean('is_published', false),
+            'is_featured' => $this->boolean('is_featured', false),
+        ]);
+        
+        // Prepare social links if they exist
+        if ($this->has('social_links')) {
+            $socialLinks = array_filter($this->social_links ?? [], function($value) {
+                return !empty($value);
+            });
+            $this->merge(['social_links' => $socialLinks]);
+        }
 
         // Auto-generate slug if not provided
         if (empty($this->slug) && !empty($this->title)) {

@@ -676,29 +676,41 @@ class EventDayController extends Controller
         try {
             DB::beginTransaction();
 
-            $startDate = Carbon::parse($event->start_date);
-            $endDate = Carbon::parse($event->end_date);
-            $created = 0;
+            $startDate = $event->start_date;
+            $endDate = $event->end_date;
+            $totalDays = $startDate->diffInDays($endDate) + 1;
 
-            for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
-                $existingDay = EventDay::where('event_id', $event->id)
-                    ->where('date', $date->toDateString())
-                    ->first();
+            // Get existing dates to avoid duplicates
+            $existingDates = EventDay::where('event_id', $event->id)
+                ->pluck('date')
+                ->map(fn($date) => $date instanceof Carbon ? $date->toDateString() : $date)
+                ->toArray();
 
-                if (!$existingDay) {
-                    $dayNumber = $date->diffInDays($startDate) + 1;
-                    $totalDays = $startDate->diffInDays($endDate) + 1;
+            $eventDaysToCreate = [];
+            $currentDate = $startDate->copy();
 
-                    EventDay::create([
+            for ($dayNumber = 1; $dayNumber <= $totalDays; $dayNumber++) {
+                $dateString = $currentDate->toDateString();
+                
+                if (!in_array($dateString, $existingDates)) {
+                    $eventDaysToCreate[] = [
                         'event_id' => $event->id,
-                        'title' => $totalDays > 1 ? "{$dayNumber}. Gün" : $event->name,
-                        'date' => $date->toDateString(),
+                        'display_name' => $totalDays > 1 ? "{$dayNumber}. Gün" : $event->name,
+                        'date' => $dateString,
                         'sort_order' => $dayNumber,
                         'is_active' => true,
-                    ]);
-
-                    $created++;
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
                 }
+                
+                $currentDate->addDay();
+            }
+
+            $created = count($eventDaysToCreate);
+            
+            if ($created > 0) {
+                EventDay::insert($eventDaysToCreate);
             }
 
             DB::commit();
