@@ -183,7 +183,7 @@ class StoreEventRequest extends FormRequest
         // Auto-generate slug if not provided
         if (empty($this->slug) && !empty($this->title)) {
             $this->merge([
-                'slug' => \Illuminate\Support\Str::slug($this->title)
+                'slug' => \App\Models\Event::createSlugFromTurkish($this->title)
             ]);
         }
 

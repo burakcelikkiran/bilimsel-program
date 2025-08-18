@@ -210,7 +210,7 @@ class StorePresentationRequest extends FormRequest
             
             'speakers.*.speaker_role' => [
                 'required',
-                'in:primary,co_speaker,discussant',
+                'in:primary,secondary,moderator',
             ],
             
             'speakers.*.sort_order' => [
@@ -411,10 +411,10 @@ class StorePresentationRequest extends FormRequest
             $validator->errors()->add('speakers', 'En fazla 3 ana konuşmacı seçilebilir.');
         }
 
-        // Check discussant limits for certain presentation types
-        $discussants = array_filter($roles, fn($role) => $role === 'discussant');
-        if (in_array($this->presentation_type, ['keynote', 'oral']) && count($discussants) > 2) {
-            $validator->errors()->add('speakers', 'Bu sunum türü için en fazla 2 tartışmacı seçilebilir.');
+        // Check moderator limits for certain presentation types
+        $moderators = array_filter($roles, fn($role) => $role === 'moderator');
+        if (in_array($this->presentation_type, ['keynote', 'oral']) && count($moderators) > 2) {
+            $validator->errors()->add('speakers', 'Bu sunum türü için en fazla 2 moderatör seçilebilir.');
         }
     }
 

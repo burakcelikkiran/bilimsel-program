@@ -231,7 +231,7 @@ class UpdatePresentationRequest extends FormRequest
             
             'speakers.*.speaker_role' => [
                 'required',
-                'in:primary,co_speaker,discussant',
+                'in:primary,secondary,moderator',
             ],
             
             'speakers.*.sort_order' => [
