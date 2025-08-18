@@ -206,11 +206,20 @@ class ProgramSession extends Model
     public function getFormattedDurationAttribute(): string
     {
         $minutes = $this->duration_in_minutes;
+        
+        if ($minutes <= 0) {
+            return 'Süre belirsiz';
+        }
+        
         $hours = intval($minutes / 60);
         $remainingMinutes = $minutes % 60;
 
         if ($hours > 0) {
-            return $hours . 'sa ' . ($remainingMinutes > 0 ? $remainingMinutes . 'dk' : '');
+            $result = $hours . 'sa';
+            if ($remainingMinutes > 0) {
+                $result .= ' ' . $remainingMinutes . 'dk';
+            }
+            return $result;
         }
 
         return $remainingMinutes . 'dk';
