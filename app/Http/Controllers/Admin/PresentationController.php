@@ -609,9 +609,11 @@ class PresentationController extends Controller
      */
     private function getPreselectedSession($request): ?array
     {
-        if (!$request->session_id) return null;
+        $sessionId = $request->get('program_session_id') ?? $request->get('session_id');
+        
+        if (!$sessionId) return null;
 
-        $session = ProgramSession::find($request->session_id);
+        $session = ProgramSession::find($sessionId);
         if (!$session) return null;
 
         return [
