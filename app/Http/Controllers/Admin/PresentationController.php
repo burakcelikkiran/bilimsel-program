@@ -362,6 +362,8 @@ class PresentationController extends Controller
      */
     private function transformPresentationForIndex($presentation): array
     {
+        $programSession = $presentation->programSession;
+        
         return [
             'id' => $presentation->id,
             'title' => $this->cleanString($presentation->title),
@@ -369,10 +371,10 @@ class PresentationController extends Controller
             'duration_minutes' => $presentation->duration_minutes,
             'presentation_type' => $presentation->presentation_type,
             'language' => $presentation->language,
-            'start_time' => $presentation->programSession?->start_time,
-            'end_time' => $presentation->programSession?->end_time,
-            'formatted_time_range' => null,
-            'program_session' => $this->transformProgramSession($presentation->programSession),
+            'start_time' => $programSession?->start_time?->format('H:i'),
+            'end_time' => $programSession?->end_time?->format('H:i'),
+            'formatted_time_range' => $programSession?->formatted_time_range,
+            'program_session' => $this->transformProgramSession($programSession),
             'speakers' => $this->transformSpeakers($presentation->speakers),
             'speakers_count' => $presentation->speakers_count,
             'can_edit' => $this->canAuthorize('update', $presentation),
