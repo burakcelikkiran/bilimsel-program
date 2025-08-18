@@ -79,6 +79,8 @@ class PresentationController extends Controller
         $participants = $this->getParticipantsForForm($organizationId);
         $preselectedSession = $this->getPreselectedSession($request);
 
+
+
         return Inertia::render('Admin/Presentations/Create', [
             'programSessions' => $programSessions,
             'participants' => $participants,
@@ -557,9 +559,18 @@ class PresentationController extends Controller
      */
     private function getProgramSessionsForForm($organizationId): array
     {
-        return ProgramSession::whereHas('venue.eventDay.event', function ($query) use ($organizationId) {
-            $query->where('organization_id', $organizationId);
-        })->with(['venue.eventDay.event', 'venue'])
+        $user = auth()->user();
+        
+        // Admin kullanıcılar tüm organizasyonların oturumlarını görebilir
+        $query = ProgramSession::query();
+        
+        if (!$user->isAdmin()) {
+            $query->whereHas('venue.eventDay.event', function ($q) use ($organizationId) {
+                $q->where('organization_id', $organizationId);
+            });
+        }
+        
+        return $query->with(['venue.eventDay.event', 'venue'])
             ->orderBy('start_time')
             ->get()
             ->map(function ($session) {
@@ -568,6 +579,7 @@ class PresentationController extends Controller
                     'title' => $this->cleanString($session->title),
                     'start_time' => $session->start_time,
                     'end_time' => $session->end_time,
+                    'session_type_display' => $session->session_type_display ?? 'Belirtilmemiş',
                     'venue' => $session->venue ? [
                         'id' => $session->venue->id,
                         'display_name' => $this->cleanString($session->venue->display_name),
@@ -590,8 +602,16 @@ class PresentationController extends Controller
      */
     private function getParticipantsForForm($organizationId): array
     {
-        return Participant::where('organization_id', $organizationId)
-            ->orderBy('last_name')
+        $user = auth()->user();
+        
+        // Admin kullanıcılar tüm organizasyonların katılımcılarını görebilir
+        $query = Participant::query();
+        
+        if (!$user->isAdmin()) {
+            $query->where('organization_id', $organizationId);
+        }
+        
+        return $query->orderBy('last_name')
             ->get()
             ->map(function ($participant) {
                 return [
@@ -668,8 +688,15 @@ class PresentationController extends Controller
     private function validateSessionAccess($sessionId): bool
     {
         $user = auth()->user();
+        
+        // Admin kullanıcılar tüm oturumlara sunum ekleyebilir
+        if ($user->isAdmin()) {
+            $session = ProgramSession::find($sessionId);
+            return $session !== null;
+        }
+        
+        // Normal kullanıcılar için organizasyon kontrolü
         $organizationId = $this->getCurrentOrganizationId($user);
-
         $session = ProgramSession::with('venue.eventDay.event')->find($sessionId);
 
         return $session && $session->venue->eventDay->event->organization_id === $organizationId;
