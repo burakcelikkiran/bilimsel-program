@@ -463,8 +463,9 @@ class PresentationController extends Controller
         return [
             'id' => $session->id,
             'title' => $this->cleanString($session->title),
-            'start_time' => $session->start_time,
-            'end_time' => $session->end_time,
+            'start_time' => $session->start_time?->format('H:i'),
+            'end_time' => $session->end_time?->format('H:i'),
+            'formatted_time_range' => $session->formatted_time_range,
             'venue' => $session->venue ? [
                 'id' => $session->venue->id,
                 'display_name' => $this->cleanString($session->venue->display_name),
