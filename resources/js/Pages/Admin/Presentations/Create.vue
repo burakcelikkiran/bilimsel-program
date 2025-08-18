@@ -526,7 +526,7 @@
                                                         Ana Konuşmacı
                                                     </option>
                                                     <option value="secondary">
-                                                        Ko-Konuşmacı
+                                                        İkincil Konuşmacı
                                                     </option>
                                                     <option value="moderator">
                                                         Moderatör
