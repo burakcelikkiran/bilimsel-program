@@ -306,6 +306,10 @@ Route::middleware([
             Route::get('/events/{event:slug}/data', [TimelineController::class, 'getTimelineData'])
                 ->name('data');
 
+            // Timeline order update (drag & drop)
+            Route::post('/events/{event:slug}/update-order', [TimelineController::class, 'updateOrder'])
+                ->name('update-order');
+
             // Timeline export
             Route::post('/events/{event:slug}/export', [TimelineController::class, 'export'])
                 ->name('export');
