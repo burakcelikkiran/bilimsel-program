@@ -369,9 +369,8 @@ class EventDayController extends Controller
                 ],
                 'eventDay' => [
                     'id' => $eventDay->id,
-                    'title' => $eventDay->title,
+                    'display_name' => $eventDay->display_name,
                     'date' => $eventDay->date,
-                    'description' => $eventDay->description,
                     'is_active' => $eventDay->is_active,
                     'sort_order' => $eventDay->sort_order,
                     'venues_count' => $venuesCount,
@@ -456,9 +455,8 @@ class EventDayController extends Controller
                 ],
                 'eventDay' => [
                     'id' => $eventDay->id,
-                    'title' => $eventDay->title,
+                    'display_name' => $eventDay->display_name,
                     'date' => $eventDay->date,
-                    'description' => $eventDay->description,
                     'is_active' => $eventDay->is_active,
                     'sort_order' => $eventDay->sort_order,
                     'venues_count' => $venuesCount,
@@ -493,7 +491,7 @@ class EventDayController extends Controller
         }
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'display_name' => 'required|string|max:255',
             'date' => [
                 'required',
                 'date',
@@ -501,7 +499,6 @@ class EventDayController extends Controller
                 'before_or_equal:' . $event->end_date,
                 Rule::unique('event_days')->where('event_id', $event->id)->ignore($eventDay->id),
             ],
-            'description' => 'nullable|string|max:1000',
             'is_active' => 'boolean',
             'sort_order' => 'nullable|integer|min:0',
         ]);
@@ -515,7 +512,7 @@ class EventDayController extends Controller
 
             return redirect()
                 ->route('admin.events.days.show', [$event->slug, $eventDay->id])
-                ->with('success', "Etkinlik günü '{$eventDay->title}' başarıyla güncellendi.");
+                ->with('success', "Etkinlik günü '{$eventDay->display_name}' başarıyla güncellendi.");
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -589,7 +586,7 @@ class EventDayController extends Controller
             DB::beginTransaction();
 
             $newEventDay = $eventDay->replicate();
-            $newEventDay->title = $eventDay->title . ' (Kopya)';
+            $newEventDay->display_name = $eventDay->display_name . ' (Kopya)';
             $newEventDay->date = $eventDay->date->addDay();
             $newEventDay->save();
 

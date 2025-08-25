@@ -25,7 +25,7 @@ class UpdateEventDayRequest extends FormRequest
         $event = $eventDay->event;
 
         return [
-            'title' => 'required|string|max:255',
+            'display_name' => 'required|string|max:255',
             'date' => [
                 'required',
                 'date',

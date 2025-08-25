@@ -86,7 +86,7 @@
               <div v-if="eventDay.sort_order !== null" class="flex items-center space-x-2">
                 <HashtagIcon class="h-5 w-5 text-gray-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ eventDay.sort_order + 1 }}. Gün</div>
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ eventDay.sort_order }}. Gün</div>
                   <div class="text-xs text-gray-500 dark:text-gray-400">Sıra</div>
                 </div>
               </div>

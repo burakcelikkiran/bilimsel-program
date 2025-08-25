@@ -319,9 +319,8 @@ class EventDayController extends Controller
             // Format response
             $eventDayData = [
                 'id' => $eventDay->id,
-                'title' => $eventDay->title,
+                'display_name' => $eventDay->display_name,
                 'date' => $eventDay->date,
-                'description' => $eventDay->description,
                 'is_active' => $eventDay->is_active,
                 'sort_order' => $eventDay->sort_order,
                 'venues_count' => count($venueIds),
@@ -439,7 +438,7 @@ class EventDayController extends Controller
     {
         try {
             $validated = $request->validate([
-                'title' => 'required|string|max:255',
+                'display_name' => 'required|string|max:255',
                 'date' => [
                     'required',
                     'date',
@@ -447,7 +446,6 @@ class EventDayController extends Controller
                     'before_or_equal:' . $event->end_date,
                     Rule::unique('event_days')->where('event_id', $event->id),
                 ],
-                'description' => 'nullable|string|max:1000',
                 'is_active' => 'boolean',
                 'sort_order' => 'nullable|integer|min:0',
             ]);
@@ -462,9 +460,8 @@ class EventDayController extends Controller
                 'message' => 'Event günü başarıyla oluşturuldu.',
                 'data' => [
                     'id' => $eventDay->id,
-                    'title' => $eventDay->title,
+                    'display_name' => $eventDay->display_name,
                     'date' => $eventDay->date,
-                    'description' => $eventDay->description,
                     'is_active' => $eventDay->is_active,
                     'sort_order' => $eventDay->sort_order,
                     'created_at' => $eventDay->created_at,
@@ -567,7 +564,7 @@ class EventDayController extends Controller
             }
 
             $validated = $request->validate([
-                'title' => 'required|string|max:255',
+                'display_name' => 'required|string|max:255',
                 'date' => [
                     'required',
                     'date',
@@ -575,7 +572,6 @@ class EventDayController extends Controller
                     'before_or_equal:' . $event->end_date,
                     Rule::unique('event_days')->where('event_id', $event->id)->ignore($eventDay->id),
                 ],
-                'description' => 'nullable|string|max:1000',
                 'is_active' => 'boolean',
                 'sort_order' => 'nullable|integer|min:0',
             ]);
@@ -587,9 +583,8 @@ class EventDayController extends Controller
                 'message' => 'Event günü başarıyla güncellendi.',
                 'data' => [
                     'id' => $eventDay->id,
-                    'title' => $eventDay->title,
+                    'display_name' => $eventDay->display_name,
                     'date' => $eventDay->date,
-                    'description' => $eventDay->description,
                     'is_active' => $eventDay->is_active,
                     'sort_order' => $eventDay->sort_order,
                     'created_at' => $eventDay->created_at,
@@ -1044,7 +1039,7 @@ class EventDayController extends Controller
                 'data' => [
                     'event_day' => [
                         'id' => $eventDay->id,
-                        'title' => $eventDay->title,
+                        'display_name' => $eventDay->display_name,
                         'date' => $eventDay->date,
                         'formatted_date' => $eventDay->date ? $eventDay->date->format('d.m.Y') : null,
                     ],
