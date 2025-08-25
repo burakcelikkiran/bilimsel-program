@@ -24,6 +24,7 @@
         "vue": "^3.3.13"
     },
     "dependencies": {
+        "@formkit/drag-and-drop": "^0.5.3",
         "@headlessui/vue": "^1.7.23",
         "@heroicons/vue": "^2.2.0",
         "@inertiajs/vue3": "^2.0.12",
@@ -33,7 +34,6 @@
         "html2canvas": "^1.4.1",
         "html2pdf.js": "^0.10.3",
         "puppeteer": "^24.10.2",
-        "vue": "^3.4.0",
-        "vuedraggable": "^2.24.3"
+        "vue": "^3.4.0"
     }
 }
