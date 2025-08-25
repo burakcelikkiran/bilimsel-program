@@ -20,6 +20,7 @@ class Presentation extends Model
         'abstract',
         'start_time',
         'end_time',
+        'duration_minutes',
         'presentation_type',
         'sponsor_id',
         'sort_order',
@@ -28,6 +29,7 @@ class Presentation extends Model
     protected $casts = [
         'start_time' => 'datetime:H:i',
         'end_time' => 'datetime:H:i',
+        'duration_minutes' => 'integer',
         'sort_order' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -51,7 +53,33 @@ class Presentation extends Model
                 $maxOrder = static::where('program_session_id', $model->program_session_id)->max('sort_order');
                 $model->sort_order = $maxOrder ? $maxOrder + 1 : 1;
             }
+            
+            // Duration sync
+            static::syncDurationFields($model);
         });
+
+        static::updating(function ($model) {
+            // Duration sync
+            static::syncDurationFields($model);
+        });
+    }
+
+    /**
+     * Sync duration fields - start_time, end_time ve duration_minutes arasında senkronizasyon
+     */
+    private static function syncDurationFields($model)
+    {
+        // Eğer duration_minutes değiştirilmişse ve start_time varsa, end_time'ı hesapla
+        if ($model->isDirty('duration_minutes') && $model->start_time && $model->duration_minutes) {
+            $startTime = \Carbon\Carbon::parse($model->start_time);
+            $model->end_time = $startTime->addMinutes($model->duration_minutes)->format('H:i');
+        }
+        // Eğer start_time veya end_time değiştirilmişse, duration_minutes'ı hesapla
+        elseif (($model->isDirty('start_time') || $model->isDirty('end_time')) && $model->start_time && $model->end_time) {
+            $startTime = \Carbon\Carbon::parse($model->start_time);
+            $endTime = \Carbon\Carbon::parse($model->end_time);
+            $model->duration_minutes = $startTime->diffInMinutes($endTime);
+        }
     }
 
     /**

@@ -165,9 +165,10 @@ class TimelineController extends Controller
      */
     private function formatTimelineData(Event $event, array $filters = []): array
     {
-        $timelineData = [];
+        try {
+            $timelineData = [];
 
-        foreach ($event->eventDays as $eventDay) {
+            foreach ($event->eventDays as $eventDay) {
             // Apply day filter
             if (!empty($filters['day_id']) && $eventDay->id != $filters['day_id']) {
                 continue;
@@ -293,7 +294,17 @@ class TimelineController extends Controller
             }
         }
 
-        return $timelineData;
+            return $timelineData;
+        } catch (\Exception $e) {
+            \Log::error('Error in formatTimelineData', [
+                'event_id' => $event->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Return empty data on error
+            return [];
+        }
     }
 
     /**
@@ -597,48 +608,126 @@ class TimelineController extends Controller
     {
         $this->authorize('update', $event);
 
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'changes' => 'required|array',
-            'changes.*.type' => 'required|in:session_moved,session_reordered',
-            'changes.*.session_id' => 'required|exists:program_sessions,id',
-            'timeline_data' => 'required|array'
+            'changes.*.sessionId' => 'required|exists:program_sessions,id',
+            'changes.*.toVenueId' => 'required|exists:venues,id',
+            'changes.*.toDayId' => 'required|exists:event_days,id',
+            'changes.*.newSortOrder' => 'required|integer|min:1',
+            'changes.*.newStartTime' => 'nullable|string',
+            'changes.*.newEndTime' => 'nullable|string',
+            'changes.*.allSessionsInVenue' => 'nullable|array',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Geçersiz veri',
-                'errors' => $validator->errors()
-            ], 422);
-        }
 
         try {
             DB::beginTransaction();
 
+            $processedSessions = [];
+            $conflicts = [];
+
             foreach ($request->changes as $change) {
-                $this->processChange($change, $event);
+                $session = ProgramSession::findOrFail($change['sessionId']);
+                
+                // Authorization check per session
+                $this->authorize('update', $session);
+
+                // Check if venue belongs to the specified day
+                $venue = Venue::findOrFail($change['toVenueId']);
+                
+                // Type conversion for comparison - both should be integers
+                $venueEventDayId = (int) $venue->event_day_id;
+                $targetDayId = (int) $change['toDayId'];
+                
+                if ($venueEventDayId !== $targetDayId) {
+                    \Log::error('Venue day mismatch', [
+                        'venue_id' => $venue->id,
+                        'venue_event_day_id' => $venueEventDayId,
+                        'target_day_id' => $targetDayId,
+                        'change' => $change
+                    ]);
+                    throw new \Exception("Venue {$venue->name} does not belong to the specified day");
+                }
+
+                // Update session venue and times
+                $sessionData = [
+                    'venue_id' => $change['toVenueId'],
+                    'sort_order' => $change['newSortOrder'],
+                ];
+
+                if (!empty($change['newStartTime'])) {
+                    $sessionData['start_time'] = $change['newStartTime'];
+                }
+
+                if (!empty($change['newEndTime'])) {
+                    $sessionData['end_time'] = $change['newEndTime'];
+                }
+
+                $session->update($sessionData);
+
+                // Update all sessions in the same venue if provided
+                if (!empty($change['allSessionsInVenue'])) {
+                    foreach ($change['allSessionsInVenue'] as $sessionUpdate) {
+                        if ($sessionUpdate['id'] !== $session->id) {
+                            $otherSession = ProgramSession::find($sessionUpdate['id']);
+                            if ($otherSession && $otherSession->venue_id === $change['toVenueId']) {
+                                $otherSession->update([
+                                    'start_time' => $sessionUpdate['start_time'],
+                                    'end_time' => $sessionUpdate['end_time'],
+                                    'sort_order' => $sessionUpdate['sort_order'],
+                                ]);
+
+                                // Update presentations in this session
+                                $this->updatePresentationTimes($otherSession);
+                            }
+                        }
+                    }
+                }
+
+                // Update presentations in moved session
+                $this->updatePresentationTimes($session);
+                
+                $processedSessions[] = $session->id;
+
+                // Check for conflicts
+                $sessionConflicts = $this->checkSessionConflicts($session);
+                if (!empty($sessionConflicts)) {
+                    $conflicts = array_merge($conflicts, $sessionConflicts);
+                }
             }
 
-            // Recalculate and return updated timeline data
-            $updatedTimelineData = $this->formatTimelineData($event);
-            $updatedStats = $this->calculateTimelineStats($event);
-
             DB::commit();
+            
+            \Log::info('Timeline update successful', [
+                'event_id' => $event->id,
+                'processed_sessions' => $processedSessions,
+                'changes_count' => count($request->changes)
+            ]);
+
+            // Get updated timeline data
+            $updatedTimelineData = $this->formatTimelineData($event);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Timeline başarıyla güncellendi',
+                'message' => count($processedSessions) . ' oturum başarıyla güncellendi',
                 'data' => [
-                    'timeline' => $updatedTimelineData,
-                    'stats' => $updatedStats
-                ]
+                    'timelineData' => $updatedTimelineData,
+                    'processedSessions' => $processedSessions,
+                    'conflicts' => $conflicts,
+                ],
             ]);
+
         } catch (\Exception $e) {
             DB::rollBack();
 
+            \Log::error('Timeline update failed', [
+                'error' => $e->getMessage(),
+                'event_id' => $event->id,
+                'changes' => $request->changes,
+            ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Timeline güncellenirken hata oluştu: ' . $e->getMessage()
+                'message' => 'Timeline güncellenirken hata oluştu: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -1048,5 +1137,71 @@ class TimelineController extends Controller
                 ],
             ],
         ]);
+    }
+
+    /**
+     * Update presentation times based on session timing
+     */
+    private function updatePresentationTimes(ProgramSession $session): void
+    {
+        if (!$session->start_time || !$session->presentations()->count()) {
+            return;
+        }
+
+        $presentations = $session->presentations()->orderBy('sort_order')->get();
+        $currentTime = \Carbon\Carbon::parse($session->start_time);
+
+        foreach ($presentations as $presentation) {
+            $presentation->start_time = $currentTime->format('H:i');
+            
+            // Calculate end time based on duration
+            if ($presentation->duration_minutes) {
+                $endTime = $currentTime->copy()->addMinutes($presentation->duration_minutes);
+                $presentation->end_time = $endTime->format('H:i');
+                $currentTime = $endTime; // Next presentation starts where this one ends
+            } else {
+                // Default 30 minutes if no duration specified
+                $endTime = $currentTime->copy()->addMinutes(30);
+                $presentation->end_time = $endTime->format('H:i');
+                $presentation->duration_minutes = 30;
+                $currentTime = $endTime;
+            }
+
+            $presentation->save();
+        }
+    }
+
+    /**
+     * Check for time conflicts in a session's venue
+     */
+    private function checkSessionConflicts(ProgramSession $session): array
+    {
+        if (!$session->start_time || !$session->end_time) {
+            return [];
+        }
+
+        $conflicts = [];
+        $venueSessions = ProgramSession::where('venue_id', $session->venue_id)
+            ->where('id', '!=', $session->id)
+            ->whereNotNull('start_time')
+            ->whereNotNull('end_time')
+            ->get();
+
+        foreach ($venueSessions as $otherSession) {
+            // Check for time overlap
+            if (($session->start_time < $otherSession->end_time) && 
+                ($session->end_time > $otherSession->start_time)) {
+                $conflicts[] = [
+                    'session1_id' => $session->id,
+                    'session1_title' => $session->title,
+                    'session2_id' => $otherSession->id,
+                    'session2_title' => $otherSession->title,
+                    'conflict_type' => 'time_overlap',
+                    'venue_name' => $session->venue->display_name ?? $session->venue->name,
+                ];
+            }
+        }
+
+        return $conflicts;
     }
 }
