@@ -10,13 +10,9 @@
         <!-- Hero Section with Quick Stats - Gray Theme -->
         <div class="mb-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div
-                    class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 text-white shadow-lg border border-gray-700"
-                >
+                <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 text-white shadow-lg border border-gray-700">
                     <div class="flex items-center">
-                        <div
-                            class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
-                        >
+                        <div class="p-3 bg-white/10 rounded-lg backdrop-blur-sm">
                             <UsersIcon class="h-8 w-8" />
                         </div>
                         <div class="ml-4">
@@ -235,8 +231,7 @@
                         >
                             <option value="">Tüm Organizasyonlar</option>
                             <option
-                                v-for="organization in filterOptions?.organizations ||
-                                []"
+                                v-for="organization in filterOptions?.organizations || []"
                                 :key="organization.id"
                                 :value="organization.id"
                             >
