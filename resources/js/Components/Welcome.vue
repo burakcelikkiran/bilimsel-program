@@ -181,7 +181,7 @@
 
             <div class="mt-4 flex justify-end">
               <Link
-                :href="route('admin.events.show', event.id)"
+                :href="route('admin.events.show', event.slug)"
                 class="text-blue-600 hover:text-blue-700 text-sm font-medium"
               >
                 Detayları Gör →

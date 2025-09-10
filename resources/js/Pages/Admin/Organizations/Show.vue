@@ -199,14 +199,14 @@
                   <!-- Event Actions -->
                   <div class="flex items-center space-x-2 ml-4">
                     <Link
-                      :href="safeRoute('admin.events.show', `/admin/events/${event.id}`, event.id)"
+                      :href="safeRoute('admin.events.show', `/admin/events/${event.slug}`, event.slug)"
                       class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       title="Etkinliği Görüntüle"
                     >
                       <EyeIcon class="h-4 w-4" />
                     </Link>
                     <Link
-                      :href="safeRoute('admin.events.edit', `/admin/events/${event.id}/edit`, event.id)"
+                      :href="safeRoute('admin.events.edit', `/admin/events/${event.slug}/edit`, event.slug)"
                       class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       title="Etkinliği Düzenle"
                     >

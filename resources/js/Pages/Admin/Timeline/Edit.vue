@@ -154,7 +154,7 @@
                             Bu etkinlik için henüz program oluşturulmamış.
                         </p>
                         <Link
-                            :href="route('admin.events.show', event.id)"
+                            :href="route('admin.events.show', event.slug)"
                             class="mt-4 inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700"
                         >
                             <PlusIcon class="h-4 w-4 mr-2" />
