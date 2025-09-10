@@ -282,6 +282,7 @@
                                         <input
                                             v-model="form.start_time"
                                             type="time"
+                                            @input="updateDurationFromTimes"
                                             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
                                             :class="{
                                                 'border-red-500':
@@ -306,6 +307,7 @@
                                         <input
                                             v-model="form.end_time"
                                             type="time"
+                                            @input="updateDurationFromTimes"
                                             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
                                             :class="{
                                                 'border-red-500':
@@ -339,6 +341,7 @@
                                             type="number"
                                             min="1"
                                             max="480"
+                                            @input="updateEndTimeFromDuration"
                                             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
                                             :class="{
                                                 'border-red-500':
@@ -785,7 +788,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import SearchableSelect from "@/Components/Forms/SearchableSelect.vue";
@@ -954,6 +957,75 @@ const submit = () => {
         },
     });
 };
+
+// Helper function to convert time string to total minutes
+const timeToMinutes = (timeString) => {
+    if (!timeString) return 0;
+    try {
+        const [hours, minutes] = timeString.split(":").map(Number);
+        return hours * 60 + minutes;
+    } catch (error) {
+        return 0;
+    }
+};
+
+// Helper function to convert minutes to time string (HH:MM)
+const minutesToTime = (totalMinutes) => {
+    if (totalMinutes < 0) return "";
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+};
+
+// Event handler to update duration when start or end time changes
+const updateDurationFromTimes = () => {
+    if (form.start_time && form.end_time) {
+        const startMinutes = timeToMinutes(form.start_time);
+        const endMinutes = timeToMinutes(form.end_time);
+        
+        if (endMinutes > startMinutes) {
+            const durationMinutes = endMinutes - startMinutes;
+            form.duration_minutes = durationMinutes;
+        }
+    }
+};
+
+// Event handler to update end time when duration changes
+const updateEndTimeFromDuration = () => {
+    if (form.duration_minutes && form.start_time && form.duration_minutes > 0) {
+        const startMinutes = timeToMinutes(form.start_time);
+        const newEndMinutes = startMinutes + form.duration_minutes;
+        form.end_time = minutesToTime(newEndMinutes);
+    }
+};
+
+// Watch for changes in start_time and end_time to update duration
+watch(
+    () => [form.start_time, form.end_time],
+    ([newStartTime, newEndTime]) => {
+        if (newStartTime && newEndTime) {
+            const startMinutes = timeToMinutes(newStartTime);
+            const endMinutes = timeToMinutes(newEndTime);
+            
+            if (endMinutes > startMinutes) {
+                const durationMinutes = endMinutes - startMinutes;
+                form.duration_minutes = durationMinutes;
+            }
+        }
+    }
+);
+
+// Watch for changes in duration_minutes to update end_time
+watch(
+    () => form.duration_minutes,
+    (newDuration) => {
+        if (newDuration && form.start_time && newDuration > 0) {
+            const startMinutes = timeToMinutes(form.start_time);
+            const newEndMinutes = startMinutes + newDuration;
+            form.end_time = minutesToTime(newEndMinutes);
+        }
+    }
+);
 </script>
 
 <style scoped>
