@@ -150,6 +150,21 @@ class TimelineController extends Controller
             case 'json':
             default:
                 $timelineData = $this->formatTimelineData($event);
+                
+                // Boş veri durumunda da dosya indirme işlemi yapılsın
+                if (empty($timelineData)) {
+                    $timelineData = [
+                        'message' => 'Bu etkinlik için henüz program verisi bulunmuyor.',
+                        'event' => [
+                            'id' => $event->id,
+                            'name' => $event->name,
+                            'slug' => $event->slug,
+                        ],
+                        'generated_at' => now()->toISOString(),
+                        'data' => []
+                    ];
+                }
+                
                 // JSON için dosyayı indirmek için response header'ları ayarla
                 $fileName = Event::createSlugFromTurkish($event->name) . '_timeline_' . now()->format('Y-m-d') . '.json';
 

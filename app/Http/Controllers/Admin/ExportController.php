@@ -240,6 +240,18 @@ class ExportController extends Controller
             ]);
         }
 
+        // Eğer veri yoksa boş dosya yerine açıklayıcı bir satır ekle
+        if ($data->isEmpty()) {
+            $data->push([
+                'Saat' => '',
+                'İçerik' => 'Bu etkinlik için henüz program verisi bulunmuyor.',
+                'Moderatör/Konuşmacı' => 'Etkinlik: ' . $event->name,
+                'Tip' => 'EMPTY',
+                'Salon' => '',
+                'Gün' => now()->format('d.m.Y H:i'),
+            ]);
+        }
+
         $filename = "program-hierarchical-{$event->slug}-" . now()->format('Y-m-d-H-i') . '.xlsx';
 
         return Excel::download(new class($data) implements
@@ -1176,6 +1188,17 @@ class ExportController extends Controller
             ];
         });
 
+        // Eğer veri yoksa boş dosya yerine açıklayıcı bir satır ekle
+        if ($data->isEmpty()) {
+            $data = collect([
+                [
+                    'Bilgi' => 'Bu organizasyon için henüz katılımcı bulunmuyor.',
+                    'Açıklama' => 'Organizasyon: ' . auth()->user()->currentOrganization->name,
+                    'Tarih' => now()->format('d.m.Y H:i'),
+                ]
+            ]);
+        }
+
         $filename = 'participants-' . now()->format('Y-m-d-H-i') . '.xlsx';
 
         return Excel::download(new class($data) implements FromCollection, WithHeadings {
@@ -1193,7 +1216,8 @@ class ExportController extends Controller
 
             public function headings(): array
             {
-                return array_keys($this->data->first() ?? []);
+                $firstRow = $this->data->first();
+                return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
     }
@@ -1271,6 +1295,17 @@ class ExportController extends Controller
             ];
         });
 
+        // Eğer veri yoksa boş dosya yerine açıklayıcı bir satır ekle
+        if ($data->isEmpty()) {
+            $data = collect([
+                [
+                    'Bilgi' => 'Bu etkinlik için henüz program verisi bulunmuyor.',
+                    'Açıklama' => 'Etkinlik: ' . $event->name,
+                    'Tarih' => now()->format('d.m.Y H:i'),
+                ]
+            ]);
+        }
+
         $filename = "program-{$event->slug}-" . now()->format('Y-m-d-H-i') . '.xlsx';
 
         return Excel::download(new class($data) implements FromCollection, WithHeadings {
@@ -1288,7 +1323,8 @@ class ExportController extends Controller
 
             public function headings(): array
             {
-                return array_keys($this->data->first() ?? []);
+                $firstRow = $this->data->first();
+                return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
     }
@@ -1343,6 +1379,17 @@ class ExportController extends Controller
             ];
         });
 
+        // Eğer veri yoksa boş dosya yerine açıklayıcı bir satır ekle
+        if ($data->isEmpty()) {
+            $data = collect([
+                [
+                    'Bilgi' => 'Bu etkinlik için henüz sunum verisi bulunmuyor.',
+                    'Açıklama' => 'Etkinlik: ' . $event->name,
+                    'Tarih' => now()->format('d.m.Y H:i'),
+                ]
+            ]);
+        }
+
         $filename = "presentations-{$event->slug}-" . now()->format('Y-m-d-H-i') . '.xlsx';
 
         return Excel::download(new class($data) implements FromCollection, WithHeadings {
@@ -1360,7 +1407,8 @@ class ExportController extends Controller
 
             public function headings(): array
             {
-                return array_keys($this->data->first() ?? []);
+                $firstRow = $this->data->first();
+                return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
     }
@@ -1396,6 +1444,17 @@ class ExportController extends Controller
             ];
         });
 
+        // Eğer veri yoksa boş dosya yerine açıklayıcı bir satır ekle
+        if ($data->isEmpty()) {
+            $data = collect([
+                [
+                    'Bilgi' => 'Bu organizasyon için henüz salon verisi bulunmuyor.',
+                    'Açıklama' => 'Organizasyon: ' . auth()->user()->currentOrganization->name,
+                    'Tarih' => now()->format('d.m.Y H:i'),
+                ]
+            ]);
+        }
+
         $filename = 'venues-' . now()->format('Y-m-d-H-i') . '.xlsx';
 
         return Excel::download(new class($data) implements FromCollection, WithHeadings {
@@ -1413,7 +1472,8 @@ class ExportController extends Controller
 
             public function headings(): array
             {
-                return array_keys($this->data->first() ?? []);
+                $firstRow = $this->data->first();
+                return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
     }
@@ -1443,6 +1503,17 @@ class ExportController extends Controller
             ];
         });
 
+        // Eğer veri yoksa boş dosya yerine açıklayıcı bir satır ekle
+        if ($data->isEmpty()) {
+            $data = collect([
+                [
+                    'Bilgi' => 'Bu organizasyon için henüz sponsor verisi bulunmuyor.',
+                    'Açıklama' => 'Organizasyon: ' . auth()->user()->currentOrganization->name,
+                    'Tarih' => now()->format('d.m.Y H:i'),
+                ]
+            ]);
+        }
+
         $filename = 'sponsors-' . now()->format('Y-m-d-H-i') . '.xlsx';
 
         return Excel::download(new class($data) implements FromCollection, WithHeadings {
@@ -1460,7 +1531,8 @@ class ExportController extends Controller
 
             public function headings(): array
             {
-                return array_keys($this->data->first() ?? []);
+                $firstRow = $this->data->first();
+                return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
     }
@@ -1603,7 +1675,8 @@ class ExportController extends Controller
 
                         public function headings(): array
                         {
-                            return array_keys($this->data->first() ?? []);
+                            $firstRow = $this->data->first();
+                            return $firstRow ? array_keys($firstRow) : ['Bilgi'];
                         }
 
                         public function title(): string
