@@ -569,8 +569,7 @@ const navigation = computed(() => [
         name: 'Etkinlikler',
         href: createRoute('admin.events.index', '/admin/events'),
         icon: CalendarIcon,
-        current: isCurrentRoute('admin.events.*') || page.url.startsWith('/admin/events'),
-        badge: '3'
+        current: isCurrentRoute('admin.events.*') || page.url.startsWith('/admin/events')
       },
       {
         name: 'Program Oturumları',
