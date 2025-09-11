@@ -936,13 +936,13 @@ const selectedSession = computed(() => {
 const onSessionChange = (session) => {
     if (session) {
         console.log("📋 Program session selected:", session);
+        console.log("Session start_time:", session.start_time);
 
-        // Auto-fill times if available
-        if (session.start_time && !form.start_time) {
-            form.start_time = session.start_time;
-        }
-        if (session.end_time && !form.end_time) {
-            form.end_time = session.end_time;
+        // Auto-fill only start time when session is selected
+        if (session.start_time) {
+            const formattedStartTime = extractTimeFromDateTime(session.start_time);
+            console.log("Formatted start time:", formattedStartTime);
+            form.start_time = formattedStartTime;
         }
     }
 };
@@ -975,6 +975,34 @@ const minutesToTime = (totalMinutes) => {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+};
+
+// Helper function to extract HH:MM from datetime string
+const extractTimeFromDateTime = (dateTimeString) => {
+    if (!dateTimeString) return "";
+    
+    try {
+        // Handle ISO datetime format like "2025-09-10T09:00:00.000000Z"
+        if (dateTimeString.includes('T')) {
+            const timePart = dateTimeString.split('T')[1];
+            if (timePart) {
+                const timeOnly = timePart.split('.')[0]; // Remove microseconds if present
+                const [hours, minutes] = timeOnly.split(':');
+                return `${hours}:${minutes}`;
+            }
+        }
+        
+        // Handle simple HH:MM or HH:MM:SS format
+        if (dateTimeString.includes(':')) {
+            const parts = dateTimeString.split(':');
+            return `${parts[0]}:${parts[1]}`;
+        }
+        
+        return dateTimeString;
+    } catch (error) {
+        console.error("Error parsing datetime:", error, dateTimeString);
+        return "";
+    }
 };
 
 // Event handler to update duration when start or end time changes
