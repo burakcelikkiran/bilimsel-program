@@ -57,17 +57,34 @@ class ProgramSessionPolicy
      */
     public function update(User $user, ProgramSession $programSession): bool
     {
+        \Log::info('🔍 ProgramSessionPolicy@update called', [
+            'user_id' => $user->id,
+            'user_role' => $user->role,
+            'user_isAdmin' => $user->isAdmin(),
+            'session_id' => $programSession->id,
+            'session_title' => $programSession->title,
+        ]);
+
         // Admin tüm oturumları güncelleyebilir
         if ($user->isAdmin()) {
+            \Log::info('✅ User is admin, allowing update');
             return true;
         }
 
         // Oturumun etkinliğinin organizasyonunda organizer veya editor rolü var mı?
         $event = $programSession->venue->eventDay->event;
-        return $user->organizations()
+        $hasRole = $user->organizations()
                    ->where('organizations.id', $event->organization_id)
                    ->whereIn('role', ['organizer', 'editor'])
                    ->exists();
+                   
+        \Log::info('🔍 Organization role check', [
+            'event_organization_id' => $event->organization_id,
+            'user_organizations' => $user->organizations()->get()->toArray(),
+            'has_role' => $hasRole
+        ]);
+        
+        return $hasRole;
     }
 
     /**

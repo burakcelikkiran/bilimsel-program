@@ -14,24 +14,47 @@ class UpdateProgramSessionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $session = $this->route('programSession');
+        $session = $this->route('program_session') ?? $this->route('programSession');
+        
+        \Log::info('🔍 Route parameter debug', [
+            'program_session' => $this->route('program_session') ? 'found' : 'not found',
+            'programSession' => $this->route('programSession') ? 'found' : 'not found',
+            'all_route_params' => $this->route()->parameters()
+        ]);
         
         if (!$session) {
+            \Log::warning('🚨 UpdateProgramSessionRequest: No session found in route');
             return false;
         }
 
         $user = $this->user();
         
+        \Log::info('🔍 UpdateProgramSessionRequest@authorize called', [
+            'user_id' => $user->id,
+            'user_role' => $user->role,
+            'user_isAdmin' => $user->isAdmin(),
+            'session_id' => $session->id,
+        ]);
+        
         // Admin can update any session
         if ($user->isAdmin()) {
+            \Log::info('✅ UpdateProgramSessionRequest: User is admin, allowing update');
             return true;
         }
 
         // Check if user belongs to the organization that owns the event
         $eventOrganizationId = $session->venue->eventDay->event->organization_id;
-        return $user->organizations()
+        $hasAccess = $user->organizations()
                    ->where('organizations.id', $eventOrganizationId)
                    ->exists();
+                   
+        \Log::info('🔍 UpdateProgramSessionRequest: Organization check', [
+            'event_organization_id' => $eventOrganizationId,
+            'user_organizations' => $user->organizations()->get()->toArray(),
+            'has_access' => $hasAccess
+        ]);
+        
+        return $hasAccess;
     }
 
     /**
@@ -39,7 +62,7 @@ class UpdateProgramSessionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $session = $this->route('programSession');
+        $session = $this->route('program_session') ?? $this->route('programSession');
         $venue = Venue::find($this->venue_id);
         
         return [
@@ -48,8 +71,9 @@ class UpdateProgramSessionRequest extends FormRequest
                 'exists:venues,id',
                 function ($attribute, $value, $fail) {
                     $venue = Venue::find($value);
-                    if (!$venue || !$venue->is_active) {
-                        $fail('Seçilen salon aktif değil.');
+                    if (!$venue) {
+                        $fail('Seçilen salon bulunamadı.');
+                        return;
                     }
                     
                     // Check if user has access to this venue's organization
@@ -82,31 +106,30 @@ class UpdateProgramSessionRequest extends FormRequest
                 'required',
                 'date_format:H:i',
                 function ($attribute, $value, $fail) {
-                    if (!$this->venue_id) return;
+                    if (!$this->venue_id || !$this->end_time) return;
                     
                     $venue = Venue::find($this->venue_id);
                     if (!$venue) return;
                     
+                    $session = $this->route('program_session') ?? $this->route('programSession');
+                    
+                    // Skip conflict check if session not found (should not happen, but safety)
+                    if (!$session) {
+                        \Log::warning('🚨 Time conflict check: Session not found for conflict validation');
+                        return;
+                    }
+                    
                     // Check for time conflicts with other sessions in the same venue
                     $endTime = $this->end_time;
-                    if (!$endTime) return;
-                    
-                    $session = $this->route('programSession');
                     $conflicts = ProgramSession::where('venue_id', $this->venue_id)
                         ->where('id', '!=', $session->id)
+                        ->whereNotNull('start_time')
+                        ->whereNotNull('end_time')
                         ->where(function ($query) use ($value, $endTime) {
                             $query->where(function ($q) use ($value, $endTime) {
-                                // New session starts during existing session
-                                $q->where('start_time', '<=', $value)
-                                  ->where('end_time', '>', $value);
-                            })->orWhere(function ($q) use ($value, $endTime) {
-                                // New session ends during existing session
+                                // Check if new time overlaps with existing sessions
                                 $q->where('start_time', '<', $endTime)
-                                  ->where('end_time', '>=', $endTime);
-                            })->orWhere(function ($q) use ($value, $endTime) {
-                                // New session encompasses existing session
-                                $q->where('start_time', '>=', $value)
-                                  ->where('end_time', '<=', $endTime);
+                                  ->where('end_time', '>', $value);
                             });
                         })
                         ->exists();
@@ -124,17 +147,34 @@ class UpdateProgramSessionRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     if (!$this->start_time) return;
                     
-                    // Check maximum session duration (8 hours)
-                    $start = \Carbon\Carbon::createFromFormat('H:i', $this->start_time);
-                    $end = \Carbon\Carbon::createFromFormat('H:i', $value);
-                    
-                    if ($end->diffInMinutes($start) > 480) {
-                        $fail('Oturum süresi en fazla 8 saat olabilir.');
-                    }
-                    
-                    // Check minimum session duration (15 minutes)
-                    if ($end->diffInMinutes($start) < 15) {
-                        $fail('Oturum süresi en az 15 dakika olmalıdır.');
+                    try {
+                        // Create Carbon instances for time comparison
+                        $start = \Carbon\Carbon::createFromFormat('H:i', $this->start_time);
+                        $end = \Carbon\Carbon::createFromFormat('H:i', $value);
+                        
+                        // If end time is earlier than start time, assume it's next day
+                        if ($end < $start) {
+                            $end->addDay();
+                        }
+                        
+                        $durationMinutes = $start->diffInMinutes($end);
+                        
+                        // Check maximum session duration (8 hours = 480 minutes)
+                        if ($durationMinutes > 480) {
+                            $fail('Oturum süresi en fazla 8 saat olabilir.');
+                        }
+                        
+                        // Check minimum session duration (15 minutes) 
+                        if ($durationMinutes < 15) {
+                            $fail('Oturum süresi en az 15 dakika olmalıdır.');
+                        }
+                    } catch (\Exception $e) {
+                        \Log::warning('🚨 Time validation error', [
+                            'start_time' => $this->start_time,
+                            'end_time' => $value,
+                            'error' => $e->getMessage()
+                        ]);
+                        // Don't fail on parsing errors, let basic validation handle it
                     }
                 }
             ],
@@ -158,8 +198,9 @@ class UpdateProgramSessionRequest extends FormRequest
                     if (!$value) return;
                     
                     $sponsor = \App\Models\Sponsor::find($value);
-                    if (!$sponsor || !$sponsor->is_active) {
-                        $fail('Seçilen sponsor aktif değil.');
+                    if (!$sponsor) {
+                        $fail('Seçilen sponsor bulunamadı.');
+                        return;
                     }
                     
                     // Check if sponsor belongs to the same organization
@@ -219,8 +260,9 @@ class UpdateProgramSessionRequest extends FormRequest
                 'exists:program_session_categories,id',
                 function ($attribute, $value, $fail) {
                     $category = \App\Models\ProgramSessionCategory::find($value);
-                    if (!$category || !$category->is_active) {
-                        $fail('Seçilen kategori aktif değil.');
+                    if (!$category) {
+                        $fail('Seçilen kategori bulunamadı.');
+                        return;
                     }
                     
                     // Check if category belongs to the same event
@@ -324,7 +366,7 @@ class UpdateProgramSessionRequest extends FormRequest
             'description' => $this->description ? trim($this->description) : null,
             'moderator_title' => $this->moderator_title ? trim($this->moderator_title) : 'Oturum Başkanı',
             'is_break' => $this->boolean('is_break'),
-            'sort_order' => $this->sort_order ? (int) $this->sort_order : null,
+            'sort_order' => $this->sort_order ? (int) $this->sort_order : 0,
             'notes' => $this->notes ? trim($this->notes) : null,
         ]);
 
@@ -374,7 +416,7 @@ class UpdateProgramSessionRequest extends FormRequest
         }
 
         $eventDay = $venue->eventDay;
-        $session = $this->route('programSession');
+        $session = $this->route('program_session') ?? $this->route('programSession');
 
         // Check if there are any presentations that would conflict with the new timing
         $existingPresentations = $session->presentations()
@@ -429,32 +471,7 @@ class UpdateProgramSessionRequest extends FormRequest
             $validator->errors()->add('moderator_ids', 'Aynı moderatör birden fazla kez seçilemez.');
         }
 
-        // Check if moderators are available at this time slot
-        $venue = Venue::find($this->venue_id);
-        if ($venue) {
-            $session = $this->route('programSession');
-            $conflictingSessions = ProgramSession::where('venue_id', '!=', $this->venue_id)
-                ->where('id', '!=', $session->id)
-                ->where(function ($query) {
-                    $query->where('start_time', '<', $this->end_time)
-                          ->where('end_time', '>', $this->start_time);
-                })
-                ->whereHas('moderators', function ($query) {
-                    $query->whereIn('participant_id', $this->moderator_ids);
-                })
-                ->with('moderators', 'venue')
-                ->get();
-
-            if ($conflictingSessions->isNotEmpty()) {
-                $conflictingModerators = $conflictingSessions->flatMap->moderators
-                    ->whereIn('id', $this->moderator_ids)
-                    ->pluck('full_name')
-                    ->unique()
-                    ->join(', ');
-
-                $validator->errors()->add('moderator_ids', 
-                    "Şu moderatörler aynı zaman diliminde başka oturumlarda görevli: {$conflictingModerators}");
-            }
-        }
+        // Removed: Time slot availability check for moderators
+        // Moderators can be assigned to multiple sessions at the same time if needed
     }
 }

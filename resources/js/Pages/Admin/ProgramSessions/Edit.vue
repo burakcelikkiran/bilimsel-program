@@ -819,7 +819,7 @@ import {
     reactive,
     onMounted,
 } from "vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import axios from "axios";
 import {
@@ -988,6 +988,7 @@ const safeProgramSession = computed(() => {
         category_ids: Array.isArray(session.category_ids)
             ? session.category_ids
             : [],
+        sort_order: session.sort_order || 0,
         venue: {
             id: session.venue?.id || null,
             name: session.venue?.name || session.venue?.display_name || "Salon",
@@ -1044,8 +1045,8 @@ const canSubmit = computed(() => {
     );
 });
 
-// Simple reactive form - Initialize with empty values first
-const form = reactive({
+// Inertia form - Initialize with empty values first
+const form = useForm({
     title: "",
     description: "",
     start_time: "",
@@ -1057,6 +1058,7 @@ const form = reactive({
     venue_id: null,
     moderator_ids: [],
     category_ids: [],
+    sort_order: null,
 });
 
 // Function to initialize form with actual data
@@ -1082,6 +1084,7 @@ const initializeForm = () => {
     form.venue_id = sessionData.venue_id;
     form.moderator_ids = [...sessionData.moderator_ids];
     form.category_ids = [...sessionData.category_ids];
+    form.sort_order = sessionData.sort_order || 0;
 
     // Also initialize cascade selection values from backend props
     if (props.selectedEventId) {
@@ -1402,42 +1405,46 @@ const loadCategoriesForEvent = async () => {
     }
 };
 
-const updateSession = async () => {
+const updateSession = () => {
     if (!sessionId.value) {
         console.error("Program session ID missing");
         return;
     }
 
-    processing.value = true;
+    console.log("🔄 Starting form submission...");
+    console.log("Session ID:", sessionId.value);
+    console.log("Form data being sent:", form.data());
+    console.log("Route URL:", route("admin.program-sessions.update", sessionId.value));
+    console.log("User permissions:", {
+        user: window.Laravel?.user,
+        session: props.programSession,
+        canEdit: props.programSession?.can_edit
+    });
 
-    try {
-        await router.put(
-            route("admin.program-sessions.update", sessionId.value),
-            form,
-            {
-                onSuccess: () => {
-                    // Update original form values
-                    Object.keys(originalForm).forEach((key) => {
-                        if (Array.isArray(form[key])) {
-                            originalForm[key] = [...form[key]];
-                        } else {
-                            originalForm[key] = form[key];
-                        }
-                    });
-                    processing.value = false;
-                },
-                onError: () => {
-                    processing.value = false;
-                },
-                onFinish: () => {
-                    processing.value = false;
-                },
-            }
-        );
-    } catch (error) {
-        console.error("Submit error:", error);
-        processing.value = false;
-    }
+    form.put(route("admin.program-sessions.update", sessionId.value), {
+        onStart: () => {
+            console.log("📤 Form submission started");
+        },
+        onSuccess: (response) => {
+            console.log("✅ Form submitted successfully", response);
+            // Update original form values
+            Object.keys(originalForm).forEach((key) => {
+                if (Array.isArray(form[key])) {
+                    originalForm[key] = [...form[key]];
+                } else {
+                    originalForm[key] = form[key];
+                }
+            });
+        },
+        onError: (errors) => {
+            console.error("❌ Form validation errors:", errors);
+            console.error("Response status:", form.response?.status);
+            console.error("Response headers:", form.response?.headers);
+        },
+        onFinish: () => {
+            console.log("🏁 Form submission finished");
+        }
+    });
 };
 
 const resetForm = () => {
@@ -1622,6 +1629,7 @@ onMounted(() => {
         venue_id: form.venue_id,
         moderator_ids: [...form.moderator_ids],
         category_ids: [...form.category_ids],
+        sort_order: form.sort_order,
     };
 
     // Initialize cascade selections
