@@ -101,7 +101,7 @@
 
                 <!-- Modern Data Table -->
                 <div
-                    class="bg-white dark:bg-gray-900 shadow-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-800/50"
+                    class="bg-white dark:bg-gray-900 shadow-xl rounded-2xl overflow-visible border border-gray-200/50 dark:border-gray-800/50"
                 >
                     <!-- Enhanced Header -->
                     <div
@@ -281,7 +281,7 @@
                     <!-- Events Table -->
                     <div
                         v-else-if="displayedEvents.length > 0"
-                        class="overflow-hidden"
+                        class="overflow-visible"
                     >
                         <div class="overflow-x-auto">
                             <table
@@ -481,6 +481,7 @@
                                                 class="flex items-center space-x-2"
                                             >
                                                 <!-- View Button -->
+                                                <div class="relative">
                                                 <Link
                                                     :href="
                                                         safeRoute(
@@ -490,14 +491,16 @@
                                                         )
                                                     "
                                                     class="inline-flex items-center px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white text-xs font-medium rounded-md"
+                                                    title="Görüntüle"
                                                 >
                                                     <EyeIcon
-                                                        class="h-3 w-3 mr-1"
+                                                        class="h-4 w-4"
                                                     />
-                                                    Görüntüle
                                                 </Link>
+                                                </div>
 
                                                 <!-- Edit Button -->
+                                                <div class="relative">
                                                 <Link
                                                     v-if="event.can_edit"
                                                     :href="
@@ -507,13 +510,14 @@
                                                             event.slug
                                                         )
                                                     "
-                                                    class="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-gray-800 text-white text-xs font-medium rounded-md"
+                                                    class="inline-flex items-center px-3 py-1.5 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded-md"
+                                                    title="Düzenle"
                                                 >
                                                     <PencilIcon
-                                                        class="h-3 w-3 mr-1"
+                                                        class="h-4 w-4"
                                                     />
-                                                    Düzenle
                                                 </Link>
+                                                </div>
 
                                                 <!-- Timeline Button -->
                                                 <Link
@@ -527,7 +531,7 @@
                                                     class="inline-flex items-center px-3 py-1.5 bg-gray-800 hover:bg-gray-900 text-white text-xs font-medium rounded-md"
                                                 >
                                                     <ClockIcon
-                                                        class="h-3 w-3 mr-1"
+                                                        class="h-4 w-4 mr-1"
                                                     />
                                                     Timeline
                                                 </Link>

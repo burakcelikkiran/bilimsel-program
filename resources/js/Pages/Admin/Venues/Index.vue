@@ -86,7 +86,7 @@
 
         <!-- Modern Data Table -->
         <div
-            class="bg-white dark:bg-gray-900 shadow-xl rounded-2xl overflow-hidden border border-gray-200/50 dark:border-gray-800/50"
+            class="bg-white dark:bg-gray-900 shadow-xl rounded-2xl overflow-visible border border-gray-200/50 dark:border-gray-800/50"
         >
             <!-- Enhanced Header -->
             <div
@@ -304,7 +304,7 @@
             <!-- List View -->
             <div
                 v-else-if="viewMode === 'list' && displayedVenues.length > 0"
-                class="overflow-hidden"
+                class="overflow-visible"
             >
                 <!-- Bulk Actions -->
                 <div
@@ -609,6 +609,7 @@
                                         class="flex flex-wrap items-center gap-2"
                                     >
                                         <!-- View -->
+                                        <div class="relative">
                                         <Link
                                             :href="
                                                 safeRoute(
@@ -620,11 +621,12 @@
                                             class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
                                             title="Görüntüle"
                                         >
-                                            <EyeIcon class="h-3 w-3 mr-1" />
-                                            Görüntüle
+                                            <EyeIcon class="h-4 w-4" />
                                         </Link>
+                                        </div>
 
                                         <!-- Edit -->
+                                        <div class="relative">
                                         <Link
                                             :href="
                                                 safeRoute(
@@ -636,9 +638,9 @@
                                             class="inline-flex items-center px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
                                             title="Düzenle"
                                         >
-                                            <PencilIcon class="h-3 w-3 mr-1" />
-                                            Düzenle
+                                            <PencilIcon class="h-4 w-4" />
                                         </Link>
+                                        </div>
 
                                         <!-- More Actions Dropdown -->
                                         <div class="relative">
@@ -646,11 +648,11 @@
                                                 @click="
                                                     toggleActionsMenu(venue.id)
                                                 "
-                                                class="inline-flex items-center px-2 py-1 bg-gray-800 hover:bg-gray-900 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
+                                                class="inline-flex items-center px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
                                                 title="Daha Fazla"
                                             >
                                                 <EllipsisVerticalIcon
-                                                    class="h-3 w-3"
+                                                    class="h-4 w-4"
                                                 />
                                             </button>
 
@@ -659,7 +661,7 @@
                                                 v-if="
                                                     showActionsMenu === venue.id
                                                 "
-                                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-50 border border-gray-200 dark:border-gray-700"
+                                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-[9999] border border-gray-200 dark:border-gray-700"
                                             >
                                                 <div class="py-1">
                                                     <!-- Duplicate -->
