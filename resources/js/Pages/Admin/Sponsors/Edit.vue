@@ -652,7 +652,8 @@ const form = useForm({
   website: props.sponsor.website || '',
   logo: null,
   is_active: props.sponsor.is_active,
-  _remove_logo: false
+  _remove_logo: false,
+  _method: 'PUT'
 })
 
 // State
@@ -758,6 +759,7 @@ const hasChanges = computed(() => {
 const updateSponsor = () => {
   form.post(route('admin.sponsors.update', props.sponsor.id), {
     forceFormData: true,
+    preserveScroll: true,
     onSuccess: () => {
       // Success message will be handled by the backend
     },
