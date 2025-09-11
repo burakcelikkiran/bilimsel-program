@@ -222,7 +222,12 @@
                 :class="{ 'bg-gray-200': showNotifications }"
               >
                 <BellIcon class="h-5 w-5 text-gray-600" />
-                <span class="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center shadow-lg">3</span>
+                <span 
+                  v-if="unreadCount > 0"
+                  class="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center shadow-lg"
+                >
+                  {{ unreadCount > 9 ? '9+' : unreadCount }}
+                </span>
               </button>
 
               <!-- Notifications Dropdown -->
@@ -238,8 +243,48 @@
                     <h3 class="text-lg font-medium text-gray-900">Bildirimler</h3>
                   </div>
                   <div class="max-h-64 overflow-y-auto">
-                    <div class="p-4 text-center text-gray-500">
-                      Henüz bildirim yok
+                    <!-- Loading State -->
+                    <div v-if="isLoadingNotifications" class="p-4 text-center">
+                      <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-600 mx-auto"></div>
+                      <p class="text-sm text-gray-500 mt-2">Yükleniyor...</p>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div v-else-if="notifications.length === 0" class="p-4 text-center text-gray-500">
+                      <BellIcon class="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                      <p class="text-sm">Henüz bildirim yok</p>
+                    </div>
+                    
+                    <!-- Notifications List -->
+                    <div v-else class="divide-y divide-gray-100">
+                      <div 
+                        v-for="notification in notifications" 
+                        :key="notification.type + notification.date"
+                        class="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                        @click="notification.link && window.open(notification.link, '_self')"
+                      >
+                        <div class="flex items-start space-x-3">
+                          <div 
+                            class="flex-shrink-0 w-2 h-2 rounded-full mt-2"
+                            :class="{
+                              'bg-red-500': notification.priority === 'high',
+                              'bg-yellow-500': notification.priority === 'medium',
+                              'bg-blue-500': notification.priority === 'low'
+                            }"
+                          ></div>
+                          <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900">
+                              {{ notification.title }}
+                            </p>
+                            <p class="text-xs text-gray-600 mt-1 line-clamp-2">
+                              {{ notification.message }}
+                            </p>
+                            <p class="text-xs text-gray-400 mt-1">
+                              {{ formatNotificationDate(notification.date) }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -436,6 +481,11 @@ const openSubmenus = ref(['etkinlikler'])
 const isDark = ref(false)
 const isMobile = ref(false)
 
+// Notifications state
+const notifications = ref([])
+const unreadCount = ref(0)
+const isLoadingNotifications = ref(false)
+
 // Dropdown positioning
 const userMenuStyle = ref({})
 const notificationsStyle = ref({})
@@ -447,6 +497,46 @@ const createRoute = (routeName, fallback = '#') => {
   } catch (error) {
     return fallback
   }
+}
+
+// Load notifications
+const loadNotifications = async () => {
+  if (isLoadingNotifications.value) return
+  
+  isLoadingNotifications.value = true
+  try {
+    const response = await fetch(route('admin.notifications'))
+    const data = await response.json()
+    notifications.value = data.notifications || []
+    unreadCount.value = data.unread_count || 0
+  } catch (error) {
+    console.error('Failed to load notifications:', error)
+  } finally {
+    isLoadingNotifications.value = false
+  }
+}
+
+// Format notification date
+const formatNotificationDate = (date) => {
+  if (!date) return ''
+  
+  const notificationDate = new Date(date)
+  const now = new Date()
+  const diffMs = now - notificationDate
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+  const diffMinutes = Math.floor(diffMs / (1000 * 60))
+  
+  if (diffMinutes < 1) return 'Şimdi'
+  if (diffMinutes < 60) return `${diffMinutes} dakika önce`
+  if (diffHours < 24) return `${diffHours} saat önce`
+  if (diffDays < 7) return `${diffDays} gün önce`
+  
+  return notificationDate.toLocaleDateString('tr-TR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
 }
 
 // Helper function to safely check current route
@@ -612,6 +702,8 @@ const toggleNotifications = async () => {
   if (showNotifications.value) {
     showUserMenu.value = false
     await calculateDropdownPosition(notificationsRef, 'notifications')
+    // Load notifications when dropdown opens
+    await loadNotifications()
   }
 }
 
@@ -679,6 +771,8 @@ onMounted(() => {
   window.addEventListener('resize', checkMobile)
   document.addEventListener('click', handleClickOutside, true)
   document.addEventListener('keydown', handleKeydown)
+  // Load notifications on page load
+  loadNotifications()
 })
 
 onUnmounted(() => {
