@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\EventDayController;
@@ -228,6 +229,9 @@ Route::middleware([
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');
         Route::get('/quick-stats', [DashboardController::class, 'quickStats'])->name('quick-stats');
+
+        // Activity Management
+        Route::resource('activities', ActivityController::class)->only(['index', 'show']);
 
         /*
         |--------------------------------------------------------------------------

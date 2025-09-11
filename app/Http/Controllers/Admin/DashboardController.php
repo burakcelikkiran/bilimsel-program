@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\Event;
 use App\Models\Organization;
 use App\Models\Participant;
@@ -158,45 +159,59 @@ class DashboardController extends Controller
      */
     private function getRecentActivities($user)
     {
-        $activities = collect();
+        $activities = Activity::with(['user', 'organization', 'subject'])
+            ->forUser($user)
+            ->recent(10)
+            ->get()
+            ->map(function ($activity) {
+                $link = $this->getActivityLink($activity);
+                
+                return [
+                    'id' => $activity->id,
+                    'type' => $activity->type,
+                    'message' => $activity->description,
+                    'date' => $activity->performed_at,
+                    'user' => [
+                        'name' => $activity->user->name,
+                        'email' => $activity->user->email,
+                    ],
+                    'organization' => $activity->organization ? [
+                        'name' => $activity->organization->name,
+                    ] : null,
+                    'link' => $link,
+                    'type_label' => $activity->getTypeLabel(),
+                ];
+            });
 
-        // Recent events created by user
-        $recentEvents = Event::where('created_by', $user->id)
-            ->latest()
-            ->limit(3)
-            ->get();
+        return $activities->values();
+    }
 
-        foreach ($recentEvents as $event) {
-            $activities->push([
-                'type' => 'event_created',
-                'message' => "'{$event->name}' etkinliğini oluşturdunuz",
-                'date' => $event->created_at,
-                'link' => route('admin.events.show', $event),
-            ]);
-        }
-
-        // If user is moderating sessions (for participants who are also users)
-        if (!$user->isAdmin()) {
-            $participant = Participant::where('email', $user->email)->first();
-            if ($participant) {
-                $recentSessions = $participant->moderatedSessions()
-                    ->with(['venue.eventDay.event'])
-                    ->latest()
-                    ->limit(2)
-                    ->get();
-
-                foreach ($recentSessions as $session) {
-                    $activities->push([
-                        'type' => 'session_moderated',
-                        'message' => "'{$session->title}' oturumunda moderatör olarak atandınız",
-                        'date' => $session->created_at,
-                        'link' => route('admin.program-sessions.show', $session),
-                    ]);
-                }
+    /**
+     * Get the appropriate link for an activity
+     */
+    private function getActivityLink($activity)
+    {
+        try {
+            switch ($activity->subject_type) {
+                case 'App\Models\Event':
+                    return $activity->subject ? route('admin.events.show', $activity->subject->slug) : null;
+                case 'App\Models\ProgramSession':
+                    return $activity->subject ? route('admin.program-sessions.show', $activity->subject->id) : null;
+                case 'App\Models\Participant':
+                    return $activity->subject ? route('admin.participants.show', $activity->subject->id) : null;
+                case 'App\Models\Venue':
+                    return $activity->subject ? route('admin.venues.show', $activity->subject->id) : null;
+                case 'App\Models\Sponsor':
+                    return $activity->subject ? route('admin.sponsors.show', $activity->subject->id) : null;
+                case 'App\Models\Organization':
+                    return $activity->subject ? route('admin.organizations.show', $activity->subject->id) : null;
+                default:
+                    return null;
             }
+        } catch (\Exception $e) {
+            // If subject is deleted or route doesn't exist
+            return null;
         }
-
-        return $activities->sortByDesc('date')->take(5)->values();
     }
 
     /**
