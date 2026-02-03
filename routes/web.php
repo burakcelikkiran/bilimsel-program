@@ -195,7 +195,7 @@ Route::middleware([
     Route::prefix('user')->group(function () {
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
         Route::put('/profile-information', [ProfileController::class, 'updateProfileInformation'])->name('profile.update');
-        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('user.password.update');
         Route::delete('/profile-photo', [ProfileController::class, 'destroyProfilePhoto'])->name('profile.photo.destroy');
         Route::delete('/other-browser-sessions', [ProfileController::class, 'destroyOtherSessions'])->name('other-browser-sessions.destroy');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
