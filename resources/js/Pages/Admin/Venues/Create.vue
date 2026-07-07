@@ -9,15 +9,15 @@
 
     <div class="w-full space-y-8">
       <!-- Header Card -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Yeni Salon</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">Etkinlik günü için yeni bir salon oluşturun</p>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Yeni Salon</h1>
+            <p class="text-slate-600 dark:text-slate-400 mt-1">Etkinlik günü için yeni bir salon oluşturun</p>
           </div>
           <Link
             :href="route('admin.venues.index')"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+            class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
           >
             <ArrowLeftIcon class="h-4 w-4 mr-2" />
             Geri Dön
@@ -26,25 +26,25 @@
       </div>
 
       <!-- Form Card -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <form @submit.prevent="createVenue" class="divide-y divide-gray-200 dark:divide-gray-700">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <form @submit.prevent="createVenue" class="divide-y divide-slate-200 dark:divide-slate-700">
           
           <!-- Basic Information -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Temel Bilgiler</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Temel Bilgiler</h3>
               
               <!-- Full width grid layout -->
               <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Event Day - Spans 2 columns -->
                 <div class="lg:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Etkinlik Günü *
                   </label>
                   <select
                     v-model="form.event_day_id"
                     required
-                    class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-gray-500 focus:ring-gray-500"
+                    class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-slate-500 focus:ring-slate-500"
                     :class="form.errors.event_day_id ? 'border-red-500' : ''"
                   >
                     <option value="">Etkinlik günü seçin</option>
@@ -67,20 +67,20 @@
 
                 <!-- Color Picker -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Renk
                   </label>
                   <div class="relative">
                     <input
                       v-model="form.color"
                       type="color"
-                      class="h-10 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 cursor-pointer"
+                      class="h-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 cursor-pointer"
                     />
                     <input
                       v-model="form.color"
                       type="text"
                       placeholder="#3B82F6"
-                      class="mt-2 block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-gray-500 focus:ring-gray-500"
+                      class="mt-2 block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-slate-500 focus:ring-slate-500"
                     />
                   </div>
                 </div>
@@ -109,7 +109,7 @@
                     show-counter
                   >
                     <template #helper>
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Programda görünecek isim. Boş bırakılırsa salon adı kullanılır.
                       </p>
                     </template>
@@ -128,7 +128,7 @@
                     max="50000"
                   >
                     <template #helper>
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Maksimum kişi sayısı (opsiyonel)
                       </p>
                     </template>
@@ -147,7 +147,7 @@
                     max="9999"
                   >
                     <template #helper>
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Salonların sıralanmasında kullanılır. Boş bırakılırsa otomatik atanır.
                       </p>
                     </template>
@@ -160,8 +160,8 @@
           <!-- Capacity & Color Templates -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Hızlı Şablonlar</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Hızlı Şablonlar</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
                 Salon türüne göre önceden tanımlanmış ayarları kullanabilirsiniz.
               </p>
               
@@ -171,7 +171,7 @@
                 <button
                   type="button"
                   @click="applyTemplate('auditorium')"
-                  class="p-6 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500 transition-all text-left group relative overflow-hidden"
+                  class="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-500 transition-all text-left group relative overflow-hidden"
                 >
                   <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-bl-full opacity-50"></div>
                   <div class="relative">
@@ -179,9 +179,9 @@
                       <div class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
                         <BuildingOfficeIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
                       </div>
-                      <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Auditorium</h4>
+                      <h4 class="text-lg font-semibold text-slate-900 dark:text-white">Auditorium</h4>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       Büyük konferans salonu. 500+ kişi kapasiteli.
                     </p>
                   </div>
@@ -191,7 +191,7 @@
                 <button
                   type="button"
                   @click="applyTemplate('conference')"
-                  class="p-6 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500 transition-all text-left group relative overflow-hidden"
+                  class="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-500 transition-all text-left group relative overflow-hidden"
                 >
                   <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 rounded-bl-full opacity-50"></div>
                   <div class="relative">
@@ -199,9 +199,9 @@
                       <div class="w-10 h-10 bg-gradient-to-br from-green-100 to-green-200 dark:from-green-900 dark:to-green-800 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
                         <UserGroupIcon class="h-6 w-6 text-green-600 dark:text-green-400" />
                       </div>
-                      <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Konferans</h4>
+                      <h4 class="text-lg font-semibold text-slate-900 dark:text-white">Konferans</h4>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       Orta boy salon. 100-300 kişi kapasiteli.
                     </p>
                   </div>
@@ -211,7 +211,7 @@
                 <button
                   type="button"
                   @click="applyTemplate('meeting')"
-                  class="p-6 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500 transition-all text-left group relative overflow-hidden"
+                  class="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-500 transition-all text-left group relative overflow-hidden"
                 >
                   <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 rounded-bl-full opacity-50"></div>
                   <div class="relative">
@@ -219,9 +219,9 @@
                       <div class="w-10 h-10 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
                         <UsersIcon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
                       </div>
-                      <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Toplantı</h4>
+                      <h4 class="text-lg font-semibold text-slate-900 dark:text-white">Toplantı</h4>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       Küçük toplantı salonu. 20-100 kişi kapasiteli.
                     </p>
                   </div>
@@ -231,7 +231,7 @@
                 <button
                   type="button"
                   @click="applyTemplate('workshop')"
-                  class="p-6 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500 transition-all text-left group relative overflow-hidden"
+                  class="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-500 transition-all text-left group relative overflow-hidden"
                 >
                   <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 rounded-bl-full opacity-50"></div>
                   <div class="relative">
@@ -239,9 +239,9 @@
                       <div class="w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
                         <WrenchScrewdriverIcon class="h-6 w-6 text-orange-600 dark:text-orange-400" />
                       </div>
-                      <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Atölye</h4>
+                      <h4 class="text-lg font-semibold text-slate-900 dark:text-white">Atölye</h4>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       Workshop salonu. 10-50 kişi kapasiteli.
                     </p>
                   </div>
@@ -251,12 +251,12 @@
           </div>
 
           <!-- Form Actions -->
-          <div class="px-6 py-6 bg-gray-50 dark:bg-gray-800">
+          <div class="px-6 py-6 bg-slate-50 dark:bg-slate-800">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-4">
                 <Link
                   :href="route('admin.venues.index')"
-                  class="inline-flex items-center px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                  class="inline-flex items-center px-6 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
                 >
                   İptal
                 </Link>
@@ -264,7 +264,7 @@
                 <button
                   type="button"
                   @click="resetForm"
-                  class="inline-flex items-center px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                  class="inline-flex items-center px-6 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
                 >
                   Temizle
                 </button>
@@ -274,7 +274,7 @@
                 <button
                   type="submit"
                   :disabled="form.processing"
-                  class="inline-flex items-center px-8 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl border border-gray-700"
+                  class="inline-flex items-center px-8 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-900 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl border border-slate-700"
                 >
                   <span v-if="form.processing" class="inline-flex items-center">
                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -5,7 +5,7 @@
     <fieldset class="space-y-3">
       <legend 
         v-if="label"
-        class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
+        class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3"
         :class="{ 'text-red-600 dark:text-red-400': hasError }"
       >
         {{ label }}
@@ -27,7 +27,7 @@
               'opacity-50 cursor-not-allowed': option.disabled,
               'ring-2 ring-blue-500 ring-opacity-50': selectedValue === option.value && variant === 'card',
               'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700': selectedValue === option.value && variant === 'card',
-              'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700': selectedValue !== option.value && variant === 'card'
+              'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700': selectedValue !== option.value && variant === 'card'
             }
           ]"
           @click="!option.disabled && selectOption(option.value)"
@@ -59,14 +59,14 @@
             <div class="ml-3 flex-1">
               <label 
                 :for="`${radioId}-${index}`" 
-                class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer"
+                class="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer"
                 :class="{ 'text-blue-500': selectedValue === option.value }"
               />
             </div>
             
             <p 
               v-if="option.description" 
-              class="text-sm text-gray-500 dark:text-gray-400"
+              class="text-sm text-slate-500 dark:text-slate-400"
             >
               {{ option.description }}
             </p>
@@ -100,7 +100,7 @@
               :class="[
                 {
                   'bg-blue-600 text-white border-blue-600': selectedValue === option.value,
-                  'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700': selectedValue !== option.value,
+                  'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700': selectedValue !== option.value,
                   'cursor-not-allowed opacity-50': disabled || option.disabled
                 }
               ]"
@@ -114,7 +114,7 @@
               <span 
                 v-if="option.badge" 
                 class="ml-2 px-1.5 py-0.5 text-xs rounded"
-                :class="selectedValue === option.value ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300'"
+                :class="selectedValue === option.value ? 'bg-blue-500 text-white' : 'bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-300'"
               >
                 {{ option.badge.text || option.badge }}
               </span>
@@ -140,7 +140,7 @@
               :class="[
                 {
                   'bg-blue-600 text-white': selectedValue === option.value,
-                  'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100': selectedValue !== option.value,
+                  'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100': selectedValue !== option.value,
                   'cursor-not-allowed opacity-50': disabled || option.disabled
                 }
               ]"
@@ -164,7 +164,7 @@
     </fieldset>
 
     <!-- Help Text -->
-    <p v-if="helpText && !hasError" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+    <p v-if="helpText && !hasError" class="mt-2 text-sm text-slate-500 dark:text-slate-400">
       {{ helpText }}
     </p>
 
@@ -179,7 +179,7 @@
     </p>
 
     <!-- Selection Info -->
-    <div v-if="showSelectionInfo && selectedValue" class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+    <div v-if="showSelectionInfo && selectedValue" class="mt-2 text-sm text-slate-600 dark:text-slate-400">
       Selected: <span class="font-medium">{{ getSelectedOptionLabel() }}</span>
     </div>
   </div>
@@ -338,14 +338,14 @@ const radioClasses = computed(() => {
 
   const variantClasses = {
     default: [
-      'text-blue-600', 'bg-white', 'dark:bg-gray-900',
-      'border-gray-300', 'dark:border-gray-600',
+      'text-blue-600', 'bg-white', 'dark:bg-slate-900',
+      'border-slate-300', 'dark:border-slate-600',
       'checked:bg-blue-600', 'checked:border-blue-600',
       'disabled:opacity-50', 'disabled:cursor-not-allowed'
     ],
     card: [
-      'text-blue-600', 'bg-white', 'dark:bg-gray-900',
-      'border-gray-300', 'dark:border-gray-600',
+      'text-blue-600', 'bg-white', 'dark:bg-slate-900',
+      'border-slate-300', 'dark:border-slate-600',
       'checked:bg-blue-600', 'checked:border-blue-600'
     ],
     button: [],
@@ -361,7 +361,7 @@ const radioClasses = computed(() => {
 
 const gridClasses = computed(() => {
   if (props.variant === 'segmented') {
-    return ['flex', 'rounded-lg', 'border', 'border-gray-300', 'dark:border-gray-600', 'overflow-hidden']
+    return ['flex', 'rounded-lg', 'border', 'border-slate-300', 'dark:border-slate-600', 'overflow-hidden']
   }
 
   const columnClasses = {
@@ -385,7 +385,7 @@ const radioItemClasses = computed(() => {
     default: [],
     card: [
       'p-4', 'rounded-lg', 'border', 'cursor-pointer',
-      'hover:shadow-sm', 'hover:border-gray-300', 'dark:hover:border-gray-600'
+      'hover:shadow-sm', 'hover:border-slate-300', 'dark:hover:border-slate-600'
     ],
     button: [],
     segmented: ['flex-1']
@@ -422,11 +422,11 @@ const getBadgeClasses = (badge) => {
       warning: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
       error: 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200',
       info: 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
-      default: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+      default: 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200'
     }
     return variants[badge.variant] || variants.default
   }
-  return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+  return 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200'
 }
 
 const handleChange = (event) => {
@@ -474,7 +474,7 @@ defineExpose({
 }
 
 .radio-segmented-label:first-child {
-  @apply border-r border-gray-300 dark:border-gray-600;
+  @apply border-r border-slate-300 dark:border-slate-600;
 }
 
 .radio-segmented-label:focus-within {
@@ -498,7 +498,7 @@ defineExpose({
 
 /* Dark mode adjustments */
 .dark .radio-input {
-  @apply bg-gray-800 border-gray-600;
+  @apply bg-slate-800 border-slate-600;
 }
 
 .dark .radio-input:checked {
@@ -507,7 +507,7 @@ defineExpose({
 
 /* Hover effects */
 .radio-input:hover:not(:disabled) {
-  @apply border-gray-400 dark:border-gray-500;
+  @apply border-slate-400 dark:border-slate-500;
 }
 
 .radio-input:checked:hover:not(:disabled) {

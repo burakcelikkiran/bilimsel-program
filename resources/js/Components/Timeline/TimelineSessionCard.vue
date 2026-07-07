@@ -16,7 +16,7 @@
                 <div class="flex-1 min-w-0">
                     <!-- Session Title -->
                     <h4
-                        class="session-title text-sm font-semibold text-gray-900 dark:text-white group-hover:text-purple-600 transition-colors"
+                        class="session-title text-sm font-semibold text-slate-900 dark:text-white group-hover:text-purple-600 transition-colors"
                     >
                         {{ sessionData.title }}
                     </h4>
@@ -24,7 +24,7 @@
                     <!-- Time and Duration -->
                     <div class="session-meta flex items-center space-x-3 mt-1">
                         <div
-                            class="flex items-center space-x-1 text-xs text-gray-600 dark:text-gray-400"
+                            class="flex items-center space-x-1 text-xs text-slate-600 dark:text-slate-400"
                         >
                             <ClockIcon class="h-3 w-3" />
                             <span>{{
@@ -33,7 +33,7 @@
                         </div>
                         <div
                             v-if="sessionData.duration_in_minutes"
-                            class="text-xs text-gray-500 dark:text-gray-500"
+                            class="text-xs text-slate-500 dark:text-slate-500"
                         >
                             {{
                                 formatDuration(sessionData.duration_in_minutes)
@@ -65,7 +65,7 @@
                         <!-- Break Badge -->
                         <span
                             v-if="sessionData.is_break"
-                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200"
                         >
                             Ara
                         </span>
@@ -78,7 +78,7 @@
                 >
                     <button
                         @click.stop="handleSessionClick"
-                        class="p-1 text-gray-400 hover:text-purple-600 transition-colors"
+                        class="p-1 text-slate-400 hover:text-purple-600 transition-colors"
                         title="Oturumu Görüntüle"
                     >
                         <EyeIcon class="h-4 w-4" />
@@ -86,7 +86,7 @@
                     <button
                         v-if="sessionData.can_edit"
                         @click.stop="handleEditClick"
-                        class="p-1 text-gray-400 hover:text-orange-600 transition-colors"
+                        class="p-1 text-slate-400 hover:text-orange-600 transition-colors"
                         title="Oturumu Düzenle"
                     >
                         <PencilSquareIcon class="h-4 w-4" />
@@ -97,7 +97,7 @@
 
         <!-- Session Description -->
         <div v-if="sessionData.description" class="session-description mt-2">
-            <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
+            <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
                 {{ sessionData.description }}
             </p>
         </div>
@@ -108,15 +108,15 @@
             class="session-moderators mt-3"
         >
             <div class="flex items-center space-x-1 text-xs">
-                <UserGroupIcon class="h-3 w-3 text-gray-400" />
-                <span class="text-gray-500 dark:text-gray-500"
+                <UserGroupIcon class="h-3 w-3 text-slate-400" />
+                <span class="text-slate-500 dark:text-slate-500"
                     >{{ sessionData.moderator_title || "Moderatör" }}:</span
                 >
                 <div class="flex flex-wrap items-center gap-1">
                     <span
                         v-for="(moderator, index) in sessionData.moderators"
                         :key="moderator.id"
-                        class="text-gray-700 dark:text-gray-300 font-medium"
+                        class="text-slate-700 dark:text-slate-300 font-medium"
                     >
                         {{ moderator.full_name
                         }}<span v-if="index < sessionData.moderators.length - 1"
@@ -134,7 +134,7 @@
                     class="w-2 h-2 rounded-full"
                     :style="{ backgroundColor: sessionData.category.color }"
                 ></div>
-                <span class="text-xs text-gray-600 dark:text-gray-400">{{
+                <span class="text-xs text-slate-600 dark:text-slate-400">{{
                     sessionData.category.name
                 }}</span>
             </div>
@@ -143,12 +143,12 @@
         <!-- Sponsor -->
         <div v-if="sessionData.sponsor" class="session-sponsor mt-2">
             <div class="flex items-center space-x-1">
-                <BuildingOfficeIcon class="h-3 w-3 text-gray-400" />
-                <span class="text-xs text-gray-600 dark:text-gray-400"
+                <BuildingOfficeIcon class="h-3 w-3 text-slate-400" />
+                <span class="text-xs text-slate-600 dark:text-slate-400"
                     >Sponsor:</span
                 >
                 <span
-                    class="text-xs text-gray-700 dark:text-gray-300 font-medium"
+                    class="text-xs text-slate-700 dark:text-slate-300 font-medium"
                     >{{ sessionData.sponsor.name }}</span
                 >
             </div>
@@ -164,7 +164,7 @@
         >
             <div class="flex items-center justify-between">
                 <div
-                    class="flex items-center space-x-1 text-xs text-gray-600 dark:text-gray-400"
+                    class="flex items-center space-x-1 text-xs text-slate-600 dark:text-slate-400"
                 >
                     <DocumentTextIcon class="h-3 w-3" />
                     <span>{{ sessionData.presentations.length }} Sunum</span>
@@ -201,11 +201,11 @@
         <!-- Session Footer -->
         <div
             v-if="!sessionData.is_break"
-            class="session-footer mt-3 pt-2 border-t border-gray-200 dark:border-gray-700"
+            class="session-footer mt-3 pt-2 border-t border-slate-200 dark:border-slate-700"
         >
             <div class="flex items-center justify-between text-xs">
                 <!-- Duration -->
-                <div class="text-gray-500 dark:text-gray-500">
+                <div class="text-slate-500 dark:text-slate-500">
                     {{
                         sessionData.duration_in_minutes
                             ? formatDuration(sessionData.duration_in_minutes)
@@ -214,7 +214,7 @@
                 </div>
 
                 <!-- Session ID -->
-                <div class="text-gray-400 dark:text-gray-600">
+                <div class="text-slate-400 dark:text-slate-600">
                     #{{ sessionData.id }}
                 </div>
             </div>
@@ -304,14 +304,14 @@ const sessionTypeBadgeClass = computed(() => {
         workshop:
             "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
         poster: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-        break: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200",
+        break: "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200",
         lunch: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
         social: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
     };
 
     return (
         badgeClasses[props.sessionData.session_type] ||
-        "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+        "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200"
     );
 });
 
@@ -346,7 +346,7 @@ const togglePresentations = () => {
 
 <style scoped>
 .timeline-session-card {
-    @apply relative bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm transition-all duration-200;
+    @apply relative bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-4 shadow-sm transition-all duration-200;
 }
 
 .timeline-session-card:hover {
@@ -372,7 +372,7 @@ const togglePresentations = () => {
 }
 
 .session-break {
-    @apply border-l-4 border-l-gray-400 bg-gray-50 dark:bg-gray-800;
+    @apply border-l-4 border-l-slate-400 bg-slate-50 dark:bg-slate-800;
 }
 
 .session-lunch {
@@ -384,7 +384,7 @@ const togglePresentations = () => {
 }
 
 .session-default {
-    @apply border-l-4 border-l-gray-500;
+    @apply border-l-4 border-l-slate-500;
 }
 
 /* Featured session styling */
@@ -418,7 +418,7 @@ const togglePresentations = () => {
 
 /* Presentations toggle */
 .presentations-list {
-    @apply bg-gray-50 dark:bg-gray-800 rounded-md p-2 border border-gray-200 dark:border-gray-700;
+    @apply bg-slate-50 dark:bg-slate-800 rounded-md p-2 border border-slate-200 dark:border-slate-700;
 }
 
 /* Mobile optimizations */
@@ -457,27 +457,27 @@ const togglePresentations = () => {
 
 /* Focus states */
 .timeline-session-card:focus-within {
-    @apply ring-2 ring-purple-500 ring-offset-2 dark:ring-offset-gray-900;
+    @apply ring-2 ring-purple-500 ring-offset-2 dark:ring-offset-slate-900;
 }
 
 /* Break session specific styling */
 .session-break .session-title {
-    @apply text-gray-600 dark:text-gray-400;
+    @apply text-slate-600 dark:text-slate-400;
 }
 
 .session-break .session-meta {
-    @apply text-gray-500 dark:text-gray-500;
+    @apply text-slate-500 dark:text-slate-500;
 }
 
 /* Loading state */
 .session-loading {
-    @apply animate-pulse bg-gray-200 dark:bg-gray-700;
+    @apply animate-pulse bg-slate-200 dark:bg-slate-700;
 }
 
 .session-loading .session-title,
 .session-loading .session-meta,
 .session-loading .session-description {
-    @apply bg-gray-300 dark:bg-gray-600 rounded;
+    @apply bg-slate-300 dark:bg-slate-600 rounded;
     height: 1rem;
     margin-bottom: 0.5rem;
 }
@@ -485,7 +485,7 @@ const togglePresentations = () => {
 /* Print styles */
 @media print {
     .timeline-session-card {
-        @apply shadow-none border border-gray-300 break-inside-avoid;
+        @apply shadow-none border border-slate-300 break-inside-avoid;
     }
 
     .session-actions {

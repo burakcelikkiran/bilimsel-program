@@ -9,10 +9,10 @@
 
     <div class="w-full space-y-8">
       <!-- Header Section -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
         <div class="relative">
           <!-- Banner with gray gradient -->
-          <div class="h-48 bg-gradient-to-r from-gray-800 to-gray-900 relative overflow-hidden">
+          <div class="h-48 bg-gradient-to-r from-slate-800 to-slate-900 relative overflow-hidden">
             <div class="absolute inset-0 bg-black/20"></div>
             <div class="absolute inset-0 flex items-end">
               <div class="p-8 text-white w-full">
@@ -71,11 +71,11 @@
           </div>
 
           <!-- Meta Bar -->
-          <div class="px-8 py-6 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
             <div class="flex flex-wrap items-center gap-6">
               <!-- Level Info -->
               <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Sponsor Seviyesi:</span>
+                <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Sponsor Seviyesi:</span>
                 <span
                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
                   :class="getSponsorLevelClasses(safeSponsor.sponsor_level)"
@@ -87,43 +87,43 @@
 
               <!-- Contact Info -->
               <div v-if="safeSponsor.contact_email" class="flex items-center space-x-2">
-                <EnvelopeIcon class="h-5 w-5 text-gray-400" />
+                <EnvelopeIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <a :href="`mailto:${safeSponsor.contact_email}`" class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:underline">
+                  <a :href="`mailto:${safeSponsor.contact_email}`" class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:underline">
                     {{ safeSponsor.contact_email }}
                   </a>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">E-posta</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">E-posta</div>
                 </div>
               </div>
 
               <div v-if="safeSponsor.website" class="flex items-center space-x-2">
-                <GlobeAltIcon class="h-5 w-5 text-gray-400" />
+                <GlobeAltIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <a :href="safeSponsor.website" target="_blank" class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:underline">
+                  <a :href="safeSponsor.website" target="_blank" class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:underline">
                     {{ formatWebsite(safeSponsor.website) }}
                   </a>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Website</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Website</div>
                 </div>
               </div>
 
               <!-- Organization Info -->
               <div class="flex items-center space-x-2">
-                <BuildingOfficeIcon class="h-5 w-5 text-gray-400" />
+                <BuildingOfficeIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ safeSponsor.organization?.name || 'Organizasyon yok' }}</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Organizasyon</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ safeSponsor.organization?.name || 'Organizasyon yok' }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Organizasyon</div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Actions Bar -->
-          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-gray-900">
+          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-slate-800">
             <div class="flex items-center space-x-3">
               <!-- Back to List -->
               <Link
                 :href="route('admin.sponsors.index')"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
               >
                 <ArrowLeftIcon class="h-4 w-4 mr-2" />
                 Sponsor Listesi
@@ -135,7 +135,7 @@
               <Link
                 v-if="safeSponsor.can_edit"
                 :href="route('admin.sponsors.edit', safeSponsor.id)"
-                class="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                class="inline-flex items-center px-4 py-2 bg-slate-600 text-white text-sm font-medium rounded-lg hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
               >
                 <PencilSquareIcon class="h-4 w-4 mr-2" />
                 Düzenle
@@ -150,28 +150,28 @@
         <!-- Main Content -->
         <div class="xl:col-span-3 space-y-8">
           <!-- Sponsored Program Sessions -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sponsorladığı Oturumlar</h3>
-              <span class="text-sm text-gray-500 dark:text-gray-400">
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Sponsorladığı Oturumlar</h3>
+              <span class="text-sm text-slate-500 dark:text-slate-400">
                 {{ safeSponsor.program_sessions?.length || 0 }} oturum
               </span>
             </div>
 
             <!-- Program Sessions List -->
-            <div v-if="safeSponsor.program_sessions?.length > 0" class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div v-if="safeSponsor.program_sessions?.length > 0" class="divide-y divide-slate-200 dark:divide-slate-700">
               <div
                 v-for="session in safeSponsor.program_sessions"
                 :key="session.id"
-                class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
               >
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
-                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">
                       {{ session.title }}
                     </h4>
                     
-                    <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    <div class="flex items-center space-x-4 text-sm text-slate-500 dark:text-slate-400 mb-3">
                       <div class="flex items-center">
                         <CalendarIcon class="h-4 w-4 mr-1" />
                         {{ formatSessionInfo(session) }}
@@ -182,7 +182,7 @@
                       </div>
                     </div>
 
-                    <div v-if="session.venue" class="text-sm text-gray-600 dark:text-gray-400">
+                    <div v-if="session.venue" class="text-sm text-slate-600 dark:text-slate-400">
                       <span class="font-medium">Salon:</span> {{ session.venue.display_name || session.venue.name }}
                     </div>
                   </div>
@@ -191,14 +191,14 @@
                   <div class="flex items-center space-x-2 ml-4">
                     <Link
                       :href="route('admin.program-sessions.show', session.id)"
-                      class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                       title="Oturumu Görüntüle"
                     >
                       <EyeIcon class="h-4 w-4" />
                     </Link>
                     <Link
                       :href="route('admin.program-sessions.edit', session.id)"
-                      class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                       title="Oturumu Düzenle"
                     >
                       <PencilIcon class="h-4 w-4" />
@@ -210,37 +210,37 @@
 
             <!-- Empty Sessions State -->
             <div v-else class="text-center py-16">
-              <div class="mx-auto h-16 w-16 text-gray-400 mb-4">
+              <div class="mx-auto h-16 w-16 text-slate-400 mb-4">
                 <DocumentTextIcon class="h-full w-full" />
               </div>
-              <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Henüz sponsorluk yok</h4>
-              <p class="text-gray-500 dark:text-gray-400">Bu sponsor henüz hiçbir oturumu sponsorlamıyor.</p>
+              <h4 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">Henüz sponsorluk yok</h4>
+              <p class="text-slate-500 dark:text-slate-400">Bu sponsor henüz hiçbir oturumu sponsorlamıyor.</p>
             </div>
           </div>
 
           <!-- Sponsored Presentations -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sponsorladığı Sunumlar</h3>
-              <span class="text-sm text-gray-500 dark:text-gray-400">
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Sponsorladığı Sunumlar</h3>
+              <span class="text-sm text-slate-500 dark:text-slate-400">
                 {{ safeSponsor.presentations?.length || 0 }} sunum
               </span>
             </div>
 
             <!-- Presentations List -->
-            <div v-if="safeSponsor.presentations?.length > 0" class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div v-if="safeSponsor.presentations?.length > 0" class="divide-y divide-slate-200 dark:divide-slate-700">
               <div
                 v-for="presentation in safeSponsor.presentations"
                 :key="presentation.id"
-                class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
               >
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
-                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">
                       {{ presentation.title }}
                     </h4>
                     
-                    <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    <div class="flex items-center space-x-4 text-sm text-slate-500 dark:text-slate-400 mb-3">
                       <div class="flex items-center">
                         <CalendarIcon class="h-4 w-4 mr-1" />
                         {{ formatPresentationInfo(presentation) }}
@@ -251,7 +251,7 @@
                       </div>
                     </div>
 
-                    <div v-if="presentation.program_session" class="text-sm text-gray-600 dark:text-gray-400">
+                    <div v-if="presentation.program_session" class="text-sm text-slate-600 dark:text-slate-400">
                       <span class="font-medium">Oturum:</span> {{ presentation.program_session.title }}
                     </div>
                   </div>
@@ -260,14 +260,14 @@
                   <div class="flex items-center space-x-2 ml-4">
                     <Link
                       :href="route('admin.presentations.show', presentation.id)"
-                      class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                       title="Sunumu Görüntüle"
                     >
                       <EyeIcon class="h-4 w-4" />
                     </Link>
                     <Link
                       :href="route('admin.presentations.edit', presentation.id)"
-                      class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                       title="Sunumu Düzenle"
                     >
                       <PencilIcon class="h-4 w-4" />
@@ -279,11 +279,11 @@
 
             <!-- Empty Presentations State -->
             <div v-else class="text-center py-16">
-              <div class="mx-auto h-16 w-16 text-gray-400 mb-4">
+              <div class="mx-auto h-16 w-16 text-slate-400 mb-4">
                 <PresentationChartLineIcon class="h-full w-full" />
               </div>
-              <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Henüz sunum sponsorluğu yok</h4>
-              <p class="text-gray-500 dark:text-gray-400">Bu sponsor henüz hiçbir sunumu sponsorlamıyor.</p>
+              <h4 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">Henüz sunum sponsorluğu yok</h4>
+              <p class="text-slate-500 dark:text-slate-400">Bu sponsor henüz hiçbir sunumu sponsorlamıyor.</p>
             </div>
           </div>
         </div>
@@ -291,53 +291,53 @@
         <!-- Sidebar -->
         <div class="space-y-6">
           <!-- Sponsor Details -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Sponsor Detayları</h3>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Sponsor Detayları</h3>
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <BuildingOffice2Icon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Sponsor Adı</span>
+                  <BuildingOffice2Icon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Sponsor Adı</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeSponsor.name }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeSponsor.name }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <StarIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Seviye</span>
+                  <StarIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Seviye</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ getSponsorLevelDisplay(safeSponsor.sponsor_level) }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ getSponsorLevelDisplay(safeSponsor.sponsor_level) }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <DocumentTextIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Oturum Sayısı</span>
+                  <DocumentTextIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Oturum Sayısı</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeSponsor.program_sessions?.length || 0 }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeSponsor.program_sessions?.length || 0 }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <PresentationChartLineIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Sunum Sayısı</span>
+                  <PresentationChartLineIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Sunum Sayısı</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeSponsor.presentations?.length || 0 }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeSponsor.presentations?.length || 0 }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <CalendarIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Kayıt Tarihi</span>
+                  <CalendarIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Kayıt Tarihi</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ formatDate(safeSponsor.created_at) }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ formatDate(safeSponsor.created_at) }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <CheckCircleIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Durum</span>
+                  <CheckCircleIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Durum</span>
                 </div>
                 <span 
                   class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
@@ -352,28 +352,28 @@
           </div>
 
           <!-- Contact Information -->
-          <div v-if="safeSponsor.contact_email || safeSponsor.website" class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">İletişim Bilgileri</h3>
+          <div v-if="safeSponsor.contact_email || safeSponsor.website" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">İletişim Bilgileri</h3>
             <div class="space-y-3">
-              <div v-if="safeSponsor.contact_email" class="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                  <EnvelopeIcon class="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              <div v-if="safeSponsor.contact_email" class="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                <div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                  <EnvelopeIcon class="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
                 <div class="flex-1">
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">E-posta</div>
-                  <a :href="`mailto:${safeSponsor.contact_email}`" class="text-sm text-gray-600 dark:text-gray-400 hover:underline">
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">E-posta</div>
+                  <a :href="`mailto:${safeSponsor.contact_email}`" class="text-sm text-slate-600 dark:text-slate-400 hover:underline">
                     {{ safeSponsor.contact_email }}
                   </a>
                 </div>
               </div>
               
-              <div v-if="safeSponsor.website" class="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                  <GlobeAltIcon class="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              <div v-if="safeSponsor.website" class="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                <div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                  <GlobeAltIcon class="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
                 <div class="flex-1">
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">Website</div>
-                  <a :href="safeSponsor.website" target="_blank" class="text-sm text-gray-600 dark:text-gray-400 hover:underline">
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">Website</div>
+                  <a :href="safeSponsor.website" target="_blank" class="text-sm text-slate-600 dark:text-slate-400 hover:underline">
                     {{ formatWebsite(safeSponsor.website) }}
                   </a>
                 </div>
@@ -382,15 +382,15 @@
           </div>
 
           <!-- Organization Information -->
-          <div v-if="safeSponsor.organization" class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Organizasyon Bilgileri</h3>
-            <div class="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <div class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                <BuildingOfficeIcon class="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          <div v-if="safeSponsor.organization" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Organizasyon Bilgileri</h3>
+            <div class="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+              <div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                <BuildingOfficeIcon class="w-4 h-4 text-slate-600 dark:text-slate-400" />
               </div>
               <div class="flex-1">
-                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ safeSponsor.organization.name }}</div>
-                <div v-if="safeSponsor.organization.description" class="text-sm text-gray-600 dark:text-gray-400">{{ safeSponsor.organization.description }}</div>
+                <div class="text-sm font-medium text-slate-900 dark:text-white">{{ safeSponsor.organization.name }}</div>
+                <div v-if="safeSponsor.organization.description" class="text-sm text-slate-600 dark:text-slate-400">{{ safeSponsor.organization.description }}</div>
               </div>
             </div>
           </div>
@@ -473,12 +473,12 @@ const breadcrumbs = computed(() => [
 // Helper functions
 const getSponsorLevelClasses = (level) => {
   const classes = {
-    platinum: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+    platinum: 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300',
     gold: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    silver: 'bg-gray-100 text-gray-700 dark:bg-gray-600 dark:text-gray-200',
+    silver: 'bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-200',
     bronze: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
   }
-  return classes[level] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+  return classes[level] || 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300'
 }
 
 const getSponsorLevelIcon = (level) => {

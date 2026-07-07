@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\AdminNotificationService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -37,7 +39,16 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            //
+            'notifications' => Inertia::defer(function () use ($request) {
+                if (! $request->user()) {
+                    return [
+                        'notifications' => [],
+                        'unread_count' => 0,
+                    ];
+                }
+
+                return app(AdminNotificationService::class)->forUser($request->user());
+            }),
         ];
     }
 }

@@ -26,7 +26,7 @@ resources/js/Components/Forms/FormSelect.vue
     <label 
       v-if="label" 
       :for="selectId" 
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
       :class="{ 'text-red-600 dark:text-red-400': hasError }"
     >
       {{ label }}
@@ -66,7 +66,7 @@ resources/js/Components/Forms/FormSelect.vue
           v-if="!isOpen && selectedOption && !searchQuery"
           class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
         >
-          <span class="text-gray-900 dark:text-gray-100 truncate">
+          <span class="text-slate-900 dark:text-slate-100 truncate">
             {{ getOptionLabel(selectedOption) }}
           </span>
         </div>
@@ -96,14 +96,14 @@ resources/js/Components/Forms/FormSelect.vue
           <span 
             v-if="selectedOption" 
             class="block truncate text-left"
-            :class="selectedOption ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500 dark:text-gray-400'"
+            :class="selectedOption ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 dark:text-slate-400'"
           >
             {{ selectedOption ? getOptionLabel(selectedOption) : placeholder }}
           </span>
           <!-- Placeholder -->
           <span 
             v-else 
-            class="block truncate text-left text-gray-500 dark:text-gray-400"
+            class="block truncate text-left text-slate-500 dark:text-slate-400"
           >
             {{ placeholder }}
           </span>
@@ -111,7 +111,7 @@ resources/js/Components/Forms/FormSelect.vue
         
         <!-- Dropdown Arrow -->
         <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-          <ChevronUpDownIcon class="h-5 w-5 text-gray-400" />
+          <ChevronUpDownIcon class="h-5 w-5 text-slate-400" />
         </span>
       </button>
 
@@ -119,7 +119,7 @@ resources/js/Components/Forms/FormSelect.vue
       <button
         v-if="clearable && selectedOption && !disabled"
         type="button"
-        class="absolute inset-y-0 right-8 flex items-center pr-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        class="absolute inset-y-0 right-8 flex items-center pr-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
         @click="clearSelection"
       >
         <XMarkIcon class="h-4 w-4" />
@@ -136,17 +136,17 @@ resources/js/Components/Forms/FormSelect.vue
       >
         <div
           v-if="isOpen"
-          class="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none"
+          class="absolute z-50 mt-1 w-full bg-white dark:bg-slate-800 shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none"
           :class="dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full'"
         >
           <!-- Loading State -->
-          <div v-if="loading" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 text-center">
+          <div v-if="loading" class="px-3 py-2 text-sm text-slate-500 dark:text-slate-400 text-center">
             <LoadingSpinner class="h-4 w-4 mx-auto" />
             <span class="ml-2">Loading...</span>
           </div>
 
           <!-- No Options -->
-          <div v-else-if="filteredOptions.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 text-center">
+          <div v-else-if="filteredOptions.length === 0" class="px-3 py-2 text-sm text-slate-500 dark:text-slate-400 text-center">
             {{ searchQuery ? 'No results found' : 'No options available' }}
           </div>
 
@@ -158,7 +158,7 @@ resources/js/Components/Forms/FormSelect.vue
               class="select-option"
               :class="{
                 'bg-blue-600 text-white': index === highlightedIndex,
-                'text-gray-900 dark:text-gray-100': index !== highlightedIndex,
+                'text-slate-900 dark:text-slate-100': index !== highlightedIndex,
                 'bg-blue-50 dark:bg-blue-900': isSelected(option) && index !== highlightedIndex
               }"
               @click="selectOption(option)"
@@ -186,7 +186,7 @@ resources/js/Components/Forms/FormSelect.vue
     </div>
 
     <!-- Help Text -->
-    <p v-if="helpText && !hasError" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <p v-if="helpText && !hasError" class="mt-1 text-sm text-slate-500 dark:text-slate-400">
       {{ helpText }}
     </p>
 
@@ -334,8 +334,8 @@ const selectClasses = computed(() => {
   const baseClasses = [
     'relative', 'block', 'w-full', 'rounded-md', 'border', 'shadow-sm', 
     'transition-colors', 'duration-200', 'focus:outline-none', 'focus:ring-2', 
-    'focus:ring-offset-0', 'bg-white', 'dark:bg-gray-900',
-    'text-gray-900', 'dark:text-gray-100'
+    'focus:ring-offset-0', 'bg-white', 'dark:bg-slate-900',
+    'text-slate-900', 'dark:text-slate-100'
   ]
 
   const sizeClasses = {
@@ -347,7 +347,7 @@ const selectClasses = computed(() => {
   return [
     ...baseClasses,
     ...sizeClasses[props.size].split(' '),
-    'border-gray-300', 'dark:border-gray-600',
+    'border-slate-300', 'dark:border-slate-600',
     'focus:border-blue-500', 'focus:ring-blue-500'
   ]
 })
@@ -543,13 +543,13 @@ defineExpose({
 }
 
 .select-option:hover {
-  @apply bg-gray-50 dark:bg-gray-700;
+  @apply bg-slate-50 dark:bg-slate-700;
 }
 
 /* Custom scrollbar for dropdown */
 .overflow-auto {
   scrollbar-width: thin;
-  scrollbar-color: rgb(156 163 175) transparent;
+  scrollbar-color: rgb(148 163 184) transparent;
 }
 
 .overflow-auto::-webkit-scrollbar {
@@ -561,11 +561,11 @@ defineExpose({
 }
 
 .overflow-auto::-webkit-scrollbar-thumb {
-  background-color: rgb(156 163 175);
+  background-color: rgb(148 163 184);
   border-radius: 3px;
 }
 
 .dark .overflow-auto::-webkit-scrollbar-thumb {
-  background-color: rgb(75 85 99);
+  background-color: rgb(71 85 105);
 }
 </style>!

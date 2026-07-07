@@ -1,25 +1,26 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div :class="{ dark: isDark }" class="min-h-screen">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
     <!-- Sidebar -->
     <aside 
       class="fixed inset-y-0 left-0 z-40 transition-all duration-300 ease-in-out"
       :class="sidebarOpen ? 'w-72' : 'w-20'"
     >
-      <div class="flex h-full flex-col bg-gray-900 shadow-2xl border-r border-gray-800">
+      <div class="flex h-full flex-col bg-slate-900 shadow-2xl border-r border-slate-800">
         <!-- Logo Section -->
-        <div class="flex h-20 items-center justify-center border-b border-gray-800">
+        <div class="flex h-20 items-center justify-center border-b border-slate-800">
           <div v-if="sidebarOpen" class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gray-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div class="w-10 h-10 bg-slate-600 rounded-xl flex items-center justify-center shadow-lg">
               <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </div>
             <div>
               <h1 class="text-lg font-bold text-white">EPS Admin</h1>
-              <p class="text-xs text-gray-300">Etkinlik Yönetimi</p>
+              <p class="text-xs text-slate-300">Etkinlik Yönetimi</p>
             </div>
           </div>
-          <div v-else class="w-10 h-10 bg-gray-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div v-else class="w-10 h-10 bg-slate-600 rounded-xl flex items-center justify-center shadow-lg">
             <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
@@ -31,7 +32,7 @@
           <div v-for="section in navigation" :key="section.name" class="space-y-1">
             <!-- Section Header -->
             <div v-if="sidebarOpen && section.title" class="px-3 py-2">
-              <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">
                 {{ section.title }}
               </h3>
             </div>
@@ -44,13 +45,13 @@
                 :href="item.href"
                 class="group flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 relative overflow-hidden"
                 :class="item.current 
-                  ? 'bg-gray-700 text-white border border-gray-600' 
-                  : 'text-gray-300 hover:text-white hover:bg-gray-800 border border-transparent hover:border-gray-700'"
+                  ? 'bg-slate-700 text-white border border-slate-600' 
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800 border border-transparent hover:border-slate-700'"
               >
                 <component 
                   :is="item.icon" 
                   class="h-5 w-5 flex-shrink-0 relative z-10"
-                  :class="item.current ? 'text-gray-200' : 'text-gray-400 group-hover:text-gray-200'"
+                  :class="item.current ? 'text-slate-200' : 'text-slate-400 group-hover:text-slate-200'"
                 />
                 <span v-if="sidebarOpen" class="ml-3 truncate relative z-10">{{ item.name }}</span>
                 
@@ -58,27 +59,27 @@
                 <span v-if="sidebarOpen && item.badge" 
                   :class="[
                     'ml-auto inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium shadow-lg relative z-10',
-                    item.badgeColor || 'bg-gray-600 text-white'
+                    item.badgeColor || 'bg-slate-600 text-white'
                   ]">
                   {{ item.badge }}
                 </span>
 
                 <!-- Active indicator -->
                 <div v-if="item.current" 
-                     class="absolute right-2 w-2 h-2 bg-gray-400 rounded-full shadow-lg relative z-10"></div>
+                     class="absolute right-2 w-2 h-2 bg-slate-400 rounded-full shadow-lg relative z-10"></div>
               </Link>
 
               <!-- Expandable Menu -->
               <div v-else>
                 <button
                   @click="toggleSubmenu(item.name)"
-                  class="group w-full flex items-center rounded-xl px-3 py-2.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-200 relative overflow-hidden"
-                  :class="item.current ? 'bg-gray-700 text-white border border-gray-600' : ''"
+                  class="group w-full flex items-center rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-200 relative overflow-hidden"
+                  :class="item.current ? 'bg-slate-700 text-white border border-slate-600' : ''"
                 >
                   <component 
                     :is="item.icon" 
-                    class="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-200"
-                    :class="item.current ? 'text-gray-200' : ''"
+                    class="h-5 w-5 flex-shrink-0 text-slate-400 group-hover:text-slate-200"
+                    :class="item.current ? 'text-slate-200' : ''"
                   />
                   <span v-if="sidebarOpen" class="ml-3 truncate">{{ item.name }}</span>
 
@@ -93,7 +94,7 @@
 
                   <ChevronDownIcon 
                     v-if="sidebarOpen"
-                    class="ml-auto h-4 w-4 transition-transform duration-200 text-gray-400 group-hover:text-gray-200"
+                    class="ml-auto h-4 w-4 transition-transform duration-200 text-slate-400 group-hover:text-slate-200"
                     :class="openSubmenus.includes(item.name) ? 'rotate-180' : ''"
                   />
                 </button>
@@ -110,7 +111,7 @@
                   <div v-if="sidebarOpen && openSubmenus.includes(item.name)" class="mt-1 ml-8 space-y-1 overflow-hidden">
                     <template v-for="subItem in item.children" :key="subItem.name">
                       <!-- Skip disabled items (separators) -->
-                      <div v-if="subItem.disabled" class="px-3 py-1 text-xs font-medium text-gray-500 border-b border-gray-800/50 mb-1">
+                      <div v-if="subItem.disabled" class="px-3 py-1 text-xs font-medium text-slate-500 border-b border-slate-800/50 mb-1">
                         {{ subItem.name.replace(/^--- | ---$/g, '') }}
                       </div>
                       
@@ -120,23 +121,23 @@
                         :href="subItem.href"
                         class="group flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 relative"
                         :class="subItem.current 
-                          ? 'text-gray-200 font-medium' 
-                          : 'text-gray-400 hover:text-gray-200'"
+                          ? 'text-slate-200 font-medium' 
+                          : 'text-slate-400 hover:text-slate-200'"
                       >
                         <!-- Background for active child -->
                         <div v-if="subItem.current" 
-                             class="absolute inset-0 bg-gray-800 rounded-lg"></div>
+                             class="absolute inset-0 bg-slate-800 rounded-lg"></div>
                         
                         <!-- Child Icon (if available) -->
                         <component v-if="subItem.icon" 
                                    :is="subItem.icon" 
                                    :class="[
                                      'h-4 w-4 mr-3 relative z-10',
-                                     subItem.current ? 'text-gray-200' : 'text-gray-400'
+                                     subItem.current ? 'text-slate-200' : 'text-slate-400'
                                    ]" />
                         <!-- Indicator line (if no icon) -->
-                        <div v-else class="w-2 h-0.5 bg-gray-600 rounded-full mr-3 relative z-10"
-                             :class="subItem.current ? 'bg-gray-400' : 'bg-gray-600'"></div>
+                        <div v-else class="w-2 h-0.5 bg-slate-600 rounded-full mr-3 relative z-10"
+                             :class="subItem.current ? 'bg-slate-400' : 'bg-slate-600'"></div>
                         
                         <span class="truncate relative z-10">{{ subItem.name }}</span>
 
@@ -158,9 +159,9 @@
         </nav>
 
         <!-- User Profile -->
-        <div class="border-t border-gray-800 p-4">
+        <div class="border-t border-slate-800 p-4">
           <div class="flex items-center">
-            <div class="h-10 w-10 rounded-xl bg-gray-600 flex items-center justify-center shadow-lg border-2 border-gray-700">
+            <div class="h-10 w-10 rounded-xl bg-slate-600 flex items-center justify-center shadow-lg border-2 border-slate-700">
               <span class="text-sm font-semibold text-white">
                 {{ currentUser?.name?.charAt(0).toUpperCase() }}
               </span>
@@ -169,12 +170,12 @@
               <p class="text-sm font-medium text-white truncate">
                 {{ currentUser?.name }}
               </p>
-              <p class="text-xs text-gray-400 truncate">
+              <p class="text-xs text-slate-400 truncate">
                 {{ currentUser?.email }}
               </p>
             </div>
-            <button v-if="sidebarOpen" class="ml-2 p-1 rounded-lg hover:bg-gray-800 transition-colors">
-              <Cog6ToothIcon class="h-4 w-4 text-gray-400 hover:text-gray-200" />
+            <button v-if="sidebarOpen" class="ml-2 p-1 rounded-lg hover:bg-slate-800 transition-colors">
+              <Cog6ToothIcon class="h-4 w-4 text-slate-400 hover:text-slate-200" />
             </button>
           </div>
         </div>
@@ -182,23 +183,23 @@
     </aside>
 
     <!-- Main Content -->
-    <div class="transition-all duration-300 ease-in-out" :class="sidebarOpen ? 'ml-72' : 'ml-20'">
+    <div class="transition-all duration-300 ease-in-out min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col" :class="sidebarOpen ? 'ml-72' : 'ml-20'">
       <!-- Top Header -->
-      <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+      <header class="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div class="flex h-20 items-center justify-between px-6">
           <div class="flex items-center space-x-4">
             <!-- Sidebar Toggle -->
             <button
               @click="toggleSidebar"
-              class="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200 shadow-sm border border-gray-200"
+              class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-all duration-200 shadow-sm border border-slate-200 dark:border-slate-700"
             >
-              <Bars3Icon class="h-5 w-5 text-gray-600" />
+              <Bars3Icon class="h-5 w-5 text-slate-600 dark:text-slate-300" />
             </button>
 
             <!-- Page Title -->
             <div>
-              <h1 class="text-2xl font-bold text-gray-900">{{ pageTitle }}</h1>
-              <p v-if="pageSubtitle" class="text-sm text-gray-500">{{ pageSubtitle }}</p>
+              <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ pageTitle }}</h1>
+              <p v-if="pageSubtitle" class="text-sm text-slate-500 dark:text-slate-400">{{ pageSubtitle }}</p>
             </div>
           </div>
 
@@ -206,11 +207,11 @@
           <div class="flex items-center space-x-4">
             <!-- Search -->
             <div class="relative">
-              <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Ara..."
-                class="w-80 pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 hover:bg-white"
+                class="w-80 pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 hover:bg-white dark:hover:bg-slate-700"
               />
             </div>
 
@@ -218,10 +219,10 @@
             <div class="relative dropdown-container" ref="notificationsRef">
               <button 
                 @click="toggleNotifications"
-                class="relative p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200 shadow-sm border border-gray-200"
-                :class="{ 'bg-gray-200': showNotifications }"
+                class="relative p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-all duration-200 shadow-sm border border-slate-200 dark:border-slate-700"
+                :class="{ 'bg-slate-200 dark:bg-slate-700': showNotifications }"
               >
-                <BellIcon class="h-5 w-5 text-gray-600" />
+                <BellIcon class="h-5 w-5 text-slate-600 dark:text-slate-300" />
                 <span 
                   v-if="unreadCount > 0"
                   class="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center shadow-lg"
@@ -235,32 +236,33 @@
                 <div 
                   v-if="showNotifications" 
                   ref="notificationsDropdown"
-                  class="fixed bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-[99999] min-w-[20rem]"
+                  class="fixed bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 py-2 z-[99999] min-w-[20rem]"
+                  :class="{ dark: isDark }"
                   :style="notificationsStyle"
                   @click.stop
                 >
-                  <div class="px-4 py-3 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">Bildirimler</h3>
+                  <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white">Bildirimler</h3>
                   </div>
                   <div class="max-h-64 overflow-y-auto">
                     <!-- Loading State -->
                     <div v-if="isLoadingNotifications" class="p-4 text-center">
-                      <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-600 mx-auto"></div>
-                      <p class="text-sm text-gray-500 mt-2">Yükleniyor...</p>
+                      <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-slate-600 mx-auto"></div>
+                      <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Yükleniyor...</p>
                     </div>
                     
                     <!-- Empty State -->
-                    <div v-else-if="notifications.length === 0" class="p-4 text-center text-gray-500">
-                      <BellIcon class="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                    <div v-else-if="notifications.length === 0" class="p-4 text-center text-slate-500 dark:text-slate-400">
+                      <BellIcon class="h-8 w-8 mx-auto mb-2 text-slate-300 dark:text-slate-600" />
                       <p class="text-sm">Henüz bildirim yok</p>
                     </div>
                     
                     <!-- Notifications List -->
-                    <div v-else class="divide-y divide-gray-100">
+                    <div v-else class="divide-y divide-slate-100 dark:divide-slate-700">
                       <div 
                         v-for="notification in notifications" 
                         :key="notification.type + notification.date"
-                        class="p-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                        class="p-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer"
                         @click="notification.link && window.open(notification.link, '_self')"
                       >
                         <div class="flex items-start space-x-3">
@@ -273,13 +275,13 @@
                             }"
                           ></div>
                           <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900">
+                            <p class="text-sm font-medium text-slate-900 dark:text-white">
                               {{ notification.title }}
                             </p>
-                            <p class="text-xs text-gray-600 mt-1 line-clamp-2">
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">
                               {{ notification.message }}
                             </p>
-                            <p class="text-xs text-gray-400 mt-1">
+                            <p class="text-xs text-slate-400 mt-1">
                               {{ formatNotificationDate(notification.date) }}
                             </p>
                           </div>
@@ -294,26 +296,26 @@
             <!-- Theme Toggle -->
             <button
               @click="toggleTheme"
-              class="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200 shadow-sm border border-gray-200"
+              class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-all duration-200 shadow-sm border border-slate-200 dark:border-slate-700"
             >
-              <SunIcon v-if="isDark" class="h-5 w-5 text-gray-600" />
-              <MoonIcon v-else class="h-5 w-5 text-gray-600" />
+              <SunIcon v-if="isDark" class="h-5 w-5 text-slate-600 dark:text-slate-300" />
+              <MoonIcon v-else class="h-5 w-5 text-slate-600 dark:text-slate-300" />
             </button>
 
             <!-- User Menu -->
             <div class="relative dropdown-container" ref="userMenuRef">
               <button 
                 @click="toggleUserMenu"
-                class="flex items-center space-x-2 p-2 rounded-xl hover:bg-gray-100 transition-all duration-200"
-                :class="{ 'bg-gray-100': showUserMenu }"
+                class="flex items-center space-x-2 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
+                :class="{ 'bg-slate-100 dark:bg-slate-800': showUserMenu }"
               >
-                <div class="h-8 w-8 rounded-lg bg-gray-600 flex items-center justify-center shadow-lg">
+                <div class="h-8 w-8 rounded-lg bg-slate-600 flex items-center justify-center shadow-lg">
                   <span class="text-xs font-semibold text-white">
                     {{ currentUser?.name?.charAt(0).toUpperCase() }}
                   </span>
                 </div>
                 <ChevronDownIcon 
-                  class="h-4 w-4 text-gray-400 transition-transform duration-200" 
+                  class="h-4 w-4 text-slate-400 transition-transform duration-200" 
                   :class="{ 'rotate-180': showUserMenu }"
                 />
               </button>
@@ -323,31 +325,32 @@
                 <div 
                   v-if="showUserMenu" 
                   ref="userDropdown"
-                  class="fixed bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-[99999] min-w-[14rem]"
+                  class="fixed bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 py-2 z-[99999] min-w-[14rem]"
+                  :class="{ dark: isDark }"
                   :style="userMenuStyle"
                   @click.stop
                 >
-                  <div class="px-4 py-3 border-b border-gray-200">
-                    <p class="text-sm font-medium text-gray-900">{{ currentUser?.name }}</p>
-                    <p class="text-xs text-gray-500">{{ currentUser?.email }}</p>
+                  <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+                    <p class="text-sm font-medium text-slate-900 dark:text-white">{{ currentUser?.name }}</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">{{ currentUser?.email }}</p>
                   </div>
                   
                   <div class="py-1">
                     <Link 
                       :href="createRoute('profile.show', '/profile')" 
                       @click="closeUserMenu"
-                      class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200"
+                      class="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-all duration-200"
                     >
-                      <UserCircleIcon class="mr-3 h-4 w-4 text-gray-400" />
+                      <UserCircleIcon class="mr-3 h-4 w-4 text-slate-400" />
                       Profil Ayarları
                     </Link>
                     
-                    <div class="border-t border-gray-200 mt-2 pt-2">
+                    <div class="border-t border-slate-200 dark:border-slate-700 mt-2 pt-2">
                       <Link 
                         href="/logout" 
                         method="post" 
                         @click="closeUserMenu"
-                        class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200"
+                        class="flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-all duration-200"
                       >
                         <ArrowRightOnRectangleIcon class="mr-3 h-4 w-4 text-red-500" />
                         Çıkış Yap
@@ -362,19 +365,19 @@
       </header>
 
       <!-- Breadcrumbs -->
-      <div v-if="breadcrumbs && breadcrumbs.length > 0" class="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-6 py-4">
+      <div v-if="breadcrumbs && breadcrumbs.length > 0" class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 px-6 py-4">
         <nav class="flex" aria-label="Breadcrumb">
           <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li v-for="(crumb, index) in breadcrumbs" :key="index" class="inline-flex items-center">
-              <ChevronRightIcon v-if="index > 0" class="w-4 h-4 text-gray-400 mx-2" />
+              <ChevronRightIcon v-if="index > 0" class="w-4 h-4 text-slate-400 mx-2" />
               <Link
                 v-if="crumb.href"
                 :href="crumb.href"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200"
+                class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-200"
               >
                 {{ crumb.label }}
               </Link>
-              <span v-else class="text-sm font-medium text-gray-900">
+              <span v-else class="text-sm font-medium text-slate-900 dark:text-white">
                 {{ crumb.label }}
               </span>
             </li>
@@ -383,16 +386,16 @@
       </div>
 
       <!-- Page Content -->
-      <main class="flex-1 px-6 py-8">
+      <main class="flex-1 px-6 py-8 bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
         <!-- Flash Messages -->
         <div v-if="$page.props.flash && Object.keys($page.props.flash).length > 0" class="mb-6">
           <div v-for="(message, type) in $page.props.flash" :key="type" 
             class="p-4 rounded-xl border shadow-sm"
             :class="{
-              'bg-green-50 border-green-200 text-green-800': type === 'success',
-              'bg-red-50 border-red-200 text-red-800': type === 'error',
-              'bg-blue-50 border-blue-200 text-blue-800': type === 'info',
-              'bg-yellow-50 border-yellow-200 text-yellow-800': type === 'warning'
+              'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-800 dark:text-green-300': type === 'success',
+              'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-800 dark:text-red-300': type === 'error',
+              'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300': type === 'info',
+              'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-300': type === 'warning'
             }"
           >
             {{ message }}
@@ -408,14 +411,16 @@
     <div 
       v-if="sidebarOpen && isMobile" 
       @click="sidebarOpen = false"
-      class="fixed inset-0 z-30 bg-gray-900/50 backdrop-blur-sm lg:hidden"
+      class="fixed inset-0 z-30 bg-slate-900/50 backdrop-blur-sm lg:hidden"
     ></div>
+  </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3'
+import { Link, usePage, router } from '@inertiajs/vue3'
+import { useTheme } from '@/Composables/useTheme'
 import {
   HomeIcon,
   CalendarIcon,
@@ -478,13 +483,14 @@ const sidebarOpen = ref(true)
 const showUserMenu = ref(false)
 const showNotifications = ref(false)
 const openSubmenus = ref(['etkinlikler'])
-const isDark = ref(false)
+const { isDark, toggleTheme } = useTheme()
 const isMobile = ref(false)
 
-// Notifications state
-const notifications = ref([])
-const unreadCount = ref(0)
-const isLoadingNotifications = ref(false)
+// Notifications from shared Inertia props
+const notificationPayload = computed(() => page.props.notifications ?? { notifications: [], unread_count: 0 })
+const notifications = computed(() => notificationPayload.value.notifications ?? [])
+const unreadCount = computed(() => notificationPayload.value.unread_count ?? 0)
+const isLoadingNotifications = computed(() => page.props.notifications === undefined)
 
 // Dropdown positioning
 const userMenuStyle = ref({})
@@ -499,21 +505,9 @@ const createRoute = (routeName, fallback = '#') => {
   }
 }
 
-// Load notifications
-const loadNotifications = async () => {
-  if (isLoadingNotifications.value) return
-  
-  isLoadingNotifications.value = true
-  try {
-    const response = await fetch(route('admin.notifications'))
-    const data = await response.json()
-    notifications.value = data.notifications || []
-    unreadCount.value = data.unread_count || 0
-  } catch (error) {
-    console.error('Failed to load notifications:', error)
-  } finally {
-    isLoadingNotifications.value = false
-  }
+// Refresh notifications via Inertia partial reload
+const refreshNotifications = () => {
+  router.reload({ only: ['notifications'] })
 }
 
 // Format notification date
@@ -701,22 +695,12 @@ const toggleNotifications = async () => {
   if (showNotifications.value) {
     showUserMenu.value = false
     await calculateDropdownPosition(notificationsRef, 'notifications')
-    // Load notifications when dropdown opens
-    await loadNotifications()
+    refreshNotifications()
   }
 }
 
 const closeNotifications = () => {
   showNotifications.value = false
-}
-
-const toggleTheme = () => {
-  isDark.value = !isDark.value
-  if (isDark.value) {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.remove('dark')
-  }
 }
 
 const checkMobile = () => {
@@ -765,16 +749,22 @@ watch(showNotifications, (newValue) => {
 })
 
 // Lifecycle
+watch(isDark, (dark) => {
+  document.body.classList.toggle('dark', dark)
+  document.body.classList.remove('bg-slate-50', 'bg-slate-950')
+  document.body.classList.add(dark ? 'bg-slate-950' : 'bg-slate-50')
+}, { immediate: true })
+
 onMounted(() => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
   document.addEventListener('click', handleClickOutside, true)
   document.addEventListener('keydown', handleKeydown)
-  // Load notifications on page load
-  loadNotifications()
+  router.poll(60000, { only: ['notifications'] })
 })
 
 onUnmounted(() => {
+  document.body.classList.remove('dark', 'bg-slate-50', 'bg-slate-950')
   window.removeEventListener('resize', checkMobile)
   document.removeEventListener('click', handleClickOutside, true)
   document.removeEventListener('keydown', handleKeydown)

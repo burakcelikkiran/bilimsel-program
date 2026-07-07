@@ -7,15 +7,17 @@ use App\Models\Event;
 use App\Models\EventDay;
 use App\Models\ProgramSession;
 use App\Models\Venue;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Inertia\Inertia;
-use Inertia\Response;
+use App\Services\ProgramJsonExporter;
+use App\Support\ProgramSessionTypeMapper;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class TimelineController extends Controller
 {
@@ -24,7 +26,7 @@ class TimelineController extends Controller
     /**
      * Display timeline view for an event
      */
-    public function show(Event $event): Response
+    public function show(Request $request, Event $event): Response
     {
         $this->authorize('view', $event);
 
@@ -47,18 +49,20 @@ class TimelineController extends Controller
                         $q->with(['speakers'])
                             ->orderBy('start_time')
                             ->orderBy('sort_order');
-                    }
+                    },
                 ])
                     ->orderBy('start_time')
                     ->orderBy('sort_order');
-            }
+            },
         ]);
 
         // Calculate timeline stats
         $stats = $this->calculateTimelineStats($event);
 
+        $activeFilters = $request->only(['day_id', 'venue_id', 'category_id', 'session_type']);
+
         // Format data for timeline component
-        $timelineData = $this->formatTimelineData($event);
+        $timelineData = $this->formatTimelineData($event, $activeFilters);
 
         return Inertia::render('Admin/Timeline/Index', [
             'event' => [
@@ -73,6 +77,7 @@ class TimelineController extends Controller
             'timelineData' => $timelineData,
             'stats' => $stats,
             'filters' => $this->getTimelineFilters($event),
+            'activeFilters' => $activeFilters,
         ]);
     }
 
@@ -88,7 +93,7 @@ class TimelineController extends Controller
             'eventDays.venues.programSessions.sponsor',
             'eventDays.venues.programSessions.moderators',
             'eventDays.venues.programSessions.categories',
-            'eventDays.venues.programSessions.presentations.speakers'
+            'eventDays.venues.programSessions.presentations.speakers',
         ]);
 
         $timelineData = $this->formatTimelineData($event);
@@ -144,13 +149,22 @@ class TimelineController extends Controller
                 return redirect()->route('admin.export.events.program-pdf', $event);
 
             case 'excel':
-                // Excel export için direkt download response döndür  
+                // Excel export için direkt download response döndür
                 return redirect()->route('admin.export.events.program-excel', $event);
+
+            case 'program_json':
+                $programData = app(ProgramJsonExporter::class)->export($event);
+                $fileName = Event::createSlugFromTurkish($event->name).'_program_'.now()->format('Y-m-d').'.json';
+
+                return response()->json($programData, 200, [
+                    'Content-Type' => 'application/json',
+                    'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
+                ]);
 
             case 'json':
             default:
                 $timelineData = $this->formatTimelineData($event);
-                
+
                 // Boş veri durumunda da dosya indirme işlemi yapılsın
                 if (empty($timelineData)) {
                     $timelineData = [
@@ -161,16 +175,16 @@ class TimelineController extends Controller
                             'slug' => $event->slug,
                         ],
                         'generated_at' => now()->toISOString(),
-                        'data' => []
+                        'data' => [],
                     ];
                 }
-                
+
                 // JSON için dosyayı indirmek için response header'ları ayarla
-                $fileName = Event::createSlugFromTurkish($event->name) . '_timeline_' . now()->format('Y-m-d') . '.json';
+                $fileName = Event::createSlugFromTurkish($event->name).'_timeline_'.now()->format('Y-m-d').'.json';
 
                 return response()->json($timelineData, 200, [
                     'Content-Type' => 'application/json',
-                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                    'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
                 ]);
         }
     }
@@ -184,139 +198,139 @@ class TimelineController extends Controller
             $timelineData = [];
 
             foreach ($event->eventDays as $eventDay) {
-            // Apply day filter
-            if (!empty($filters['day_id']) && $eventDay->id != $filters['day_id']) {
-                continue;
-            }
-
-            $dayData = [
-                'id' => $eventDay->id,
-                'title' => $eventDay->title,
-                'display_name' => $eventDay->title,
-                'date' => $eventDay->date->toDateString(),
-                'formatted_date' => $eventDay->date->locale('tr')->translatedFormat('d F Y l'),
-                'is_active' => $eventDay->is_active,
-                'venues' => [],
-            ];
-
-            foreach ($eventDay->venues as $venue) {
-                // Apply venue filter
-                if (!empty($filters['venue_id']) && $venue->id != $filters['venue_id']) {
+                // Apply day filter
+                if (! empty($filters['day_id']) && $eventDay->id != $filters['day_id']) {
                     continue;
                 }
 
-                $venueData = [
-                    'id' => $venue->id,
-                    'name' => $venue->name,
-                    'display_name' => $venue->display_name ?? $venue->name,
-                    'color' => $venue->color ?? '#3B82F6',
-                    'capacity' => $venue->capacity,
-                    'sessions' => [],
+                $dayData = [
+                    'id' => $eventDay->id,
+                    'title' => $eventDay->title,
+                    'display_name' => $eventDay->title,
+                    'date' => $eventDay->date->toDateString(),
+                    'formatted_date' => $eventDay->date->locale('tr')->translatedFormat('d F Y l'),
+                    'is_active' => $eventDay->is_active,
+                    'venues' => [],
                 ];
 
-                foreach ($venue->programSessions as $session) {
-                    // Apply session type filter
-                    if (!empty($filters['session_type']) && $session->session_type != $filters['session_type']) {
+                foreach ($eventDay->venues as $venue) {
+                    // Apply venue filter
+                    if (! empty($filters['venue_id']) && $venue->id != $filters['venue_id']) {
                         continue;
                     }
 
-                    // Apply category filter - categories relationship kullan
-                    if (!empty($filters['category_id'])) {
-                        $hasCategory = $session->categories->contains('id', $filters['category_id']);
-                        if (!$hasCategory) {
-                            continue;
-                        }
-                    }
-
-                    $sessionData = [
-                        'id' => $session->id,
-                        'title' => $session->title,
-                        'description' => $session->description,
-                        'start_time' => $session->start_time?->format('H:i'),
-                        'end_time' => $session->end_time?->format('H:i'),
-                        'formatted_time_range' => $this->formatTimeRange($session),
-                        'duration_in_minutes' => $this->calculateDuration($session),
-                        'session_type' => $session->session_type,
-                        'session_type_display' => $this->getSessionTypeDisplay($session->session_type),
-                        'moderator_title' => $session->moderator_title,
-                        'is_break' => $session->is_break,
-                        'sort_order' => $session->sort_order,
-                        
-                        // Categories - multiple categories support
-                        'categories' => $session->categories->map(function ($category) {
-                            return [
-                                'id' => $category->id,
-                                'name' => $category->name,
-                                'color' => $category->color ?? '#3B82F6',
-                            ];
-                        }),
-                        
-                        'sponsor' => $session->sponsor ? [
-                            'id' => $session->sponsor->id,
-                            'name' => $session->sponsor->name,
-                            'logo_url' => $session->sponsor->logo_url,
-                        ] : null,
-                        
-                        'moderators' => $session->moderators->map(function ($moderator) {
-                            return [
-                                'id' => $moderator->id,
-                                'full_name' => $moderator->first_name . ' ' . $moderator->last_name,
-                                'title' => $moderator->title,
-                                'affiliation' => $moderator->affiliation,
-                            ];
-                        }),
-                        
-                        'presentations' => $session->presentations->map(function ($presentation) {
-                            return [
-                                'id' => $presentation->id,
-                                'title' => $presentation->title,
-                                'abstract' => $presentation->abstract,
-                                'start_time' => $presentation->start_time,
-                                'end_time' => $presentation->end_time,
-                                'formatted_time_range' => $this->formatTimeRange($presentation),
-                                'duration_minutes' => $this->calculateDuration($presentation),
-                                'presentation_type' => $presentation->presentation_type,
-                                'presentation_type_display' => $this->getPresentationTypeDisplay($presentation->presentation_type),
-                                'sort_order' => $presentation->sort_order,
-                                'speakers' => $presentation->speakers->map(function ($speaker) {
-                                    return [
-                                        'id' => $speaker->id,
-                                        'full_name' => $speaker->first_name . ' ' . $speaker->last_name,
-                                        'title' => $speaker->title,
-                                        'affiliation' => $speaker->affiliation,
-                                        'speaker_role' => $speaker->pivot->speaker_role ?? 'speaker',
-                                    ];
-                                }),
-                            ];
-                        }),
-                        
-                        'can_edit' => auth()->user()->can('update', $session),
-                        'can_delete' => auth()->user()->can('delete', $session),
+                    $venueData = [
+                        'id' => $venue->id,
+                        'name' => $venue->name,
+                        'display_name' => $venue->display_name ?? $venue->name,
+                        'color' => $venue->color ?? '#3B82F6',
+                        'capacity' => $venue->capacity,
+                        'sessions' => [],
                     ];
 
-                    $venueData['sessions'][] = $sessionData;
+                    foreach ($venue->programSessions as $session) {
+                        // Apply session type filter
+                        if (! empty($filters['session_type']) && $session->session_type != $filters['session_type']) {
+                            continue;
+                        }
+
+                        // Apply category filter - categories relationship kullan
+                        if (! empty($filters['category_id'])) {
+                            $hasCategory = $session->categories->contains('id', $filters['category_id']);
+                            if (! $hasCategory) {
+                                continue;
+                            }
+                        }
+
+                        $sessionData = [
+                            'id' => $session->id,
+                            'title' => $session->title,
+                            'description' => $session->description,
+                            'start_time' => $session->start_time?->format('H:i'),
+                            'end_time' => $session->end_time?->format('H:i'),
+                            'formatted_time_range' => $this->formatTimeRange($session),
+                            'duration_in_minutes' => $this->calculateDuration($session),
+                            'session_type' => $session->session_type,
+                            'session_type_display' => $this->getSessionTypeDisplay($session->session_type),
+                            'moderator_title' => $session->moderator_title,
+                            'is_break' => $session->is_break,
+                            'sort_order' => $session->sort_order,
+
+                            // Categories - multiple categories support
+                            'categories' => $session->categories->map(function ($category) {
+                                return [
+                                    'id' => $category->id,
+                                    'name' => $category->name,
+                                    'color' => $category->color ?? '#3B82F6',
+                                ];
+                            }),
+
+                            'sponsor' => $session->sponsor ? [
+                                'id' => $session->sponsor->id,
+                                'name' => $session->sponsor->name,
+                                'logo_url' => $session->sponsor->logo_url,
+                            ] : null,
+
+                            'moderators' => $session->moderators->map(function ($moderator) {
+                                return [
+                                    'id' => $moderator->id,
+                                    'full_name' => $moderator->first_name.' '.$moderator->last_name,
+                                    'title' => $moderator->title,
+                                    'affiliation' => $moderator->affiliation,
+                                ];
+                            }),
+
+                            'presentations' => $session->presentations->map(function ($presentation) {
+                                return [
+                                    'id' => $presentation->id,
+                                    'title' => $presentation->title,
+                                    'abstract' => $presentation->abstract,
+                                    'start_time' => $presentation->start_time,
+                                    'end_time' => $presentation->end_time,
+                                    'formatted_time_range' => $this->formatTimeRange($presentation),
+                                    'duration_minutes' => $this->calculateDuration($presentation),
+                                    'presentation_type' => $presentation->presentation_type,
+                                    'presentation_type_display' => $this->getPresentationTypeDisplay($presentation->presentation_type),
+                                    'sort_order' => $presentation->sort_order,
+                                    'speakers' => $presentation->speakers->map(function ($speaker) {
+                                        return [
+                                            'id' => $speaker->id,
+                                            'full_name' => $speaker->first_name.' '.$speaker->last_name,
+                                            'title' => $speaker->title,
+                                            'affiliation' => $speaker->affiliation,
+                                            'speaker_role' => $speaker->pivot->speaker_role ?? 'speaker',
+                                        ];
+                                    }),
+                                ];
+                            }),
+
+                            'can_edit' => auth()->user()->can('update', $session),
+                            'can_delete' => auth()->user()->can('delete', $session),
+                        ];
+
+                        $venueData['sessions'][] = $sessionData;
+                    }
+
+                    // Only add venue if it has sessions (after filtering)
+                    if (! empty($venueData['sessions']) || empty($filters)) {
+                        $dayData['venues'][] = $venueData;
+                    }
                 }
 
-                // Only add venue if it has sessions (after filtering)
-                if (!empty($venueData['sessions']) || empty($filters)) {
-                    $dayData['venues'][] = $venueData;
+                // Only add day if it has venues with sessions (after filtering)
+                if (! empty($dayData['venues']) || empty($filters)) {
+                    $timelineData[] = $dayData;
                 }
             }
-
-            // Only add day if it has venues with sessions (after filtering)
-            if (!empty($dayData['venues']) || empty($filters)) {
-                $timelineData[] = $dayData;
-            }
-        }
 
             return $timelineData;
         } catch (\Exception $e) {
             \Log::error('Error in formatTimelineData', [
                 'event_id' => $event->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
-            
+
             // Return empty data on error
             return [];
         }
@@ -354,7 +368,7 @@ class TimelineController extends Controller
 
         return [
             'total_days' => $event->eventDays->count(),
-            'total_venues' => $event->eventDays->sum(fn($day) => $day->venues->count()),
+            'total_venues' => $event->eventDays->sum(fn ($day) => $day->venues->count()),
             'total_sessions' => $totalSessions,
             'total_presentations' => $totalPresentations,
             'total_duration_minutes' => $totalDuration,
@@ -409,7 +423,7 @@ class TimelineController extends Controller
     private function getEventCategories(Event $event): array
     {
         $categories = collect();
-        
+
         foreach ($event->eventDays as $eventDay) {
             foreach ($eventDay->venues as $venue) {
                 foreach ($venue->programSessions as $session) {
@@ -419,7 +433,7 @@ class TimelineController extends Controller
                 }
             }
         }
-        
+
         return $categories->unique('id')->map(function ($category) {
             return [
                 'value' => $category->id,
@@ -436,7 +450,7 @@ class TimelineController extends Controller
     {
         return [
             'conflicts' => $this->detectTimeConflicts($event),
-            'available_time_slots' => $this->getAvailableTimeSlots($event),
+            'available_time_slots' => $this->buildAvailableTimeSlots($event),
             'venue_capacities' => $this->getVenueCapacities($event),
         ];
     }
@@ -507,9 +521,22 @@ class TimelineController extends Controller
     }
 
     /**
-     * Get available time slots for scheduling
+     * Get available time slots for scheduling (AJAX)
      */
-    private function getAvailableTimeSlots(Event $event): array
+    public function getAvailableTimeSlots(Event $event): JsonResponse
+    {
+        $this->authorize('view', $event);
+
+        return response()->json([
+            'success' => true,
+            'data' => $this->buildAvailableTimeSlots($event),
+        ]);
+    }
+
+    /**
+     * @return array<int, array{time: string, label: string}>
+     */
+    private function buildAvailableTimeSlots(Event $event): array
     {
         $slots = [];
         $start = Carbon::createFromFormat('H:i', '08:00');
@@ -554,14 +581,14 @@ class TimelineController extends Controller
      */
     private function formatTimeRange($model): string
     {
-        if (!$model->start_time || !$model->end_time) {
+        if (! $model->start_time || ! $model->end_time) {
             return '';
         }
 
         $start = $model->start_time instanceof Carbon ? $model->start_time : Carbon::parse($model->start_time);
         $end = $model->end_time instanceof Carbon ? $model->end_time : Carbon::parse($model->end_time);
 
-        return $start->format('H:i') . ' - ' . $end->format('H:i');
+        return $start->format('H:i').' - '.$end->format('H:i');
     }
 
     /**
@@ -569,7 +596,7 @@ class TimelineController extends Controller
      */
     private function calculateDuration($model): int
     {
-        if (!$model->start_time || !$model->end_time) {
+        if (! $model->start_time || ! $model->end_time) {
             return 0;
         }
 
@@ -584,21 +611,7 @@ class TimelineController extends Controller
      */
     private function getSessionTypeDisplay($type): string
     {
-        $types = [
-            'plenary' => 'Genel Oturum',
-            'parallel' => 'Paralel Oturum',
-            'workshop' => 'Workshop',
-            'poster' => 'Poster',
-            'break' => 'Ara',
-            'lunch' => 'Öğle Arası',
-            'social' => 'Sosyal',
-            'main' => 'Ana Oturum',
-            'satellite' => 'Uydu Sempozyumu',
-            'oral_presentation' => 'Sözlü Bildiri',
-            'special' => 'Özel Oturum',
-        ];
-
-        return $types[$type] ?? ucfirst($type);
+        return ProgramSessionTypeMapper::displayLabel((string) $type);
     }
 
     /**
@@ -619,7 +632,7 @@ class TimelineController extends Controller
     /**
      * Update session order and positions via drag & drop
      */
-    public function updateOrder(Request $request, Event $event): JsonResponse
+    public function updateOrder(Request $request, Event $event): RedirectResponse
     {
         $this->authorize('update', $event);
 
@@ -642,23 +655,23 @@ class TimelineController extends Controller
 
             foreach ($request->changes as $change) {
                 $session = ProgramSession::findOrFail($change['sessionId']);
-                
+
                 // Authorization check per session
                 $this->authorize('update', $session);
 
                 // Check if venue belongs to the specified day
                 $venue = Venue::findOrFail($change['toVenueId']);
-                
+
                 // Type conversion for comparison - both should be integers
                 $venueEventDayId = (int) $venue->event_day_id;
                 $targetDayId = (int) $change['toDayId'];
-                
+
                 if ($venueEventDayId !== $targetDayId) {
                     \Log::error('Venue day mismatch', [
                         'venue_id' => $venue->id,
                         'venue_event_day_id' => $venueEventDayId,
                         'target_day_id' => $targetDayId,
-                        'change' => $change
+                        'change' => $change,
                     ]);
                     throw new \Exception("Venue {$venue->name} does not belong to the specified day");
                 }
@@ -669,18 +682,18 @@ class TimelineController extends Controller
                     'sort_order' => $change['newSortOrder'],
                 ];
 
-                if (!empty($change['newStartTime'])) {
+                if (! empty($change['newStartTime'])) {
                     $sessionData['start_time'] = $change['newStartTime'];
                 }
 
-                if (!empty($change['newEndTime'])) {
+                if (! empty($change['newEndTime'])) {
                     $sessionData['end_time'] = $change['newEndTime'];
                 }
 
                 $session->update($sessionData);
 
                 // Update all sessions in the same venue if provided
-                if (!empty($change['allSessionsInVenue'])) {
+                if (! empty($change['allSessionsInVenue'])) {
                     foreach ($change['allSessionsInVenue'] as $sessionUpdate) {
                         if ($sessionUpdate['id'] !== $session->id) {
                             $otherSession = ProgramSession::find($sessionUpdate['id']);
@@ -700,36 +713,27 @@ class TimelineController extends Controller
 
                 // Update presentations in moved session
                 $this->updatePresentationTimes($session);
-                
+
                 $processedSessions[] = $session->id;
 
                 // Check for conflicts
                 $sessionConflicts = $this->checkSessionConflicts($session);
-                if (!empty($sessionConflicts)) {
+                if (! empty($sessionConflicts)) {
                     $conflicts = array_merge($conflicts, $sessionConflicts);
                 }
             }
 
             DB::commit();
-            
+
             \Log::info('Timeline update successful', [
                 'event_id' => $event->id,
                 'processed_sessions' => $processedSessions,
-                'changes_count' => count($request->changes)
+                'changes_count' => count($request->changes),
             ]);
 
-            // Get updated timeline data
-            $updatedTimelineData = $this->formatTimelineData($event);
-
-            return response()->json([
-                'success' => true,
-                'message' => count($processedSessions) . ' oturum başarıyla güncellendi',
-                'data' => [
-                    'timelineData' => $updatedTimelineData,
-                    'processedSessions' => $processedSessions,
-                    'conflicts' => $conflicts,
-                ],
-            ]);
+            return redirect()
+                ->route('admin.timeline.edit', $event->slug)
+                ->with('success', count($processedSessions).' oturum başarıyla güncellendi');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -740,10 +744,8 @@ class TimelineController extends Controller
                 'changes' => $request->changes,
             ]);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Timeline güncellenirken hata oluştu: ' . $e->getMessage(),
-            ], 500);
+            return back()
+                ->withErrors(['timeline' => 'Timeline güncellenirken hata oluştu: '.$e->getMessage()]);
         }
     }
 
@@ -765,7 +767,7 @@ class TimelineController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -776,7 +778,7 @@ class TimelineController extends Controller
             $targetDay = EventDay::findOrFail($request->target_day_id);
 
             // Validate that venue belongs to the event
-            if (!$targetVenue->eventDays()->where('event_days.id', $targetDay->id)->exists()) {
+            if (! $targetVenue->eventDays()->where('event_days.id', $targetDay->id)->exists()) {
                 throw new \Exception('Hedef salon bu etkinlik gününe ait değil');
             }
 
@@ -813,14 +815,14 @@ class TimelineController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Oturum başarıyla taşındı',
-                'session' => $session->fresh()->load(['venue', 'eventDay', 'moderators'])
+                'session' => $session->fresh()->load(['venue', 'eventDay', 'moderators']),
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -835,13 +837,13 @@ class TimelineController extends Controller
         $validator = Validator::make($request->all(), [
             'session_ids' => 'required|array',
             'session_ids.*' => 'exists:program_sessions,id',
-            'day_id' => 'required|exists:event_days,id'
+            'day_id' => 'required|exists:event_days,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -864,7 +866,7 @@ class TimelineController extends Controller
             // Update sort order
             foreach ($sessionIds as $index => $sessionId) {
                 ProgramSession::where('id', $sessionId)->update([
-                    'sort_order' => $index + 1
+                    'sort_order' => $index + 1,
                 ]);
             }
 
@@ -872,14 +874,14 @@ class TimelineController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Oturum sırası güncellendi'
+                'message' => 'Oturum sırası güncellendi',
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -902,7 +904,7 @@ class TimelineController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'valid' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -916,12 +918,12 @@ class TimelineController extends Controller
             return response()->json([
                 'valid' => $validation['valid'],
                 'message' => $validation['message'],
-                'conflicts' => $validation['conflicts'] ?? []
+                'conflicts' => $validation['conflicts'] ?? [],
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'valid' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -939,7 +941,7 @@ class TimelineController extends Controller
                 $this->processSessionReorder($change, $event);
                 break;
             default:
-                throw new \Exception('Bilinmeyen değişiklik tipi: ' . $change['type']);
+                throw new \Exception('Bilinmeyen değişiklik tipi: '.$change['type']);
         }
     }
 
@@ -952,7 +954,7 @@ class TimelineController extends Controller
 
         // Validate session belongs to event through venue->eventDay->event
         $sessionEvent = $session->venue?->eventDay?->event;
-        if (!$sessionEvent || $sessionEvent->id !== $event->id) {
+        if (! $sessionEvent || $sessionEvent->id !== $event->id) {
             throw new \Exception('Oturum bu etkinliğe ait değil');
         }
 
@@ -985,7 +987,7 @@ class TimelineController extends Controller
      */
     private function processSessionReorder(array $change, Event $event): void
     {
-        if (!isset($change['venue_id']) || !isset($change['day_id']) || !isset($change['session_order'])) {
+        if (! isset($change['venue_id']) || ! isset($change['day_id']) || ! isset($change['session_order'])) {
             throw new \Exception('Sıralama için gerekli veriler eksik');
         }
 
@@ -1098,7 +1100,7 @@ class TimelineController extends Controller
         return [
             'valid' => $valid,
             'message' => $message,
-            'conflicts' => $conflicts
+            'conflicts' => $conflicts,
         ];
     }
 
@@ -1121,6 +1123,68 @@ class TimelineController extends Controller
         foreach ($sessions as $index => $id) {
             ProgramSession::where('id', $id)->update(['sort_order' => $index + 1]);
         }
+    }
+
+    /**
+     * Timeline settings page
+     */
+    public function settings(): Response
+    {
+        return Inertia::render('Admin/Timeline/Help', [
+            'helpSections' => [
+                [
+                    'title' => 'Timeline Ayarları',
+                    'content' => 'Timeline görünümü ve dışa aktarma tercihleri yakında bu sayfadan yönetilebilecek.',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Quick access to the most recent event timeline
+     */
+    public function quickAccess(): \Illuminate\Http\RedirectResponse
+    {
+        $user = auth()->user();
+        $query = Event::query()->orderByDesc('updated_at');
+
+        if (! $user->isAdmin()) {
+            $organizationIds = $user->organizations()->pluck('organizations.id');
+            $query->whereIn('organization_id', $organizationIds);
+        }
+
+        $event = $query->first();
+
+        if (! $event) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('admin.timeline.show', $event->slug);
+    }
+
+    /**
+     * Get venue scheduling conflicts for an event (AJAX)
+     */
+    public function getVenueConflicts(Event $event): JsonResponse
+    {
+        $this->authorize('view', $event);
+
+        $event->load(['eventDays.venues.programSessions']);
+
+        $conflicts = $this->detectTimeConflicts($event);
+
+        if (request()->filled('venue_id')) {
+            $venueId = (int) request('venue_id');
+            $conflicts = array_values(array_filter(
+                $conflicts,
+                fn (array $conflict) => ($conflict['venue_id'] ?? null) === $venueId
+            ));
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $conflicts,
+        ]);
     }
 
     /**
@@ -1159,7 +1223,7 @@ class TimelineController extends Controller
      */
     private function updatePresentationTimes(ProgramSession $session): void
     {
-        if (!$session->start_time || !$session->presentations()->count()) {
+        if (! $session->start_time || ! $session->presentations()->count()) {
             return;
         }
 
@@ -1168,7 +1232,7 @@ class TimelineController extends Controller
 
         foreach ($presentations as $presentation) {
             $presentation->start_time = $currentTime->format('H:i');
-            
+
             // Calculate end time based on duration
             if ($presentation->duration_minutes) {
                 $endTime = $currentTime->copy()->addMinutes($presentation->duration_minutes);
@@ -1191,7 +1255,7 @@ class TimelineController extends Controller
      */
     private function checkSessionConflicts(ProgramSession $session): array
     {
-        if (!$session->start_time || !$session->end_time) {
+        if (! $session->start_time || ! $session->end_time) {
             return [];
         }
 
@@ -1204,7 +1268,7 @@ class TimelineController extends Controller
 
         foreach ($venueSessions as $otherSession) {
             // Check for time overlap
-            if (($session->start_time < $otherSession->end_time) && 
+            if (($session->start_time < $otherSession->end_time) &&
                 ($session->end_time > $otherSession->start_time)) {
                 $conflicts[] = [
                     'session1_id' => $session->id,

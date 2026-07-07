@@ -14,7 +14,7 @@ class UpdateEventRequest extends FormRequest
     {
         $event = $this->route('event');
         $user = auth()->user();
-        
+
         if ($user->isAdmin()) {
             return true;
         }
@@ -36,7 +36,7 @@ class UpdateEventRequest extends FormRequest
                 'exists:organizations,id',
                 function ($attribute, $value, $fail) {
                     $user = auth()->user();
-                    if (!$user->isAdmin() && !$user->organizations()->where('organizations.id', $value)->exists()) {
+                    if (! $user->isAdmin() && ! $user->organizations()->where('organizations.id', $value)->exists()) {
                         $fail('Bu organizasyona etkinlik ekleyemezsiniz.');
                     }
                 },
@@ -68,11 +68,15 @@ class UpdateEventRequest extends FormRequest
                 'required',
                 'date',
                 function ($attribute, $value, $fail) use ($event) {
-                    // Allow past dates for existing events if they have sessions
-                    if ($event->programSessions()->exists() && $value !== $event->start_date) {
-                        if (\Carbon\Carbon::parse($value)->isPast()) {
-                            $fail('Program oturumları olan etkinliğin tarihi geçmişe alınamaz.');
-                        }
+                    if (! $event->programSessions()->exists()) {
+                        return;
+                    }
+
+                    $submittedDate = \Carbon\Carbon::parse($value)->toDateString();
+                    $currentDate = $event->start_date->toDateString();
+
+                    if ($submittedDate !== $currentDate && \Carbon\Carbon::parse($value)->isPast()) {
+                        $fail('Program oturumları olan etkinliğin tarihi geçmişe alınamaz.');
                     }
                 },
             ],
@@ -188,32 +192,36 @@ class UpdateEventRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $event = $this->route('event');
-        
+
         // If title is provided, use it as the name for validation
-        if ($this->has('title') && !$this->has('name')) {
+        if ($this->has('title') && ! $this->has('name')) {
             $this->merge([
-                'name' => $this->title
+                'name' => $this->title,
             ]);
         }
-        
+
         // Set default values
         $this->merge([
             'is_published' => $this->boolean('is_published', false),
             'is_featured' => $this->boolean('is_featured', false),
         ]);
-        
+
         // Prepare social links if they exist
         if ($this->has('social_links')) {
-            $socialLinks = array_filter($this->social_links ?? [], function($value) {
-                return !empty($value);
+            $socialLinks = array_filter($this->social_links ?? [], function ($value) {
+                return ! empty($value);
             });
             $this->merge(['social_links' => $socialLinks]);
         }
 
-        // Auto-generate slug if not provided
-        if (empty($this->slug) && !empty($this->title)) {
+        // Auto-generate slug only when the title actually changes
+        if (
+            empty($this->slug)
+            && ! empty($this->title)
+            && $this->title !== $event->name
+        ) {
             $this->merge([
-                'slug' => \App\Models\Event::createSlugFromTurkish($this->title)
+                'slug' => \App\Models\Event::createSlugFromTurkish($this->title),
             ]);
         }
 
@@ -227,8 +235,8 @@ class UpdateEventRequest extends FormRequest
         // Prepare social links
         if ($this->has('social_links')) {
             $currentSocialLinks = $event->social_links ?? [];
-            $newSocialLinks = array_filter($this->social_links ?? [], function($value) {
-                return !empty($value);
+            $newSocialLinks = array_filter($this->social_links ?? [], function ($value) {
+                return ! empty($value);
             });
             $this->merge(['social_links' => array_merge($currentSocialLinks, $newSocialLinks)]);
         }
@@ -237,19 +245,19 @@ class UpdateEventRequest extends FormRequest
         if ($this->has('settings')) {
             $currentSettings = $event->settings ?? [];
             $newSettings = $this->settings ?? [];
-            
+
             $settings = array_merge($currentSettings, $newSettings);
             $settings['allow_public_access'] = $this->boolean('settings.allow_public_access', $settings['allow_public_access'] ?? true);
             $settings['require_registration'] = $this->boolean('settings.require_registration', $settings['require_registration'] ?? false);
             $settings['auto_generate_days'] = $this->boolean('settings.auto_generate_days', $settings['auto_generate_days'] ?? true);
-            
+
             $this->merge(['settings' => $settings]);
         }
 
         // Prepare tags
         if ($this->has('tags')) {
-            $tags = array_filter(array_map('trim', $this->tags ?? []), function($value) {
-                return !empty($value);
+            $tags = array_filter(array_map('trim', $this->tags ?? []), function ($value) {
+                return ! empty($value);
             });
             $this->merge(['tags' => array_values($tags)]);
         }

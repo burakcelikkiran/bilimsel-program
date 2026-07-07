@@ -1,8 +1,8 @@
 <!-- ModeratorsSection.vue - Reusable Moderators Selection Component -->
 <template>
-  <div class="space-y-6 border-t border-gray-200 dark:border-gray-700 pt-8">
+  <div class="space-y-6 border-t border-slate-200 dark:border-slate-700 pt-8">
     <div>
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+      <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center">
         <UserGroupIcon class="h-5 w-5 mr-2 text-blue-600" />
         Moderatörler
       </h3>
@@ -11,13 +11,13 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Moderator Title -->
       <div>
-        <label for="moderator_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label for="moderator_title" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
           Moderatör Unvanı
         </label>
         <select 
           id="moderator_title"
           v-model="form.moderator_title"
-          class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+          class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
           :class="errors.moderator_title ? 'border-red-300 focus:ring-red-500' : ''"
         >
           <option value="">Unvan Seçiniz</option>
@@ -30,7 +30,7 @@
 
       <!-- Enhanced Moderators Selection with Search -->
       <div class="lg:col-span-2">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
           Moderatörler
           <span v-if="selectedModerators.length > 0" class="ml-2 text-sm text-blue-600 dark:text-blue-400">
             ({{ selectedModerators.length }} seçildi)
@@ -40,18 +40,18 @@
         <!-- Search Input -->
         <div class="relative mb-4">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" />
+            <MagnifyingGlassIcon class="h-5 w-5 text-slate-400" />
           </div>
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Moderatör ara (isim, unvan, kurum)..."
-            class="block w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+            class="block w-full pl-10 pr-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
           />
           <div v-if="searchQuery" class="absolute inset-y-0 right-0 pr-3 flex items-center">
             <button
               @click="clearSearch"
-              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
             >
               <XMarkIcon class="h-5 w-5" />
             </button>
@@ -78,11 +78,11 @@
         </div>
 
         <!-- Moderators List -->
-        <div class="border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 max-h-64 overflow-y-auto">
+        <div class="border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 max-h-64 overflow-y-auto">
           <!-- Quick Actions -->
-          <div class="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+          <div class="p-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700">
             <div class="flex items-center justify-between text-sm">
-              <span class="text-gray-600 dark:text-gray-400">
+              <span class="text-slate-600 dark:text-slate-400">
                 {{ filteredParticipants.length }} moderatör bulundu
               </span>
               <div class="flex space-x-2">
@@ -93,7 +93,7 @@
                 >
                   Tümünü Seç
                 </button>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
+                <span class="text-slate-300 dark:text-slate-600">|</span>
                 <button
                   @click="clearAll"
                   :disabled="selectedModerators.length === 0"
@@ -106,18 +106,18 @@
           </div>
 
           <!-- Moderators Options -->
-          <div v-if="filteredParticipants.length === 0" class="p-6 text-center text-gray-500 dark:text-gray-400">
+          <div v-if="filteredParticipants.length === 0" class="p-6 text-center text-slate-500 dark:text-slate-400">
             <UserGroupIcon class="h-12 w-12 mx-auto mb-2 opacity-50" />
             <p>
               {{ searchQuery ? 'Arama kriterlerine uygun moderatör bulunamadı' : 'Henüz moderatör bulunmuyor' }}
             </p>
           </div>
 
-          <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
+          <div v-else class="divide-y divide-slate-200 dark:divide-slate-700">
             <div
               v-for="participant in filteredParticipants"
               :key="participant.id"
-              class="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+              class="p-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
               @click="toggleModerator(participant)"
             >
               <div class="flex items-start space-x-3">
@@ -125,7 +125,7 @@
                   :id="`moderator_${participant.id}`"
                   :checked="isModeratorSelected(participant.id)"
                   type="checkbox"
-                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-1 cursor-pointer"
+                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded mt-1 cursor-pointer"
                   @click.stop
                   @change="toggleModerator(participant)"
                 />
@@ -134,13 +134,13 @@
                     :for="`moderator_${participant.id}`"
                     class="block cursor-pointer"
                   >
-                    <div class="font-medium text-gray-900 dark:text-white truncate">
+                    <div class="font-medium text-slate-900 dark:text-white truncate">
                       {{ participant.full_name }}
                     </div>
-                    <div v-if="participant.title" class="text-sm text-gray-600 dark:text-gray-400 truncate">
+                    <div v-if="participant.title" class="text-sm text-slate-600 dark:text-slate-400 truncate">
                       {{ participant.title }}
                     </div>
-                    <div v-if="participant.affiliation" class="text-xs text-gray-500 dark:text-gray-500 truncate">
+                    <div v-if="participant.affiliation" class="text-xs text-slate-500 dark:text-slate-500 truncate">
                       {{ participant.affiliation }}
                     </div>
                   </label>
@@ -160,7 +160,7 @@
         </p>
 
         <!-- Help Text -->
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">
           Birden fazla moderatör seçebilirsiniz. Seçilen moderatörler oturum sırasına göre görüntülenecektir.
         </p>
       </div>
@@ -270,7 +270,7 @@ watch(searchQuery, (newQuery) => {
 /* Enhanced scrollbar for moderators list */
 .overflow-y-auto {
   scrollbar-width: thin;
-  scrollbar-color: rgb(156 163 175) transparent;
+  scrollbar-color: rgb(148 163 184) transparent;
 }
 
 .overflow-y-auto::-webkit-scrollbar {
@@ -282,12 +282,12 @@ watch(searchQuery, (newQuery) => {
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background-color: rgb(156 163 175);
+  background-color: rgb(148 163 184);
   border-radius: 3px;
 }
 
 .dark .overflow-y-auto::-webkit-scrollbar-thumb {
-  background-color: rgb(75 85 99);
+  background-color: rgb(71 85 105);
 }
 
 /* Smooth transitions */

@@ -1,27 +1,27 @@
 <!-- DataTable.vue - Tam dosya -->
 <template>
-  <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+  <div class="bg-white dark:bg-slate-800 shadow rounded-lg overflow-hidden">
     
 
     <!-- Table Header with Search -->
-    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+    <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700">
       <div class="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <!-- Left side: Title and Search -->
         <div class="flex-1 flex items-center space-x-4">
           <div v-if="title" class="flex-shrink-0">
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ title }}</h3>
-            <p v-if="subtitle" class="text-sm text-gray-500 dark:text-gray-400">{{ subtitle }}</p>
+            <h3 class="text-lg font-medium text-slate-900 dark:text-white">{{ title }}</h3>
+            <p v-if="subtitle" class="text-sm text-slate-500 dark:text-slate-400">{{ subtitle }}</p>
           </div>
           
           <!-- Search Input -->
           <div v-if="searchable" class="flex-1 max-w-md">
             <div class="relative">
-              <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
               <input
                 v-model="searchQuery"
                 type="text"
                 :placeholder="searchPlaceholder"
-                class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                class="block w-full pl-10 pr-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-400"
                 @input="handleSearch"
               />
             </div>
@@ -38,21 +38,21 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex items-center justify-center py-12">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      <span class="ml-3 text-gray-600 dark:text-gray-400">Yükleniyor...</span>
+      <span class="ml-3 text-slate-600 dark:text-slate-400">Yükleniyor...</span>
     </div>
 
     <!-- Table Content -->
     <div v-else class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
         <!-- Table Header -->
-        <thead class="bg-gray-50 dark:bg-gray-700">
+        <thead class="bg-slate-50 dark:bg-slate-700">
           <tr>
             <!-- Column Headers -->
             <th
               v-for="column in columns"
               :key="column.key"
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400"
-              :class="column.sortable ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600' : ''"
+              class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400"
+              :class="column.sortable ? 'cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600' : ''"
               @click="column.sortable ? handleSort(column.key) : null"
             >
               <div class="flex items-center space-x-1">
@@ -60,38 +60,38 @@
                 <div v-if="column.sortable" class="flex flex-col">
                   <ChevronUpIcon
                     class="h-3 w-3"
-                    :class="sortColumn === column.key && sortDirection === 'asc' ? 'text-blue-600' : 'text-gray-400'"
+                    :class="sortColumn === column.key && sortDirection === 'asc' ? 'text-blue-600' : 'text-slate-400'"
                   />
                   <ChevronDownIcon
                     class="h-3 w-3 -mt-1"
-                    :class="sortColumn === column.key && sortDirection === 'desc' ? 'text-blue-600' : 'text-gray-400'"
+                    :class="sortColumn === column.key && sortDirection === 'desc' ? 'text-blue-600' : 'text-slate-400'"
                   />
                 </div>
               </div>
             </th>
 
             <!-- Actions Column -->
-            <th v-if="hasActions" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
+            <th v-if="hasActions" class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">
               İşlemler
             </th>
           </tr>
         </thead>
 
         <!-- Table Body -->
-        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+        <tbody class="bg-white divide-y divide-slate-200 dark:bg-slate-800 dark:divide-slate-700">
           
 
           <!-- Data Rows -->
           <tr
             v-for="(row, index) in displayedData"
             :key="getRowKey(row, index)"
-            class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150"
+            class="hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors duration-150"
           >
             <!-- Data Cells -->
             <td
               v-for="column in columns"
               :key="column.key"
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+              class="px-6 py-4 whitespace-nowrap text-sm text-slate-900 dark:text-slate-100"
             >
               <!-- Custom Cell Content -->
               <slot
@@ -116,11 +116,11 @@
           <tr v-if="displayedData.length === 0">
             <td :colspan="columns.length + (hasActions ? 1 : 0)" class="px-6 py-12 text-center">
               <div class="flex flex-col items-center">
-                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">{{ emptyMessage }}</h3>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ emptyDescription }}</p>
+                <h3 class="mt-2 text-sm font-medium text-slate-900 dark:text-slate-100">{{ emptyMessage }}</h3>
+                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ emptyDescription }}</p>
               </div>
             </td>
           </tr>

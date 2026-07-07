@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProgramSession;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProgramSessionApiController extends Controller
 {
@@ -28,7 +28,7 @@ class ProgramSessionApiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Geçersiz veri.',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -37,27 +37,27 @@ class ProgramSessionApiController extends Controller
 
             foreach ($request->sessions as $sessionData) {
                 $session = ProgramSession::findOrFail($sessionData['id']);
-                
+
                 // Check permissions
-                if (!$this->canUpdateSession($session)) {
+                if (! $this->canUpdateSession($session)) {
                     continue;
                 }
 
                 // Update only provided fields
                 $updateData = [];
-                
+
                 if (isset($sessionData['venue_id'])) {
                     $updateData['venue_id'] = $sessionData['venue_id'];
                 }
-                
+
                 if (isset($sessionData['start_time'])) {
                     $updateData['start_time'] = $sessionData['start_time'];
                 }
-                
+
                 if (isset($sessionData['end_time'])) {
                     $updateData['end_time'] = $sessionData['end_time'];
                 }
-                
+
                 if (isset($sessionData['sort_order'])) {
                     $updateData['sort_order'] = $sessionData['sort_order'];
                 }
@@ -75,7 +75,7 @@ class ProgramSessionApiController extends Controller
                         return response()->json([
                             'success' => false,
                             'message' => "'{$session->title}' oturumu için zaman çakışması var.",
-                            'conflicting_session' => $session->title
+                            'conflicting_session' => $session->title,
                         ], 422);
                     }
                 }
@@ -88,15 +88,15 @@ class ProgramSessionApiController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Oturumlar başarıyla güncellendi.',
-                'updated_count' => count($request->sessions)
+                'updated_count' => count($request->sessions),
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             return response()->json([
                 'success' => false,
-                'message' => 'Güncelleme sırasında hata oluştu: ' . $e->getMessage()
+                'message' => 'Güncelleme sırasında hata oluştu: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -115,14 +115,14 @@ class ProgramSessionApiController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
-        if (!$this->canUpdateSession($session)) {
+        if (! $this->canUpdateSession($session)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Bu oturumu güncelleme yetkiniz yok.'
+                'message' => 'Bu oturumu güncelleme yetkiniz yok.',
             ], 403);
         }
 
@@ -138,16 +138,16 @@ class ProgramSessionApiController extends Controller
             if ($hasConflict) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Hedef salonda zaman çakışması var.'
+                    'message' => 'Hedef salonda zaman çakışması var.',
                 ], 422);
             }
 
             $updateData = ['venue_id' => $request->venue_id];
-            
+
             if ($request->start_time) {
                 $updateData['start_time'] = $request->start_time;
             }
-            
+
             if ($request->end_time) {
                 $updateData['end_time'] = $request->end_time;
             }
@@ -157,13 +157,13 @@ class ProgramSessionApiController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Oturum salonu güncellendi.',
-                'session' => $session->load(['venue', 'moderators', 'presentations'])
+                'session' => $session->load(['venue', 'moderators', 'presentations']),
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Güncelleme hatası: ' . $e->getMessage()
+                'message' => 'Güncelleme hatası: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -181,14 +181,14 @@ class ProgramSessionApiController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
-        if (!$this->canUpdateSession($session)) {
+        if (! $this->canUpdateSession($session)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Bu oturumu güncelleme yetkiniz yok.'
+                'message' => 'Bu oturumu güncelleme yetkiniz yok.',
             ], 403);
         }
 
@@ -204,7 +204,7 @@ class ProgramSessionApiController extends Controller
             if ($hasConflict) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Zaman çakışması var.'
+                    'message' => 'Zaman çakışması var.',
                 ], 422);
             }
 
@@ -216,13 +216,13 @@ class ProgramSessionApiController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Oturum zamanı güncellendi.',
-                'session' => $session
+                'session' => $session,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Güncelleme hatası: ' . $e->getMessage()
+                'message' => 'Güncelleme hatası: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -235,13 +235,13 @@ class ProgramSessionApiController extends Controller
         $validator = Validator::make($request->all(), [
             'event_day_id' => 'required|exists:event_days,id',
             'venue_ids' => 'nullable|array',
-            'venue_ids.*' => 'exists:venues,id'
+            'venue_ids.*' => 'exists:venues,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -250,17 +250,17 @@ class ProgramSessionApiController extends Controller
                 'venue',
                 'moderators',
                 'presentations',
-                'categories'
+                'categories',
             ])
-            ->whereHas('venue', function ($q) use ($request) {
-                $q->where('event_day_id', $request->event_day_id);
-                
-                if ($request->venue_ids) {
-                    $q->whereIn('id', $request->venue_ids);
-                }
-            })
-            ->orderBy('start_time')
-            ->orderBy('sort_order');
+                ->whereHas('venue', function ($q) use ($request) {
+                    $q->where('event_day_id', $request->event_day_id);
+
+                    if ($request->venue_ids) {
+                        $q->whereIn('id', $request->venue_ids);
+                    }
+                })
+                ->orderBy('start_time')
+                ->orderBy('sort_order');
 
             $sessions = $query->get();
 
@@ -279,13 +279,13 @@ class ProgramSessionApiController extends Controller
                 'success' => true,
                 'sessions' => $groupedSessions,
                 'venues' => $venues,
-                'total_sessions' => $sessions->count()
+                'total_sessions' => $sessions->count(),
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Veri alınırken hata oluştu: ' . $e->getMessage()
+                'message' => 'Veri alınırken hata oluştu: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -307,7 +307,7 @@ class ProgramSessionApiController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -323,7 +323,7 @@ class ProgramSessionApiController extends Controller
             if ($hasConflict) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Bu zaman aralığında çakışma var.'
+                    'message' => 'Bu zaman aralığında çakışma var.',
                 ], 422);
             }
 
@@ -341,13 +341,13 @@ class ProgramSessionApiController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Oturum başarıyla oluşturuldu.',
-                'session' => $session->load(['venue', 'moderators', 'presentations'])
+                'session' => $session->load(['venue', 'moderators', 'presentations']),
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Oluşturma hatası: ' . $e->getMessage()
+                'message' => 'Oluşturma hatası: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -358,27 +358,27 @@ class ProgramSessionApiController extends Controller
     private function canUpdateSession(ProgramSession $session): bool
     {
         $user = auth()->user();
-        
-        if (!$user) {
+
+        if (! $user) {
             return false;
         }
 
-        // Admin can update any session
-        if ($user->hasRole('admin')) {
+        if ($user->isAdmin()) {
             return true;
         }
 
-        // Organizer can update sessions in their events
-        if ($user->hasRole('organizer')) {
-            return $session->venue->eventDay->event->organizer_id === $user->id;
+        $event = $session->venue->eventDay->event;
+        $organization = $event->organization;
+
+        if (! $user->hasAccessToOrganization($organization)) {
+            return false;
         }
 
-        // Editor can update sessions if they have permission for the event
-        if ($user->hasRole('editor')) {
-            return $session->venue->eventDay->event->editors()->where('user_id', $user->id)->exists();
+        if ($user->isEditor()) {
+            return true;
         }
 
-        return false;
+        return $event->created_by === $user->id;
     }
 
     /**
@@ -389,11 +389,11 @@ class ProgramSessionApiController extends Controller
         $query = ProgramSession::where('venue_id', $venueId)
             ->where(function ($q) use ($startTime, $endTime) {
                 $q->whereBetween('start_time', [$startTime, $endTime])
-                  ->orWhereBetween('end_time', [$startTime, $endTime])
-                  ->orWhere(function ($q2) use ($startTime, $endTime) {
-                      $q2->where('start_time', '<=', $startTime)
-                         ->where('end_time', '>=', $endTime);
-                  });
+                    ->orWhereBetween('end_time', [$startTime, $endTime])
+                    ->orWhere(function ($q2) use ($startTime, $endTime) {
+                        $q2->where('start_time', '<=', $startTime)
+                            ->where('end_time', '>=', $endTime);
+                    });
             });
 
         if ($sessionId) {
@@ -409,6 +409,7 @@ class ProgramSessionApiController extends Controller
     private function getNextSortOrder($venueId): int
     {
         $maxOrder = ProgramSession::where('venue_id', $venueId)->max('sort_order');
+
         return ($maxOrder ?? 0) + 1;
     }
 }

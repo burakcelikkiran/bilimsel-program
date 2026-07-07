@@ -20,20 +20,20 @@
               :style="{ backgroundColor: venueData.color || '#3B82F6' }"
             ></div>
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
                 {{ venueData.display_name || venueData.name }}
               </h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
+              <p class="text-sm text-slate-500 dark:text-slate-400">
                 {{ venueData.capacity ? `Kapasite: ${venueData.capacity}` : 'Salon' }}
               </p>
             </div>
           </div>
           
           <div class="text-right">
-            <div class="text-lg font-bold text-gray-900 dark:text-white">
+            <div class="text-lg font-bold text-slate-900 dark:text-white">
               {{ venueData.sessions.length }}
             </div>
-            <div class="text-sm text-gray-500 dark:text-gray-400">Oturum</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Oturum</div>
           </div>
         </div>
       </div>
@@ -114,8 +114,8 @@
             'can-drop': editMode && dragState.isDragOver && dragState.canDrop
           }"
         >
-          <ClockIcon class="h-8 w-8 text-gray-400 mx-auto mb-2" />
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+          <ClockIcon class="h-8 w-8 text-slate-400 mx-auto mb-2" />
+          <p class="text-sm text-slate-500 dark:text-slate-400">
             {{ editMode ? 'Oturum sürükleyerek buraya bırakın' : 'Bu salonda oturum yok' }}
           </p>
         </div>

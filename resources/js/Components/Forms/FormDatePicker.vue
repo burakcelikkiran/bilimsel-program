@@ -26,7 +26,7 @@ resources/js/Components/Forms/FormDatePicker.vue
     <label 
       v-if="label" 
       :for="pickerId" 
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
       :class="{ 'text-red-600 dark:text-red-400': hasError }"
     >
       {{ label }}
@@ -66,7 +66,7 @@ resources/js/Components/Forms/FormDatePicker.vue
       <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
         <button
           type="button"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
           :disabled="disabled"
           @click="openCalendar"
         >
@@ -78,7 +78,7 @@ resources/js/Components/Forms/FormDatePicker.vue
       <button
         v-if="clearable && selectedDate && !disabled"
         type="button"
-        class="absolute inset-y-0 right-8 flex items-center pr-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        class="absolute inset-y-0 right-8 flex items-center pr-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
         @click="clearDate"
       >
         <XMarkIcon class="h-4 w-4" />
@@ -95,24 +95,24 @@ resources/js/Components/Forms/FormDatePicker.vue
       >
         <div
           v-if="isOpen"
-          class="absolute z-50 mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 p-4"
+          class="absolute z-50 mt-1 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-600 p-4"
           :class="dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full'"
         >
           <!-- Calendar Header -->
           <div class="flex items-center justify-between mb-4">
             <button
               type="button"
-              class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              class="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
               @click="previousMonth"
             >
-              <ChevronLeftIcon class="h-5 w-5 text-gray-600 dark:text-gray-400" />
+              <ChevronLeftIcon class="h-5 w-5 text-slate-600 dark:text-slate-400" />
             </button>
             
             <div class="flex items-center space-x-2">
               <!-- Month Selector -->
               <select
                 v-model="currentMonth"
-                class="text-sm font-medium text-gray-900 dark:text-gray-100 bg-transparent border-0 focus:ring-0"
+                class="text-sm font-medium text-slate-900 dark:text-slate-100 bg-transparent border-0 focus:ring-0"
                 @change="updateCalendar"
               >
                 <option v-for="(month, index) in monthNames" :key="index" :value="index">
@@ -123,7 +123,7 @@ resources/js/Components/Forms/FormDatePicker.vue
               <!-- Year Selector -->
               <select
                 v-model="currentYear"
-                class="text-sm font-medium text-gray-900 dark:text-gray-100 bg-transparent border-0 focus:ring-0"
+                class="text-sm font-medium text-slate-900 dark:text-slate-100 bg-transparent border-0 focus:ring-0"
                 @change="updateCalendar"
               >
                 <option v-for="year in availableYears" :key="year" :value="year">
@@ -134,10 +134,10 @@ resources/js/Components/Forms/FormDatePicker.vue
             
             <button
               type="button"
-              class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              class="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
               @click="nextMonth"
             >
-              <ChevronRightIcon class="h-5 w-5 text-gray-600 dark:text-gray-400" />
+              <ChevronRightIcon class="h-5 w-5 text-slate-600 dark:text-slate-400" />
             </button>
           </div>
 
@@ -147,7 +147,7 @@ resources/js/Components/Forms/FormDatePicker.vue
             <div
               v-for="day in dayNames"
               :key="day"
-              class="text-center text-xs font-medium text-gray-500 dark:text-gray-400 py-2"
+              class="text-center text-xs font-medium text-slate-500 dark:text-slate-400 py-2"
             >
               {{ day }}
             </div>
@@ -160,10 +160,10 @@ resources/js/Components/Forms/FormDatePicker.vue
               class="calendar-day"
               :class="[
                 {
-                  'text-gray-400 dark:text-gray-600': !date.inCurrentMonth,
+                  'text-slate-400 dark:text-slate-600': !date.inCurrentMonth,
                   'bg-blue-600 text-white': date.isSelected,
                   'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400': date.isToday && !date.isSelected,
-                  'hover:bg-gray-100 dark:hover:bg-gray-700': !date.isDisabled && !date.isSelected,
+                  'hover:bg-slate-100 dark:hover:bg-slate-700': !date.isDisabled && !date.isSelected,
                   'opacity-50 cursor-not-allowed': date.isDisabled,
                   'ring-2 ring-blue-500 ring-opacity-50': date.isSelected
                 }
@@ -176,24 +176,24 @@ resources/js/Components/Forms/FormDatePicker.vue
           </div>
 
           <!-- Time Picker (if enabled) -->
-          <div v-if="showTime" class="border-t border-gray-200 dark:border-gray-600 pt-4 mt-4">
+          <div v-if="showTime" class="border-t border-slate-200 dark:border-slate-600 pt-4 mt-4">
             <div class="flex items-center justify-center space-x-2">
               <!-- Hours -->
               <select
                 v-model="selectedHour"
-                class="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                class="px-2 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700"
               >
                 <option v-for="hour in hours" :key="hour" :value="hour">
                   {{ String(hour).padStart(2, '0') }}
                 </option>
               </select>
               
-              <span class="text-gray-500 dark:text-gray-400">:</span>
+              <span class="text-slate-500 dark:text-slate-400">:</span>
               
               <!-- Minutes -->
               <select
                 v-model="selectedMinute"
-                class="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                class="px-2 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700"
               >
                 <option v-for="minute in minutes" :key="minute" :value="minute">
                   {{ String(minute).padStart(2, '0') }}
@@ -204,7 +204,7 @@ resources/js/Components/Forms/FormDatePicker.vue
               <select
                 v-if="!use24Hour"
                 v-model="selectedPeriod"
-                class="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
+                class="px-2 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700"
               >
                 <option value="AM">AM</option>
                 <option value="PM">PM</option>
@@ -213,7 +213,7 @@ resources/js/Components/Forms/FormDatePicker.vue
           </div>
 
           <!-- Quick Actions -->
-          <div class="flex justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+          <div class="flex justify-between mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
             <button
               type="button"
               class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
@@ -225,7 +225,7 @@ resources/js/Components/Forms/FormDatePicker.vue
             <div class="space-x-2">
               <button
                 type="button"
-                class="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                class="px-3 py-1 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
                 @click="closeCalendar"
               >
                 Cancel
@@ -244,7 +244,7 @@ resources/js/Components/Forms/FormDatePicker.vue
     </div>
 
     <!-- Help Text -->
-    <p v-if="helpText && !hasError" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <p v-if="helpText && !hasError" class="mt-1 text-sm text-slate-500 dark:text-slate-400">
       {{ helpText }}
     </p>
 
@@ -404,9 +404,9 @@ const hasSuccess = computed(() => Boolean(props.successMessage))
 const inputClasses = computed(() => {
   const baseClasses = [
     'block', 'w-full', 'rounded-md', 'border', 'shadow-sm', 'transition-colors', 'duration-200',
-    'placeholder-gray-400', 'dark:placeholder-gray-500',
-    'bg-white', 'dark:bg-gray-900',
-    'text-gray-900', 'dark:text-gray-100',
+    'placeholder-slate-400', 'dark:placeholder-slate-500',
+    'bg-white', 'dark:bg-slate-900',
+    'text-slate-900', 'dark:text-slate-100',
     'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-0',
     'focus:border-blue-500', 'focus:ring-blue-500',
     'pr-16' // Space for icons
@@ -421,7 +421,7 @@ const inputClasses = computed(() => {
   return [
     ...baseClasses,
     ...sizeClasses[props.size].split(' '),
-    'border-gray-300', 'dark:border-gray-600'
+    'border-slate-300', 'dark:border-slate-600'
   ]
 })
 
@@ -716,7 +716,7 @@ defineExpose({
 }
 
 .calendar-day:hover:not(:disabled) {
-  @apply bg-gray-100 dark:bg-gray-700;
+  @apply bg-slate-100 dark:bg-slate-700;
 }
 
 .calendar-day:focus {

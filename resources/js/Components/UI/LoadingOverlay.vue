@@ -24,29 +24,29 @@
               v-if="icon" 
               class="absolute inset-0 flex items-center justify-center"
             >
-              <component :is="icon" class="h-6 w-6 text-gray-400" />
+              <component :is="icon" class="h-6 w-6 text-slate-400" />
             </div>
           </div>
 
           <!-- Loading Text -->
           <div v-if="message" class="text-center">
-            <p class="text-sm font-medium text-gray-900 dark:text-white">
+            <p class="text-sm font-medium text-slate-900 dark:text-white">
               {{ message }}
             </p>
-            <p v-if="description" class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p v-if="description" class="text-xs text-slate-500 dark:text-slate-400 mt-1">
               {{ description }}
             </p>
           </div>
 
           <!-- Progress Bar -->
           <div v-if="showProgress && progress !== null" class="w-full max-w-xs">
-            <div class="bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+            <div class="bg-slate-200 rounded-full h-2 dark:bg-slate-700">
               <div 
                 class="bg-blue-600 h-2 rounded-full transition-all duration-300"
                 :style="{ width: `${Math.min(Math.max(progress, 0), 100)}%` }"
               ></div>
             </div>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 text-center">
               {{ Math.round(progress) }}%
             </p>
           </div>
@@ -55,7 +55,7 @@
           <button
             v-if="cancellable"
             type="button"
-            class="mt-4 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
+            class="mt-4 inline-flex items-center px-3 py-2 border border-slate-300 shadow-sm text-sm leading-4 font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
             @click="handleCancel"
           >
             {{ cancelText }}
@@ -165,8 +165,8 @@ const overlayClasses = computed(() => {
 
   // Background variant
   const variants = {
-    light: 'bg-white bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-80',
-    dark: 'bg-gray-900 bg-opacity-80',
+    light: 'bg-white bg-opacity-80 dark:bg-slate-900 dark:bg-opacity-80',
+    dark: 'bg-slate-900 bg-opacity-80',
     transparent: 'bg-transparent'
   }
   classes.push(variants[props.variant])

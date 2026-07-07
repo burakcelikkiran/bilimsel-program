@@ -25,7 +25,7 @@ resources/js/Components/Forms/FormTextarea.vue
     <label 
       v-if="label" 
       :for="textareaId" 
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
       :class="{ 'text-red-600 dark:text-red-400': hasError }"
     >
       {{ label }}
@@ -53,7 +53,7 @@ resources/js/Components/Forms/FormTextarea.vue
             'border-red-300 dark:border-red-600 focus:border-red-500 focus:ring-red-500': hasError,
             'border-green-300 dark:border-green-600 focus:border-green-500 focus:ring-green-500': hasSuccess && !hasError,
             'opacity-50 cursor-not-allowed': disabled,
-            'bg-gray-50 dark:bg-gray-800': readonly,
+            'bg-slate-50 dark:bg-slate-800': readonly,
             'resize-none': !resizable,
             'resize-y': resizable === 'vertical',
             'resize-x': resizable === 'horizontal',
@@ -84,13 +84,13 @@ resources/js/Components/Forms/FormTextarea.vue
 
       <!-- Loading Spinner -->
       <div v-if="loading" class="absolute top-2 right-2">
-        <LoadingSpinner class="h-5 w-5 text-gray-400" />
+        <LoadingSpinner class="h-5 w-5 text-slate-400" />
       </div>
 
       <!-- Toolbar -->
       <div 
         v-if="showToolbar"
-        class="absolute bottom-2 right-2 flex space-x-1 bg-white dark:bg-gray-800 rounded-md shadow-sm border border-gray-200 dark:border-gray-600 p-1"
+        class="absolute bottom-2 right-2 flex space-x-1 bg-white dark:bg-slate-800 rounded-md shadow-sm border border-slate-200 dark:border-slate-600 p-1"
       >
         <!-- Format Buttons -->
         <button
@@ -139,7 +139,7 @@ resources/js/Components/Forms/FormTextarea.vue
     </div>
 
     <!-- Help Text -->
-    <p v-if="helpText && !hasError" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <p v-if="helpText && !hasError" class="mt-1 text-sm text-slate-500 dark:text-slate-400">
       {{ helpText }}
     </p>
 
@@ -154,7 +154,7 @@ resources/js/Components/Forms/FormTextarea.vue
     </p>
 
     <!-- Counter -->
-    <div v-if="showCounter" class="mt-1 flex justify-between text-xs text-gray-500 dark:text-gray-400">
+    <div v-if="showCounter" class="mt-1 flex justify-between text-xs text-slate-500 dark:text-slate-400">
       <div v-if="showWordCount" class="flex space-x-4">
         <span>Words: {{ wordCount }}</span>
         <span>Characters: {{ characterCount }}</span>
@@ -171,7 +171,7 @@ resources/js/Components/Forms/FormTextarea.vue
     <!-- Character/Word Statistics -->
     <div 
       v-if="showStats && (showWordCount || isFocused)"
-      class="mt-2 text-xs text-gray-500 dark:text-gray-400 space-y-1"
+      class="mt-2 text-xs text-slate-500 dark:text-slate-400 space-y-1"
     >
       <div class="flex justify-between">
         <span>Paragraphs: {{ paragraphCount }}</span>
@@ -364,9 +364,9 @@ const currentRows = computed(() => {
 const textareaClasses = computed(() => {
   const baseClasses = [
     'block', 'w-full', 'rounded-md', 'border', 'shadow-sm', 'transition-colors', 'duration-200',
-    'placeholder-gray-400', 'dark:placeholder-gray-500',
-    'bg-white', 'dark:bg-gray-900',
-    'text-gray-900', 'dark:text-gray-100',
+    'placeholder-slate-400', 'dark:placeholder-slate-500',
+    'bg-white', 'dark:bg-slate-900',
+    'text-slate-900', 'dark:text-slate-100',
     'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-0',
     'focus:border-blue-500', 'focus:ring-blue-500'
   ]
@@ -380,7 +380,7 @@ const textareaClasses = computed(() => {
   return [
     ...baseClasses,
     ...sizeClasses[props.size].split(' '),
-    'border-gray-300', 'dark:border-gray-600'
+    'border-slate-300', 'dark:border-slate-600'
   ]
 })
 
@@ -513,7 +513,7 @@ defineExpose({
 }
 
 .toolbar-button {
-  @apply p-1 rounded text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150;
+  @apply p-1 rounded text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150;
 }
 
 .toolbar-button:focus {
@@ -523,7 +523,7 @@ defineExpose({
 /* Custom scrollbar for textarea */
 .form-textarea {
   scrollbar-width: thin;
-  scrollbar-color: rgb(156 163 175) transparent;
+  scrollbar-color: rgb(148 163 184) transparent;
 }
 
 .form-textarea::-webkit-scrollbar {
@@ -535,12 +535,12 @@ defineExpose({
 }
 
 .form-textarea::-webkit-scrollbar-thumb {
-  background-color: rgb(156 163 175);
+  background-color: rgb(148 163 184);
   border-radius: 4px;
 }
 
 .dark .form-textarea::-webkit-scrollbar-thumb {
-  background-color: rgb(75 85 99);
+  background-color: rgb(71 85 105);
 }
 
 /* Auto-resize animation */

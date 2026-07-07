@@ -7,16 +7,16 @@
         <Head title="Yeni Etkinlik" />
 
         <div
-            class="min-h-screen bg-gray-50 dark:bg-gray-900 -mx-8 -my-6 px-4 py-3"
+            class="min-h-screen bg-slate-50 dark:bg-slate-950 -mx-8 -my-6 px-4 py-3"
         >
             <div class="max-w-7xl mx-auto">
                 <!-- Corporate Header Section -->
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-6"
+                    class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden mb-6"
                 >
                     <div class="relative">
                         <!-- Professional Corporate Header -->
-                        <div class="bg-gray-800 dark:bg-gray-900 px-6 py-6">
+                        <div class="bg-slate-800 dark:bg-slate-900 px-6 py-6">
                             <div class="flex items-center space-x-8">
                                 <div class="flex-shrink-0">
                                     <div
@@ -34,7 +34,7 @@
                                         Bilimsel Etkinlik Oluştur
                                     </h1>
                                     <p
-                                        class="text-gray-300 text-sm font-medium"
+                                        class="text-slate-300 text-sm font-medium"
                                     >
                                         Kongre, sempozyum veya konferans
                                         programınızı profesyonelce organize edin
@@ -45,16 +45,16 @@
                             <!-- Professional Progress -->
                             <div class="mt-4 flex items-center space-x-3">
                                 <div
-                                    class="h-2 w-2 bg-gray-400 rounded-full animate-pulse shadow-sm"
+                                    class="h-2 w-2 bg-slate-400 rounded-full animate-pulse shadow-sm"
                                 ></div>
-                                <span class="text-gray-300 text-sm font-medium"
+                                <span class="text-slate-300 text-sm font-medium"
                                     >Temel bilgiler aşaması</span
                                 >
                             </div>
                         </div>
 
                         <!-- Corporate Border -->
-                        <div class="h-1 bg-gray-600 dark:bg-gray-700"></div>
+                        <div class="h-1 bg-slate-600 dark:bg-slate-700"></div>
                     </div>
 
                     <!-- Main Form Section -->
@@ -63,14 +63,14 @@
                         <div class="space-y-6">
                             <div class="flex items-center space-x-4 mb-6">
                                 <div
-                                    class="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+                                    class="h-8 w-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center"
                                 >
                                     <DocumentTextIcon
-                                        class="h-4 w-4 text-gray-600 dark:text-gray-300"
+                                        class="h-4 w-4 text-slate-600 dark:text-slate-300"
                                     />
                                 </div>
                                 <h3
-                                    class="text-lg font-bold text-gray-900 dark:text-white"
+                                    class="text-lg font-bold text-slate-900 dark:text-white"
                                 >
                                     Etkinlik Bilgileri
                                 </h3>
@@ -81,11 +81,11 @@
                                 <div class="lg:col-span-2">
                                     <label
                                         for="title"
-                                        class="block text-sm font-bold text-gray-900 dark:text-white mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-white mb-2"
                                     >
                                         Etkinlik Adı *
                                         <span
-                                            class="text-xs font-normal text-gray-600 dark:text-gray-400 ml-2"
+                                            class="text-xs font-normal text-slate-600 dark:text-slate-400 ml-2"
                                             >(Resmi kongre/konferans adı)</span
                                         >
                                     </label>
@@ -94,7 +94,7 @@
                                         v-model="form.title"
                                         type="text"
                                         required
-                                        class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-gray-500/30 focus:border-gray-500 transition-all duration-200 text-sm"
+                                        class="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-slate-500/30 focus:border-slate-500 transition-all duration-200 text-sm"
                                         :class="
                                             errors.title
                                                 ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
@@ -117,11 +117,11 @@
                                 <div class="lg:col-span-1">
                                     <label
                                         for="organization_id"
-                                        class="block text-sm font-bold text-gray-900 dark:text-white mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-white mb-2"
                                     >
                                         Organizasyon *
                                         <span
-                                            class="text-xs font-normal text-gray-600 dark:text-gray-400 ml-2"
+                                            class="text-xs font-normal text-slate-600 dark:text-slate-400 ml-2"
                                             >(Düzenleyen kurum)</span
                                         >
                                     </label>
@@ -129,7 +129,7 @@
                                         id="organization_id"
                                         v-model="form.organization_id"
                                         required
-                                        class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500/30 focus:border-gray-500 transition-all duration-200 text-sm"
+                                        class="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500/30 focus:border-slate-500 transition-all duration-200 text-sm"
                                         :class="
                                             errors.organization_id
                                                 ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
@@ -162,18 +162,18 @@
 
                         <!-- Date and Location Section -->
                         <div
-                            class="space-y-6 pt-6 border-t border-gray-200 dark:border-gray-700"
+                            class="space-y-6 pt-6 border-t border-slate-200 dark:border-slate-700"
                         >
                             <div class="flex items-center space-x-4 mb-6">
                                 <div
-                                    class="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+                                    class="h-8 w-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center"
                                 >
                                     <ClockIcon
-                                        class="h-4 w-4 text-gray-600 dark:text-gray-300"
+                                        class="h-4 w-4 text-slate-600 dark:text-slate-300"
                                     />
                                 </div>
                                 <h3
-                                    class="text-lg font-bold text-gray-900 dark:text-white"
+                                    class="text-lg font-bold text-slate-900 dark:text-white"
                                 >
                                     Tarih ve Konum
                                 </h3>
@@ -184,20 +184,20 @@
                                 <div class="lg:col-span-1">
                                     <label
                                         for="start_date"
-                                        class="block text-sm font-bold text-gray-900 dark:text-white mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-white mb-2"
                                     >
                                         Başlangıç Tarihi *
                                     </label>
                                     <div class="relative">
                                         <CalendarDaysIcon
-                                            class="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500"
+                                            class="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500"
                                         />
                                         <input
                                             id="start_date"
                                             v-model="form.start_date"
                                             type="date"
                                             required
-                                            class="block w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500/30 focus:border-gray-500 transition-all duration-200 text-sm"
+                                            class="block w-full pl-8 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500/30 focus:border-slate-500 transition-all duration-200 text-sm"
                                             :class="
                                                 errors.start_date
                                                     ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
@@ -218,20 +218,20 @@
                                 <div class="lg:col-span-1">
                                     <label
                                         for="end_date"
-                                        class="block text-sm font-bold text-gray-900 dark:text-white mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-white mb-2"
                                     >
                                         Bitiş Tarihi *
                                     </label>
                                     <div class="relative">
                                         <CalendarDaysIcon
-                                            class="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500"
+                                            class="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500"
                                         />
                                         <input
                                             id="end_date"
                                             v-model="form.end_date"
                                             type="date"
                                             required
-                                            class="block w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500/30 focus:border-gray-500 transition-all duration-200 text-sm"
+                                            class="block w-full pl-8 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500/30 focus:border-slate-500 transition-all duration-200 text-sm"
                                             :class="
                                                 errors.end_date
                                                     ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
@@ -254,15 +254,15 @@
                                     class="lg:col-span-1"
                                 >
                                     <label
-                                        class="block text-sm font-bold text-gray-900 dark:text-white mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-white mb-2"
                                     >
                                         Süre
                                     </label>
                                     <div
-                                        class="px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
+                                        class="px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg"
                                     >
                                         <div
-                                            class="flex items-center justify-center text-gray-800 dark:text-gray-100"
+                                            class="flex items-center justify-center text-slate-800 dark:text-slate-100"
                                         >
                                             <span class="text-xl font-bold">{{
                                                 calculateDuration(
@@ -281,19 +281,19 @@
                                 <div class="lg:col-span-2">
                                     <label
                                         for="location"
-                                        class="block text-sm font-bold text-gray-900 dark:text-white mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-white mb-2"
                                     >
                                         Etkinlik Konumu
                                     </label>
                                     <div class="relative">
                                         <MapPinIcon
-                                            class="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500"
+                                            class="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500"
                                         />
                                         <input
                                             id="location"
                                             v-model="form.location"
                                             type="text"
-                                            class="block w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-gray-500/30 focus:border-gray-500 transition-all duration-200 text-sm"
+                                            class="block w-full pl-8 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-slate-500/30 focus:border-slate-500 transition-all duration-200 text-sm"
                                             :class="
                                                 errors.location
                                                     ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
@@ -314,18 +314,18 @@
 
                         <!-- Description Section -->
                         <div
-                            class="space-y-6 pt-6 border-t border-gray-200 dark:border-gray-700"
+                            class="space-y-6 pt-6 border-t border-slate-200 dark:border-slate-700"
                         >
                             <div class="flex items-center space-x-4 mb-6">
                                 <div
-                                    class="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+                                    class="h-8 w-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center"
                                 >
                                     <DocumentTextIcon
-                                        class="h-4 w-4 text-gray-600 dark:text-gray-300"
+                                        class="h-4 w-4 text-slate-600 dark:text-slate-300"
                                     />
                                 </div>
                                 <h3
-                                    class="text-lg font-bold text-gray-900 dark:text-white"
+                                    class="text-lg font-bold text-slate-900 dark:text-white"
                                 >
                                     Akademik İçerik
                                 </h3>
@@ -336,11 +336,11 @@
                                 <div class="lg:col-span-3">
                                     <label
                                         for="description"
-                                        class="block text-sm font-bold text-gray-900 dark:text-white mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-white mb-2"
                                     >
                                         Etkinlik Açıklaması
                                         <span
-                                            class="text-xs font-normal text-gray-600 dark:text-gray-400 ml-2"
+                                            class="text-xs font-normal text-slate-600 dark:text-slate-400 ml-2"
                                             >(Bilimsel amaç, hedef kitle ve
                                             program hakkında)</span
                                         >
@@ -350,7 +350,7 @@
                                             id="description"
                                             v-model="form.description"
                                             rows="4"
-                                            class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-gray-500/30 focus:border-gray-500 transition-all duration-200 resize-none text-sm leading-relaxed"
+                                            class="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-slate-500/30 focus:border-slate-500 transition-all duration-200 resize-none text-sm leading-relaxed"
                                             :class="
                                                 errors.description
                                                     ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
@@ -363,7 +363,7 @@
                                             class="absolute bottom-4 right-4 flex items-center space-x-2"
                                         >
                                             <span
-                                                class="text-base text-gray-500 bg-white dark:bg-gray-800 px-3 py-2 rounded-lg font-semibold"
+                                                class="text-base text-slate-500 bg-white dark:bg-slate-800 px-3 py-2 rounded-lg font-semibold"
                                                 >{{
                                                     (form.description || "")
                                                         .length
@@ -382,18 +382,18 @@
                                 <!-- Settings Panel -->
                                 <div class="lg:col-span-1">
                                     <label
-                                        class="block text-sm font-bold text-gray-900 dark:text-white mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-white mb-2"
                                     >
                                         Program Ayarları
                                     </label>
                                     <div
-                                        class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 border border-gray-300 dark:border-gray-600"
+                                        class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 border border-slate-300 dark:border-slate-600"
                                     >
                                         <h4
-                                            class="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center"
+                                            class="text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center"
                                         >
                                             <Cog6ToothIcon
-                                                class="h-4 w-4 mr-2 text-gray-600 dark:text-gray-400"
+                                                class="h-4 w-4 mr-2 text-slate-600 dark:text-slate-400"
                                             />
                                             Otomatik İşlemler
                                         </h4>
@@ -406,16 +406,16 @@
                                                         form.auto_create_days
                                                     "
                                                     type="checkbox"
-                                                    class="mt-0.5 h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded transition-colors"
+                                                    class="mt-0.5 h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded transition-colors"
                                                 />
                                                 <div>
                                                     <span
-                                                        class="text-sm font-bold text-gray-900 dark:text-white"
+                                                        class="text-sm font-bold text-slate-900 dark:text-white"
                                                     >
                                                         Günleri otomatik oluştur
                                                     </span>
                                                     <p
-                                                        class="text-xs text-gray-700 dark:text-gray-300 mt-1 leading-relaxed"
+                                                        class="text-xs text-slate-700 dark:text-slate-300 mt-1 leading-relaxed"
                                                     >
                                                         Belirlenen tarih
                                                         aralığında her gün için
@@ -432,11 +432,11 @@
 
                         <!-- Form Actions -->
                         <div
-                            class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700"
+                            class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-700"
                         >
                             <Link
                                 :href="route('admin.events.index')"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500/30 transition-all duration-200"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500/30 transition-all duration-200"
                             >
                                 <ArrowLeftIcon class="h-4 w-4 mr-2" />
                                 Vazgeç
@@ -448,7 +448,7 @@
                                     type="button"
                                     @click="submitForm(false)"
                                     :disabled="processing"
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <DocumentIcon class="h-4 w-4 mr-2" />
                                     Taslak Kaydet
@@ -458,7 +458,7 @@
                                 <button
                                     type="submit"
                                     :disabled="processing"
-                                    class="inline-flex items-center px-6 py-2 bg-gray-800 hover:bg-gray-900 dark:bg-gray-600 dark:hover:bg-gray-700 text-white text-sm font-medium rounded-lg focus:ring-2 focus:ring-gray-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="inline-flex items-center px-6 py-2 bg-slate-800 hover:bg-slate-900 dark:bg-slate-600 dark:hover:bg-slate-700 text-white text-sm font-medium rounded-lg focus:ring-2 focus:ring-slate-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <template v-if="processing">
                                         <div
@@ -478,31 +478,31 @@
 
                 <!-- Professional Tips Section -->
                 <div
-                    class="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 border border-gray-300 dark:border-gray-600"
+                    class="bg-slate-100 dark:bg-slate-800 rounded-lg p-6 border border-slate-300 dark:border-slate-600"
                 >
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0">
                             <div
-                                class="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+                                class="h-8 w-8 bg-slate-200 dark:bg-slate-700 rounded-lg flex items-center justify-center"
                             >
                                 <InformationCircleIcon
-                                    class="h-4 w-4 text-gray-700 dark:text-gray-300"
+                                    class="h-4 w-4 text-slate-700 dark:text-slate-300"
                                 />
                             </div>
                         </div>
                         <div class="flex-1">
                             <h4
-                                class="text-lg font-bold text-gray-900 dark:text-white mb-4"
+                                class="text-lg font-bold text-slate-900 dark:text-white mb-4"
                             >
                                 Akademik Etkinlik Oluşturma Rehberi
                             </h4>
                             <div
-                                class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-800 dark:text-gray-300"
+                                class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-800 dark:text-slate-300"
                             >
                                 <div class="space-y-3">
                                     <div class="flex items-start space-x-3">
                                         <div
-                                            class="h-2 w-2 bg-gray-600 rounded-full mt-1.5 flex-shrink-0"
+                                            class="h-2 w-2 bg-slate-600 rounded-full mt-1.5 flex-shrink-0"
                                         ></div>
                                         <span
                                             ><strong>Resmi Ad:</strong>
@@ -512,7 +512,7 @@
                                     </div>
                                     <div class="flex items-start space-x-4">
                                         <div
-                                            class="h-3 w-3 bg-gray-600 rounded-full mt-3 flex-shrink-0"
+                                            class="h-3 w-3 bg-slate-600 rounded-full mt-3 flex-shrink-0"
                                         ></div>
                                         <span
                                             ><strong>Organizasyon:</strong> Ana
@@ -521,7 +521,7 @@
                                     </div>
                                     <div class="flex items-start space-x-4">
                                         <div
-                                            class="h-3 w-3 bg-gray-600 rounded-full mt-3 flex-shrink-0"
+                                            class="h-3 w-3 bg-slate-600 rounded-full mt-3 flex-shrink-0"
                                         ></div>
                                         <span
                                             ><strong>Tarih Seçimi:</strong>
@@ -533,7 +533,7 @@
                                 <div class="space-y-3">
                                     <div class="flex items-start space-x-3">
                                         <div
-                                            class="h-2 w-2 bg-gray-600 rounded-full mt-1.5 flex-shrink-0"
+                                            class="h-2 w-2 bg-slate-600 rounded-full mt-1.5 flex-shrink-0"
                                         ></div>
                                         <span
                                             ><strong>Açıklama:</strong> Bilimsel
@@ -542,7 +542,7 @@
                                     </div>
                                     <div class="flex items-start space-x-4">
                                         <div
-                                            class="h-3 w-3 bg-gray-600 rounded-full mt-3 flex-shrink-0"
+                                            class="h-3 w-3 bg-slate-600 rounded-full mt-3 flex-shrink-0"
                                         ></div>
                                         <span
                                             ><strong>Konum:</strong> Detaylı
@@ -551,7 +551,7 @@
                                     </div>
                                     <div class="flex items-start space-x-4">
                                         <div
-                                            class="h-3 w-3 bg-gray-600 rounded-full mt-3 flex-shrink-0"
+                                            class="h-3 w-3 bg-slate-600 rounded-full mt-3 flex-shrink-0"
                                         ></div>
                                         <span
                                             ><strong>Otomatik Gün:</strong>

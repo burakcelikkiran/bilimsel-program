@@ -8,20 +8,20 @@
         <Head title="Program Oturumları" />
 
         <!-- Hero Section with Quick Stats - Gray Theme -->
-        <div class="mb-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div
-                    class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 text-white shadow-lg border border-gray-700"
+                    class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 text-white shadow border border-slate-700"
                 >
                     <div class="flex items-center">
                         <div
-                            class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                            class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                         >
-                            <SpeakerWaveIcon class="h-8 w-8" />
+                            <SpeakerWaveIcon class="h-5 w-5" />
                         </div>
-                        <div class="ml-4">
-                            <p class="text-gray-300 text-sm">Toplam Oturum</p>
-                            <p class="text-2xl font-bold">
+                        <div class="ml-3">
+                            <p class="text-slate-300 text-xs">Toplam Oturum</p>
+                            <p class="text-lg font-bold">
                                 {{ stats.total || sessions?.total || 0 }}
                             </p>
                         </div>
@@ -29,19 +29,19 @@
                 </div>
 
                 <div
-                    class="bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl p-6 text-white shadow-lg border border-gray-600"
+                    class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg p-4 text-white shadow border border-slate-600"
                 >
                     <div class="flex items-center">
                         <div
-                            class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                            class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                         >
-                            <DocumentTextIcon class="h-8 w-8" />
+                            <DocumentTextIcon class="h-5 w-5" />
                         </div>
-                        <div class="ml-4">
-                            <p class="text-gray-300 text-sm">
+                        <div class="ml-3">
+                            <p class="text-slate-300 text-xs">
                                 Sunumlu Oturumlar
                             </p>
-                            <p class="text-2xl font-bold">
+                            <p class="text-lg font-bold">
                                 {{ stats.with_presentations || 0 }}
                             </p>
                         </div>
@@ -49,17 +49,17 @@
                 </div>
 
                 <div
-                    class="bg-gradient-to-br from-gray-600 to-gray-700 rounded-xl p-6 text-white shadow-lg border border-gray-500"
+                    class="bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg p-4 text-white shadow border border-slate-500"
                 >
                     <div class="flex items-center">
                         <div
-                            class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                            class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                         >
-                            <UsersIcon class="h-8 w-8" />
+                            <UsersIcon class="h-5 w-5" />
                         </div>
-                        <div class="ml-4">
-                            <p class="text-gray-300 text-sm">Moderatörlü</p>
-                            <p class="text-2xl font-bold">
+                        <div class="ml-3">
+                            <p class="text-slate-300 text-xs">Moderatörlü</p>
+                            <p class="text-lg font-bold">
                                 {{ stats.with_moderators || 0 }}
                             </p>
                         </div>
@@ -67,19 +67,19 @@
                 </div>
 
                 <div
-                    class="bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl p-6 text-white shadow-lg border border-gray-400"
+                    class="bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg p-4 text-white shadow border border-slate-400"
                 >
                     <div class="flex items-center">
                         <div
-                            class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                            class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                         >
-                            <ClockIcon class="h-8 w-8" />
+                            <ClockIcon class="h-5 w-5" />
                         </div>
-                        <div class="ml-4">
-                            <p class="text-gray-300 text-sm">
+                        <div class="ml-3">
+                            <p class="text-slate-300 text-xs">
                                 Bugünkü Oturumlar
                             </p>
-                            <p class="text-2xl font-bold">
+                            <p class="text-lg font-bold">
                                 {{ stats.today || 0 }}
                             </p>
                         </div>
@@ -90,38 +90,38 @@
 
         <!-- Modern Data Table -->
         <div
-            class="bg-white dark:bg-gray-900 shadow-xl rounded-2xl overflow-visible border border-gray-200/50 dark:border-gray-800/50"
+            class="bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-visible border border-slate-200/50 dark:border-slate-800/50"
         >
             <!-- Enhanced Header -->
             <div
-                class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 px-8 py-6 border-b border-gray-200 dark:border-gray-800"
+                class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 px-4 py-4 border-b border-slate-200 dark:border-slate-800"
             >
                 <div
-                    class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0"
+                    class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-3 lg:space-y-0"
                 >
                     <!-- Left: Title and Description -->
                     <div>
                         <h2
-                            class="text-2xl font-bold text-gray-900 dark:text-white"
+                            class="text-lg font-bold text-slate-900 dark:text-white"
                         >
                             Oturum Yönetimi
                         </h2>
-                        <p class="text-gray-600 dark:text-gray-400 mt-1">
+                        <p class="text-slate-600 dark:text-slate-400 text-sm">
                             Program oturumlarını düzenleyin ve yönetin
                         </p>
                     </div>
 
                     <!-- Right: Actions -->
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2">
                         <!-- Quick Filters -->
                         <div class="flex items-center space-x-2">
                             <button
                                 @click="quickFilter('all')"
                                 :class="[
-                                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                                    'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                     currentQuickFilter === 'all'
-                                        ? 'bg-gray-800 text-white shadow-lg border border-gray-700'
-                                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                        ? 'bg-slate-800 text-white shadow-lg border border-slate-700'
+                                        : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                 ]"
                             >
                                 Tümü
@@ -129,10 +129,10 @@
                             <button
                                 @click="quickFilter('main')"
                                 :class="[
-                                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                                    'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                     currentQuickFilter === 'main'
-                                        ? 'bg-gray-700 text-white shadow-lg border border-gray-600'
-                                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                        ? 'bg-slate-700 text-white shadow-lg border border-slate-600'
+                                        : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                 ]"
                             >
                                 Ana Oturum
@@ -140,10 +140,10 @@
                             <button
                                 @click="quickFilter('oral_presentation')"
                                 :class="[
-                                    'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                                    'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                     currentQuickFilter === 'oral_presentation'
-                                        ? 'bg-gray-600 text-white shadow-lg border border-gray-500'
-                                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                        ? 'bg-slate-600 text-white shadow-lg border border-slate-500'
+                                        : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                 ]"
                             >
                                 Sözlü Bildiri
@@ -152,29 +152,29 @@
 
                         <!-- View Toggle -->
                         <div
-                            class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1"
+                            class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-md p-0.5"
                         >
                             <button
                                 @click="viewMode = 'list'"
                                 :class="[
-                                    'px-3 py-1 text-sm font-medium rounded-md transition-colors',
+                                    'px-2 py-1 text-xs font-medium rounded-sm transition-colors',
                                     viewMode === 'list'
-                                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
+                                        ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300',
                                 ]"
                             >
-                                <ListBulletIcon class="h-4 w-4" />
+                                <ListBulletIcon class="h-3 w-3" />
                             </button>
                             <button
                                 @click="viewMode = 'grid'"
                                 :class="[
-                                    'px-3 py-1 text-sm font-medium rounded-md transition-colors',
+                                    'px-2 py-1 text-xs font-medium rounded-sm transition-colors',
                                     viewMode === 'grid'
-                                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
+                                        ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300',
                                 ]"
                             >
-                                <Squares2X2Icon class="h-4 w-4" />
+                                <Squares2X2Icon class="h-3 w-3" />
                             </button>
                         </div>
 
@@ -183,12 +183,12 @@
                             :href="
                                 safeRoute(
                                     'admin.program-sessions.create',
-                                    '/admin/program-sessions/create'
+                                    '/admin/program-sessions/create',
                                 )
                             "
-                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 border border-gray-700"
+                            class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white text-sm font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-slate-700"
                         >
-                            <PlusIcon class="h-5 w-5 mr-2" />
+                            <PlusIcon class="h-4 w-4 mr-1.5" />
                             Yeni Oturum
                         </Link>
                     </div>
@@ -196,44 +196,44 @@
 
                 <!-- Enhanced Search and Filters -->
                 <div
-                    class="mt-6 flex flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-4"
+                    class="mt-4 flex flex-col lg:flex-row lg:items-center space-y-3 lg:space-y-0 lg:space-x-3"
                 >
                     <!-- Search Bar -->
                     <div class="flex-1 relative">
                         <div
-                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                         >
                             <MagnifyingGlassIcon
-                                class="h-5 w-5 text-gray-400"
+                                class="h-5 w-5 text-slate-400"
                             />
                         </div>
                         <input
                             v-model="searchQuery"
                             type="text"
                             placeholder="Oturum başlığı, açıklama veya moderatör ile ara..."
-                            class="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent shadow-sm"
+                            class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                             @input="handleSearchDebounced"
                         />
                         <div
                             v-if="searchQuery"
-                            class="absolute inset-y-0 right-0 pr-4 flex items-center"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center"
                         >
                             <button
                                 @click="clearSearch"
-                                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                             >
-                                <XMarkIcon class="h-5 w-5" />
+                                <XMarkIcon class="h-4 w-4" />
                             </button>
                         </div>
                     </div>
 
                     <!-- Advanced Filters -->
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2">
                         <!-- Event Filter -->
                         <select
                             v-model="activeFilters.event_id"
                             @change="applyFilters"
-                            class="px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-sm"
+                            class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                         >
                             <option value="">Tüm Etkinlikler</option>
                             <option
@@ -249,7 +249,7 @@
                         <select
                             v-model="activeFilters.venue_id"
                             @change="applyFilters"
-                            class="px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-sm"
+                            class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                         >
                             <option value="">Tüm Salonlar</option>
                             <option
@@ -265,7 +265,7 @@
                         <select
                             v-model="activeFilters.session_type"
                             @change="applyFilters"
-                            class="px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-sm"
+                            class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 text-xs"
                         >
                             <option value="">Tüm Türler</option>
                             <option value="main">Ana Oturum</option>
@@ -281,10 +281,10 @@
                         <button
                             v-if="hasActiveFilters"
                             @click="clearFilters"
-                            class="px-4 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
+                            class="px-2 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200"
                             title="Filtreleri Temizle"
                         >
-                            <XMarkIcon class="h-5 w-5" />
+                            <XMarkIcon class="h-4 w-4" />
                         </button>
                     </div>
                 </div>
@@ -294,9 +294,9 @@
             <div v-if="loading" class="flex items-center justify-center py-16">
                 <div class="flex flex-col items-center space-y-4">
                     <div
-                        class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600"
+                        class="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"
                     ></div>
-                    <p class="text-gray-600 dark:text-gray-400 font-medium">
+                    <p class="text-slate-600 dark:text-slate-400 font-medium">
                         Yükleniyor...
                     </p>
                 </div>
@@ -306,12 +306,12 @@
             <div v-else-if="displayedSessions.length === 0" class="py-16">
                 <div class="text-center">
                     <div
-                        class="mx-auto h-24 w-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl flex items-center justify-center"
+                        class="mx-auto h-24 w-24 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl flex items-center justify-center"
                     >
-                        <SpeakerWaveIcon class="h-12 w-12 text-gray-400" />
+                        <SpeakerWaveIcon class="h-12 w-12 text-slate-400" />
                     </div>
                     <h3
-                        class="mt-6 text-xl font-semibold text-gray-900 dark:text-white"
+                        class="mt-6 text-xl font-semibold text-slate-900 dark:text-white"
                     >
                         {{
                             searchQuery || hasActiveFilters
@@ -319,7 +319,7 @@
                                 : "Henüz oturum yok"
                         }}
                     </h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">
+                    <p class="mt-2 text-slate-600 dark:text-slate-400">
                         {{
                             searchQuery || hasActiveFilters
                                 ? "Arama kriterlerinizi değiştirip tekrar deneyin."
@@ -332,18 +332,18 @@
                             :href="
                                 safeRoute(
                                     'admin.program-sessions.create',
-                                    '/admin/program-sessions/create'
+                                    '/admin/program-sessions/create',
                                 )
                             "
-                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                            class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white text-sm font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200"
                         >
-                            <PlusIcon class="h-5 w-5 mr-2" />
+                            <PlusIcon class="h-4 w-4 mr-1.5" />
                             İlk Oturumu Oluşturun
                         </Link>
                         <button
                             v-else
                             @click="clearAllFilters"
-                            class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                            class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                         >
                             <XMarkIcon class="h-5 w-5 mr-2" />
                             Filtreleri Temizle
@@ -357,22 +357,24 @@
                 <!-- Bulk Actions -->
                 <div
                     v-if="selectedSessions.length > 0"
-                    class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-8 py-4"
+                    class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-2"
                 >
                     <div class="flex items-center justify-between">
-                        <p class="text-gray-800 dark:text-gray-200 font-medium">
+                        <p
+                            class="text-slate-800 dark:text-slate-200 font-medium"
+                        >
                             {{ selectedSessions.length }} oturum seçildi
                         </p>
-                        <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
                             <button
                                 @click="bulkDuplicate"
-                                class="px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg text-sm font-medium transition-all duration-200"
+                                class="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-lg text-sm font-medium transition-all duration-200"
                             >
                                 Kopyala
                             </button>
                             <button
                                 @click="bulkDelete"
-                                class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg text-sm font-medium transition-all duration-200"
+                                class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-medium transition-all duration-200"
                             >
                                 Sil
                             </button>
@@ -383,52 +385,52 @@
                 <!-- Sessions Table -->
                 <div class="overflow-visible">
                     <table
-                        class="w-full divide-y divide-gray-200 dark:divide-gray-800"
+                        class="w-full divide-y divide-slate-200 dark:divide-slate-800"
                     >
-                        <thead class="bg-gray-50 dark:bg-gray-800/50">
+                        <thead class="bg-slate-50 dark:bg-slate-800/50">
                             <tr>
                                 <!-- Select All -->
-                                <th class="px-8 py-4 text-left w-12">
+                                <th class="px-3 py-2 text-left w-10">
                                     <input
                                         type="checkbox"
                                         :checked="isAllSelected"
                                         :indeterminate="isIndeterminate"
                                         @change="toggleSelectAll"
-                                        class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                                        class="h-3.5 w-3.5 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                                     />
                                 </th>
 
                                 <!-- Session Header -->
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                    class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider"
                                 >
                                     <span>Oturum</span>
                                 </th>
 
                                 <!-- Type Header -->
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32"
+                                    class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-64"
                                 >
                                     Tür
                                 </th>
 
                                 <!-- Time Header -->
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-40"
+                                    class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-64"
                                 >
                                     Zaman
                                 </th>
 
                                 <!-- Stats Header -->
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32"
+                                    class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-64"
                                 >
                                     İstatistikler
                                 </th>
 
                                 <!-- Actions Header -->
                                 <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-60"
+                                    class="px-3 py-2 text-center text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-"
                                 >
                                     İşlemler
                                 </th>
@@ -436,55 +438,55 @@
                         </thead>
 
                         <tbody
-                            class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800"
+                            class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-800"
                         >
                             <tr
                                 v-for="session in displayedSessions"
                                 :key="session.id"
-                                class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200"
+                                class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200"
                             >
                                 <!-- Checkbox -->
-                                <td class="px-8 py-6 w-12">
+                                <td class="px-3 py-2 w-10">
                                     <input
                                         type="checkbox"
                                         :value="session.id"
                                         v-model="selectedSessions"
-                                        class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                                        class="h-3.5 w-3.5 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                                     />
                                 </td>
 
                                 <!-- Session Info -->
-                                <td class="px-6 py-6">
-                                    <div class="flex items-start">
-                                        <div class="flex-shrink-0 h-12 w-12">
+                                <td class="px-3 py-2">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8">
                                             <div
-                                                class="h-12 w-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md"
+                                                class="h-8 w-8 rounded-lg bg-gradient-to-br flex items-center justify-center"
                                                 :class="
                                                     getSessionTypeGradient(
-                                                        session.session_type
+                                                        session.session_type,
                                                     )
                                                 "
                                             >
                                                 <component
                                                     :is="
                                                         getSessionIcon(
-                                                            session.session_type
+                                                            session.session_type,
                                                         )
                                                     "
-                                                    class="h-6 w-6 text-white"
+                                                    class="h-4 w-4 text-white"
                                                 />
                                             </div>
                                         </div>
-                                        <div class="ml-4">
+                                        <div class="ml-2.5 min-w-0">
                                             <Link
                                                 :href="
                                                     safeRoute(
                                                         'admin.program-sessions.show',
                                                         `/admin/program-sessions/${session.id}`,
-                                                        session.id
+                                                        session.id,
                                                     )
                                                 "
-                                                class="text-lg font-semibold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-200"
+                                                class="text-sm font-medium text-slate-900 dark:text-white hover:text-slate-600 dark:hover:text-slate-400 transition-colors duration-200"
                                             >
                                                 {{
                                                     session.title ||
@@ -493,34 +495,34 @@
                                             </Link>
                                             <p
                                                 v-if="session.description"
-                                                class="text-gray-600 dark:text-gray-400 mt-1 line-clamp-2 max-w-md"
+                                                class="text-slate-500 dark:text-slate-400 text-xs line-clamp-1 max-w-xs"
                                             >
                                                 {{ session.description }}
                                             </p>
                                             <div
-                                                class="flex items-center mt-2 text-sm text-gray-500 dark:text-gray-400"
+                                                class="flex items-center mt-0.5 text-xs text-slate-500 dark:text-slate-400"
                                             >
                                                 <BuildingOfficeIcon
-                                                    class="h-4 w-4 mr-1"
+                                                    class="h-3 w-3 mr-0.5 flex-shrink-0"
                                                 />
-                                                {{
+                                                <span class="truncate">{{
                                                     session.venue
                                                         ?.display_name ||
                                                     session.venue?.name ||
                                                     "Salon belirtilmemiş"
-                                                }}
+                                                }}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
 
                                 <!-- Type -->
-                                <td class="px-6 py-6 w-32">
+                                <td class="px-3 py-2 w-28">
                                     <span
-                                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
                                         :class="
                                             getSessionTypeClasses(
-                                                session.session_type
+                                                session.session_type,
                                             )
                                         "
                                     >
@@ -535,20 +537,13 @@
                                             session.session_type
                                         }}
                                     </span>
-                                    <span
-                                        v-if="session.is_break"
-                                        class="block mt-1 inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
-                                    >
-                                        <PauseIcon class="w-3 h-3 mr-1" />
-                                        Ara
-                                    </span>
                                 </td>
 
                                 <!-- Time -->
-                                <td class="px-6 py-6 w-40">
-                                    <div class="text-sm">
+                                <td class="px-3 py-2 w-32">
+                                    <div class="text-xs">
                                         <div
-                                            class="font-medium text-gray-900 dark:text-white"
+                                            class="font-medium text-slate-900 dark:text-white"
                                         >
                                             {{
                                                 session.formatted_time_range ||
@@ -556,40 +551,42 @@
                                             }}
                                         </div>
                                         <div
-                                            class="text-gray-500 dark:text-gray-400 flex items-center mt-1"
+                                            class="text-slate-500 dark:text-slate-400 flex items-center mt-0.5"
                                         >
-                                            <ClockIcon class="h-4 w-4 mr-1" />
+                                            <ClockIcon class="h-3 w-3 mr-0.5" />
                                             {{ formatDuration(session) }}
                                         </div>
                                     </div>
                                 </td>
 
                                 <!-- Stats -->
-                                <td class="px-6 py-6 w-32">
-                                    <div class="text-sm space-y-1">
+                                <td class="px-3 py-2 w-28">
+                                    <div class="text-xs space-y-0.5">
                                         <div
-                                            class="flex items-center text-gray-900 dark:text-white"
+                                            class="flex items-center text-slate-900 dark:text-white"
                                         >
                                             <DocumentTextIcon
-                                                class="h-4 w-4 mr-1"
+                                                class="h-3 w-3 mr-0.5 text-slate-400"
                                             />
-                                            <span class="font-semibold">{{
+                                            <span class="font-medium">{{
                                                 session.presentations_count || 0
                                             }}</span>
                                             <span
-                                                class="text-gray-500 dark:text-gray-400 ml-1"
+                                                class="text-slate-500 dark:text-slate-400 ml-0.5"
                                                 >sunum</span
                                             >
                                         </div>
                                         <div
-                                            class="flex items-center text-gray-900 dark:text-white"
+                                            class="flex items-center text-slate-900 dark:text-white"
                                         >
-                                            <UsersIcon class="h-4 w-4 mr-1" />
-                                            <span class="font-semibold">{{
+                                            <UsersIcon
+                                                class="h-3 w-3 mr-0.5 text-slate-400"
+                                            />
+                                            <span class="font-medium">{{
                                                 session.moderators_count || 0
                                             }}</span>
                                             <span
-                                                class="text-gray-500 dark:text-gray-400 ml-1"
+                                                class="text-slate-500 dark:text-slate-400 ml-0.5"
                                                 >moderatör</span
                                             >
                                         </div>
@@ -597,43 +594,45 @@
                                 </td>
 
                                 <!-- Actions -->
-                                <td class="px-6 py-6 w-60">
+                                <td class="px-3 py-2 w-32">
                                     <div
-                                        class="flex flex-wrap items-center gap-2"
+                                        class="flex flex-wrap items-center gap-1"
                                     >
                                         <!-- View -->
                                         <div class="relative">
-                                        <Link
-                                            :href="
-                                                safeRoute(
-                                                    'admin.program-sessions.show',
-                                                    `/admin/program-sessions/${session.id}`,
-                                                    session.id
-                                                )
-                                            "
-                                            class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
-                                            title="Görüntüle"
-                                        >
-                                            <EyeIcon class="h-4 w-4" />
-                                        </Link>
+                                            <Link
+                                                :href="
+                                                    safeRoute(
+                                                        'admin.program-sessions.show',
+                                                        `/admin/program-sessions/${session.id}`,
+                                                        session.id,
+                                                    )
+                                                "
+                                                class="inline-flex items-center p-1 bg-slate-600 hover:bg-slate-700 text-white rounded shadow-sm transition-all duration-200"
+                                                title="Görüntüle"
+                                            >
+                                                <EyeIcon class="h-3.5 w-3.5" />
+                                            </Link>
                                         </div>
 
                                         <!-- Edit -->
                                         <div class="relative">
-                                        <Link
-                                            v-if="session.can_edit"
-                                            :href="
-                                                safeRoute(
-                                                    'admin.program-sessions.edit',
-                                                    `/admin/program-sessions/${session.id}/edit`,
-                                                    session.id
-                                                )
-                                            "
-                                            class="inline-flex items-center px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
-                                            title="Düzenle"
-                                        >
-                                            <PencilIcon class="h-4 w-4" />
-                                        </Link>
+                                            <Link
+                                                v-if="session.can_edit"
+                                                :href="
+                                                    safeRoute(
+                                                        'admin.program-sessions.edit',
+                                                        `/admin/program-sessions/${session.id}/edit`,
+                                                        session.id,
+                                                    )
+                                                "
+                                                class="inline-flex items-center p-1 bg-slate-500 hover:bg-slate-600 text-white rounded shadow-sm transition-all duration-200"
+                                                title="Düzenle"
+                                            >
+                                                <PencilIcon
+                                                    class="h-3.5 w-3.5"
+                                                />
+                                            </Link>
                                         </div>
 
                                         <!-- More Actions Dropdown -->
@@ -641,14 +640,14 @@
                                             <button
                                                 @click="
                                                     toggleActionsMenu(
-                                                        session.id
+                                                        session.id,
                                                     )
                                                 "
-                                                class="inline-flex items-center px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
+                                                class="inline-flex items-center p-1 bg-slate-500 hover:bg-slate-600 text-white rounded shadow-sm transition-all duration-200"
                                                 title="Daha Fazla"
                                             >
                                                 <EllipsisVerticalIcon
-                                                    class="h-4 w-4"
+                                                    class="h-3.5 w-3.5"
                                                 />
                                             </button>
 
@@ -658,17 +657,17 @@
                                                     showActionsMenu ===
                                                     session.id
                                                 "
-                                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-[9999] border border-gray-200 dark:border-gray-700"
+                                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-[9999] border border-slate-200 dark:border-slate-700"
                                             >
                                                 <div class="py-1">
                                                     <!-- Duplicate -->
                                                     <button
                                                         @click="
                                                             duplicateSession(
-                                                                session
+                                                                session,
                                                             )
                                                         "
-                                                        class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                                        class="flex items-center w-full px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                                                     >
                                                         <DocumentDuplicateIcon
                                                             class="h-4 w-4 mr-2"
@@ -683,10 +682,10 @@
                                                         "
                                                         @click="
                                                             deleteSession(
-                                                                session
+                                                                session,
                                                             )
                                                         "
-                                                        class="flex items-center w-full px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                                        class="flex items-center w-full px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700"
                                                     >
                                                         <TrashIcon
                                                             class="h-4 w-4 mr-2"
@@ -849,29 +848,30 @@ const isIndeterminate = computed(() => {
 // Methods
 const getSessionTypeClasses = (sessionType) => {
     const classes = {
-        main: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
+        main: "bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200",
         satellite:
-            "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-200",
+            "bg-slate-200 text-slate-900 dark:bg-slate-800 dark:text-slate-200",
         oral_presentation:
-            "bg-gray-300 text-gray-900 dark:bg-gray-700 dark:text-gray-200",
-        special: "bg-gray-400 text-white dark:bg-gray-600 dark:text-gray-200",
-        break: "bg-gray-500 text-white dark:bg-gray-500 dark:text-gray-100",
+            "bg-slate-300 text-slate-900 dark:bg-slate-700 dark:text-slate-200",
+        special:
+            "bg-slate-400 text-white dark:bg-slate-600 dark:text-slate-200",
+        break: "bg-slate-500 text-white dark:bg-slate-500 dark:text-slate-100",
     };
     return (
         classes[sessionType] ||
-        "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+        "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300"
     );
 };
 
 const getSessionTypeGradient = (sessionType) => {
     const gradients = {
-        main: "from-gray-500 to-gray-600",
-        satellite: "from-gray-600 to-gray-700",
-        oral_presentation: "from-gray-700 to-gray-800",
-        special: "from-gray-800 to-gray-900",
-        break: "from-gray-400 to-gray-500",
+        main: "from-slate-500 to-slate-600",
+        satellite: "from-slate-600 to-slate-700",
+        oral_presentation: "from-slate-700 to-slate-800",
+        special: "from-slate-800 to-slate-900",
+        break: "from-slate-400 to-slate-500",
     };
-    return gradients[sessionType] || "from-gray-500 to-gray-600";
+    return gradients[sessionType] || "from-slate-500 to-slate-600";
 };
 
 const getSessionIcon = (sessionType) => {
@@ -953,7 +953,7 @@ const toggleSelectAll = () => {
         selectedSessions.value = [];
     } else {
         selectedSessions.value = displayedSessions.value.map(
-            (session) => session.id
+            (session) => session.id,
         );
     }
 };
@@ -970,14 +970,14 @@ const duplicateSession = (session) => {
         safeRoute(
             "admin.program-sessions.duplicate",
             `/admin/program-sessions/${session.id}/duplicate`,
-            session.id
+            session.id,
         ),
         {},
         {
             onError: () => {
                 alert("Kopyalama sırasında bir hata oluştu.");
             },
-        }
+        },
     );
 };
 
@@ -993,7 +993,7 @@ const deleteSession = (session) => {
                 safeRoute(
                     "admin.program-sessions.destroy",
                     `/admin/program-sessions/${session.id}`,
-                    session.id
+                    session.id,
                 ),
                 {
                     onSuccess: () => {
@@ -1002,7 +1002,7 @@ const deleteSession = (session) => {
                     onError: () => {
                         alert("Silme işlemi sırasında bir hata oluştu.");
                     },
-                }
+                },
             );
         },
     };
@@ -1010,7 +1010,7 @@ const deleteSession = (session) => {
 
 const hasActiveFilters = computed(() => {
     return Object.values(activeFilters.value).some(
-        (value) => value !== "" && value !== null
+        (value) => value !== "" && value !== null,
     );
 });
 
@@ -1019,7 +1019,7 @@ const bulkDuplicate = () => {
     router.post(
         safeRoute(
             "admin.program-sessions.bulk-duplicate",
-            "/admin/program-sessions/bulk-duplicate"
+            "/admin/program-sessions/bulk-duplicate",
         ),
         {
             session_ids: selectedSessions.value,
@@ -1031,7 +1031,7 @@ const bulkDuplicate = () => {
             onError: () => {
                 alert("Kopyalama işlemi sırasında bir hata oluştu.");
             },
-        }
+        },
     );
 };
 
@@ -1045,7 +1045,7 @@ const bulkDelete = () => {
             router.delete(
                 safeRoute(
                     "admin.program-sessions.bulk-destroy",
-                    "/admin/program-sessions/bulk-destroy"
+                    "/admin/program-sessions/bulk-destroy",
                 ),
                 {
                     data: { session_ids: selectedSessions.value },
@@ -1056,7 +1056,7 @@ const bulkDelete = () => {
                     onError: () => {
                         alert("Silme işlemi sırasında bir hata oluştu.");
                     },
-                }
+                },
             );
         },
     };
@@ -1131,7 +1131,7 @@ const updateUrl = (params) => {
             preserveScroll: true,
             onStart: () => (loading.value = true),
             onFinish: () => (loading.value = false),
-        }
+        },
     );
 };
 
@@ -1147,6 +1147,13 @@ onUnmounted(() => {
 
 <style scoped>
 /* Line clamp utility */
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;

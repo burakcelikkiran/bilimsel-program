@@ -1,6 +1,6 @@
 <!-- resources/js/Components/Layout/PageHeader.vue -->
 <template>
-  <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+  <header class="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="py-6">
         <!-- Breadcrumbs -->
@@ -9,7 +9,7 @@
             <li class="inline-flex items-center">
               <Link
                 :href="route('admin.dashboard')"
-                class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
+                class="inline-flex items-center text-sm font-medium text-slate-700 hover:text-blue-600 dark:text-slate-400 dark:hover:text-white"
               >
                 <HomeIcon class="w-4 h-4 mr-2" />
                 Dashboard
@@ -17,17 +17,17 @@
             </li>
             <li v-for="(crumb, index) in breadcrumbs" :key="index">
               <div class="flex items-center">
-                <ChevronRightIcon class="w-6 h-6 text-gray-400" />
+                <ChevronRightIcon class="w-6 h-6 text-slate-400" />
                 <Link
                   v-if="crumb.href && index < breadcrumbs.length - 1"
                   :href="crumb.href"
-                  class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white"
+                  class="ml-1 text-sm font-medium text-slate-700 hover:text-blue-600 md:ml-2 dark:text-slate-400 dark:hover:text-white"
                 >
                   {{ crumb.label }}
                 </Link>
                 <span
                   v-else
-                  class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400"
+                  class="ml-1 text-sm font-medium text-slate-500 md:ml-2 dark:text-slate-400"
                   :aria-current="index === breadcrumbs.length - 1 ? 'page' : undefined"
                 >
                   {{ crumb.label }}
@@ -51,10 +51,10 @@
 
               <!-- Title and Subtitle -->
               <div class="flex-1 min-w-0">
-                <h1 class="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:text-3xl sm:truncate">
+                <h1 class="text-2xl font-bold leading-7 text-slate-900 dark:text-white sm:text-3xl sm:truncate">
                   {{ title }}
                 </h1>
-                <p v-if="subtitle" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p v-if="subtitle" class="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   {{ subtitle }}
                 </p>
               </div>
@@ -71,7 +71,7 @@
             </div>
 
             <!-- Meta Information -->
-            <div v-if="meta && meta.length > 0" class="mt-3 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <div v-if="meta && meta.length > 0" class="mt-3 flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
               <div v-for="(item, index) in meta" :key="index" class="flex items-center">
                 <component :is="item.icon" class="w-4 h-4 mr-1" />
                 <span>{{ item.label }}: {{ item.value }}</span>
@@ -83,7 +83,7 @@
               <div
                 v-for="(stat, index) in statistics"
                 :key="index"
-                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200"
               >
                 <component v-if="stat.icon" :is="stat.icon" class="w-3 h-3 mr-1" />
                 <span class="font-semibold">{{ stat.value }}</span>
@@ -103,7 +103,7 @@
               <div v-if="secondaryActions.length > 0" class="relative">
                 <button
                   @click="showSecondaryActions = !showSecondaryActions"
-                  class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  class="inline-flex items-center px-3 py-2 border border-slate-300 shadow-sm text-sm leading-4 font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
                 >
                   <EllipsisHorizontalIcon class="h-4 w-4" />
                   <span class="sr-only">Daha fazla seçenek</span>
@@ -112,15 +112,15 @@
                 <!-- Secondary Actions Dropdown -->
                 <div
                   v-if="showSecondaryActions"
-                  class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10 dark:bg-gray-800"
+                  class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10 dark:bg-slate-800"
                 >
                   <div class="py-1">
                     <button
                       v-for="action in secondaryActions"
                       :key="action.key"
                       @click="handleAction(action)"
-                      class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
-                      :class="action.destructive ? 'text-red-600 dark:text-red-400' : 'text-gray-700 dark:text-gray-300'"
+                      class="block w-full text-left px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700"
+                      :class="action.destructive ? 'text-red-600 dark:text-red-400' : 'text-slate-700 dark:text-slate-300'"
                       :disabled="action.disabled"
                     >
                       <div class="flex items-center">
@@ -152,7 +152,7 @@
             <button
               v-if="showBackButton"
               @click="goBack"
-              class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              class="inline-flex items-center px-3 py-2 border border-slate-300 shadow-sm text-sm leading-4 font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
             >
               <ArrowLeftIcon class="w-4 h-4 mr-2" />
               Geri
@@ -162,7 +162,7 @@
 
         <!-- Tabs Navigation -->
         <div v-if="tabs && tabs.length > 0" class="mt-6">
-          <div class="border-b border-gray-200 dark:border-gray-700">
+          <div class="border-b border-slate-200 dark:border-slate-700">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
               <button
                 v-for="tab in tabs"
@@ -171,7 +171,7 @@
                 class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
                 :class="tab.active 
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'"
+                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'"
               >
                 <div class="flex items-center">
                   <component v-if="tab.icon" :is="tab.icon" class="w-4 h-4 mr-2" />
@@ -181,7 +181,7 @@
                     class="ml-2 py-0.5 px-2 rounded-full text-xs font-medium"
                     :class="tab.active 
                       ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-200' 
-                      : 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-300'"
+                      : 'bg-slate-100 text-slate-900 dark:bg-slate-700 dark:text-slate-300'"
                   >
                     {{ tab.count }}
                   </span>
@@ -331,10 +331,10 @@ const secondaryActions = computed(() => {
 const getStatusClasses = (status) => {
   const classes = {
     active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+    inactive: 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300',
     pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
     published: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    draft: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
+    draft: 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300',
     completed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
     cancelled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
   }
@@ -356,11 +356,11 @@ const getStatusLabel = (status) => {
 
 const getActionClasses = (action) => {
   if (action.disabled) {
-    return 'bg-gray-300 text-gray-500 cursor-not-allowed'
+    return 'bg-slate-300 text-slate-500 cursor-not-allowed'
   }
 
   if (action.variant === 'secondary') {
-    return 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600'
+    return 'border-slate-300 text-slate-700 bg-white hover:bg-slate-50 focus:ring-slate-500 dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:hover:bg-slate-600'
   }
 
   if (action.variant === 'danger') {

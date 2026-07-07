@@ -9,20 +9,20 @@
         <Head :title="`${presentation.title} - Düzenle`" />
 
         <!-- Full Screen Container -->
-        <div class="min-h-screen bg-gray-50 dark:bg-gray-900 -m-6 p-6">
+        <div class="min-h-screen bg-slate-50 dark:bg-slate-950 -m-6 p-6">
             <!-- Header Section -->
-            <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg mb-6">
+            <div class="bg-white dark:bg-slate-800 shadow-sm rounded-lg mb-6">
                 <div class="px-8 py-6">
                     <div
                         class="flex flex-col lg:flex-row lg:items-center lg:justify-between"
                     >
                         <div class="mb-4 lg:mb-0">
                             <h1
-                                class="text-3xl font-bold text-gray-900 dark:text-white"
+                                class="text-3xl font-bold text-slate-900 dark:text-white"
                             >
                                 Sunumu Düzenle
                             </h1>
-                            <p class="text-gray-600 dark:text-gray-400 mt-2">
+                            <p class="text-slate-600 dark:text-slate-400 mt-2">
                                 "{{ presentation.title }}" sunumunu düzenleyin
                                 ve değişikliklerinizi kaydedin
                             </p>
@@ -37,7 +37,7 @@
                                         presentation.id
                                     )
                                 "
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium rounded-lg transition-colors"
                             >
                                 <EyeIcon class="h-4 w-4 mr-2" />
                                 Görüntüle
@@ -45,7 +45,7 @@
 
                             <Link
                                 :href="route('admin.presentations.index')"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium rounded-lg transition-colors"
                             >
                                 <ArrowLeftIcon class="h-4 w-4 mr-2" />
                                 Geri Dön
@@ -62,18 +62,18 @@
                     <form @submit.prevent="submit" class="space-y-6">
                         <!-- Basic Information Card -->
                         <div
-                            class="bg-white dark:bg-gray-800 shadow-sm rounded-lg"
+                            class="bg-white dark:bg-slate-800 shadow-sm rounded-lg"
                         >
                             <div
-                                class="px-8 py-6 border-b border-gray-200 dark:border-gray-700"
+                                class="px-8 py-6 border-b border-slate-200 dark:border-slate-700"
                             >
                                 <h2
-                                    class="text-xl font-semibold text-gray-900 dark:text-white"
+                                    class="text-xl font-semibold text-slate-900 dark:text-white"
                                 >
                                     Temel Bilgiler
                                 </h2>
                                 <p
-                                    class="text-gray-600 dark:text-gray-400 mt-1"
+                                    class="text-slate-600 dark:text-slate-400 mt-1"
                                 >
                                     Sunumun başlık, özet ve temel özelliklerini
                                     düzenleyin
@@ -84,14 +84,14 @@
                                 <!-- Program Session Selection -->
                                 <div>
                                     <label
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Program Oturumu
                                         <span class="text-red-500">*</span>
                                     </label>
                                     <select
                                         v-model="form.program_session_id"
-                                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                        class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
                                         :class="{
                                             'border-red-500':
                                                 form.errors.program_session_id,
@@ -131,7 +131,7 @@
                                 <!-- Title -->
                                 <div>
                                     <label
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Sunum Başlığı
                                         <span class="text-red-500">*</span>
@@ -139,7 +139,7 @@
                                     <input
                                         v-model="form.title"
                                         type="text"
-                                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 text-lg"
+                                        class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 text-lg"
                                         :class="{
                                             'border-red-500': form.errors.title,
                                         }"
@@ -157,14 +157,14 @@
                                 <!-- Abstract -->
                                 <div>
                                     <label
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Özet
                                     </label>
                                     <textarea
                                         v-model="form.abstract"
                                         rows="8"
-                                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                        class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
                                         :class="{
                                             'border-red-500':
                                                 form.errors.abstract,
@@ -181,7 +181,7 @@
                                         >
                                             {{ form.errors.abstract }}
                                         </p>
-                                        <p class="text-gray-500 text-sm">
+                                        <p class="text-slate-500 text-sm">
                                             {{
                                                 form.abstract?.length || 0
                                             }}/5000 karakter
@@ -193,18 +193,18 @@
 
                         <!-- Details Card -->
                         <div
-                            class="bg-white dark:bg-gray-800 shadow-sm rounded-lg"
+                            class="bg-white dark:bg-slate-800 shadow-sm rounded-lg"
                         >
                             <div
-                                class="px-8 py-6 border-b border-gray-200 dark:border-gray-700"
+                                class="px-8 py-6 border-b border-slate-200 dark:border-slate-700"
                             >
                                 <h2
-                                    class="text-xl font-semibold text-gray-900 dark:text-white"
+                                    class="text-xl font-semibold text-slate-900 dark:text-white"
                                 >
                                     Detaylar
                                 </h2>
                                 <p
-                                    class="text-gray-600 dark:text-gray-400 mt-1"
+                                    class="text-slate-600 dark:text-slate-400 mt-1"
                                 >
                                     Sunum türü, dil ve süre bilgilerini
                                     belirleyin
@@ -218,13 +218,13 @@
                                     <!-- Presentation Type -->
                                     <div>
                                         <label
-                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                         >
                                             Sunum Türü
                                         </label>
                                         <select
                                             v-model="form.presentation_type"
-                                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                            class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
                                         >
                                             <option value="">Tür Seçin</option>
                                             <option value="keynote">
@@ -246,7 +246,7 @@
                                     <!-- Duration -->
                                     <div>
                                         <label
-                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                         >
                                             Süre (Dakika)
                                         </label>
@@ -257,7 +257,7 @@
                                             type="number"
                                             min="1"
                                             max="480"
-                                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                            class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
                                             placeholder="60"
                                         />
                                     </div>
@@ -265,13 +265,13 @@
                                     <!-- Language -->
                                     <div>
                                         <label
-                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                         >
                                             Dil
                                         </label>
                                         <select
                                             v-model="form.language"
-                                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                            class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
                                         >
                                             <option value="">Dil Seçin</option>
                                             <option value="tr">Türkçe</option>
@@ -290,20 +290,20 @@
 
                         <!-- Speakers Card -->
                         <div
-                            class="bg-white dark:bg-gray-800 shadow-sm rounded-lg"
+                            class="bg-white dark:bg-slate-800 shadow-sm rounded-lg"
                         >
                             <div
-                                class="px-8 py-6 border-b border-gray-200 dark:border-gray-700"
+                                class="px-8 py-6 border-b border-slate-200 dark:border-slate-700"
                             >
                                 <div class="flex items-center justify-between">
                                     <div>
                                         <h2
-                                            class="text-xl font-semibold text-gray-900 dark:text-white"
+                                            class="text-xl font-semibold text-slate-900 dark:text-white"
                                         >
                                             Konuşmacılar
                                         </h2>
                                         <p
-                                            class="text-gray-600 dark:text-gray-400 mt-1"
+                                            class="text-slate-600 dark:text-slate-400 mt-1"
                                         >
                                             Sunumda yer alacak konuşmacıları
                                             ekleyin ve rollerini belirleyin
@@ -312,7 +312,7 @@
                                     <button
                                         type="button"
                                         @click="addSpeaker"
-                                        class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors"
+                                        class="inline-flex items-center px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-lg transition-colors"
                                     >
                                         <PlusIcon class="h-4 w-4 mr-2" />
                                         Konuşmacı Ekle
@@ -324,17 +324,17 @@
                                 <!-- Speaker List -->
                                 <div
                                     v-if="form.speakers.length === 0"
-                                    class="text-center py-12 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg"
+                                    class="text-center py-12 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg"
                                 >
                                     <UserGroupIcon
-                                        class="h-16 w-16 text-gray-400 mx-auto mb-4"
+                                        class="h-16 w-16 text-slate-400 mx-auto mb-4"
                                     />
                                     <h3
-                                        class="text-lg font-medium text-gray-900 dark:text-white mb-2"
+                                        class="text-lg font-medium text-slate-900 dark:text-white mb-2"
                                     >
                                         Henüz konuşmacı eklenmedi
                                     </h3>
-                                    <p class="text-gray-500 dark:text-gray-400">
+                                    <p class="text-slate-500 dark:text-slate-400">
                                         Sunuma konuşmacı eklemek için yukarıdaki
                                         butonu kullanın
                                     </p>
@@ -346,7 +346,7 @@
                                             speaker, index
                                         ) in form.speakers"
                                         :key="index"
-                                        class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 border border-gray-200 dark:border-gray-600"
+                                        class="bg-slate-50 dark:bg-slate-700 rounded-lg p-6 border border-slate-200 dark:border-slate-600"
                                     >
                                         <div
                                             class="grid grid-cols-1 lg:grid-cols-4 gap-4"
@@ -354,7 +354,7 @@
                                             <!-- Participant Selection -->
                                             <div class="lg:col-span-2">
                                                 <label
-                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                                    class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                                 >
                                                     Katılımcı
                                                 </label>
@@ -362,7 +362,7 @@
                                                     v-model="
                                                         speaker.participant_id
                                                     "
-                                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                                    class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
                                                 >
                                                     <option value="">
                                                         Katılımcı Seçin
@@ -385,13 +385,13 @@
                                             <!-- Role Selection -->
                                             <div>
                                                 <label
-                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                                    class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                                 >
                                                     Rol
                                                 </label>
                                                 <select
                                                     v-model="speaker.role"
-                                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                                    class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
                                                 >
                                                     <option value="primary">
                                                         Ana Konuşmacı
@@ -428,18 +428,18 @@
 
                         <!-- Notes Card -->
                         <div
-                            class="bg-white dark:bg-gray-800 shadow-sm rounded-lg"
+                            class="bg-white dark:bg-slate-800 shadow-sm rounded-lg"
                         >
                             <div
-                                class="px-8 py-6 border-b border-gray-200 dark:border-gray-700"
+                                class="px-8 py-6 border-b border-slate-200 dark:border-slate-700"
                             >
                                 <h2
-                                    class="text-xl font-semibold text-gray-900 dark:text-white"
+                                    class="text-xl font-semibold text-slate-900 dark:text-white"
                                 >
                                     Notlar
                                 </h2>
                                 <p
-                                    class="text-gray-600 dark:text-gray-400 mt-1"
+                                    class="text-slate-600 dark:text-slate-400 mt-1"
                                 >
                                     İç notlar ve ek bilgiler ekleyin (opsiyonel)
                                 </p>
@@ -449,11 +449,11 @@
                                 <textarea
                                     v-model="form.notes"
                                     rows="4"
-                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                    class="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
                                     placeholder="İç notlar (opsiyonel)"
                                     maxlength="1000"
                                 ></textarea>
-                                <p class="text-gray-500 text-sm mt-2">
+                                <p class="text-slate-500 text-sm mt-2">
                                     {{ form.notes?.length || 0 }}/1000 karakter
                                 </p>
                             </div>
@@ -465,10 +465,10 @@
                 <div class="xl:col-span-1 space-y-6">
                     <!-- Action Buttons -->
                     <div
-                        class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
+                        class="bg-white dark:bg-slate-800 shadow-sm rounded-lg p-6"
                     >
                         <h3
-                            class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                            class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                         >
                             İşlemler
                         </h3>
@@ -477,7 +477,7 @@
                             <button
                                 @click="submit"
                                 :disabled="form.processing"
-                                class="w-full inline-flex items-center justify-center px-4 py-3 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white font-medium rounded-lg transition-colors"
+                                class="w-full inline-flex items-center justify-center px-4 py-3 bg-slate-600 hover:bg-slate-700 disabled:bg-slate-400 text-white font-medium rounded-lg transition-colors"
                             >
                                 <span
                                     v-if="form.processing"
@@ -494,7 +494,7 @@
                             <button
                                 type="button"
                                 @click="duplicatePresentation"
-                                class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors"
+                                class="w-full inline-flex items-center justify-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium rounded-lg transition-colors"
                             >
                                 <DocumentDuplicateIcon class="h-4 w-4 mr-2" />
                                 Kopyala
@@ -513,41 +513,41 @@
 
                     <!-- Quick Info -->
                     <div
-                        class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
+                        class="bg-white dark:bg-slate-800 shadow-sm rounded-lg p-6"
                     >
                         <h3
-                            class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                            class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                         >
                             Hızlı Bilgiler
                         </h3>
 
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between">
-                                <span class="text-gray-500 dark:text-gray-400"
+                                <span class="text-slate-500 dark:text-slate-400"
                                     >ID</span
                                 >
                                 <span
-                                    class="text-gray-900 dark:text-white font-medium"
+                                    class="text-slate-900 dark:text-white font-medium"
                                     >#{{ presentation.id }}</span
                                 >
                             </div>
 
                             <div class="flex justify-between">
-                                <span class="text-gray-500 dark:text-gray-400"
+                                <span class="text-slate-500 dark:text-slate-400"
                                     >Konuşmacı</span
                                 >
                                 <span
-                                    class="text-gray-900 dark:text-white font-medium"
+                                    class="text-slate-900 dark:text-white font-medium"
                                     >{{ form.speakers.length }}</span
                                 >
                             </div>
 
                             <div class="flex justify-between">
-                                <span class="text-gray-500 dark:text-gray-400"
+                                <span class="text-slate-500 dark:text-slate-400"
                                     >Durum</span
                                 >
                                 <span
-                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200"
                                 >
                                     Aktif
                                 </span>
@@ -557,10 +557,10 @@
 
                     <!-- Navigation -->
                     <div
-                        class="bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6"
+                        class="bg-white dark:bg-slate-800 shadow-sm rounded-lg p-6"
                     >
                         <h3
-                            class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                            class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                         >
                             Gezinti
                         </h3>
@@ -573,7 +573,7 @@
                                         presentation.id
                                     )
                                 "
-                                class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                                class="block px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors"
                             >
                                 <EyeIcon class="h-4 w-4 inline mr-2" />
                                 Sunumu Görüntüle
@@ -581,7 +581,7 @@
 
                             <Link
                                 :href="route('admin.presentations.index')"
-                                class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+                                class="block px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors"
                             >
                                 <ArrowLeftIcon class="h-4 w-4 inline mr-2" />
                                 Sunum Listesi
@@ -598,21 +598,21 @@
             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         >
             <div
-                class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4"
+                class="bg-white dark:bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4"
             >
                 <h3
-                    class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                    class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                 >
                     Sunumu Sil
                 </h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">
+                <p class="text-slate-600 dark:text-slate-400 mb-6">
                     Bu sunumu silmek istediğinize emin misiniz? Bu işlem geri
                     alınamaz.
                 </p>
                 <div class="flex items-center justify-end space-x-3">
                     <button
                         @click="showDeleteModal = false"
-                        class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                        class="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700"
                     >
                         İptal
                     </button>
@@ -786,14 +786,14 @@ const confirmDelete = () => {
 }
 
 ::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-800;
+    @apply bg-slate-100 dark:bg-slate-800;
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+    @apply bg-slate-300 dark:bg-slate-600 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400 dark:bg-gray-500;
+    @apply bg-slate-400 dark:bg-slate-500;
 }
 </style>

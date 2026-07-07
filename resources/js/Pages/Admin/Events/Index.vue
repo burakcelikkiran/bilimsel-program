@@ -6,26 +6,24 @@
     >
         <Head title="Bilimsel Etkinlikler" />
 
-        <div class="-mx-8 -my-6 px-8 py-6">
-            <div class="max-w-7xl mx-auto">
                 <!-- Hero Section with Quick Stats -->
-                <div class="mb-8">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <!-- Total Events -->
                         <div
-                            class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 text-white shadow-lg border border-gray-700"
+                            class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 text-white shadow border border-slate-700"
                         >
                             <div class="flex items-center">
                                 <div
-                                    class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                                    class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                                 >
-                                    <CalendarIcon class="h-8 w-8" />
+                                    <CalendarIcon class="h-5 w-5" />
                                 </div>
-                                <div class="ml-4">
-                                    <p class="text-gray-300 text-sm">
+                                <div class="ml-3">
+                                    <p class="text-slate-300 text-xs">
                                         Toplam Etkinlik
                                     </p>
-                                    <p class="text-2xl font-bold">
+                                    <p class="text-lg font-bold">
                                         {{
                                             stats?.total ||
                                             events?.meta?.total ||
@@ -38,17 +36,17 @@
 
                         <!-- Published Events -->
                         <div
-                            class="bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl p-6 text-white shadow-lg border border-gray-600"
+                            class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg p-4 text-white shadow border border-slate-600"
                         >
                             <div class="flex items-center">
                                 <div
-                                    class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                                    class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                                 >
-                                    <EyeIcon class="h-8 w-8" />
+                                    <EyeIcon class="h-5 w-5" />
                                 </div>
-                                <div class="ml-4">
-                                    <p class="text-gray-300 text-sm">Yayında</p>
-                                    <p class="text-2xl font-bold">
+                                <div class="ml-3">
+                                    <p class="text-slate-300 text-xs">Yayında</p>
+                                    <p class="text-lg font-bold">
                                         {{ stats?.published || 0 }}
                                     </p>
                                 </div>
@@ -57,19 +55,19 @@
 
                         <!-- Upcoming Events -->
                         <div
-                            class="bg-gradient-to-br from-gray-600 to-gray-700 rounded-xl p-6 text-white shadow-lg border border-gray-500"
+                            class="bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg p-4 text-white shadow border border-slate-500"
                         >
                             <div class="flex items-center">
                                 <div
-                                    class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                                    class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                                 >
-                                    <ClockIcon class="h-8 w-8" />
+                                    <ClockIcon class="h-5 w-5" />
                                 </div>
-                                <div class="ml-4">
-                                    <p class="text-gray-300 text-sm">
+                                <div class="ml-3">
+                                    <p class="text-slate-300 text-xs">
                                         Yaklaşan
                                     </p>
-                                    <p class="text-2xl font-bold">
+                                    <p class="text-lg font-bold">
                                         {{ stats?.upcoming || 0 }}
                                     </p>
                                 </div>
@@ -78,19 +76,19 @@
 
                         <!-- Ongoing Events -->
                         <div
-                            class="bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl p-6 text-white shadow-lg border border-gray-400"
+                            class="bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg p-4 text-white shadow border border-slate-400"
                         >
                             <div class="flex items-center">
                                 <div
-                                    class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                                    class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                                 >
-                                    <PlayIcon class="h-8 w-8" />
+                                    <PlayIcon class="h-5 w-5" />
                                 </div>
-                                <div class="ml-4">
-                                    <p class="text-gray-300 text-sm">
+                                <div class="ml-3">
+                                    <p class="text-slate-300 text-xs">
                                         Devam Eden
                                     </p>
-                                    <p class="text-2xl font-bold">
+                                    <p class="text-lg font-bold">
                                         {{ stats?.ongoing || 0 }}
                                     </p>
                                 </div>
@@ -101,40 +99,40 @@
 
                 <!-- Modern Data Table -->
                 <div
-                    class="bg-white dark:bg-gray-900 shadow-xl rounded-2xl overflow-visible border border-gray-200/50 dark:border-gray-800/50"
+                    class="bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-visible border border-slate-200/50 dark:border-slate-800/50"
                 >
                     <!-- Enhanced Header -->
                     <div
-                        class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 px-8 py-6 border-b border-gray-200 dark:border-gray-800"
+                        class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 px-4 py-4 border-b border-slate-200 dark:border-slate-800"
                     >
                         <div
-                            class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0"
+                            class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-3 lg:space-y-0"
                         >
                             <!-- Left: Title and Description -->
                             <div>
                                 <h2
-                                    class="text-2xl font-bold text-gray-900 dark:text-white"
+                                    class="text-lg font-bold text-slate-900 dark:text-white"
                                 >
                                     Etkinlik Yönetimi
                                 </h2>
                                 <p
-                                    class="text-gray-600 dark:text-gray-400 mt-1"
+                                    class="text-slate-600 dark:text-slate-400 text-sm"
                                 >
                                     Bilimsel etkinlikleri düzenleyin ve yönetin
                                 </p>
                             </div>
 
                             <!-- Right: Actions -->
-                            <div class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-2">
                                 <!-- Quick Filters -->
                                 <div class="flex items-center space-x-2">
                                     <button
                                         @click="quickFilter('all')"
                                         :class="[
-                                            'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                                            'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                             currentQuickFilter === 'all'
-                                                ? 'bg-gray-800 text-white shadow-lg border border-gray-700'
-                                                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                                ? 'bg-slate-800 text-white shadow-lg border border-slate-700'
+                                                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                         ]"
                                     >
                                         Tümü
@@ -142,10 +140,10 @@
                                     <button
                                         @click="quickFilter('published')"
                                         :class="[
-                                            'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                                            'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                             currentQuickFilter === 'published'
-                                                ? 'bg-gray-700 text-white shadow-lg border border-gray-600'
-                                                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                                ? 'bg-slate-700 text-white shadow-lg border border-slate-600'
+                                                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                         ]"
                                     >
                                         Yayında
@@ -153,10 +151,10 @@
                                     <button
                                         @click="quickFilter('upcoming')"
                                         :class="[
-                                            'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                                            'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                             currentQuickFilter === 'upcoming'
-                                                ? 'bg-gray-600 text-white shadow-lg border border-gray-500'
-                                                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                                ? 'bg-slate-600 text-white shadow-lg border border-slate-500'
+                                                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                         ]"
                                     >
                                         Yaklaşan
@@ -171,9 +169,9 @@
                                             '/admin/events/create'
                                         )
                                     "
-                                    class="inline-flex items-center px-6 py-2 bg-gray-800 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-all duration-200 border border-gray-700"
+                                    class="inline-flex items-center px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded-lg transition-all duration-200 border border-slate-700"
                                 >
-                                    <PlusIcon class="h-4 w-4 mr-2" />
+                                    <PlusIcon class="h-4 w-4 mr-1.5" />
                                     Yeni Etkinlik
                                 </Link>
                             </div>
@@ -181,7 +179,7 @@
 
                         <!-- Search and Filters -->
                         <div
-                            class="mt-6 flex flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-4"
+                            class="mt-4 flex flex-col lg:flex-row lg:items-center space-y-3 lg:space-y-0 lg:space-x-3"
                         >
                             <!-- Search Bar -->
                             <div class="flex-1 relative">
@@ -189,14 +187,14 @@
                                     class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                                 >
                                     <MagnifyingGlassIcon
-                                        class="h-5 w-5 text-gray-400"
+                                        class="h-5 w-5 text-slate-400"
                                     />
                                 </div>
                                 <input
                                     v-model="searchQuery"
                                     type="text"
                                     placeholder="Etkinlik adı, açıklama veya organizasyon ara..."
-                                    class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-sm"
+                                    class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 text-sm"
                                     @input="handleSearchDebounced"
                                 />
                                 <div
@@ -205,7 +203,7 @@
                                 >
                                     <button
                                         @click="clearSearch"
-                                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                        class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                                     >
                                         <XMarkIcon class="h-4 w-4" />
                                     </button>
@@ -218,7 +216,7 @@
                                 <select
                                     v-model="activeFilters.organization_id"
                                     @change="applyFilters"
-                                    class="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm min-w-[200px]"
+                                    class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm min-w-[200px]"
                                 >
                                     <option value="">
                                         Tüm Organizasyonlar
@@ -236,7 +234,7 @@
                                 <select
                                     v-model="activeFilters.status"
                                     @change="applyFilters"
-                                    class="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm min-w-[150px]"
+                                    class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm min-w-[150px]"
                                 >
                                     <option value="">Tüm Durumlar</option>
                                     <option value="draft">Taslak</option>
@@ -268,11 +266,11 @@
                         v-if="loading"
                         class="flex items-center justify-center py-12"
                     >
-                        <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
                             <div
-                                class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600"
+                                class="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-600"
                             ></div>
-                            <p class="text-gray-600 dark:text-gray-400">
+                            <p class="text-slate-600 dark:text-slate-400">
                                 Yükleniyor...
                             </p>
                         </div>
@@ -285,41 +283,41 @@
                     >
                         <div class="overflow-x-auto">
                             <table
-                                class="w-full divide-y divide-gray-200 dark:divide-gray-700"
+                                class="w-full table-fixed divide-y divide-slate-200 dark:divide-slate-700"
                             >
-                                <thead class="bg-gray-50 dark:bg-gray-800">
+                                <thead class="bg-slate-50 dark:bg-slate-800">
                                     <tr>
                                         <!-- Event Header -->
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                                            class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-[36%]"
                                         >
                                             Etkinlik
                                         </th>
 
                                         <!-- Status Header -->
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32"
+                                            class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-[12%]"
                                         >
                                             Durum
                                         </th>
 
                                         <!-- Organization Header -->
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48"
+                                            class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-[24%]"
                                         >
                                             Organizasyon
                                         </th>
 
                                         <!-- Progress Header -->
                                         <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-36"
+                                            class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-[14%]"
                                         >
                                             İlerleme
                                         </th>
 
                                         <!-- Actions Header -->
                                         <th
-                                            class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48"
+                                            class="px-3 py-2 text-center text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-[14%]"
                                         >
                                             İşlemler
                                         </th>
@@ -327,35 +325,35 @@
                                 </thead>
 
                                 <tbody
-                                    class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700"
+                                    class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700"
                                 >
                                     <tr
                                         v-for="event in displayedEvents"
                                         :key="event.id"
-                                        class="hover:bg-gray-50 dark:hover:bg-gray-800"
+                                        class="hover:bg-slate-50 dark:hover:bg-slate-800"
                                     >
                                         <!-- Event Info -->
-                                        <td class="px-6 py-4">
+                                        <td class="px-3 py-2">
                                             <div class="flex items-center">
                                                 <div
-                                                    class="flex-shrink-0 h-12 w-12"
+                                                    class="flex-shrink-0 h-8 w-8"
                                                 >
                                                     <img
                                                         v-if="event.banner_url"
-                                                        class="h-12 w-12 rounded-lg object-cover"
+                                                        class="h-8 w-8 rounded-lg object-cover"
                                                         :src="event.banner_url"
                                                         :alt="event.name"
                                                     />
                                                     <div
                                                         v-else
-                                                        class="h-12 w-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center"
+                                                        class="h-8 w-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center"
                                                     >
                                                         <CalendarIcon
-                                                            class="h-6 w-6 text-gray-400"
+                                                            class="h-4 w-4 text-slate-400"
                                                         />
                                                     </div>
                                                 </div>
-                                                <div class="ml-4">
+                                                <div class="ml-2.5 min-w-0">
                                                     <Link
                                                         :href="
                                                             safeRoute(
@@ -364,18 +362,18 @@
                                                                 event.slug
                                                             )
                                                         "
-                                                        class="text-sm font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
+                                                        class="text-sm font-medium text-slate-900 dark:text-white hover:text-slate-600 dark:hover:text-slate-300"
                                                     >
                                                         {{ event.name }}
                                                     </Link>
                                                     <div
-                                                        class="flex items-center mt-1 text-xs text-gray-500 dark:text-gray-400 space-x-3"
+                                                        class="flex items-center mt-0.5 text-[11px] text-slate-500 dark:text-slate-400 gap-2"
                                                     >
                                                         <span
                                                             class="inline-flex items-center"
                                                         >
                                                             <CalendarDaysIcon
-                                                                class="h-3 w-3 mr-1"
+                                                                class="h-3 w-3 mr-0.5"
                                                             />
                                                             {{
                                                                 formatDateRange(
@@ -388,10 +386,10 @@
                                                             v-if="
                                                                 event.location
                                                             "
-                                                            class="inline-flex items-center"
+                                                            class="inline-flex items-center truncate"
                                                         >
                                                             <MapPinIcon
-                                                                class="h-3 w-3 mr-1"
+                                                                class="h-3 w-3 mr-0.5 flex-shrink-0"
                                                             />
                                                             {{ event.location }}
                                                         </span>
@@ -401,7 +399,7 @@
                                         </td>
 
                                         <!-- Status -->
-                                        <td class="px-6 py-4 w-32">
+                                        <td class="px-3 py-2 w-24">
                                             <span
                                                 :class="[
                                                     'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
@@ -417,14 +415,14 @@
                                         </td>
 
                                         <!-- Organization -->
-                                        <td class="px-6 py-4 w-48">
-                                            <div class="flex items-center">
+                                        <td class="px-3 py-2 w-40">
+                                            <div class="flex items-center min-w-0">
                                                 <img
                                                     v-if="
                                                         event.organization
                                                             ?.logo_url
                                                     "
-                                                    class="h-8 w-8 rounded-lg object-cover"
+                                                    class="h-6 w-6 rounded object-cover flex-shrink-0"
                                                     :src="
                                                         event.organization
                                                             .logo_url
@@ -435,11 +433,11 @@
                                                 />
                                                 <BuildingOfficeIcon
                                                     v-else
-                                                    class="h-8 w-8 text-gray-400"
+                                                    class="h-6 w-6 text-slate-400 flex-shrink-0"
                                                 />
-                                                <div class="ml-3">
+                                                <div class="ml-2 min-w-0">
                                                     <span
-                                                        class="text-sm font-medium text-gray-900 dark:text-white block truncate"
+                                                        class="text-xs font-medium text-slate-900 dark:text-white block truncate"
                                                     >
                                                         {{
                                                             event.organization
@@ -452,9 +450,9 @@
                                         </td>
 
                                         <!-- Progress -->
-                                        <td class="px-6 py-4 w-36">
+                                        <td class="px-3 py-2 w-28">
                                             <div
-                                                class="text-sm text-gray-900 dark:text-white"
+                                                class="text-xs text-slate-900 dark:text-white"
                                             >
                                                 <div>
                                                     {{
@@ -464,7 +462,7 @@
                                                     gün
                                                 </div>
                                                 <div
-                                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                                    class="text-slate-500 dark:text-slate-400"
                                                 >
                                                     {{
                                                         event.total_presentations ||
@@ -476,9 +474,9 @@
                                         </td>
 
                                         <!-- Actions -->
-                                        <td class="px-6 py-4 w-48">
+                                        <td class="px-3 py-2 w-36">
                                             <div
-                                                class="flex items-center space-x-2"
+                                                class="flex items-center gap-1"
                                             >
                                                 <!-- View Button -->
                                                 <div class="relative">
@@ -490,11 +488,11 @@
                                                             event.slug
                                                         )
                                                     "
-                                                    class="inline-flex items-center px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white text-xs font-medium rounded-md"
+                                                    class="inline-flex items-center p-1 bg-slate-600 hover:bg-slate-700 text-white rounded shadow-sm"
                                                     title="Görüntüle"
                                                 >
                                                     <EyeIcon
-                                                        class="h-4 w-4"
+                                                        class="h-3.5 w-3.5"
                                                     />
                                                 </Link>
                                                 </div>
@@ -510,11 +508,11 @@
                                                             event.slug
                                                         )
                                                     "
-                                                    class="inline-flex items-center px-3 py-1.5 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded-md"
+                                                    class="inline-flex items-center p-1 bg-slate-500 hover:bg-slate-600 text-white rounded shadow-sm"
                                                     title="Düzenle"
                                                 >
                                                     <PencilIcon
-                                                        class="h-4 w-4"
+                                                        class="h-3.5 w-3.5"
                                                     />
                                                 </Link>
                                                 </div>
@@ -528,10 +526,10 @@
                                                             event.slug
                                                         )
                                                     "
-                                                    class="inline-flex items-center px-3 py-1.5 bg-gray-800 hover:bg-gray-900 text-white text-xs font-medium rounded-md"
+                                                    class="inline-flex items-center px-1.5 py-1 bg-slate-800 hover:bg-slate-900 text-white text-[11px] font-medium rounded shadow-sm"
                                                 >
                                                     <ClockIcon
-                                                        class="h-4 w-4 mr-1"
+                                                        class="h-3 w-3 mr-0.5"
                                                     />
                                                     Timeline
                                                 </Link>
@@ -545,12 +543,12 @@
                         <!-- Pagination -->
                         <div
                             v-if="events?.meta?.last_page > 1"
-                            class="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700"
+                            class="bg-slate-50 dark:bg-slate-800 px-6 py-4 border-t border-slate-200 dark:border-slate-700"
                         >
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p
-                                        class="text-sm text-gray-700 dark:text-gray-300"
+                                        class="text-sm text-slate-700 dark:text-slate-300"
                                     >
                                         <span class="font-medium">{{
                                             events.meta.from || 0
@@ -578,14 +576,14 @@
                                         :disabled="
                                             events.meta.current_page <= 1
                                         "
-                                        class="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         Önceki
                                     </button>
 
                                     <!-- Page Info -->
                                     <div
-                                        class="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 rounded-md"
+                                        class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-600 rounded-md"
                                     >
                                         {{ events.meta.current_page }} /
                                         {{ events.meta.last_page }}
@@ -602,7 +600,7 @@
                                             events.meta.current_page >=
                                             events.meta.last_page
                                         "
-                                        class="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         Sonraki
                                     </button>
@@ -615,12 +613,12 @@
                     <div v-else class="py-12">
                         <div class="text-center">
                             <div
-                                class="mx-auto h-24 w-24 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center mb-6"
+                                class="mx-auto h-24 w-24 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center mb-6"
                             >
-                                <CalendarIcon class="h-12 w-12 text-gray-400" />
+                                <CalendarIcon class="h-12 w-12 text-slate-400" />
                             </div>
                             <h3
-                                class="text-lg font-medium text-gray-900 dark:text-white mb-2"
+                                class="text-lg font-medium text-slate-900 dark:text-white mb-2"
                             >
                                 {{
                                     searchQuery || hasActiveFilters
@@ -628,7 +626,7 @@
                                         : "Henüz etkinlik yok"
                                 }}
                             </h3>
-                            <p class="text-gray-500 dark:text-gray-400 mb-6">
+                            <p class="text-slate-500 dark:text-slate-400 mb-6">
                                 {{
                                     searchQuery || hasActiveFilters
                                         ? "Arama kriterlerinizi değiştirip tekrar deneyin."
@@ -644,9 +642,9 @@
                                             '/admin/events/create'
                                         )
                                     "
-                                    class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white text-sm font-medium rounded-lg"
+                                    class="inline-flex items-center px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium rounded-lg"
                                 >
-                                    <PlusIcon class="h-4 w-4 mr-2" />
+                                    <PlusIcon class="h-4 w-4 mr-1.5" />
                                     Yeni Etkinlik Oluştur
                                 </Link>
 
@@ -656,14 +654,14 @@
                                 >
                                     <button
                                         @click="clearSearch"
-                                        class="inline-flex items-center px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                                        class="inline-flex items-center px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700"
                                     >
                                         <XMarkIcon class="h-4 w-4 mr-2" />
                                         Aramayı Temizle
                                     </button>
                                     <button
                                         @click="clearFilters"
-                                        class="inline-flex items-center px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                                        class="inline-flex items-center px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700"
                                     >
                                         <XMarkIcon class="h-4 w-4 mr-2" />
                                         Filtreleri Temizle
@@ -673,8 +671,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
     </AdminLayout>
 </template>
 
@@ -814,13 +810,13 @@ const hasActiveFilters = computed(() => {
 // Methods
 const getStatusClasses = (status) => {
     const classes = {
-        draft: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
+        draft: "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300",
         upcoming:
             "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
         ongoing:
             "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
         completed:
-            "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
+            "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300",
         published:
             "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
     };

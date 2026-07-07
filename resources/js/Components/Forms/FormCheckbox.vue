@@ -5,7 +5,7 @@
     <label 
       v-if="label && !multiple" 
       :for="checkboxId" 
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
       :class="{ 'text-red-600 dark:text-red-400': hasError }"
     >
       {{ label }}
@@ -16,7 +16,7 @@
     <fieldset v-if="multiple" class="space-y-3">
       <legend 
         v-if="label"
-        class="text-sm font-medium text-gray-700 dark:text-gray-300"
+        class="text-sm font-medium text-slate-700 dark:text-slate-300"
         :class="{ 'text-red-600 dark:text-red-400': hasError }"
       >
         {{ label }}
@@ -61,14 +61,14 @@
             <div class="ml-3 text-sm">
               <label 
                 :for="`${checkboxId}-${index}`" 
-                class="font-medium text-gray-700 dark:text-gray-300 cursor-pointer"
+                class="font-medium text-slate-700 dark:text-slate-300 cursor-pointer"
                 :class="{ 'cursor-not-allowed': disabled || option.disabled }"
               >
                 {{ option.label }}
               </label>
               <p 
                 v-if="option.description" 
-                class="text-gray-500 dark:text-gray-400 mt-1"
+                class="text-slate-500 dark:text-slate-400 mt-1"
               >
                 {{ option.description }}
               </p>
@@ -89,7 +89,7 @@
         </button>
         <button
           type="button"
-          class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300 transition-colors"
+          class="text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-300 transition-colors"
           :disabled="disabled"
           @click="selectNone"
         >
@@ -128,7 +128,7 @@
         <div class="ml-3 flex-1">
           <label 
             :for="checkboxId" 
-            class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer"
+            class="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer"
             :class="{ 'cursor-not-allowed': disabled }"
           >
             {{ checkboxLabel }}
@@ -137,7 +137,7 @@
           
           <p 
             v-if="description" 
-            class="text-sm text-gray-500 dark:text-gray-400 mt-1"
+            class="text-sm text-slate-500 dark:text-slate-400 mt-1"
           >
             {{ description }}
           </p>
@@ -151,7 +151,7 @@
     </div>
 
     <!-- Help Text -->
-    <p v-if="helpText && !hasError" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <p v-if="helpText && !hasError" class="mt-1 text-sm text-slate-500 dark:text-slate-400">
       {{ helpText }}
     </p>
 
@@ -166,7 +166,7 @@
     </p>
 
     <!-- Selection Summary (for multiple) -->
-    <p v-if="multiple && showSummary && selectedValues.length > 0" class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+    <p v-if="multiple && showSummary && selectedValues.length > 0" class="mt-1 text-sm text-slate-600 dark:text-slate-400">
       {{ selectedValues.length }} of {{ normalizedOptions.length }} selected
     </p>
   </div>
@@ -355,20 +355,20 @@ const checkboxClasses = computed(() => {
 
   const variantClasses = {
     default: [
-      'text-blue-600', 'bg-white', 'dark:bg-gray-900',
-      'border-gray-300', 'dark:border-gray-600',
+      'text-blue-600', 'bg-white', 'dark:bg-slate-900',
+      'border-slate-300', 'dark:border-slate-600',
       'checked:bg-blue-600', 'checked:border-blue-600',
       'disabled:opacity-50', 'disabled:cursor-not-allowed'
     ],
     switch: [
-      'rounded-full', 'text-blue-600', 'bg-white', 'dark:bg-gray-900',
-      'border-gray-300', 'dark:border-gray-600',
+      'rounded-full', 'text-blue-600', 'bg-white', 'dark:bg-slate-900',
+      'border-slate-300', 'dark:border-slate-600',
       'checked:bg-blue-600', 'checked:border-blue-600'
     ],
     button: [
       'appearance-none', 'rounded-md', 'border-2',
-      'text-blue-600', 'bg-white', 'dark:bg-gray-900',
-      'border-gray-300', 'dark:border-gray-600',
+      'text-blue-600', 'bg-white', 'dark:bg-slate-900',
+      'border-slate-300', 'dark:border-slate-600',
       'checked:bg-blue-600', 'checked:border-blue-600', 'checked:text-white'
     ]
   }
@@ -526,7 +526,7 @@ defineExpose({
 
 /* Dark mode adjustments */
 .dark .checkbox-input {
-  @apply bg-gray-800 border-gray-600;
+  @apply bg-slate-800 border-slate-600;
 }
 
 .dark .checkbox-input:checked {
@@ -540,7 +540,7 @@ defineExpose({
 
 /* Hover effects */
 .checkbox-input:hover:not(:disabled) {
-  @apply border-gray-400 dark:border-gray-500;
+  @apply border-slate-400 dark:border-slate-500;
 }
 
 .checkbox-input:checked:hover:not(:disabled) {
@@ -549,7 +549,7 @@ defineExpose({
 
 /* Label hover effects */
 label:hover .checkbox-input:not(:disabled) {
-  @apply border-gray-400 dark:border-gray-500;
+  @apply border-slate-400 dark:border-slate-500;
 }
 
 /* Grid responsive adjustments */

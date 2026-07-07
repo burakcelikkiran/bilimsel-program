@@ -9,15 +9,15 @@
 
     <div class="w-full space-y-8">
       <!-- Header Card -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Yeni Katılımcı</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">Etkinlik için yeni bir katılımcı oluşturun</p>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Yeni Katılımcı</h1>
+            <p class="text-slate-600 dark:text-slate-400 mt-1">Etkinlik için yeni bir katılımcı oluşturun</p>
           </div>
           <Link
             :href="route('admin.participants.index')"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+            class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
           >
             <ArrowLeftIcon class="h-4 w-4 mr-2" />
             Geri Dön
@@ -26,12 +26,12 @@
       </div>
 
       <!-- Form Card -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <form @submit.prevent="createParticipant" class="divide-y divide-gray-200 dark:divide-gray-700">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <form @submit.prevent="createParticipant" class="divide-y divide-slate-200 dark:divide-slate-700">
           <!-- Basic Information -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Temel Bilgiler</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Temel Bilgiler</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Organization -->
@@ -104,7 +104,7 @@
           <!-- Contact Information -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">İletişim Bilgileri</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">İletişim Bilgileri</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Email -->
@@ -118,7 +118,7 @@
                     :maxlength="255"
                   >
                     <template #helper>
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Katılımcıya bildirimler bu adrese gönderilecektir
                       </p>
                     </template>
@@ -143,42 +143,42 @@
           <!-- Roles -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Roller</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Roller</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Is Speaker -->
-                <div class="flex items-start space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+                <div class="flex items-start space-x-3 p-4 border border-slate-200 dark:border-slate-600 rounded-lg">
                   <input
                     id="is_speaker"
                     v-model="form.is_speaker"
                     type="checkbox"
-                    class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded mt-1"
+                    class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded mt-1"
                   />
                   <div class="flex-1">
-                    <label for="is_speaker" class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
-                      <MicrophoneIcon class="h-4 w-4 mr-2 text-gray-600" />
+                    <label for="is_speaker" class="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center">
+                      <MicrophoneIcon class="h-4 w-4 mr-2 text-slate-600" />
                       Konuşmacı
                     </label>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       Bu katılımcı sunumlar yapabilir
                     </p>
                   </div>
                 </div>
 
                 <!-- Is Moderator -->
-                <div class="flex items-start space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+                <div class="flex items-start space-x-3 p-4 border border-slate-200 dark:border-slate-600 rounded-lg">
                   <input
                     id="is_moderator"
                     v-model="form.is_moderator"
                     type="checkbox"
-                    class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded mt-1"
+                    class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded mt-1"
                   />
                   <div class="flex-1">
-                    <label for="is_moderator" class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
-                      <UserGroupIcon class="h-4 w-4 mr-2 text-gray-600" />
+                    <label for="is_moderator" class="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center">
+                      <UserGroupIcon class="h-4 w-4 mr-2 text-slate-600" />
                       Moderatör
                     </label>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       Bu katılımcı oturum modere edebilir
                     </p>
                   </div>
@@ -190,7 +190,7 @@
           <!-- Bio and Photo -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Profil Bilgileri</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Profil Bilgileri</h3>
               
               <div class="space-y-6">
                 <!-- Biography -->
@@ -205,7 +205,7 @@
                     show-counter
                   >
                     <template #helper>
-                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Bu bilgi katılımcının profil sayfasında gösterilecektir
                       </p>
                     </template>
@@ -214,20 +214,20 @@
 
                 <!-- Photo Upload -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Profil Fotoğrafı
                   </label>
                   
                   <div class="space-y-4">
                     <!-- Photo Preview -->
                     <div v-if="photoPreview" class="flex items-center space-x-4">
-                      <div class="h-20 w-20 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-600">
+                      <div class="h-20 w-20 rounded-lg overflow-hidden border-2 border-slate-200 dark:border-slate-600">
                         <img :src="photoPreview" alt="Önizleme" class="h-full w-full object-cover" />
                       </div>
                       <button
                         type="button"
                         @click="removePhoto"
-                        class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 transition-colors"
+                        class="inline-flex items-center px-3 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 focus:ring-2 focus:ring-slate-500 transition-colors"
                       >
                         <TrashIcon class="h-4 w-4 mr-2" />
                         Kaldır
@@ -236,13 +236,13 @@
 
                     <!-- Photo Upload Input -->
                     <div class="flex items-center justify-center w-full">
-                      <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-600 transition-colors">
+                      <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 dark:border-slate-600 transition-colors">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                          <PhotoIcon class="w-8 h-8 mb-2 text-gray-400" />
-                          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <PhotoIcon class="w-8 h-8 mb-2 text-slate-400" />
+                          <p class="mb-2 text-sm text-slate-500 dark:text-slate-400">
                             <span class="font-semibold">Fotoğraf yüklemek için tıklayın</span>
                           </p>
-                          <p class="text-xs text-gray-500 dark:text-gray-400">JPEG, PNG veya JPG (Max. 2MB)</p>
+                          <p class="text-xs text-slate-500 dark:text-slate-400">JPEG, PNG veya JPG (Max. 2MB)</p>
                         </div>
                         <input
                           type="file"
@@ -265,8 +265,8 @@
           <!-- Quick Setup Templates -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Hızlı Şablonlar</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Hızlı Şablonlar</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
                 Yaygın katılımcı türleri için önceden tanımlanmış şablonları kullanabilirsiniz.
               </p>
               
@@ -275,13 +275,13 @@
                 <button
                   type="button"
                   @click="applyTemplate('speaker')"
-                  class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+                  class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
                 >
                   <div class="flex items-center mb-2">
-                    <MicrophoneIcon class="h-5 w-5 text-gray-600 mr-2" />
-                    <h4 class="font-medium text-gray-900 dark:text-white">Konuşmacı</h4>
+                    <MicrophoneIcon class="h-5 w-5 text-slate-600 mr-2" />
+                    <h4 class="font-medium text-slate-900 dark:text-white">Konuşmacı</h4>
                   </div>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                  <p class="text-sm text-slate-500 dark:text-slate-400">
                     Sadece konuşmacı rolü olan katılımcı
                   </p>
                 </button>
@@ -290,13 +290,13 @@
                 <button
                   type="button"
                   @click="applyTemplate('moderator')"
-                  class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+                  class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
                 >
                   <div class="flex items-center mb-2">
-                    <UserGroupIcon class="h-5 w-5 text-gray-600 mr-2" />
-                    <h4 class="font-medium text-gray-900 dark:text-white">Moderatör</h4>
+                    <UserGroupIcon class="h-5 w-5 text-slate-600 mr-2" />
+                    <h4 class="font-medium text-slate-900 dark:text-white">Moderatör</h4>
                   </div>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                  <p class="text-sm text-slate-500 dark:text-slate-400">
                     Sadece moderatör rolü olan katılımcı
                   </p>
                 </button>
@@ -305,13 +305,13 @@
                 <button
                   type="button"
                   @click="applyTemplate('both')"
-                  class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
+                  class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
                 >
                   <div class="flex items-center mb-2">
-                    <UserIcon class="h-5 w-5 text-gray-600 mr-2" />
-                    <h4 class="font-medium text-gray-900 dark:text-white">Her İkisi</h4>
+                    <UserIcon class="h-5 w-5 text-slate-600 mr-2" />
+                    <h4 class="font-medium text-slate-900 dark:text-white">Her İkisi</h4>
                   </div>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                  <p class="text-sm text-slate-500 dark:text-slate-400">
                     Hem konuşmacı hem moderatör
                   </p>
                 </button>
@@ -320,11 +320,11 @@
           </div>
 
           <!-- Form Actions -->
-          <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800 flex items-center justify-between">
+          <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800 flex items-center justify-between">
             <div class="flex items-center space-x-4">
               <Link
                 :href="route('admin.participants.index')"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
               >
                 İptal
               </Link>
@@ -332,7 +332,7 @@
               <button
                 type="button"
                 @click="resetForm"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
               >
                 Temizle
               </button>
@@ -342,7 +342,7 @@
               <button
                 type="submit"
                 :disabled="form.processing"
-                class="inline-flex items-center px-6 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-gray-700"
+                class="inline-flex items-center px-6 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-900 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-slate-700"
               >
                 <span v-if="form.processing" class="inline-flex items-center">
                   <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

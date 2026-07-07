@@ -9,15 +9,15 @@
 
     <div class="w-full space-y-8">
       <!-- Header Card -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Yeni Sponsor</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">Etkinlik için yeni bir sponsor oluşturun</p>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Yeni Sponsor</h1>
+            <p class="text-slate-600 dark:text-slate-400 mt-1">Etkinlik için yeni bir sponsor oluşturun</p>
           </div>
           <Link
             :href="route('admin.sponsors.index')"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+            class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
           >
             <ArrowLeftIcon class="h-4 w-4 mr-2" />
             Geri Dön
@@ -26,13 +26,13 @@
       </div>
 
       <!-- Form Card -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <form @submit.prevent="createSponsor" class="divide-y divide-gray-200 dark:divide-gray-700">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <form @submit.prevent="createSponsor" class="divide-y divide-slate-200 dark:divide-slate-700">
           
           <!-- Basic Information -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Temel Bilgiler</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Temel Bilgiler</h3>
               
               <!-- Full width grid layout -->
               <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -63,19 +63,19 @@
                 </div>
 
                 <!-- Status -->
-                <div class="flex items-center space-x-3 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                <div class="flex items-center space-x-3 p-4 border border-slate-200 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800/50">
                   <input
                     id="is_active"
                     v-model="form.is_active"
                     type="checkbox"
-                    class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                    class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                   />
                   <div class="flex-1">
-                    <label for="is_active" class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
-                      <CheckCircleIcon class="h-4 w-4 mr-2 text-gray-600" />
+                    <label for="is_active" class="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center">
+                      <CheckCircleIcon class="h-4 w-4 mr-2 text-slate-600" />
                       Aktif Sponsor
                     </label>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       Aktif sponsorlar listede görünür
                     </p>
                   </div>
@@ -100,12 +100,12 @@
           <!-- Contact Information & Logo Side by Side -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">İletişim Bilgileri ve Logo</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">İletişim Bilgileri ve Logo</h3>
               
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Contact Information Section -->
                 <div class="space-y-6">
-                  <h4 class="text-md font-medium text-gray-700 dark:text-gray-300">İletişim Bilgileri</h4>
+                  <h4 class="text-md font-medium text-slate-700 dark:text-slate-300">İletişim Bilgileri</h4>
                   
                   <div class="space-y-4">
                     <!-- Contact Email -->
@@ -119,7 +119,7 @@
                         maxlength="255"
                       >
                         <template #helper>
-                          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                             Sponsor ile iletişim için kullanılacak e-posta adresi
                           </p>
                         </template>
@@ -137,7 +137,7 @@
                         maxlength="500"
                       >
                         <template #helper>
-                          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                             Sponsor'un resmi website adresi
                           </p>
                         </template>
@@ -148,18 +148,18 @@
 
                 <!-- Logo Upload Section -->
                 <div class="space-y-6">
-                  <h4 class="text-md font-medium text-gray-700 dark:text-gray-300">Logo</h4>
+                  <h4 class="text-md font-medium text-slate-700 dark:text-slate-300">Logo</h4>
                   
                   <div class="space-y-4">
                     <!-- Logo Preview -->
                     <div v-if="logoPreview" class="flex items-center space-x-4">
-                      <div class="h-24 w-24 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-600 bg-white">
+                      <div class="h-24 w-24 rounded-lg overflow-hidden border-2 border-slate-200 dark:border-slate-600 bg-white">
                         <img :src="logoPreview" alt="Logo önizleme" class="h-full w-full object-contain p-2" />
                       </div>
                       <button
                         type="button"
                         @click="removeLogo"
-                        class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 transition-colors"
+                        class="inline-flex items-center px-3 py-2 border border-slate-300 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 focus:ring-2 focus:ring-slate-500 transition-colors"
                       >
                         <TrashIcon class="h-4 w-4 mr-2" />
                         Kaldır
@@ -168,13 +168,13 @@
 
                     <!-- Logo Upload Input -->
                     <div class="flex items-center justify-center w-full">
-                      <label class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 dark:border-gray-600 transition-colors">
+                      <label class="flex flex-col items-center justify-center w-full h-40 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 dark:border-slate-600 transition-colors">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                          <PhotoIcon class="w-10 h-10 mb-3 text-gray-400" />
-                          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <PhotoIcon class="w-10 h-10 mb-3 text-slate-400" />
+                          <p class="mb-2 text-sm text-slate-500 dark:text-slate-400">
                             <span class="font-semibold">Logo yüklemek için tıklayın</span>
                           </p>
-                          <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF veya SVG (Max. 2MB)</p>
+                          <p class="text-xs text-slate-500 dark:text-slate-400">PNG, JPG, GIF veya SVG (Max. 2MB)</p>
                         </div>
                         <input
                           type="file"
@@ -197,8 +197,8 @@
           <!-- Sponsor Level Templates -->
           <div class="p-6 space-y-6">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Hızlı Şablonlar</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Hızlı Şablonlar</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-6">
                 Sponsor seviyesine göre önceden tanımlanmış ayarları kullanabilirsiniz.
               </p>
               
@@ -208,17 +208,17 @@
                 <button
                   type="button"
                   @click="applyTemplate('platinum')"
-                  class="p-6 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500 transition-all text-left group relative overflow-hidden"
+                  class="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-500 transition-all text-left group relative overflow-hidden"
                 >
-                  <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-bl-full opacity-50"></div>
+                  <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-bl-full opacity-50"></div>
                   <div class="relative">
                     <div class="flex items-center mb-3">
-                      <div class="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
-                        <StarIcon class="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                      <div class="w-10 h-10 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                        <StarIcon class="h-6 w-6 text-slate-600 dark:text-slate-300" />
                       </div>
-                      <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Platinum</h4>
+                      <h4 class="text-lg font-semibold text-slate-900 dark:text-white">Platinum</h4>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       En üst seviye sponsor paketi. Maksimum görünürlük ve avantajlar.
                     </p>
                   </div>
@@ -228,7 +228,7 @@
                 <button
                   type="button"
                   @click="applyTemplate('gold')"
-                  class="p-6 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500 transition-all text-left group relative overflow-hidden"
+                  class="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-500 transition-all text-left group relative overflow-hidden"
                 >
                   <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 rounded-bl-full opacity-50"></div>
                   <div class="relative">
@@ -236,9 +236,9 @@
                       <div class="w-10 h-10 bg-gradient-to-br from-yellow-100 to-yellow-200 dark:from-yellow-900 dark:to-yellow-800 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
                         <StarIcon class="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
                       </div>
-                      <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Gold</h4>
+                      <h4 class="text-lg font-semibold text-slate-900 dark:text-white">Gold</h4>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       Yüksek seviye sponsor paketi. Premium görünürlük imkanları.
                     </p>
                   </div>
@@ -248,17 +248,17 @@
                 <button
                   type="button"
                   @click="applyTemplate('silver')"
-                  class="p-6 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500 transition-all text-left group relative overflow-hidden"
+                  class="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-500 transition-all text-left group relative overflow-hidden"
                 >
-                  <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-bl-full opacity-50"></div>
+                  <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-600 dark:to-slate-700 rounded-bl-full opacity-50"></div>
                   <div class="relative">
                     <div class="flex items-center mb-3">
-                      <div class="w-10 h-10 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
-                        <StarIcon class="h-6 w-6 text-gray-500 dark:text-gray-400" />
+                      <div class="w-10 h-10 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-600 dark:to-slate-700 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
+                        <StarIcon class="h-6 w-6 text-slate-500 dark:text-slate-400" />
                       </div>
-                      <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Silver</h4>
+                      <h4 class="text-lg font-semibold text-slate-900 dark:text-white">Silver</h4>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       Orta seviye sponsor paketi. İyi görünürlük ve faydalar.
                     </p>
                   </div>
@@ -268,7 +268,7 @@
                 <button
                   type="button"
                   @click="applyTemplate('bronze')"
-                  class="p-6 border border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500 transition-all text-left group relative overflow-hidden"
+                  class="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-500 transition-all text-left group relative overflow-hidden"
                 >
                   <div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 rounded-bl-full opacity-50"></div>
                   <div class="relative">
@@ -276,9 +276,9 @@
                       <div class="w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900 dark:to-orange-800 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform">
                         <StarIcon class="h-6 w-6 text-orange-600 dark:text-orange-400" />
                       </div>
-                      <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Bronze</h4>
+                      <h4 class="text-lg font-semibold text-slate-900 dark:text-white">Bronze</h4>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                       Temel seviye sponsor paketi. Maliyet etkin çözüm.
                     </p>
                   </div>
@@ -288,12 +288,12 @@
           </div>
 
           <!-- Form Actions -->
-          <div class="px-6 py-6 bg-gray-50 dark:bg-gray-800">
+          <div class="px-6 py-6 bg-slate-50 dark:bg-slate-800">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-4">
                 <Link
                   :href="route('admin.sponsors.index')"
-                  class="inline-flex items-center px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                  class="inline-flex items-center px-6 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
                 >
                   İptal
                 </Link>
@@ -301,7 +301,7 @@
                 <button
                   type="button"
                   @click="resetForm"
-                  class="inline-flex items-center px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                  class="inline-flex items-center px-6 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
                 >
                   Temizle
                 </button>
@@ -311,7 +311,7 @@
                 <button
                   type="submit"
                   :disabled="form.processing"
-                  class="inline-flex items-center px-8 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl border border-gray-700"
+                  class="inline-flex items-center px-8 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-900 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg hover:shadow-xl border border-slate-700"
                 >
                   <span v-if="form.processing" class="inline-flex items-center">
                     <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

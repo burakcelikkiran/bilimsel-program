@@ -3,19 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Venue;
-use App\Models\EventDay;
 use App\Models\Event;
+use App\Models\EventDay;
 use App\Models\Organization;
+use App\Models\Venue;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
-use Inertia\Response as InertiaResponse;
 
 class VenueController extends Controller
 {
@@ -23,8 +20,6 @@ class VenueController extends Controller
 
     /**
      * Display a listing of venues with filtering and pagination
-     * 
-     * @param Request $request
      */
     public function index(Request $request)
     {
@@ -36,7 +31,7 @@ class VenueController extends Controller
                 ->withCount('programSessions');
 
             // User access control - non-admin users can only see venues from their organizations
-            if (!$user->isAdmin()) {
+            if (! $user->isAdmin()) {
                 $organizationIds = $user->organizations()->pluck('organizations.id');
                 if ($organizationIds->isEmpty()) {
                     return $this->renderEmptyVenuesResponse($request);
@@ -113,7 +108,7 @@ class VenueController extends Controller
                 return response()->json([
                     'success' => true,
                     'data' => $venues,
-                    'message' => 'Salonlar başarıyla listelendi.'
+                    'message' => 'Salonlar başarıyla listelendi.',
                 ]);
             }
 
@@ -141,13 +136,14 @@ class VenueController extends Controller
                     'with_sessions' => $venues->getCollection()->where('program_sessions_count', '>', 0)->count(),
                     'without_sessions' => $venues->getCollection()->where('program_sessions_count', 0)->count(),
                 ],
-                'canCreate' => auth()->user()->isEditor()
+                'canCreate' => auth()->user()->isEditor(),
+                'deletePreview' => $this->resolveDeletePreview($request),
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to list venues', [
                 'error' => $e->getMessage(),
                 'user_id' => auth()->id(),
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
 
             return $this->handleVenuesError($request, $e);
@@ -163,16 +159,14 @@ class VenueController extends Controller
             $user = auth()->user();
             $eventDays = $this->getUserAccessibleEventDays($user);
 
-
-
             $selectedEventDay = null;
             if ($request->filled('event_day_id')) {
                 $selectedEventDay = $eventDays->where('id', $request->get('event_day_id'))->first();
-                if (!$selectedEventDay) {
+                if (! $selectedEventDay) {
                     if ($request->wantsJson()) {
                         return response()->json([
                             'success' => false,
-                            'message' => 'Belirtilen etkinlik günü bulunamadı veya erişim yetkiniz yok.'
+                            'message' => 'Belirtilen etkinlik günü bulunamadı veya erişim yetkiniz yok.',
                         ], 403);
                     }
 
@@ -191,27 +185,27 @@ class VenueController extends Controller
                     'data' => [
                         'event_days' => $cleanedEventDays,
                         'selected_event_day' => $cleanedSelectedEventDay,
-                        'color_options' => $this->getColorOptions()
-                    ]
+                        'color_options' => $this->getColorOptions(),
+                    ],
                 ]);
             }
 
             return Inertia::render('Admin/Venues/Create', [
                 'eventDays' => $cleanedEventDays,
                 'selectedEventDay' => $cleanedSelectedEventDay,
-                'colorOptions' => $this->getColorOptions()
+                'colorOptions' => $this->getColorOptions(),
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to load venue creation form', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Salon oluşturma formu yüklenirken bir hata oluştu.'
+                    'message' => 'Salon oluşturma formu yüklenirken bir hata oluştu.',
                 ], 500);
             }
 
@@ -245,7 +239,7 @@ class VenueController extends Controller
 
             // Check if user has access to this event day
             $eventDay = EventDay::with('event.organization')->findOrFail($validatedData['event_day_id']);
-            
+
             $this->authorize('create', [Venue::class, $eventDay]);
 
             DB::beginTransaction();
@@ -256,7 +250,7 @@ class VenueController extends Controller
             }
 
             // Set sort_order to 0 if not provided or null (database constraint)
-            if (!isset($validatedData['sort_order']) || $validatedData['sort_order'] === null || $validatedData['sort_order'] === '') {
+            if (! isset($validatedData['sort_order']) || $validatedData['sort_order'] === null || $validatedData['sort_order'] === '') {
                 $validatedData['sort_order'] = 0;
             }
 
@@ -270,15 +264,16 @@ class VenueController extends Controller
 
             Log::info('Venue created successfully', [
                 'venue_id' => $venue->id,
-                'created_by' => auth()->id()
+                'created_by' => auth()->id(),
             ]);
 
             if ($request->wantsJson()) {
                 $cleanVenue = $this->createSafeVenueArray($venue);
+
                 return response()->json([
                     'success' => true,
                     'data' => $cleanVenue,
-                    'message' => 'Salon başarıyla oluşturuldu.'
+                    'message' => 'Salon başarıyla oluşturuldu.',
                 ], 201);
             }
 
@@ -290,14 +285,14 @@ class VenueController extends Controller
 
             Log::error('Venue validation failed', [
                 'errors' => $e->errors(),
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
 
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Doğrulama hatası oluştu.',
-                    'errors' => $e->errors()
+                    'errors' => $e->errors(),
                 ], 422);
             }
 
@@ -309,14 +304,14 @@ class VenueController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'request_data' => $request->all(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Salon oluşturulurken bir hata oluştu.',
-                    'error' => config('app.debug') ? $e->getMessage() : null
+                    'error' => config('app.debug') ? $e->getMessage() : null,
                 ], 500);
             }
 
@@ -341,7 +336,7 @@ class VenueController extends Controller
                     $query->with(['moderators', 'presentations.speakers', 'sponsor'])
                         ->orderBy('start_time')
                         ->orderBy('sort_order');
-                }
+                },
             ]);
 
             // Calculate venue statistics
@@ -349,31 +344,33 @@ class VenueController extends Controller
 
             if (request()->wantsJson()) {
                 $cleanVenue = $this->createSafeVenueArray($venue);
+
                 return response()->json([
                     'success' => true,
                     'data' => [
                         'venue' => $cleanVenue,
-                        'statistics' => $statistics
-                    ]
+                        'statistics' => $statistics,
+                    ],
                 ]);
             }
 
             $cleanVenue = $this->createSafeVenueArray($venue);
+
             return Inertia::render('Admin/Venues/Show', [
                 'venue' => $cleanVenue,
-                'statistics' => $statistics
+                'statistics' => $statistics,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to show venue', [
                 'venue_id' => $venue->id,
                 'error' => $e->getMessage(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             if (request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Salon detayları yüklenirken bir hata oluştu.'
+                    'message' => 'Salon detayları yüklenirken bir hata oluştu.',
                 ], 500);
             }
 
@@ -397,7 +394,7 @@ class VenueController extends Controller
             $venue->load(['eventDay.event.organization']);
 
             // Ensure the venue's current event day is included in the eventDays list
-            if ($venue->eventDay && !$eventDays->contains('id', $venue->event_day_id)) {
+            if ($venue->eventDay && ! $eventDays->contains('id', $venue->event_day_id)) {
                 // If user doesn't have access to venue's current event day, add it for editing
                 $eventDays->push($venue->eventDay);
             }
@@ -408,8 +405,8 @@ class VenueController extends Controller
                     'data' => [
                         'venue' => $this->createSafeVenueArray($venue),
                         'event_days' => $this->sanitizeEventDaysCollection($eventDays),
-                        'color_options' => $this->getColorOptions()
-                    ]
+                        'color_options' => $this->getColorOptions(),
+                    ],
                 ]);
             }
 
@@ -420,19 +417,19 @@ class VenueController extends Controller
             return Inertia::render('Admin/Venues/Edit', [
                 'venue' => $sanitizedVenue,
                 'eventDays' => $sanitizedEventDays,
-                'colorOptions' => $this->getColorOptions()
+                'colorOptions' => $this->getColorOptions(),
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to load venue edit form', [
                 'venue_id' => $venue->id,
                 'error' => $e->getMessage(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             if (request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Salon düzenleme formu yüklenirken bir hata oluştu.'
+                    'message' => 'Salon düzenleme formu yüklenirken bir hata oluştu.',
                 ], 500);
             }
 
@@ -471,13 +468,13 @@ class VenueController extends Controller
 
             // Check user access to the event day's organization
             $user = auth()->user();
-            if (!$user->isAdmin()) {
+            if (! $user->isAdmin()) {
                 $organizationIds = $user->organizations()->pluck('organizations.id');
-                if (!$organizationIds->contains($eventDay->event->organization_id)) {
+                if (! $organizationIds->contains($eventDay->event->organization_id)) {
                     if ($request->wantsJson()) {
                         return response()->json([
                             'success' => false,
-                            'message' => 'Hedef etkinlik gününe erişim yetkiniz yok.'
+                            'message' => 'Hedef etkinlik gününe erişim yetkiniz yok.',
                         ], 403);
                     }
 
@@ -495,7 +492,7 @@ class VenueController extends Controller
             }
 
             // Set sort_order to 0 if not provided or null (database constraint)
-            if (!isset($validatedData['sort_order']) || $validatedData['sort_order'] === null || $validatedData['sort_order'] === '') {
+            if (! isset($validatedData['sort_order']) || $validatedData['sort_order'] === null || $validatedData['sort_order'] === '') {
                 $validatedData['sort_order'] = 0;
             }
 
@@ -506,7 +503,7 @@ class VenueController extends Controller
 
             Log::info('Venue updated successfully', [
                 'venue_id' => $venue->id,
-                'updated_by' => auth()->id()
+                'updated_by' => auth()->id(),
             ]);
 
             if ($request->wantsJson()) {
@@ -517,7 +514,7 @@ class VenueController extends Controller
                 return response()->json([
                     'success' => true,
                     'data' => $cleanVenue,
-                    'message' => 'Salon başarıyla güncellendi.'
+                    'message' => 'Salon başarıyla güncellendi.',
                 ]);
             }
 
@@ -532,7 +529,7 @@ class VenueController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => 'Doğrulama hatası oluştu.',
-                    'errors' => $e->errors()
+                    'errors' => $e->errors(),
                 ], 422);
             }
 
@@ -543,13 +540,13 @@ class VenueController extends Controller
             Log::error('Venue update failed', [
                 'venue_id' => $venue->id,
                 'error' => $e->getMessage(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Salon güncellenirken bir hata oluştu.'
+                    'message' => 'Salon güncellenirken bir hata oluştu.',
                 ], 500);
             }
 
@@ -565,60 +562,111 @@ class VenueController extends Controller
     public function deletePreview(Request $request, Venue $venue)
     {
         try {
-            $this->authorize('delete', $venue);
+            $preview = $this->buildDeletePreviewForVenue($request, $venue);
 
-            // Get related sessions with event information
-            $sessions = $venue->programSessions()
-                ->with(['venue.eventDay.event:id,name', 'venue.eventDay:id,event_id,display_name,date'])
-                ->select('id', 'title', 'venue_id', 'start_time', 'end_time')
-                ->get();
-
-            $sessionCount = $sessions->count();
-
-            // Check if user can manage sessions (for cascade delete)
-            $canCascadeDelete = $sessionCount > 0 && 
-                ($request->user()->isAdmin() || 
-                 $request->user()->can('manageSessions', $venue));
+            if ($request->header('X-Inertia')) {
+                return redirect()->route('admin.venues.index', [
+                    'delete_preview' => $venue->id,
+                    ...$request->only(['search', 'event_id', 'event_day_id', 'capacity_range', 'sort', 'direction', 'per_page']),
+                ]);
+            }
 
             return response()->json([
                 'success' => true,
-                'venue' => [
-                    'id' => $venue->id,
-                    'name' => $venue->name,
-                    'display_name' => $venue->display_name,
-                    'capacity' => $venue->capacity,
-                    'color' => $venue->color,
-                ],
-                'sessions' => $sessions->map(function ($session) {
-                    return [
-                        'id' => $session->id,
-                        'name' => $session->title,
-                        'start_time' => $session->start_time,
-                        'end_time' => $session->end_time,
-                        'event_day' => $session->venue && $session->venue->eventDay ? [
-                            'name' => $session->venue->eventDay->display_name,
-                            'date' => $session->venue->eventDay->date,
-                            'event' => $session->venue->eventDay->event ? [
-                                'name' => $session->venue->eventDay->event->name
-                            ] : null
-                        ] : null
-                    ];
-                }),
-                'session_count' => $sessionCount,
-                'can_cascade_delete' => $canCascadeDelete,
+                ...$preview,
             ]);
         } catch (\Exception $e) {
             Log::error('Venue delete preview failed', [
                 'venue_id' => $venue->id,
                 'error' => $e->getMessage(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
+
+            if ($request->header('X-Inertia')) {
+                return back()->withErrors(['deletePreview' => 'Salon bilgileri yüklenirken bir hata oluştu.']);
+            }
 
             return response()->json([
                 'success' => false,
-                'message' => 'Salon bilgileri yüklenirken bir hata oluştu.'
+                'message' => 'Salon bilgileri yüklenirken bir hata oluştu.',
             ], 500);
         }
+    }
+
+    /**
+     * Resolve delete preview payload for the venues index page.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function resolveDeletePreview(Request $request): ?array
+    {
+        if (! $request->filled('delete_preview')) {
+            return null;
+        }
+
+        $venue = Venue::query()->find($request->integer('delete_preview'));
+
+        if (! $venue) {
+            return null;
+        }
+
+        try {
+            return $this->buildDeletePreviewForVenue($request, $venue);
+        } catch (\Exception $e) {
+            Log::warning('Venue delete preview resolve failed', [
+                'venue_id' => $venue->id,
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+            ]);
+
+            return null;
+        }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildDeletePreviewForVenue(Request $request, Venue $venue): array
+    {
+        $this->authorize('delete', $venue);
+
+        $sessions = $venue->programSessions()
+            ->with(['venue.eventDay.event:id,name', 'venue.eventDay:id,event_id,display_name,date'])
+            ->select('id', 'title', 'venue_id', 'start_time', 'end_time')
+            ->get();
+
+        $sessionCount = $sessions->count();
+
+        $canCascadeDelete = $sessionCount > 0 &&
+            ($request->user()->isAdmin() ||
+             $request->user()->can('manageSessions', $venue));
+
+        return [
+            'venue' => [
+                'id' => $venue->id,
+                'name' => $venue->name,
+                'display_name' => $venue->display_name,
+                'capacity' => $venue->capacity,
+                'color' => $venue->color,
+            ],
+            'sessions' => $sessions->map(function ($session) {
+                return [
+                    'id' => $session->id,
+                    'name' => $session->title,
+                    'start_time' => $session->start_time,
+                    'end_time' => $session->end_time,
+                    'event_day' => $session->venue && $session->venue->eventDay ? [
+                        'name' => $session->venue->eventDay->display_name,
+                        'date' => $session->venue->eventDay->date,
+                        'event' => $session->venue->eventDay->event ? [
+                            'name' => $session->venue->eventDay->event->name,
+                        ] : null,
+                    ] : null,
+                ];
+            })->values()->all(),
+            'session_count' => $sessionCount,
+            'can_cascade_delete' => $canCascadeDelete,
+        ];
     }
 
     /**
@@ -640,13 +688,14 @@ class VenueController extends Controller
                 // If cascade delete is requested and confirmed
                 if ($cascadeDelete && $confirmCascade) {
                     // Check if user can manage sessions
-                    if (!$request->user()->isAdmin() && !$request->user()->can('manageSessions', $venue)) {
+                    if (! $request->user()->isAdmin() && ! $request->user()->can('manageSessions', $venue)) {
                         if ($request->wantsJson()) {
                             return response()->json([
                                 'success' => false,
-                                'message' => 'Bu salon\'un oturumlarını silmek için yetkiniz yok.'
+                                'message' => 'Bu salon\'un oturumlarını silmek için yetkiniz yok.',
                             ], 403);
                         }
+
                         return back()->withErrors('Bu salon\'un oturumlarını silmek için yetkiniz yok.');
                     }
 
@@ -658,14 +707,14 @@ class VenueController extends Controller
                         'venue_id' => $venue->id,
                         'session_count' => $sessionCount,
                         'deleted_sessions' => $deletedSessions->pluck('id')->toArray(),
-                        'user_id' => auth()->id()
+                        'user_id' => auth()->id(),
                     ]);
                 } else {
                     // Return error if sessions exist but cascade delete not requested
                     if ($request->wantsJson()) {
                         return response()->json([
                             'success' => false,
-                            'message' => "Bu salon silinemez çünkü {$sessionCount} adet oturum içeriyor. Önce oturumları silin."
+                            'message' => "Bu salon silinemez çünkü {$sessionCount} adet oturum içeriyor. Önce oturumları silin.",
                         ], 422);
                     }
 
@@ -683,13 +732,13 @@ class VenueController extends Controller
 
             Log::info('Venue deleted successfully', [
                 'venue_id' => $venueId,
-                'deleted_by' => auth()->id()
+                'deleted_by' => auth()->id(),
             ]);
 
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Salon başarıyla silindi.'
+                    'message' => 'Salon başarıyla silindi.',
                 ]);
             }
 
@@ -703,14 +752,14 @@ class VenueController extends Controller
                 'venue_id' => $venue->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'user_id' => auth()->id()
+                'user_id' => auth()->id(),
             ]);
 
             if ($request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Salon silinirken bir hata oluştu.',
-                    'error' => config('app.debug') ? $e->getMessage() : null
+                    'error' => config('app.debug') ? $e->getMessage() : null,
                 ], 500);
             }
 
@@ -730,6 +779,7 @@ class VenueController extends Controller
         }
 
         $organizationIds = $user->organizations()->pluck('organizations.id');
+
         return Event::with('organization')
             ->whereIn('organization_id', $organizationIds)
             ->get();
@@ -745,7 +795,7 @@ class VenueController extends Controller
         }
 
         $organizationIds = $user->organizations()->pluck('organizations.id');
-        
+
         return EventDay::with('event.organization')
             ->whereHas('event', function ($q) use ($organizationIds) {
                 $q->whereIn('organization_id', $organizationIds);
@@ -765,22 +815,22 @@ class VenueController extends Controller
         // Basic cleaning: remove null bytes and control characters
         $cleaned = str_replace(["\0", "\x00"], '', $string);
         $cleaned = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $cleaned);
-        
+
         // Ensure UTF-8 encoding
         $cleaned = mb_convert_encoding($cleaned, 'UTF-8', 'UTF-8');
-        
+
         // Remove common problematic characters
         $cleaned = str_replace([
             "\u{FEFF}", // BOM
             "\u{200B}", // Zero width space
             "\u{FFFD}", // Replacement character
         ], '', $cleaned);
-        
+
         // Final validation
-        if (!mb_check_encoding($cleaned, 'UTF-8')) {
+        if (! mb_check_encoding($cleaned, 'UTF-8')) {
             $cleaned = mb_convert_encoding($cleaned, 'UTF-8', 'auto');
         }
-        
+
         return trim($cleaned);
     }
 
@@ -817,15 +867,15 @@ class VenueController extends Controller
             if (json_last_error() !== JSON_ERROR_NONE) {
                 Log::warning('JSON encoding test failed for venue', [
                     'venue_id' => $venue->id,
-                    'json_error' => json_last_error_msg()
+                    'json_error' => json_last_error_msg(),
                 ]);
-                
+
                 // Return minimal safe data
                 return [
                     'id' => $venue->id,
                     'event_day_id' => $venue->event_day_id,
-                    'name' => 'Salon ' . $venue->id,
-                    'display_name' => 'Salon ' . $venue->id,
+                    'name' => 'Salon '.$venue->id,
+                    'display_name' => 'Salon '.$venue->id,
                     'capacity' => $venue->capacity,
                     'color' => $venue->color ?? '#3B82F6',
                     'sort_order' => $venue->sort_order ?? 0,
@@ -842,15 +892,15 @@ class VenueController extends Controller
         } catch (\Exception $e) {
             Log::error('Error creating safe venue array', [
                 'venue_id' => $venue->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             // Return minimal safe data
             return [
                 'id' => $venue->id,
                 'event_day_id' => $venue->event_day_id,
-                'name' => 'Salon ' . $venue->id,
-                'display_name' => 'Salon ' . $venue->id,
+                'name' => 'Salon '.$venue->id,
+                'display_name' => 'Salon '.$venue->id,
                 'capacity' => $venue->capacity,
                 'color' => '#3B82F6',
                 'sort_order' => 0,
@@ -893,8 +943,8 @@ class VenueController extends Controller
         } catch (\Exception $e) {
             return [
                 'id' => $eventDay->id,
-                'title' => 'Etkinlik Günü ' . $eventDay->id,
-                'display_name' => 'Etkinlik Günü ' . $eventDay->id,
+                'title' => 'Etkinlik Günü '.$eventDay->id,
+                'display_name' => 'Etkinlik Günü '.$eventDay->id,
                 'date' => null,
             ];
         }
@@ -924,8 +974,8 @@ class VenueController extends Controller
             } catch (\Exception $e) {
                 return [
                     'id' => $event->id,
-                    'name' => 'Etkinlik ' . $event->id,
-                    'slug' => 'event-' . $event->id,
+                    'name' => 'Etkinlik '.$event->id,
+                    'slug' => 'event-'.$event->id,
                 ];
             }
         })->toArray();
@@ -964,8 +1014,8 @@ class VenueController extends Controller
             } catch (\Exception $e) {
                 return [
                     'id' => $eventDay->id,
-                    'title' => 'Etkinlik Günü ' . $eventDay->id,
-                    'display_name' => 'Etkinlik Günü ' . $eventDay->id,
+                    'title' => 'Etkinlik Günü '.$eventDay->id,
+                    'display_name' => 'Etkinlik Günü '.$eventDay->id,
                     'date' => null,
                 ];
             }
@@ -981,7 +1031,7 @@ class VenueController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => ['data' => [], 'total' => 0],
-                'message' => 'Erişilebilir salon bulunamadı.'
+                'message' => 'Erişilebilir salon bulunamadı.',
             ]);
         }
 
@@ -991,7 +1041,7 @@ class VenueController extends Controller
             'eventDays' => [],
             'filters' => $request->only(['search', 'event_id', 'event_day_id', 'sort', 'direction']),
             'stats' => ['total' => 0, 'with_sessions' => 0, 'without_sessions' => 0],
-            'canCreate' => auth()->user()->isEditor()
+            'canCreate' => auth()->user()->isEditor(),
         ])->with('error', 'Erişilebilir salon bulunamadı.');
     }
 
@@ -1004,7 +1054,7 @@ class VenueController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Salonlar listesi yüklenirken bir hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : null
+                'error' => config('app.debug') ? $e->getMessage() : null,
             ], 500);
         }
 
@@ -1014,7 +1064,7 @@ class VenueController extends Controller
             'eventDays' => [],
             'filters' => $request->only(['search', 'event_id', 'event_day_id', 'sort', 'direction']),
             'stats' => ['total' => 0, 'with_sessions' => 0, 'without_sessions' => 0],
-            'canCreate' => auth()->user()->isEditor()
+            'canCreate' => auth()->user()->isEditor(),
         ])->with('error', 'Salonlar listesi yüklenirken bir hata oluştu.');
     }
 
@@ -1049,7 +1099,7 @@ class VenueController extends Controller
             'total_duration_minutes' => $totalDuration,
             'total_duration_hours' => round($totalDuration / 60, 1),
             'capacity_utilization' => $venue->capacity ?
-                min(100, round(($totalSpeakers / $venue->capacity) * 100, 1)) : null
+                min(100, round(($totalSpeakers / $venue->capacity) * 100, 1)) : null,
         ];
     }
 
@@ -1068,7 +1118,7 @@ class VenueController extends Controller
             '#06B6D4' => 'Cyan',
             '#84CC16' => 'Lime',
             '#EC4899' => 'Pembe',
-            '#6B7280' => 'Gri'
+            '#6B7280' => 'Gri',
         ];
     }
 }

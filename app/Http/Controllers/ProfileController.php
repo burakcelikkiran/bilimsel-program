@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
-
 use Laravel\Fortify\Features;
 
 class ProfileController extends Controller
@@ -24,7 +23,34 @@ class ProfileController extends Controller
             'sessions' => $this->sessions($request)->all(),
             'mustVerifyEmail' => $request->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail,
             'status' => session('status'),
+            ...$this->twoFactorProps($request),
         ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function twoFactorProps(Request $request): array
+    {
+        $user = $request->user();
+
+        if (! $user->two_factor_secret) {
+            return [
+                'twoFactorQrCode' => null,
+                'twoFactorSecretKey' => null,
+                'twoFactorRecoveryCodes' => [],
+            ];
+        }
+
+        $secretKey = decrypt($user->two_factor_secret);
+
+        return [
+            'twoFactorQrCode' => $user->twoFactorQrCodeSvg(),
+            'twoFactorSecretKey' => collect(str_split($secretKey, 4))->implode(' '),
+            'twoFactorRecoveryCodes' => $user->two_factor_recovery_codes
+                ? json_decode(decrypt($user->two_factor_recovery_codes), true)
+                : [],
+        ];
     }
 
     /**
@@ -89,7 +115,7 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        Auth::logout();
+        Auth::guard('web')->logout();
 
         $user->delete();
 
@@ -165,7 +191,7 @@ class ProfileController extends Controller
         // Simple user agent parsing
         $isMobile = preg_match('/Mobile|Android|iPhone|iPad/', $userAgent);
         $isTablet = preg_match('/iPad|Tablet/', $userAgent);
-        
+
         // Platform detection
         $platform = 'Unknown';
         if (preg_match('/Windows/', $userAgent)) {
@@ -186,7 +212,7 @@ class ProfileController extends Controller
             $browser = 'Chrome';
         } elseif (preg_match('/Firefox/', $userAgent)) {
             $browser = 'Firefox';
-        } elseif (preg_match('/Safari/', $userAgent) && !preg_match('/Chrome/', $userAgent)) {
+        } elseif (preg_match('/Safari/', $userAgent) && ! preg_match('/Chrome/', $userAgent)) {
             $browser = 'Safari';
         } elseif (preg_match('/Edge/', $userAgent)) {
             $browser = 'Edge';
@@ -195,7 +221,7 @@ class ProfileController extends Controller
         }
 
         return [
-            'is_desktop' => !$isMobile || $isTablet,
+            'is_desktop' => ! $isMobile || $isTablet,
             'platform' => $platform,
             'browser' => $browser,
         ];

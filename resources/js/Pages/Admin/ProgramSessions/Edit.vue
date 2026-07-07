@@ -10,10 +10,10 @@
         <div class="w-full space-y-8">
             <!-- Header Section -->
             <div
-                class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+                class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden"
             >
                 <div
-                    class="px-6 py-5 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-800 to-gray-900"
+                    class="px-6 py-5 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-slate-800 to-slate-900"
                 >
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
@@ -30,7 +30,7 @@
                                 <h3 class="text-lg font-semibold text-white">
                                     Oturum Düzenle
                                 </h3>
-                                <p class="text-sm text-gray-300">
+                                <p class="text-sm text-slate-300">
                                     {{ sessionTitle }}
                                 </p>
                             </div>
@@ -44,7 +44,7 @@
                                         "Salon Seçiniz"
                                     }}
                                 </p>
-                                <p class="text-xs text-gray-300">
+                                <p class="text-xs text-slate-300">
                                     {{
                                         formatTimeRange(
                                             form.start_time,
@@ -58,8 +58,8 @@
                                 class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
                                 :class="
                                     form.is_break
-                                        ? 'bg-gray-100 text-gray-800 dark:bg-gray-200 dark:text-gray-900'
-                                        : 'bg-gray-600 text-white dark:bg-gray-500 dark:text-gray-100'
+                                        ? 'bg-slate-100 text-slate-800 dark:bg-slate-200 dark:text-slate-900'
+                                        : 'bg-slate-600 text-white dark:bg-slate-500 dark:text-slate-100'
                                 "
                             >
                                 <span
@@ -78,17 +78,17 @@
 
             <!-- Form Card -->
             <div
-                class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+                class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden"
             >
                 <form
                     @submit.prevent="updateSession"
-                    class="divide-y divide-gray-200 dark:divide-gray-700"
+                    class="divide-y divide-slate-200 dark:divide-slate-700"
                 >
                     <!-- Event Context Selection -->
-                    <div class="p-6 space-y-6 bg-gray-50 dark:bg-gray-800/50">
+                    <div class="p-6 space-y-6 bg-slate-50 dark:bg-slate-800/50">
                         <div>
                             <h3
-                                class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                                class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                             >
                                 Etkinlik Seçimi
                             </h3>
@@ -98,7 +98,7 @@
                                 <div>
                                     <label
                                         for="event_id"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Etkinlik *
                                     </label>
@@ -107,7 +107,7 @@
                                         v-model="selectedEventId"
                                         @change="onEventChange"
                                         required
-                                        class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                                        class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                                     >
                                         <option value="">Etkinlik seçin</option>
                                         <option
@@ -124,7 +124,7 @@
                                 <div>
                                     <label
                                         for="event_day_id"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Etkinlik Günü *
                                     </label>
@@ -137,7 +137,7 @@
                                             isLoadingEventDays
                                         "
                                         required
-                                        class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <option value="">
                                             {{
@@ -162,7 +162,7 @@
                                 <div>
                                     <label
                                         for="venue_id"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Salon *
                                     </label>
@@ -174,7 +174,7 @@
                                             isLoadingVenues
                                         "
                                         required
-                                        class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                        class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                                         :class="
                                             errors.venue_id
                                                 ? 'border-red-300 focus:ring-red-500'
@@ -211,7 +211,7 @@
                     <div class="p-6 space-y-6">
                         <div>
                             <h3
-                                class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                                class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                             >
                                 Oturum Bilgileri
                             </h3>
@@ -223,7 +223,7 @@
                                 <div class="lg:col-span-3 xl:col-span-2">
                                     <label
                                         for="title"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Oturum Başlığı *
                                     </label>
@@ -232,7 +232,7 @@
                                         v-model="form.title"
                                         type="text"
                                         required
-                                        class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                                        class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                                         :class="
                                             errors.title
                                                 ? 'border-red-300 focus:ring-red-500'
@@ -252,7 +252,7 @@
                                 <div class="lg:col-span-1 xl:col-span-1">
                                     <label
                                         for="session_type"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Oturum Türü *
                                     </label>
@@ -260,7 +260,7 @@
                                         id="session_type"
                                         v-model="form.session_type"
                                         required
-                                        class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                                        class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                                         :class="
                                             errors.session_type
                                                 ? 'border-red-300 focus:ring-red-500'
@@ -289,7 +289,7 @@
                                 <!-- Quick Actions -->
                                 <div class="lg:col-span-1 xl:col-span-1">
                                     <label
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Hızlı İşlemler
                                     </label>
@@ -298,10 +298,10 @@
                                             <input
                                                 v-model="form.is_break"
                                                 type="checkbox"
-                                                class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded transition-colors"
+                                                class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded transition-colors"
                                             />
                                             <span
-                                                class="ml-3 text-sm text-gray-700 dark:text-gray-300"
+                                                class="ml-3 text-sm text-slate-700 dark:text-slate-300"
                                             >
                                                 Bu bir ara
                                             </span>
@@ -317,20 +317,20 @@
                             <div>
                                 <label
                                     for="start_time"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                    class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                 >
                                     Başlangıç Saati *
                                 </label>
                                 <div class="relative">
                                     <ClockIcon
-                                        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                                        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400"
                                     />
                                     <input
                                         id="start_time"
                                         v-model="form.start_time"
                                         type="time"
                                         required
-                                        class="block w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                                        class="block w-full pl-10 pr-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                                         :class="
                                             errors.start_time
                                                 ? 'border-red-300 focus:ring-red-500'
@@ -350,20 +350,20 @@
                             <div>
                                 <label
                                     for="end_time"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                    class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                 >
                                     Bitiş Saati *
                                 </label>
                                 <div class="relative">
                                     <ClockIcon
-                                        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                                        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400"
                                     />
                                     <input
                                         id="end_time"
                                         v-model="form.end_time"
                                         type="time"
                                         required
-                                        class="block w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                                        class="block w-full pl-10 pr-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                                         :class="
                                             errors.end_time
                                                 ? 'border-red-300 focus:ring-red-500'
@@ -383,15 +383,15 @@
                             <!-- Duration Display -->
                             <div v-if="form.start_time && form.end_time">
                                 <label
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                    class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                 >
                                     Süre
                                 </label>
                                 <div
-                                    class="px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg"
+                                    class="px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
                                 >
                                     <div
-                                        class="flex items-center text-gray-700 dark:text-gray-300"
+                                        class="flex items-center text-slate-700 dark:text-slate-300"
                                     >
                                         <ClockIcon class="h-5 w-5 mr-2" />
                                         <span class="font-semibold"
@@ -412,7 +412,7 @@
                         <div>
                             <label
                                 for="description"
-                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                             >
                                 Oturum Açıklaması
                             </label>
@@ -421,7 +421,7 @@
                                     id="description"
                                     v-model="form.description"
                                     rows="6"
-                                    class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md resize-none"
+                                    class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md resize-none"
                                     :class="
                                         errors.description
                                             ? 'border-red-300 focus:ring-red-500'
@@ -430,7 +430,7 @@
                                     placeholder="Oturum hakkında detaylı bilgi verin. Bu açıklama katılımcılara gösterilecektir..."
                                 ></textarea>
                                 <div
-                                    class="absolute bottom-3 right-3 text-xs text-gray-400"
+                                    class="absolute bottom-3 right-3 text-xs text-slate-400"
                                 >
                                     {{ (form.description || "").length }}/2000
                                 </div>
@@ -448,7 +448,7 @@
                     <div class="p-6 space-y-6">
                         <div>
                             <h3
-                                class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                                class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                             >
                                 Moderatörler
                             </h3>
@@ -458,14 +458,14 @@
                                 <div class="md:col-span-2">
                                     <label
                                         for="moderator_title"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Moderatör Unvanı
                                     </label>
                                     <select
                                         id="moderator_title"
                                         v-model="form.moderator_title"
-                                        class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                                        class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                                         :class="
                                             errors.moderator_title
                                                 ? 'border-red-300 focus:ring-red-500'
@@ -494,14 +494,14 @@
                                 <!-- Moderators Selection -->
                                 <div class="md:col-span-2">
                                     <label
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Moderatörler
                                     </label>
 
                                     <div
                                         v-if="participants.length > 0"
-                                        class="space-y-2 max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3"
+                                        class="space-y-2 max-h-48 overflow-y-auto border border-slate-200 dark:border-slate-600 rounded-lg p-3"
                                     >
                                         <div
                                             v-for="participant in participants"
@@ -513,16 +513,16 @@
                                                 v-model="form.moderator_ids"
                                                 :value="participant.id"
                                                 type="checkbox"
-                                                class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                                                class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                                             />
                                             <label
                                                 :for="`moderator_${participant.id}`"
-                                                class="text-sm text-gray-700 dark:text-gray-300 flex-1"
+                                                class="text-sm text-slate-700 dark:text-slate-300 flex-1"
                                             >
                                                 {{ participant.full_name }}
                                                 <span
                                                     v-if="participant.title"
-                                                    class="text-gray-500"
+                                                    class="text-slate-500"
                                                 >
                                                     -
                                                     {{
@@ -533,7 +533,7 @@
                                                     v-if="
                                                         participant.affiliation
                                                     "
-                                                    class="text-gray-400 text-xs block"
+                                                    class="text-slate-400 text-xs block"
                                                 >
                                                     {{
                                                         participant.affiliation
@@ -545,7 +545,7 @@
 
                                     <div
                                         v-else
-                                        class="text-center py-8 text-gray-500 dark:text-gray-400"
+                                        class="text-center py-8 text-slate-500 dark:text-slate-400"
                                     >
                                         <UsersIcon
                                             class="h-12 w-12 mx-auto mb-2"
@@ -557,7 +557,7 @@
                                                     'admin.participants.create'
                                                 )
                                             "
-                                            class="text-gray-600 dark:text-gray-400 hover:underline text-sm"
+                                            class="text-slate-600 dark:text-slate-400 hover:underline text-sm"
                                         >
                                             Yeni katılımcı ekle
                                         </Link>
@@ -578,9 +578,9 @@
                     <div class="p-6 space-y-6">
                         <div>
                             <h3
-                                class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center"
+                                class="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center"
                             >
-                                <TagIcon class="h-5 w-5 mr-2 text-gray-600" />
+                                <TagIcon class="h-5 w-5 mr-2 text-slate-600" />
                                 Kategoriler ve Sponsor
                             </h3>
 
@@ -588,14 +588,14 @@
                                 <!-- Categories -->
                                 <div>
                                     <label
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Kategoriler
                                     </label>
 
                                     <div
                                         v-if="availableCategories.length > 0"
-                                        class="space-y-2 max-h-32 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg p-3"
+                                        class="space-y-2 max-h-32 overflow-y-auto border border-slate-200 dark:border-slate-600 rounded-lg p-3"
                                     >
                                         <div
                                             v-for="category in availableCategories"
@@ -607,11 +607,11 @@
                                                 v-model="form.category_ids"
                                                 :value="category.id"
                                                 type="checkbox"
-                                                class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                                                class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                                             />
                                             <label
                                                 :for="`category_${category.id}`"
-                                                class="text-sm text-gray-700 dark:text-gray-300 flex items-center space-x-2"
+                                                class="text-sm text-slate-700 dark:text-slate-300 flex items-center space-x-2"
                                             >
                                                 <div
                                                     class="w-3 h-3 rounded-full"
@@ -627,7 +627,7 @@
 
                                     <div
                                         v-else
-                                        class="text-center py-4 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600 rounded-lg"
+                                        class="text-center py-4 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 rounded-lg"
                                     >
                                         <TagIcon class="h-8 w-8 mx-auto mb-1" />
                                         <p class="text-sm">
@@ -651,14 +651,14 @@
                                 <div>
                                     <label
                                         for="sponsor_id"
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                     >
                                         Sponsor
                                     </label>
                                     <select
                                         id="sponsor_id"
                                         v-model="form.sponsor_id"
-                                        class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                                        class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                                         :class="
                                             errors.sponsor_id
                                                 ? 'border-red-300 focus:ring-red-500'
@@ -689,7 +689,7 @@
 
                     <!-- Form Actions -->
                     <div
-                        class="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700"
+                        class="flex items-center justify-between p-6 border-t border-slate-200 dark:border-slate-700"
                     >
                         <Link
                             :href="
@@ -700,7 +700,7 @@
                                       )
                                     : route('admin.program-sessions.index')
                             "
-                            class="inline-flex items-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                            class="inline-flex items-center px-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
                         >
                             <ArrowLeftIcon class="h-4 w-4 mr-2" />
                             İptal
@@ -712,7 +712,7 @@
                                 type="button"
                                 @click="resetForm"
                                 :disabled="processing"
-                                class="inline-flex items-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                class="inline-flex items-center px-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <ArrowPathIcon class="h-4 w-4 mr-2" />
                                 Sıfırla
@@ -722,7 +722,7 @@
                             <button
                                 type="submit"
                                 :disabled="processing || !canSubmit"
-                                class="inline-flex items-center px-6 py-2.5 bg-gradient-to-r from-gray-700 to-gray-800 text-white text-sm font-medium rounded-lg hover:from-gray-800 hover:to-gray-900 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                class="inline-flex items-center px-6 py-2.5 bg-gradient-to-r from-slate-700 to-slate-800 text-white text-sm font-medium rounded-lg hover:from-slate-800 hover:to-slate-900 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <template v-if="processing">
                                     <div
@@ -743,20 +743,20 @@
             <!-- Change Summary -->
             <div
                 v-if="hasChanges"
-                class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+                class="bg-slate-50 dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700"
             >
                 <div class="flex items-start">
                     <ExclamationTriangleIcon
-                        class="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5 flex-shrink-0"
+                        class="h-5 w-5 text-slate-600 dark:text-slate-400 mt-0.5 flex-shrink-0"
                     />
                     <div class="ml-3">
                         <h4
-                            class="text-sm font-medium text-gray-900 dark:text-gray-100"
+                            class="text-sm font-medium text-slate-900 dark:text-slate-100"
                         >
                             Kaydedilmemiş Değişiklikler
                         </h4>
                         <div
-                            class="mt-2 text-sm text-gray-700 dark:text-gray-200"
+                            class="mt-2 text-sm text-slate-700 dark:text-slate-200"
                         >
                             <p>
                                 Formu değiştirdiniz ancak henüz kaydetmediniz.
@@ -770,20 +770,20 @@
 
             <!-- Quick Tips -->
             <div
-                class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+                class="bg-slate-50 dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700"
             >
                 <div class="flex items-start">
                     <InformationCircleIcon
-                        class="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5 flex-shrink-0"
+                        class="h-5 w-5 text-slate-600 dark:text-slate-400 mt-0.5 flex-shrink-0"
                     />
                     <div class="ml-3">
                         <h4
-                            class="text-sm font-medium text-gray-900 dark:text-gray-100"
+                            class="text-sm font-medium text-slate-900 dark:text-slate-100"
                         >
                             Program Oturum Düzenleme İpuçları
                         </h4>
                         <div
-                            class="mt-2 text-sm text-gray-700 dark:text-gray-200"
+                            class="mt-2 text-sm text-slate-700 dark:text-slate-200"
                         >
                             <ul class="list-disc list-inside space-y-1">
                                 <li>
@@ -821,7 +821,6 @@ import {
 } from "vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import axios from "axios";
 import {
     ArrowLeftIcon,
     PencilSquareIcon,
@@ -1236,14 +1235,71 @@ const formatTimeRange = (startTime, endTime) => {
     return `${start} - ${end}`;
 };
 
-const onEventChange = async () => {
-    console.log(
-        "🔥 onEventChange called, selectedEventId:",
-        selectedEventId.value
-    );
+const cascadeOnly = [
+    "events",
+    "selectedEvent",
+    "eventDays",
+    "selectedEventDay",
+    "venues",
+    "categories",
+    "selectedEventId",
+    "selectedEventDayId",
+    "selectedVenueId",
+];
 
+const reloadCascade = (params = {}, loadingRef = null) => {
+    if (!sessionId.value) {
+        return;
+    }
+
+    if (loadingRef) {
+        loadingRef.value = true;
+    }
+
+    router.get(route("admin.program-sessions.edit", sessionId.value), params, {
+        only: cascadeOnly,
+        preserveState: true,
+        preserveScroll: true,
+        onFinish: () => {
+            if (loadingRef) {
+                loadingRef.value = false;
+            }
+        },
+    });
+};
+
+watch(
+    () => props.eventDays,
+    (val) => {
+        availableEventDays.value = val ?? [];
+    }
+);
+
+watch(
+    () => props.venues,
+    (val) => {
+        availableVenues.value = val ?? [];
+    }
+);
+
+watch(
+    () => props.categories,
+    (val) => {
+        availableCategories.value = val ?? [];
+    }
+);
+
+watch(
+    () => props.selectedEventDayId,
+    (val) => {
+        if (val !== undefined && val !== null) {
+            selectedEventDayId.value = val;
+        }
+    }
+);
+
+const onEventChange = () => {
     if (!selectedEventId.value) {
-        console.log("❌ No event selected, clearing data");
         availableEventDays.value = [];
         availableVenues.value = [];
         availableCategories.value = [];
@@ -1252,157 +1308,26 @@ const onEventChange = async () => {
         return;
     }
 
-    isLoadingEventDays.value = true;
-    console.log("🔄 Loading event days for event:", selectedEventId.value);
-
-    try {
-        const response = await axios.get(
-            "/admin/ajax/program-sessions/event-days",
-            {
-                params: { event_id: selectedEventId.value },
-            }
-        );
-
-        console.log("✅ Event days response:", response.data);
-
-        if (response.data.success) {
-            availableEventDays.value = response.data.data;
-            selectedEventDayId.value = null;
-            availableVenues.value = [];
-            availableCategories.value = [];
-            form.venue_id = "";
-
-            console.log(
-                "✅ Event days loaded:",
-                availableEventDays.value.length,
-                "days"
-            );
-
-            // Load categories for selected event
-            await loadCategoriesForEvent();
-        } else {
-            console.error(
-                "❌ Event days loading failed:",
-                response.data.message
-            );
-        }
-    } catch (error) {
-        console.error("❌ Error loading event days:", error);
-
-        // Show user-friendly error
-        if (error.response) {
-            console.error(
-                "Server responded with:",
-                error.response.status,
-                error.response.data
-            );
-            alert(
-                `Hata: ${error.response.status} - ${
-                    error.response.data.message || "Sunucu hatası"
-                }`
-            );
-        } else {
-            console.error("Network error:", error.message);
-            alert("Ağ hatası: " + error.message);
-        }
-    } finally {
-        isLoadingEventDays.value = false;
-        console.log("✅ Event days loading finished");
-    }
+    selectedEventDayId.value = null;
+    form.venue_id = "";
+    reloadCascade({ event_id: selectedEventId.value }, isLoadingEventDays);
 };
 
-const onEventDayChange = async () => {
-    console.log(
-        "🔥 onEventDayChange called, selectedEventDayId:",
-        selectedEventDayId.value
-    );
-
+const onEventDayChange = () => {
     if (!selectedEventDayId.value) {
-        console.log("❌ No event day selected, clearing venues");
         availableVenues.value = [];
         form.venue_id = "";
         return;
     }
 
-    isLoadingVenues.value = true;
-    console.log("🔄 Loading venues for event day:", selectedEventDayId.value);
-
-    try {
-        const response = await axios.get(
-            "/admin/ajax/program-sessions/venues-for-event-day",
-            {
-                params: { event_day_id: selectedEventDayId.value },
-            }
-        );
-
-        console.log("✅ Venues response:", response.data);
-
-        if (response.data.success) {
-            availableVenues.value = response.data.data;
-            form.venue_id = "";
-
-            console.log(
-                "✅ Venues loaded:",
-                availableVenues.value.length,
-                "venues"
-            );
-        } else {
-            console.error("❌ Venues loading failed:", response.data.message);
-        }
-    } catch (error) {
-        console.error("❌ Error loading venues:", error);
-        if (error.response) {
-            alert(
-                `Salon yükleme hatası: ${error.response.status} - ${
-                    error.response.data.message || "Sunucu hatası"
-                }`
-            );
-        }
-    } finally {
-        isLoadingVenues.value = false;
-        console.log("✅ Venues loading finished");
-    }
-};
-
-const loadCategoriesForEvent = async () => {
-    if (!selectedEventId.value) {
-        console.log("❌ No event selected for categories");
-        availableCategories.value = [];
-        return;
-    }
-
-    isLoadingCategories.value = true;
-    console.log("🔄 Loading categories for event:", selectedEventId.value);
-
-    try {
-        const response = await axios.get(
-            "/admin/ajax/program-sessions/categories-for-event",
-            {
-                params: { event_id: selectedEventId.value },
-            }
-        );
-
-        console.log("✅ Categories response:", response.data);
-
-        if (response.data.success) {
-            availableCategories.value = response.data.data;
-            console.log(
-                "✅ Categories loaded:",
-                availableCategories.value.length,
-                "categories"
-            );
-        } else {
-            console.error(
-                "❌ Categories loading failed:",
-                response.data.message
-            );
-        }
-    } catch (error) {
-        console.error("❌ Error loading categories:", error);
-    } finally {
-        isLoadingCategories.value = false;
-        console.log("✅ Categories loading finished");
-    }
+    form.venue_id = "";
+    reloadCascade(
+        {
+            event_id: selectedEventId.value,
+            event_day_id: selectedEventDayId.value,
+        },
+        isLoadingVenues
+    );
 };
 
 const updateSession = () => {

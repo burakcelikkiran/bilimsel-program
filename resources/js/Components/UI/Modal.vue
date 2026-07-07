@@ -12,7 +12,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+        <div class="fixed inset-0 bg-slate-500 bg-opacity-75 transition-opacity" />
       </TransitionChild>
 
       <!-- Modal Container -->
@@ -29,7 +29,8 @@
           >
             <DialogPanel
               :class="[
-                'relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all dark:bg-gray-800',
+                'relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all dark:bg-slate-800',
+                { dark: isDark },
                 maxWidthClass,
                 'sm:my-8 sm:w-full sm:p-6'
               ]"
@@ -40,7 +41,7 @@
                   <DialogTitle
                     v-if="title"
                     as="h3"
-                    class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100"
+                    class="text-lg font-semibold leading-6 text-slate-900 dark:text-slate-100"
                   >
                     {{ title }}
                   </DialogTitle>
@@ -51,7 +52,7 @@
                 <button
                   v-if="closable"
                   type="button"
-                  class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-gray-800 dark:text-gray-500 dark:hover:text-gray-400"
+                  class="rounded-md bg-white text-slate-400 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-slate-800 dark:text-slate-500 dark:hover:text-slate-400"
                   @click="closeModal"
                 >
                   <span class="sr-only">Kapat</span>
@@ -61,7 +62,7 @@
 
               <!-- Subtitle -->
               <div v-if="subtitle" class="mb-4">
-                <p class="text-sm text-gray-500 dark:text-gray-400">
+                <p class="text-sm text-slate-500 dark:text-slate-400">
                   {{ subtitle }}
                 </p>
               </div>
@@ -72,7 +73,7 @@
               </div>
 
               <!-- Footer -->
-              <div v-if="$slots.footer" class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div v-if="$slots.footer" class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
                 <slot name="footer" />
               </div>
 
@@ -85,7 +86,7 @@
                 <button
                   v-if="showCancelButton"
                   type="button"
-                  class="inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:w-auto dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 dark:hover:bg-gray-600"
+                  class="inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:w-auto dark:bg-slate-700 dark:text-slate-100 dark:ring-slate-600 dark:hover:bg-slate-600"
                   @click="cancel"
                 >
                   {{ cancelText }}
@@ -130,11 +131,11 @@
               <!-- Loading Overlay -->
               <div
                 v-if="loading"
-                class="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center dark:bg-gray-800 dark:bg-opacity-50"
+                class="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center dark:bg-slate-800 dark:bg-opacity-50"
               >
                 <div class="flex items-center space-x-2">
                   <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                  <span class="text-sm text-gray-600 dark:text-gray-400">{{ loadingText }}</span>
+                  <span class="text-sm text-slate-600 dark:text-slate-400">{{ loadingText }}</span>
                 </div>
               </div>
             </DialogPanel>
@@ -147,6 +148,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useTheme } from '@/Composables/useTheme'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 
@@ -221,6 +223,8 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'confirm', 'cancel'])
 
+const { isDark } = useTheme()
+
 // Computed
 const maxWidthClass = computed(() => {
   const sizes = {
@@ -242,7 +246,7 @@ const maxWidthClass = computed(() => {
 const confirmButtonClasses = computed(() => {
   const variants = {
     primary: 'bg-blue-600 hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
-    secondary: 'bg-gray-600 hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600',
+    secondary: 'bg-slate-600 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600',
     success: 'bg-green-600 hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600',
     warning: 'bg-yellow-600 hover:bg-yellow-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600',
     danger: 'bg-red-600 hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600'

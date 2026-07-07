@@ -11,7 +11,7 @@
         <div class="mb-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div
-                    class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-4 text-white shadow border border-gray-700"
+                    class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 text-white shadow border border-slate-700"
                 >
                     <div class="flex items-center">
                         <div
@@ -20,7 +20,7 @@
                             <BuildingOfficeIcon class="h-5 w-5" />
                         </div>
                         <div class="ml-3">
-                            <p class="text-gray-300 text-xs">
+                            <p class="text-slate-300 text-xs">
                                 Toplam Organizasyon
                             </p>
                             <p class="text-lg font-bold">
@@ -31,7 +31,7 @@
                 </div>
 
                 <div
-                    class="bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg p-4 text-white shadow border border-gray-600"
+                    class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg p-4 text-white shadow border border-slate-600"
                 >
                     <div class="flex items-center">
                         <div
@@ -40,7 +40,7 @@
                             <CheckCircleIcon class="h-5 w-5" />
                         </div>
                         <div class="ml-3">
-                            <p class="text-gray-300 text-xs">Aktif</p>
+                            <p class="text-slate-300 text-xs">Aktif</p>
                             <p class="text-lg font-bold">
                                 {{ enhancedStats.active }}
                             </p>
@@ -49,7 +49,7 @@
                 </div>
 
                 <div
-                    class="bg-gradient-to-br from-gray-600 to-gray-700 rounded-lg p-4 text-white shadow border border-gray-500"
+                    class="bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg p-4 text-white shadow border border-slate-500"
                 >
                     <div class="flex items-center">
                         <div
@@ -58,7 +58,7 @@
                             <CalendarIcon class="h-5 w-5" />
                         </div>
                         <div class="ml-3">
-                            <p class="text-gray-300 text-xs">Etkinlikli</p>
+                            <p class="text-slate-300 text-xs">Etkinlikli</p>
                             <p class="text-lg font-bold">
                                 {{ enhancedStats.withEvents }}
                             </p>
@@ -67,7 +67,7 @@
                 </div>
 
                 <div
-                    class="bg-gradient-to-br from-gray-500 to-gray-600 rounded-lg p-4 text-white shadow border border-gray-400"
+                    class="bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg p-4 text-white shadow border border-slate-400"
                 >
                     <div class="flex items-center">
                         <div
@@ -76,7 +76,7 @@
                             <UserGroupIcon class="h-5 w-5" />
                         </div>
                         <div class="ml-3">
-                            <p class="text-gray-300 text-xs">
+                            <p class="text-slate-300 text-xs">
                                 Toplam Katılımcı
                             </p>
                             <p class="text-lg font-bold">
@@ -90,11 +90,11 @@
 
         <!-- Modern Data Table -->
         <div
-            class="bg-white dark:bg-gray-900 shadow-lg rounded-lg overflow-visible border border-gray-200/50 dark:border-gray-800/50"
+            class="bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-visible border border-slate-200/50 dark:border-slate-800/50"
         >
             <!-- Enhanced Header -->
             <div
-                class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 px-4 py-4 border-b border-gray-200 dark:border-gray-800"
+                class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 px-4 py-4 border-b border-slate-200 dark:border-slate-800"
             >
                 <div
                     class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-3 lg:space-y-0"
@@ -102,11 +102,11 @@
                     <!-- Left: Title and Description -->
                     <div>
                         <h2
-                            class="text-lg font-bold text-gray-900 dark:text-white"
+                            class="text-lg font-bold text-slate-900 dark:text-white"
                         >
                             Organizasyon Yönetimi
                         </h2>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                        <p class="text-slate-600 dark:text-slate-400 text-sm">
                             Sistem organizasyonlarını düzenleyin ve yönetin
                         </p>
                     </div>
@@ -120,8 +120,8 @@
                                 :class="[
                                     'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                     currentQuickFilter === 'all'
-                                        ? 'bg-gray-800 text-white shadow border border-gray-700'
-                                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                        ? 'bg-slate-800 text-white shadow border border-slate-700'
+                                        : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                 ]"
                             >
                                 Tümü
@@ -131,8 +131,8 @@
                                 :class="[
                                     'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                     currentQuickFilter === 'active'
-                                        ? 'bg-gray-700 text-white shadow border border-gray-600'
-                                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                        ? 'bg-slate-700 text-white shadow border border-slate-600'
+                                        : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                 ]"
                             >
                                 Aktif
@@ -142,8 +142,8 @@
                                 :class="[
                                     'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                     currentQuickFilter === 'with_events'
-                                        ? 'bg-gray-600 text-white shadow border border-gray-500'
-                                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                        ? 'bg-slate-600 text-white shadow border border-slate-500'
+                                        : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                 ]"
                             >
                                 Etkinlikli
@@ -152,15 +152,15 @@
 
                         <!-- View Toggle -->
                         <div
-                            class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-md p-0.5"
+                            class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-md p-0.5"
                         >
                             <button
                                 @click="viewMode = 'list'"
                                 :class="[
                                     'px-2 py-1 text-xs font-medium rounded-sm transition-colors',
                                     viewMode === 'list'
-                                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
+                                        ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300',
                                 ]"
                             >
                                 <ListBulletIcon class="h-3 w-3" />
@@ -170,8 +170,8 @@
                                 :class="[
                                     'px-2 py-1 text-xs font-medium rounded-sm transition-colors',
                                     viewMode === 'grid'
-                                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
+                                        ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300',
                                 ]"
                             >
                                 <Squares2X2Icon class="h-3 w-3" />
@@ -186,7 +186,7 @@
                                     '/admin/organizations/create'
                                 )
                             "
-                            class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white text-sm font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-gray-700"
+                            class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white text-sm font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-slate-700"
                         >
                             <PlusIcon class="h-4 w-4 mr-1.5" />
                             Yeni Organizasyon
@@ -204,14 +204,14 @@
                             class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                         >
                             <MagnifyingGlassIcon
-                                class="h-4 w-4 text-gray-400"
+                                class="h-4 w-4 text-slate-400"
                             />
                         </div>
                         <input
                             v-model="searchQuery"
                             type="text"
                             placeholder="Organizasyon adı, e-posta veya açıklama ile ara..."
-                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                            class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                             @input="handleSearchDebounced"
                         />
                         <div
@@ -220,7 +220,7 @@
                         >
                             <button
                                 @click="clearSearch"
-                                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                             >
                                 <XMarkIcon class="h-4 w-4" />
                             </button>
@@ -233,7 +233,7 @@
                         <select
                             v-model="activeFilters.status"
                             @change="applyFilters"
-                            class="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                         >
                             <option value="">Tüm Durumlar</option>
                             <option value="active">Aktif</option>
@@ -244,7 +244,7 @@
                         <select
                             v-model="activeFilters.sort"
                             @change="applyFilters"
-                            class="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                         >
                             <option value="name">Ad (A-Z)</option>
                             <option value="created_at">Oluşturma Tarihi</option>
@@ -260,7 +260,7 @@
                         <button
                             v-if="hasActiveFilters"
                             @click="clearFilters"
-                            class="px-2 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200"
+                            class="px-2 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-all duration-200"
                             title="Filtreleri Temizle"
                         >
                             <XMarkIcon class="h-4 w-4" />
@@ -273,9 +273,9 @@
             <div v-if="loading" class="flex items-center justify-center py-16">
                 <div class="flex flex-col items-center space-y-4">
                     <div
-                        class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600"
+                        class="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"
                     ></div>
-                    <p class="text-gray-600 dark:text-gray-400 font-medium">
+                    <p class="text-slate-600 dark:text-slate-400 font-medium">
                         Yükleniyor...
                     </p>
                 </div>
@@ -291,23 +291,23 @@
                 <!-- Bulk Actions -->
                 <div
                     v-if="selectedOrganizations.length > 0"
-                    class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-8 py-4"
+                    class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-8 py-4"
                 >
                     <div class="flex items-center justify-between">
-                        <p class="text-gray-800 dark:text-gray-200 font-medium">
+                        <p class="text-slate-800 dark:text-slate-200 font-medium">
                             {{ selectedOrganizations.length }} organizasyon
                             seçildi
                         </p>
                         <div class="flex items-center space-x-3">
                             <button
                                 @click="bulkToggleStatus"
-                                class="px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg text-sm font-medium transition-all duration-200"
+                                class="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-lg text-sm font-medium transition-all duration-200"
                             >
                                 Durum Değiştir
                             </button>
                             <button
                                 @click="bulkDelete"
-                                class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg text-sm font-medium transition-all duration-200"
+                                class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-medium transition-all duration-200"
                             >
                                 Sil
                             </button>
@@ -318,9 +318,9 @@
                 <!-- Table View -->
                 <div class="overflow-visible">
                     <table
-                        class="w-full divide-y divide-gray-200 dark:divide-gray-800"
+                        class="w-full divide-y divide-slate-200 dark:divide-slate-800"
                     >
-                        <thead class="bg-gray-50 dark:bg-gray-800/50">
+                        <thead class="bg-slate-50 dark:bg-slate-800/50">
                             <tr>
                                 <!-- Select All -->
                                 <th class="px-4 py-3 text-left w-10">
@@ -329,13 +329,13 @@
                                         :checked="isAllSelected"
                                         :indeterminate="isIndeterminate"
                                         @change="toggleSelectAll"
-                                        class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                                        class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                                     />
                                 </th>
 
                                 <!-- Organization Header -->
                                 <th
-                                    class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200"
+                                    class="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200"
                                     @click="handleSort('name')"
                                 >
                                     <div class="flex items-center space-x-1">
@@ -346,8 +346,8 @@
                                                 :class="
                                                     sortField === 'name' &&
                                                     sortDirection === 'asc'
-                                                        ? 'text-gray-600'
-                                                        : 'text-gray-300'
+                                                        ? 'text-slate-600'
+                                                        : 'text-slate-300'
                                                 "
                                             />
                                             <ChevronDownIcon
@@ -355,8 +355,8 @@
                                                 :class="
                                                     sortField === 'name' &&
                                                     sortDirection === 'desc'
-                                                        ? 'text-gray-600'
-                                                        : 'text-gray-300'
+                                                        ? 'text-slate-600'
+                                                        : 'text-slate-300'
                                                 "
                                             />
                                         </div>
@@ -365,21 +365,21 @@
 
                                 <!-- Contact Header -->
                                 <th
-                                    class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48"
+                                    class="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-48"
                                 >
                                     İletişim
                                 </th>
 
                                 <!-- Status Header -->
                                 <th
-                                    class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-24"
+                                    class="px-4 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-24"
                                 >
                                     Durum
                                 </th>
 
                                 <!-- Events Header -->
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200 w-32"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200 w-32"
                                     @click="handleSort('events_count')"
                                 >
                                     <div class="flex items-center space-x-1">
@@ -391,8 +391,8 @@
                                                     sortField ===
                                                         'events_count' &&
                                                     sortDirection === 'asc'
-                                                        ? 'text-gray-600'
-                                                        : 'text-gray-300'
+                                                        ? 'text-slate-600'
+                                                        : 'text-slate-300'
                                                 "
                                             />
                                             <ChevronDownIcon
@@ -401,8 +401,8 @@
                                                     sortField ===
                                                         'events_count' &&
                                                     sortDirection === 'desc'
-                                                        ? 'text-gray-600'
-                                                        : 'text-gray-300'
+                                                        ? 'text-slate-600'
+                                                        : 'text-slate-300'
                                                 "
                                             />
                                         </div>
@@ -411,7 +411,7 @@
 
                                 <!-- Participants Header -->
                                 <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200 w-32"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200 w-32"
                                     @click="handleSort('participants_count')"
                                 >
                                     <div class="flex items-center space-x-1">
@@ -423,8 +423,8 @@
                                                     sortField ===
                                                         'participants_count' &&
                                                     sortDirection === 'asc'
-                                                        ? 'text-gray-600'
-                                                        : 'text-gray-300'
+                                                        ? 'text-slate-600'
+                                                        : 'text-slate-300'
                                                 "
                                             />
                                             <ChevronDownIcon
@@ -433,8 +433,8 @@
                                                     sortField ===
                                                         'participants_count' &&
                                                     sortDirection === 'desc'
-                                                        ? 'text-gray-600'
-                                                        : 'text-gray-300'
+                                                        ? 'text-slate-600'
+                                                        : 'text-slate-300'
                                                 "
                                             />
                                         </div>
@@ -443,7 +443,7 @@
 
                                 <!-- Actions Header -->
                                 <th
-                                    class="px-6 py-4 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-60"
+                                    class="px-6 py-4 text-center text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-60"
                                 >
                                     İşlemler
                                 </th>
@@ -451,12 +451,12 @@
                         </thead>
 
                         <tbody
-                            class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800"
+                            class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-800"
                         >
                             <tr
                                 v-for="organization in displayedOrganizations"
                                 :key="organization.id"
-                                class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200"
+                                class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200"
                             >
                                 <!-- Checkbox -->
                                 <td class="px-4 py-4 w-10">
@@ -464,7 +464,7 @@
                                         type="checkbox"
                                         :value="organization.id"
                                         v-model="selectedOrganizations"
-                                        class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                                        class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                                     />
                                 </td>
 
@@ -476,14 +476,14 @@
                                                 v-if="organization.logo_url"
                                                 :src="organization.logo_url"
                                                 :alt="organization.name"
-                                                class="h-8 w-8 rounded-lg object-cover border border-gray-200 dark:border-gray-600"
+                                                class="h-8 w-8 rounded-lg object-cover border border-slate-200 dark:border-slate-600"
                                             />
                                             <div
                                                 v-else
-                                                class="h-8 w-8 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center"
+                                                class="h-8 w-8 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center"
                                             >
                                                 <BuildingOfficeIcon
-                                                    class="w-4 h-4 text-gray-400"
+                                                    class="w-4 h-4 text-slate-400"
                                                 />
                                             </div>
                                         </div>
@@ -496,13 +496,13 @@
                                                         organization.id
                                                     )
                                                 "
-                                                class="text-sm font-semibold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-200"
+                                                class="text-sm font-semibold text-slate-900 dark:text-white hover:text-slate-600 dark:hover:text-slate-400 transition-colors duration-200"
                                             >
                                                 {{ organization.name }}
                                             </Link>
                                             <p
                                                 v-if="organization.description"
-                                                class="text-gray-600 dark:text-gray-400 text-xs line-clamp-1 max-w-md"
+                                                class="text-slate-600 dark:text-slate-400 text-xs line-clamp-1 max-w-md"
                                             >
                                                 {{ organization.description }}
                                             </p>
@@ -518,11 +518,11 @@
                                             class="flex items-center mb-1"
                                         >
                                             <EnvelopeIcon
-                                                class="h-3 w-3 mr-1.5 text-gray-400"
+                                                class="h-3 w-3 mr-1.5 text-slate-400"
                                             />
                                             <a
                                                 :href="`mailto:${organization.contact_email}`"
-                                                class="text-gray-600 dark:text-gray-400 hover:underline"
+                                                class="text-slate-600 dark:text-slate-400 hover:underline"
                                             >
                                                 {{ organization.contact_email }}
                                             </a>
@@ -532,10 +532,10 @@
                                             class="flex items-center"
                                         >
                                             <PhoneIcon
-                                                class="h-4 w-4 mr-2 text-gray-400"
+                                                class="h-4 w-4 mr-2 text-slate-400"
                                             />
                                             <span
-                                                class="text-gray-900 dark:text-white"
+                                                class="text-slate-900 dark:text-white"
                                                 >{{
                                                     organization.contact_phone
                                                 }}</span
@@ -578,13 +578,13 @@
                                 <td class="px-6 py-6 w-32">
                                     <div class="text-center">
                                         <div
-                                            class="text-sm font-medium text-gray-900 dark:text-white"
+                                            class="text-sm font-medium text-slate-900 dark:text-white"
                                         >
                                             {{ organization.events_count || 0 }}
                                         </div>
                                         <div
                                             v-if="organization.active_events"
-                                            class="text-xs text-gray-500 dark:text-gray-400"
+                                            class="text-xs text-slate-500 dark:text-slate-400"
                                         >
                                             {{
                                                 organization.active_events
@@ -598,7 +598,7 @@
                                 <td class="px-6 py-6 w-32">
                                     <div class="text-center">
                                         <div
-                                            class="text-sm font-medium text-gray-900 dark:text-white"
+                                            class="text-sm font-medium text-slate-900 dark:text-white"
                                         >
                                             {{
                                                 organization.participants_count ||
@@ -606,7 +606,7 @@
                                             }}
                                         </div>
                                         <div
-                                            class="text-xs text-gray-500 dark:text-gray-400"
+                                            class="text-xs text-slate-500 dark:text-slate-400"
                                         >
                                             katılımcı
                                         </div>
@@ -628,7 +628,7 @@
                                                     organization.id
                                                 )
                                             "
-                                            class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
+                                            class="inline-flex items-center px-2 py-1 bg-slate-600 hover:bg-slate-700 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
                                             title="Görüntüle"
                                         >
                                             <EyeIcon class="h-4 w-4" />
@@ -646,7 +646,7 @@
                                                     organization.id
                                                 )
                                             "
-                                            class="inline-flex items-center px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
+                                            class="inline-flex items-center px-2 py-1 bg-slate-500 hover:bg-slate-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
                                             title="Düzenle"
                                         >
                                             <PencilIcon class="h-4 w-4" />
@@ -661,7 +661,7 @@
                                                         organization.id
                                                     )
                                                 "
-                                                class="inline-flex items-center px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
+                                                class="inline-flex items-center px-2 py-1 bg-slate-500 hover:bg-slate-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
                                                 title="Daha Fazla"
                                             >
                                                 <EllipsisVerticalIcon
@@ -675,7 +675,7 @@
                                                     showActionsMenu ===
                                                     organization.id
                                                 "
-                                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-[9999] border border-gray-200 dark:border-gray-700"
+                                                class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-[9999] border border-slate-200 dark:border-slate-700"
                                             >
                                                 <div class="py-1">
                                                     <!-- Toggle Status -->
@@ -685,7 +685,7 @@
                                                                 organization
                                                             )
                                                         "
-                                                        class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                                        class="flex items-center w-full px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                                                     >
                                                         <CheckCircleIcon
                                                             v-if="
@@ -714,7 +714,7 @@
                                                                 organization
                                                             )
                                                         "
-                                                        class="flex items-center w-full px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                                        class="flex items-center w-full px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700"
                                                     >
                                                         <TrashIcon
                                                             class="h-4 w-4 mr-2"
@@ -742,7 +742,7 @@
                 <div
                     v-for="organization in displayedOrganizations"
                     :key="organization.id"
-                    class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700"
+                    class="bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl p-6 hover:shadow-lg transition-all duration-200 border border-slate-200 dark:border-slate-700"
                 >
                     <!-- Card Header -->
                     <div class="flex items-start justify-between mb-4">
@@ -752,26 +752,26 @@
                                     v-if="organization.logo_url"
                                     :src="organization.logo_url"
                                     :alt="organization.name"
-                                    class="h-12 w-12 rounded-lg object-cover border border-gray-200 dark:border-gray-600"
+                                    class="h-12 w-12 rounded-lg object-cover border border-slate-200 dark:border-slate-600"
                                 />
                                 <div
                                     v-else
-                                    class="h-12 w-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center"
+                                    class="h-12 w-12 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center"
                                 >
                                     <BuildingOfficeIcon
-                                        class="w-6 h-6 text-gray-400"
+                                        class="w-6 h-6 text-slate-400"
                                     />
                                 </div>
                             </div>
                             <div class="flex-1">
                                 <h4
-                                    class="text-lg font-semibold text-gray-900 dark:text-white line-clamp-1"
+                                    class="text-lg font-semibold text-slate-900 dark:text-white line-clamp-1"
                                 >
                                     {{ organization.name }}
                                 </h4>
                                 <p
                                     v-if="organization.contact_email"
-                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                    class="text-sm text-slate-500 dark:text-slate-400"
                                 >
                                     {{ organization.contact_email }}
                                 </p>
@@ -792,7 +792,7 @@
 
                     <!-- Card Content -->
                     <div
-                        class="space-y-3 text-sm text-gray-600 dark:text-gray-400"
+                        class="space-y-3 text-sm text-slate-600 dark:text-slate-400"
                     >
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
@@ -800,7 +800,7 @@
                                 <span>Etkinlikler</span>
                             </div>
                             <span
-                                class="font-medium text-gray-900 dark:text-white"
+                                class="font-medium text-slate-900 dark:text-white"
                                 >{{ organization.events_count || 0 }}</span
                             >
                         </div>
@@ -811,7 +811,7 @@
                                 <span>Katılımcılar</span>
                             </div>
                             <span
-                                class="font-medium text-gray-900 dark:text-white"
+                                class="font-medium text-slate-900 dark:text-white"
                                 >{{
                                     organization.participants_count || 0
                                 }}</span
@@ -824,7 +824,7 @@
                         >
                             <PhoneIcon class="h-4 w-4 mr-2" />
                             <span
-                                class="text-gray-600 dark:text-gray-400 truncate"
+                                class="text-slate-600 dark:text-slate-400 truncate"
                             >
                                 {{ organization.contact_phone }}
                             </span>
@@ -834,7 +834,7 @@
                     <!-- Description -->
                     <div v-if="organization.description" class="mt-4">
                         <p
-                            class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
+                            class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2"
                         >
                             {{ organization.description }}
                         </p>
@@ -842,7 +842,7 @@
 
                     <!-- Card Actions -->
                     <div
-                        class="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-600"
+                        class="flex items-center justify-between mt-6 pt-4 border-t border-slate-200 dark:border-slate-600"
                     >
                         <div class="flex items-center space-x-2">
                             <Link
@@ -853,7 +853,7 @@
                                         organization.id
                                     )
                                 "
-                                class="p-2 text-gray-600 hover:text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                class="p-2 text-slate-600 hover:text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                                 title="Görüntüle"
                             >
                                 <EyeIcon class="h-4 w-4" />
@@ -868,14 +868,14 @@
                                         organization.id
                                     )
                                 "
-                                class="p-2 text-gray-600 hover:text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                class="p-2 text-slate-600 hover:text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                                 title="Düzenle"
                             >
                                 <PencilIcon class="h-4 w-4" />
                             </Link>
                         </div>
 
-                        <span class="text-xs text-gray-400">
+                        <span class="text-xs text-slate-400">
                             {{ formatDate(organization.created_at) }}
                         </span>
                     </div>
@@ -886,12 +886,12 @@
             <div v-else class="py-16">
                 <div class="text-center">
                     <div
-                        class="mx-auto h-24 w-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl flex items-center justify-center"
+                        class="mx-auto h-24 w-24 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl flex items-center justify-center"
                     >
-                        <BuildingOfficeIcon class="h-12 w-12 text-gray-400" />
+                        <BuildingOfficeIcon class="h-12 w-12 text-slate-400" />
                     </div>
                     <h3
-                        class="mt-6 text-xl font-semibold text-gray-900 dark:text-white"
+                        class="mt-6 text-xl font-semibold text-slate-900 dark:text-white"
                     >
                         {{
                             searchQuery || hasActiveFilters
@@ -899,7 +899,7 @@
                                 : "Henüz organizasyon yok"
                         }}
                     </h3>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">
+                    <p class="mt-2 text-slate-600 dark:text-slate-400">
                         {{
                             searchQuery || hasActiveFilters
                                 ? "Arama kriterlerinizi değiştirip tekrar deneyin."
@@ -915,7 +915,7 @@
                                     '/admin/organizations/create'
                                 )
                             "
-                            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                            class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white text-sm font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200"
                         >
                             <PlusIcon class="h-5 w-5 mr-2" />
                             İlk Organizasyonu Oluşturun
@@ -923,7 +923,7 @@
                         <button
                             v-else
                             @click="clearAllFilters"
-                            class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                            class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                         >
                             <XMarkIcon class="h-5 w-5 mr-2" />
                             Filtreleri Temizle
@@ -935,11 +935,11 @@
             <!-- Enhanced Pagination -->
             <div
                 v-if="organizations?.last_page > 1"
-                class="bg-gray-50 dark:bg-gray-800/50 px-4 py-4 border-t border-gray-200 dark:border-gray-800"
+                class="bg-slate-50 dark:bg-slate-800/50 px-4 py-4 border-t border-slate-200 dark:border-slate-800"
             >
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <p class="text-xs text-gray-700 dark:text-gray-300">
+                        <p class="text-xs text-slate-700 dark:text-slate-300">
                             <span class="font-medium">{{
                                 organizations.from || 0
                             }}</span>
@@ -957,7 +957,7 @@
                         <select
                             v-model="pageSize"
                             @change="handlePageSizeChange"
-                            class="px-2 py-1 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-xs"
+                            class="px-2 py-1 border border-slate-300 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-xs"
                         >
                             <option value="15">15</option>
                             <option value="25">25</option>
@@ -971,7 +971,7 @@
                         <button
                             @click="goToPage(organizations.current_page - 1)"
                             :disabled="organizations.current_page <= 1"
-                            class="px-2 py-1.5 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700"
+                            class="px-2 py-1.5 text-xs font-medium text-slate-500 bg-white border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-700"
                         >
                             Önceki
                         </button>
@@ -986,10 +986,10 @@
                                 :class="[
                                     'px-2 py-1.5 text-xs font-medium rounded-md transition-all duration-200',
                                     page === organizations.current_page
-                                        ? 'bg-gray-800 text-white shadow'
+                                        ? 'bg-slate-800 text-white shadow'
                                         : page === '...'
-                                        ? 'text-gray-500 cursor-default'
-                                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700',
+                                        ? 'text-slate-500 cursor-default'
+                                        : 'text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700',
                                 ]"
                             >
                                 {{ page }}
@@ -1003,7 +1003,7 @@
                                 organizations.current_page >=
                                 organizations.last_page
                             "
-                            class="px-2 py-1.5 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700"
+                            class="px-2 py-1.5 text-xs font-medium text-slate-500 bg-white border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-700"
                         >
                             Sonraki
                         </button>
@@ -1456,15 +1456,15 @@ onUnmounted(() => {
 }
 
 .overflow-x-auto::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-800;
+    @apply bg-slate-100 dark:bg-slate-800;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+    @apply bg-slate-300 dark:bg-slate-600 rounded-full;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400 dark:bg-gray-500;
+    @apply bg-slate-400 dark:bg-slate-500;
 }
 
 /* Smooth transitions */

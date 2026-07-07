@@ -9,10 +9,10 @@
 
     <div class="w-full space-y-8">
       <!-- Header Section -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
         <div class="relative">
           <!-- Banner with gray gradient -->
-          <div class="h-48 bg-gradient-to-r from-gray-800 to-gray-900 relative overflow-hidden">
+          <div class="h-48 bg-gradient-to-r from-slate-800 to-slate-900 relative overflow-hidden">
             <div class="absolute inset-0 bg-black/20"></div>
             <div class="absolute inset-0 flex items-end">
               <div class="p-8 text-white w-full">
@@ -71,11 +71,11 @@
           </div>
 
           <!-- Meta Bar -->
-          <div class="px-8 py-6 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
             <div class="flex flex-wrap items-center gap-6">
               <!-- Status Info -->
               <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Durum:</span>
+                <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Durum:</span>
                 <span
                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
                   :class="safeOrganization.is_active 
@@ -89,43 +89,43 @@
 
               <!-- Contact Info -->
               <div v-if="safeOrganization.contact_email" class="flex items-center space-x-2">
-                <EnvelopeIcon class="h-5 w-5 text-gray-400" />
+                <EnvelopeIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <a :href="`mailto:${safeOrganization.contact_email}`" class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:underline">
+                  <a :href="`mailto:${safeOrganization.contact_email}`" class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:underline">
                     {{ safeOrganization.contact_email }}
                   </a>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">E-posta</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">E-posta</div>
                 </div>
               </div>
 
               <div v-if="safeOrganization.contact_phone" class="flex items-center space-x-2">
-                <PhoneIcon class="h-5 w-5 text-gray-400" />
+                <PhoneIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <a :href="`tel:${safeOrganization.contact_phone}`" class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:underline">
+                  <a :href="`tel:${safeOrganization.contact_phone}`" class="text-sm font-medium text-slate-600 dark:text-slate-400 hover:underline">
                     {{ safeOrganization.contact_phone }}
                   </a>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Telefon</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Telefon</div>
                 </div>
               </div>
 
               <!-- Creation Date -->
               <div class="flex items-center space-x-2">
-                <CalendarIcon class="h-5 w-5 text-gray-400" />
+                <CalendarIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ formatDate(safeOrganization.created_at) }}</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Oluşturma Tarihi</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ formatDate(safeOrganization.created_at) }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Oluşturma Tarihi</div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Actions Bar -->
-          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-gray-900">
+          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-slate-800">
             <div class="flex items-center space-x-3">
               <!-- Back to List -->
               <Link
                 :href="route('admin.organizations.index')"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
               >
                 <ArrowLeftIcon class="h-4 w-4 mr-2" />
                 Organizasyon Listesi
@@ -136,7 +136,7 @@
               <!-- Edit Button -->
               <Link
                 :href="route('admin.organizations.edit', safeOrganization.id)"
-                class="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                class="inline-flex items-center px-4 py-2 bg-slate-600 text-white text-sm font-medium rounded-lg hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
               >
                 <PencilSquareIcon class="h-4 w-4 mr-2" />
                 Düzenle
@@ -151,28 +151,28 @@
         <!-- Main Content -->
         <div class="xl:col-span-3 space-y-8">
           <!-- Recent Events -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Son Etkinlikler</h3>
-              <span class="text-sm text-gray-500 dark:text-gray-400">
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Son Etkinlikler</h3>
+              <span class="text-sm text-slate-500 dark:text-slate-400">
                 {{ safeOrganization.recent_events?.length || 0 }} etkinlik
               </span>
             </div>
 
             <!-- Events List -->
-            <div v-if="safeOrganization.recent_events?.length > 0" class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div v-if="safeOrganization.recent_events?.length > 0" class="divide-y divide-slate-200 dark:divide-slate-700">
               <div
                 v-for="event in safeOrganization.recent_events"
                 :key="event.id"
-                class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
               >
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
-                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">
                       {{ event.name }}
                     </h4>
                     
-                    <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    <div class="flex items-center space-x-4 text-sm text-slate-500 dark:text-slate-400 mb-3">
                       <div class="flex items-center">
                         <CalendarIcon class="h-4 w-4 mr-1" />
                         {{ event.formatted_date_range || 'Tarih belirtilmemiş' }}
@@ -191,7 +191,7 @@
                       </div>
                     </div>
 
-                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                    <div class="text-sm text-slate-600 dark:text-slate-400">
                       <span class="font-medium">Durum:</span> {{ getStatusText(event.status) }}
                     </div>
                   </div>
@@ -200,14 +200,14 @@
                   <div class="flex items-center space-x-2 ml-4">
                     <Link
                       :href="safeRoute('admin.events.show', `/admin/events/${event.slug}`, event.slug)"
-                      class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                       title="Etkinliği Görüntüle"
                     >
                       <EyeIcon class="h-4 w-4" />
                     </Link>
                     <Link
                       :href="safeRoute('admin.events.edit', `/admin/events/${event.slug}/edit`, event.slug)"
-                      class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                       title="Etkinliği Düzenle"
                     >
                       <PencilIcon class="h-4 w-4" />
@@ -219,45 +219,45 @@
 
             <!-- Empty Events State -->
             <div v-else class="text-center py-16">
-              <div class="mx-auto h-16 w-16 text-gray-400 mb-4">
+              <div class="mx-auto h-16 w-16 text-slate-400 mb-4">
                 <CalendarIcon class="h-full w-full" />
               </div>
-              <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Henüz etkinlik yok</h4>
-              <p class="text-gray-500 dark:text-gray-400">Bu organizasyona ait henüz etkinlik oluşturulmamış.</p>
+              <h4 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">Henüz etkinlik yok</h4>
+              <p class="text-slate-500 dark:text-slate-400">Bu organizasyona ait henüz etkinlik oluşturulmamış.</p>
             </div>
           </div>
 
           <!-- Users Section -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Kullanıcılar</h3>
-              <span class="text-sm text-gray-500 dark:text-gray-400">
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Kullanıcılar</h3>
+              <span class="text-sm text-slate-500 dark:text-slate-400">
                 {{ safeOrganization.users?.length || 0 }} kullanıcı
               </span>
             </div>
 
             <!-- Users List -->
-            <div v-if="safeOrganization.users?.length > 0" class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div v-if="safeOrganization.users?.length > 0" class="divide-y divide-slate-200 dark:divide-slate-700">
               <div
                 v-for="user in safeOrganization.users"
                 :key="user.id"
-                class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center text-white text-lg font-semibold shadow-lg">
+                    <div class="w-12 h-12 bg-gradient-to-br from-slate-500 to-slate-600 rounded-xl flex items-center justify-center text-white text-lg font-semibold shadow-lg">
                       {{ user.name.charAt(0).toUpperCase() }}
                     </div>
                     <div>
-                      <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ user.name }}</p>
-                      <p class="text-gray-600 dark:text-gray-400">{{ user.email }}</p>
+                      <p class="text-lg font-semibold text-slate-900 dark:text-white">{{ user.name }}</p>
+                      <p class="text-slate-600 dark:text-slate-400">{{ user.email }}</p>
                     </div>
                   </div>
                   <div class="flex items-center space-x-3">
                     <span
                       :class="[
                         'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
-                        user.role === 'organizer' ? 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200' :
+                        user.role === 'organizer' ? 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200' :
                         'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                       ]"
                     >
@@ -270,11 +270,11 @@
 
             <!-- Empty Users State -->
             <div v-else class="text-center py-16">
-              <div class="mx-auto h-16 w-16 text-gray-400 mb-4">
+              <div class="mx-auto h-16 w-16 text-slate-400 mb-4">
                 <UserGroupIcon class="h-full w-full" />
               </div>
-              <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Henüz kullanıcı yok</h4>
-              <p class="text-gray-500 dark:text-gray-400">Bu organizasyona atanmış kullanıcı bulunmuyor.</p>
+              <h4 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">Henüz kullanıcı yok</h4>
+              <p class="text-slate-500 dark:text-slate-400">Bu organizasyona atanmış kullanıcı bulunmuyor.</p>
             </div>
           </div>
         </div>
@@ -282,53 +282,53 @@
         <!-- Sidebar -->
         <div class="space-y-6">
           <!-- Organization Details -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Organizasyon Detayları</h3>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Organizasyon Detayları</h3>
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <BuildingOfficeIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Organizasyon Adı</span>
+                  <BuildingOfficeIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Organizasyon Adı</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeOrganization.name }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeOrganization.name }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <CalendarIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Toplam Etkinlik</span>
+                  <CalendarIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Toplam Etkinlik</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ statistics.total_events || 0 }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ statistics.total_events || 0 }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <EyeIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Yayınlı Etkinlik</span>
+                  <EyeIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Yayınlı Etkinlik</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ statistics.published_events || 0 }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ statistics.published_events || 0 }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <UserGroupIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Katılımcılar</span>
+                  <UserGroupIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Katılımcılar</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ statistics.total_participants || 0 }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ statistics.total_participants || 0 }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <ClockIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Oluşturma Tarihi</span>
+                  <ClockIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Oluşturma Tarihi</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ formatDate(safeOrganization.created_at) }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ formatDate(safeOrganization.created_at) }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <CheckCircleIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Durum</span>
+                  <CheckCircleIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Durum</span>
                 </div>
                 <span 
                   class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
@@ -343,28 +343,28 @@
           </div>
 
           <!-- Contact Information -->
-          <div v-if="safeOrganization.contact_email || safeOrganization.contact_phone" class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">İletişim Bilgileri</h3>
+          <div v-if="safeOrganization.contact_email || safeOrganization.contact_phone" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">İletişim Bilgileri</h3>
             <div class="space-y-3">
-              <div v-if="safeOrganization.contact_email" class="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                  <EnvelopeIcon class="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              <div v-if="safeOrganization.contact_email" class="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                <div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                  <EnvelopeIcon class="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
                 <div class="flex-1">
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">E-posta</div>
-                  <a :href="`mailto:${safeOrganization.contact_email}`" class="text-sm text-gray-600 dark:text-gray-400 hover:underline">
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">E-posta</div>
+                  <a :href="`mailto:${safeOrganization.contact_email}`" class="text-sm text-slate-600 dark:text-slate-400 hover:underline">
                     {{ safeOrganization.contact_email }}
                   </a>
                 </div>
               </div>
               
-              <div v-if="safeOrganization.contact_phone" class="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                  <PhoneIcon class="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              <div v-if="safeOrganization.contact_phone" class="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                <div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                  <PhoneIcon class="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
                 <div class="flex-1">
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">Telefon</div>
-                  <a :href="`tel:${safeOrganization.contact_phone}`" class="text-sm text-gray-600 dark:text-gray-400 hover:underline">
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">Telefon</div>
+                  <a :href="`tel:${safeOrganization.contact_phone}`" class="text-sm text-slate-600 dark:text-slate-400 hover:underline">
                     {{ safeOrganization.contact_phone }}
                   </a>
                 </div>
@@ -373,20 +373,20 @@
           </div>
 
           <!-- Description -->
-          <div v-if="safeOrganization.description" class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Açıklama</h3>
-            <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+          <div v-if="safeOrganization.description" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Açıklama</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
               {{ safeOrganization.description }}
             </p>
           </div>
 
           <!-- Quick Actions -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Hızlı İşlemler</h3>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Hızlı İşlemler</h3>
             <div class="space-y-3">
               <Link
                 :href="safeRoute('admin.events.create', '/admin/events/create') + `?organization_id=${safeOrganization.id}`"
-                class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
               >
                 <CalendarIcon class="h-5 w-5 mr-2" />
                 Yeni Etkinlik
@@ -394,7 +394,7 @@
               
               <Link
                 :href="safeRoute('admin.participants.create', '/admin/participants/create') + `?organization_id=${safeOrganization.id}`"
-                class="w-full inline-flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                class="w-full inline-flex items-center justify-center px-4 py-3 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <UserPlusIcon class="h-5 w-5 mr-2" />
                 Katılımcı Ekle
@@ -402,7 +402,7 @@
               
               <Link
                 :href="safeRoute('admin.sponsors.create', '/admin/sponsors/create') + `?organization_id=${safeOrganization.id}`"
-                class="w-full inline-flex items-center justify-center px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                class="w-full inline-flex items-center justify-center px-4 py-3 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <StarIcon class="h-5 w-5 mr-2" />
                 Sponsor Ekle
@@ -411,12 +411,12 @@
           </div>
 
           <!-- Recent Participants -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Son Katılımcılar</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Son Katılımcılar</h3>
               <Link
                 :href="safeRoute('admin.participants.index', '/admin/participants') + `?organization_id=${safeOrganization.id}`"
-                class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300 font-medium"
+                class="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-300 font-medium"
               >
                 Tümünü Gör
               </Link>
@@ -433,11 +433,11 @@
                     v-if="participant.photo_url"
                     :src="participant.photo_url"
                     :alt="participant.full_name"
-                    class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-sm"
+                    class="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-700 shadow-sm"
                   />
                   <div
                     v-else
-                    class="w-10 h-10 bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center shadow-sm"
+                    class="w-10 h-10 bg-gradient-to-br from-slate-300 to-slate-400 dark:from-slate-600 dark:to-slate-700 rounded-full flex items-center justify-center shadow-sm"
                   >
                     <span class="text-sm font-semibold text-white">
                       {{ participant.initials }}
@@ -445,17 +445,17 @@
                   </div>
                 </div>
                 <div class="flex-grow min-w-0">
-                  <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                  <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">
                     {{ participant.full_name }}
                   </p>
-                  <p class="text-xs text-gray-600 dark:text-gray-400 truncate">
+                  <p class="text-xs text-slate-600 dark:text-slate-400 truncate">
                     {{ participant.affiliation }}
                   </p>
                 </div>
                 <div class="flex-shrink-0 flex space-x-1">
                   <span
                     v-if="participant.is_speaker"
-                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200"
                   >
                     Konuşmacı
                   </span>
@@ -469,20 +469,20 @@
               </div>
             </div>
             <div v-else class="text-center py-6">
-              <div class="mx-auto h-12 w-12 text-gray-400 mb-3">
+              <div class="mx-auto h-12 w-12 text-slate-400 mb-3">
                 <UserGroupIcon class="h-full w-full" />
               </div>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Henüz katılımcı bulunmuyor.</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Henüz katılımcı bulunmuyor.</p>
             </div>
           </div>
 
           <!-- Sponsors -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Sponsorlar</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Sponsorlar</h3>
               <Link
                 :href="safeRoute('admin.sponsors.index', '/admin/sponsors') + `?organization_id=${safeOrganization.id}`"
-                class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300 font-medium"
+                class="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-300 font-medium"
               >
                 Tümünü Gör
               </Link>
@@ -499,20 +499,20 @@
                     v-if="sponsor.logo_url"
                     :src="sponsor.logo_url"
                     :alt="sponsor.name"
-                    class="w-10 h-10 rounded-lg object-cover border border-gray-200 dark:border-gray-600 shadow-sm"
+                    class="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-slate-600 shadow-sm"
                   />
                   <div
                     v-else
-                    class="w-10 h-10 bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700 rounded-lg flex items-center justify-center shadow-sm"
+                    class="w-10 h-10 bg-gradient-to-br from-slate-300 to-slate-400 dark:from-slate-600 dark:to-slate-700 rounded-lg flex items-center justify-center shadow-sm"
                   >
-                    <BuildingOfficeIcon class="w-5 h-5 text-gray-500" />
+                    <BuildingOfficeIcon class="w-5 h-5 text-slate-500" />
                   </div>
                 </div>
                 <div class="flex-grow min-w-0">
-                  <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                  <p class="text-sm font-semibold text-slate-900 dark:text-white truncate">
                     {{ sponsor.name }}
                   </p>
-                  <p class="text-xs text-gray-600 dark:text-gray-400">
+                  <p class="text-xs text-slate-600 dark:text-slate-400">
                     {{ sponsor.formatted_level }}
                   </p>
                 </div>
@@ -522,7 +522,7 @@
                       'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium',
                       sponsor.is_active
                         ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+                        : 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200'
                     ]"
                   >
                     {{ sponsor.is_active ? 'Aktif' : 'Pasif' }}
@@ -531,10 +531,10 @@
               </div>
             </div>
             <div v-else class="text-center py-6">
-              <div class="mx-auto h-12 w-12 text-gray-400 mb-3">
+              <div class="mx-auto h-12 w-12 text-slate-400 mb-3">
                 <StarIcon class="h-full w-full" />
               </div>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Henüz sponsor bulunmuyor.</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">Henüz sponsor bulunmuyor.</p>
             </div>
           </div>
         </div>

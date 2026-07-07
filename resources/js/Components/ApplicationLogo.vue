@@ -74,7 +74,7 @@ const circleColor = computed(() => {
     default: '#3B82F6', // blue-500
     white: '#FFFFFF',
     compact: '#1E40AF', // blue-700
-    dark: '#1F2937' // gray-800
+    dark: '#1F2937' // slate-800
   }
   return colors[props.variant] || colors.default
 })
@@ -121,7 +121,7 @@ const accentColor = computed(() => {
 
 const textColor = computed(() => {
   const colors = {
-    default: '#1F2937', // gray-800
+    default: '#1F2937', // slate-800
     white: '#FFFFFF',
     compact: '#1F2937',
     dark: '#FFFFFF'
@@ -131,10 +131,10 @@ const textColor = computed(() => {
 
 const subtextColor = computed(() => {
   const colors = {
-    default: '#6B7280', // gray-500
+    default: '#6B7280', // slate-500
     white: 'rgba(255, 255, 255, 0.8)',
     compact: '#6B7280',
-    dark: '#D1D5DB' // gray-300
+    dark: '#D1D5DB' // slate-300
   }
   return colors[props.variant] || colors.default
 })

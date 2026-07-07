@@ -1,13 +1,13 @@
 <!-- resources/js/Components/Charts/ParticipantChart.vue -->
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">
           Katılımcı Analizi
         </h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400">
+        <p class="text-sm text-slate-500 dark:text-slate-400">
           {{ totalParticipants }} toplam katılımcı
         </p>
       </div>
@@ -16,7 +16,7 @@
       <div class="flex items-center space-x-3">
         <select
           v-model="selectedOrganization"
-          class="text-sm border border-gray-300 rounded-md px-3 py-1 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+          class="text-sm border border-slate-300 rounded-md px-3 py-1 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
           @change="updateCharts"
         >
           <option value="">Tüm Organizasyonlar</option>
@@ -29,7 +29,7 @@
           </option>
         </select>
         
-        <div class="flex rounded-lg bg-gray-100 dark:bg-gray-700 p-1">
+        <div class="flex rounded-lg bg-slate-100 dark:bg-slate-700 p-1">
           <button
             v-for="view in viewModes"
             :key="view.value"
@@ -37,8 +37,8 @@
             :class="[
               'px-3 py-1 text-sm font-medium rounded-md transition-all duration-200',
               selectedView === view.value
-                ? 'bg-white dark:bg-gray-800 text-blue-600 shadow-sm'
-                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+                ? 'bg-white dark:bg-slate-800 text-blue-600 shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
             ]"
           >
             {{ view.label }}
@@ -54,7 +54,7 @@
         <!-- Role Distribution Chart -->
         <div v-if="selectedView === 'roles'" class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 h-80">
           <div class="flex justify-between items-center mb-4">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">
               Rol Dağılımı
             </h4>
             <div class="flex space-x-2">
@@ -76,10 +76,10 @@
         <!-- Participation Activity Chart -->
         <div v-if="selectedView === 'activity'" class="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg p-4 h-80">
           <div class="flex justify-between items-center mb-4">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">
               Katılım Aktivitesi
             </h4>
-            <div class="text-xs text-gray-500 dark:text-gray-400">
+            <div class="text-xs text-slate-500 dark:text-slate-400">
               Son 30 gün
             </div>
           </div>
@@ -91,10 +91,10 @@
         <!-- Affiliations Chart -->
         <div v-if="selectedView === 'affiliations'" class="bg-gradient-to-br from-purple-50 to-pink-100 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4 h-80">
           <div class="flex justify-between items-center mb-4">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">
               Kurum Dağılımı
             </h4>
-            <div class="text-xs text-gray-500 dark:text-gray-400">
+            <div class="text-xs text-slate-500 dark:text-slate-400">
               En aktif {{ topAffiliations.length }} kurum
             </div>
           </div>
@@ -106,7 +106,7 @@
         <!-- Engagement Metrics -->
         <div v-if="selectedView === 'engagement'" class="bg-gradient-to-br from-orange-50 to-red-100 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg p-4 h-80">
           <div class="flex justify-between items-center mb-4">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">
               Katılım Metrikleri
             </h4>
             <div class="flex space-x-2">
@@ -125,28 +125,28 @@
       <div class="col-span-4 space-y-4">
         <!-- Quick Stats -->
         <div class="bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-lg p-4">
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
             Hızlı İstatistikler
           </h4>
           <div class="space-y-3">
             <div class="flex justify-between items-center">
-              <span class="text-xs text-gray-600 dark:text-gray-400">Toplam Katılımcı:</span>
+              <span class="text-xs text-slate-600 dark:text-slate-400">Toplam Katılımcı:</span>
               <span class="text-sm font-bold text-cyan-600 dark:text-cyan-400">{{ totalParticipants }}</span>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-xs text-gray-600 dark:text-gray-400">Konuşmacılar:</span>
+              <span class="text-xs text-slate-600 dark:text-slate-400">Konuşmacılar:</span>
               <span class="text-sm font-bold text-green-600 dark:text-green-400">{{ speakersCount }}</span>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-xs text-gray-600 dark:text-gray-400">Moderatörler:</span>
+              <span class="text-xs text-slate-600 dark:text-slate-400">Moderatörler:</span>
               <span class="text-sm font-bold text-purple-600 dark:text-purple-400">{{ moderatorsCount }}</span>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-xs text-gray-600 dark:text-gray-400">Her İkisi:</span>
+              <span class="text-xs text-slate-600 dark:text-slate-400">Her İkisi:</span>
               <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">{{ bothRolesCount }}</span>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-xs text-gray-600 dark:text-gray-400">Fotoğrafı Olan:</span>
+              <span class="text-xs text-slate-600 dark:text-slate-400">Fotoğrafı Olan:</span>
               <span class="text-sm font-bold text-orange-600 dark:text-orange-400">{{ withPhotoCount }}</span>
             </div>
           </div>
@@ -154,7 +154,7 @@
 
         <!-- Top Participants -->
         <div class="bg-gradient-to-br from-violet-50 to-purple-100 dark:from-violet-900/20 dark:to-purple-900/20 rounded-lg p-4">
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
             En Aktif Katılımcılar
           </h4>
           <div class="space-y-3">
@@ -167,17 +167,17 @@
                 <div
                   :class="[
                     'w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white',
-                    index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-amber-600' : 'bg-gray-300'
+                    index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-slate-400' : index === 2 ? 'bg-amber-600' : 'bg-slate-300'
                   ]"
                 >
                   {{ index + 1 }}
                 </div>
               </div>
               <div class="flex-1 min-w-0">
-                <p class="text-xs font-medium text-gray-900 dark:text-gray-100 truncate">
+                <p class="text-xs font-medium text-slate-900 dark:text-slate-100 truncate">
                   {{ participant.full_name }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                <p class="text-xs text-slate-500 dark:text-slate-400 truncate">
                   {{ participant.affiliation }}
                 </p>
               </div>
@@ -190,7 +190,7 @@
 
         <!-- Top Affiliations -->
         <div class="bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-900/20 dark:to-green-900/20 rounded-lg p-4">
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
             En Aktif Kurumlar
           </h4>
           <div class="space-y-2">
@@ -199,11 +199,11 @@
               :key="affiliation.name"
               class="flex justify-between items-center"
             >
-              <span class="text-xs text-gray-600 dark:text-gray-400 truncate flex-1 mr-2">
+              <span class="text-xs text-slate-600 dark:text-slate-400 truncate flex-1 mr-2">
                 {{ affiliation.name }}
               </span>
               <div class="flex items-center space-x-2">
-                <div class="w-12 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                <div class="w-12 bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
                   <div
                     class="bg-emerald-500 h-1.5 rounded-full"
                     :style="{ width: `${(affiliation.count / topAffiliations[0].count) * 100}%` }"
@@ -219,7 +219,7 @@
 
         <!-- Recent Activity -->
         <div class="bg-gradient-to-br from-rose-50 to-pink-100 dark:from-rose-900/20 dark:to-pink-900/20 rounded-lg p-4">
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
             Son Aktivite
           </h4>
           <div class="space-y-2">
@@ -230,13 +230,13 @@
             >
               <div class="flex-shrink-0 w-2 h-2 bg-rose-400 rounded-full mt-1.5"></div>
               <div class="flex-1 min-w-0">
-                <p class="text-xs text-gray-600 dark:text-gray-400">
-                  <span class="font-medium text-gray-900 dark:text-gray-100">
+                <p class="text-xs text-slate-600 dark:text-slate-400">
+                  <span class="font-medium text-slate-900 dark:text-slate-100">
                     {{ activity.participant.full_name }}
                   </span>
                   {{ activity.type === 'speaker' ? 'konuşmacı olarak eklendi' : 'moderatör olarak atandı' }}
                 </p>
-                <p class="text-xs text-gray-400 dark:text-gray-500">
+                <p class="text-xs text-slate-400 dark:text-slate-500">
                   {{ formatDate(activity.created_at) }}
                 </p>
               </div>
@@ -248,20 +248,20 @@
 
     <!-- Export Actions -->
     <div class="mt-6 flex justify-between items-center">
-      <div class="text-xs text-gray-500 dark:text-gray-400">
+      <div class="text-xs text-slate-500 dark:text-slate-400">
         Son güncellenme: {{ lastUpdated }}
       </div>
       <div class="flex space-x-2">
         <button
           @click="exportChart"
-          class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
+          class="inline-flex items-center px-3 py-1 border border-slate-300 rounded-md text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
         >
           <ArrowDownTrayIcon class="w-3 h-3 mr-1" />
           Dışa Aktar
         </button>
         <button
           @click="refreshData"
-          class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
+          class="inline-flex items-center px-3 py-1 border border-slate-300 rounded-md text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
         >
           <ArrowPathIcon class="w-3 h-3 mr-1" />
           Yenile
@@ -270,10 +270,10 @@
     </div>
 
     <!-- Loading Overlay -->
-    <div v-if="loading" class="absolute inset-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg flex items-center justify-center">
+    <div v-if="loading" class="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-lg flex items-center justify-center">
       <div class="flex items-center space-x-2">
         <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-        <span class="text-sm text-gray-600 dark:text-gray-400">Veriler yükleniyor...</span>
+        <span class="text-sm text-slate-600 dark:text-slate-400">Veriler yükleniyor...</span>
       </div>
     </div>
   </div>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DragDropController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\EventDayController;
 use App\Http\Controllers\Admin\ExportController;
@@ -10,14 +11,14 @@ use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\ParticipantController;
 use App\Http\Controllers\Admin\PresentationController;
-use App\Http\Controllers\Admin\ProgramSessionController;
 use App\Http\Controllers\Admin\ProgramSessionCategoryController;
+use App\Http\Controllers\Admin\ProgramSessionController;
+use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\SponsorController;
-use App\Http\Controllers\Admin\VenueController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\API\PublicEventController;
 use App\Http\Controllers\Admin\TimelineController;
-use App\Http\Controllers\Admin\DragDropController;
+use App\Http\Controllers\Admin\VenueController;
+use App\Http\Controllers\API\PublicEventController;
+use App\Http\Controllers\ProfileController;
 use App\Models\Event;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -64,7 +65,7 @@ Route::prefix('events')->name('events.')->group(function () {
 // Development/Debug routes
 Route::middleware(['web'])->group(function () {
     Route::get('/debug', function () {
-        if (!app()->environment(['local', 'development'])) {
+        if (! app()->environment(['local', 'development'])) {
             abort(404);
         }
 
@@ -81,14 +82,14 @@ Route::middleware(['web'])->group(function () {
 // API Documentation routes
 Route::prefix('docs')->name('docs.')->group(function () {
     Route::get('api-docs.json', function () {
-        $path = storage_path('api-docs' . DIRECTORY_SEPARATOR . 'api-docs.json');
+        $path = storage_path('api-docs'.DIRECTORY_SEPARATOR.'api-docs.json');
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return response()->json([
                 'error' => 'API documentation not found',
                 'message' => 'Swagger dokümantasyonu bulunamadı. Lütfen php artisan l5-swagger:generate komutunu çalıştırın.',
                 'path' => $path,
-                'exists' => file_exists($path)
+                'exists' => file_exists($path),
             ], 404);
         }
 
@@ -102,25 +103,20 @@ Route::prefix('docs')->name('docs.')->group(function () {
     })->name('json');
 
     Route::get('/', function () {
-        $urlToDocs = route('docs.json');
-
-        return view('swagger-ui', [
-            'urlToDocs' => $urlToDocs,
-            'title' => 'Event Management System API'
-        ]);
+        return redirect()->route('l5-swagger.api');
     })->name('index');
 });
 
 // Swagger JSON dosyasını serve etmek için (L5-Swagger'ın kendi route'undan önce)
 Route::get('docs/api-docs.json', function () {
-    $path = storage_path('api-docs' . DIRECTORY_SEPARATOR . 'api-docs.json');
+    $path = storage_path('api-docs'.DIRECTORY_SEPARATOR.'api-docs.json');
 
-    if (!file_exists($path)) {
+    if (! file_exists($path)) {
         return response()->json([
             'error' => 'API documentation not found',
             'message' => 'Swagger dokümantasyonu bulunamadı. Lütfen php artisan l5-swagger:generate komutunu çalıştırın.',
             'path' => $path,
-            'exists' => file_exists($path)
+            'exists' => file_exists($path),
         ], 404);
     }
 
@@ -219,14 +215,9 @@ Route::middleware([
 
     Route::prefix('admin')->name('admin.')->group(function () {
 
-
         // AJAX endpoints
-        Route::get('ajax/program-sessions/event-days', [ProgramSessionController::class, 'getEventDays']);
-        Route::get('ajax/program-sessions/venues-for-event-day', [ProgramSessionController::class, 'getVenuesForEventDay']);
-        Route::get('ajax/program-sessions/categories-for-event', [ProgramSessionController::class, 'getCategoriesForEvent']);
-
-        // Dashboard & Quick Stats
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/search', [SearchController::class, 'index'])->name('search');
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');
         Route::get('/quick-stats', [DashboardController::class, 'quickStats'])->name('quick-stats');
 
@@ -277,7 +268,7 @@ Route::middleware([
 
             // Event days management (nested resource) - PARAMETRE ADINI DÜZELTİYORUZ
             Route::resource('days', EventDayController::class, [
-                'parameters' => ['days' => 'eventDay']
+                'parameters' => ['days' => 'eventDay'],
             ]);
             Route::prefix('days')->name('days.')->group(function () {
                 Route::patch('/sort-order', [EventDayController::class, 'updateSortOrder'])->name('update-sort-order');
@@ -306,10 +297,6 @@ Route::middleware([
             Route::get('/events/{event:slug}/edit', [TimelineController::class, 'edit'])
                 ->name('edit');
 
-            // AJAX timeline data
-            Route::get('/events/{event:slug}/data', [TimelineController::class, 'getTimelineData'])
-                ->name('data');
-
             // Timeline order update (drag & drop)
             Route::post('/events/{event:slug}/update-order', [TimelineController::class, 'updateOrder'])
                 ->name('update-order');
@@ -317,10 +304,6 @@ Route::middleware([
             // Timeline export
             Route::post('/events/{event:slug}/export', [TimelineController::class, 'export'])
                 ->name('export');
-
-            // *** YENİ EKLENEN SÜRÜKLE-BIRAK ROUTES ***
-            Route::post('/events/{event:slug}/update-order', [TimelineController::class, 'updateOrder'])
-                ->name('update-order');
 
             Route::post('/events/{event:slug}/move-session/{session}', [TimelineController::class, 'moveSession'])
                 ->name('move-session');
@@ -459,12 +442,14 @@ Route::middleware([
         |--------------------------------------------------------------------------
         */
 
+        Route::prefix('participants')->name('participants.')->group(function () {
+            Route::get('/search', [ParticipantController::class, 'search'])->name('search');
+            Route::post('/bulk-import', [ParticipantController::class, 'bulkImport'])->name('bulk-import');
+        });
         Route::resource('participants', ParticipantController::class);
         Route::prefix('participants')->name('participants.')->group(function () {
             Route::post('/{participant}/duplicate', [ParticipantController::class, 'duplicate'])->name('duplicate');
             Route::patch('/{participant}/toggle-status', [ParticipantController::class, 'toggleStatus'])->name('toggle-status');
-            Route::get('/search', [ParticipantController::class, 'search'])->name('search');
-            Route::post('/bulk-import', [ParticipantController::class, 'bulkImport'])->name('bulk-import');
         });
 
         /*
@@ -619,13 +604,13 @@ Route::fallback(function () {
             'error' => '404 - API endpoint bulunamadı',
             'message' => 'İstenen API endpoint mevcut değil.',
             'url' => request()->fullUrl(),
-            'suggestion' => 'API dokümantasyonu için /docs adresini ziyaret edin.'
+            'suggestion' => 'API dokümantasyonu için /docs adresini ziyaret edin.',
         ], 404);
     }
 
     return Inertia::render('Errors/404', [
         'status' => 404,
         'message' => 'Sayfa bulunamadı',
-        'url' => request()->fullUrl()
+        'url' => request()->fullUrl(),
     ]);
 });

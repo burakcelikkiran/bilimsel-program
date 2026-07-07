@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Event;
@@ -10,6 +9,7 @@ use App\Models\Organization;
 use App\Models\Participant;
 use App\Models\ProgramSession;
 use App\Models\Sponsor;
+use App\Services\AdminNotificationService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -62,7 +62,7 @@ class DashboardController extends Controller
             ->latest()
             ->limit(5);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $query->whereIn('organization_id', $organizationIds);
         }
@@ -132,7 +132,7 @@ class DashboardController extends Controller
             ->orderBy('start_date')
             ->limit(3);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $query->whereIn('organization_id', $organizationIds);
         }
@@ -165,7 +165,7 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($activity) {
                 $link = $this->getActivityLink($activity);
-                
+
                 return [
                     'id' => $activity->id,
                     'type' => $activity->type,
@@ -239,56 +239,16 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        $notifications = collect();
-
-        // Check for events starting soon
-        $soonEvents = Event::upcoming()
-            ->where('start_date', '<=', now()->addDays(7))
-            ->where('start_date', '>', now())
-            ->published();
-
-        if (!$user->isAdmin()) {
-            $organizationIds = $user->organizations()->pluck('organizations.id');
-            $soonEvents->whereIn('organization_id', $organizationIds);
-        }
-
-        foreach ($soonEvents->get() as $event) {
-            $daysUntil = now()->diffInDays($event->start_date);
-            $notifications->push([
-                'type' => 'event_starting_soon',
-                'title' => 'Etkinlik Yaklaşıyor',
-                'message' => "'{$event->name}' etkinliği {$daysUntil} gün içinde başlayacak",
-                'date' => $event->start_date,
-                'link' => route('admin.events.show', $event),
-                'priority' => 'medium',
+        if (! $user) {
+            return response()->json([
+                'notifications' => [],
+                'unread_count' => 0,
             ]);
         }
 
-        // Check for events without sessions
-        $eventsWithoutSessions = Event::whereDoesntHave('eventDays.venues.programSessions')
-            ->where('start_date', '>', now())
-            ->published();
-
-        if (!$user->isAdmin()) {
-            $organizationIds = $user->organizations()->pluck('organizations.id');
-            $eventsWithoutSessions->whereIn('organization_id', $organizationIds);
-        }
-
-        foreach ($eventsWithoutSessions->get() as $event) {
-            $notifications->push([
-                'type' => 'event_incomplete',
-                'title' => 'Eksik Program',
-                'message' => "'{$event->name}' etkinliğinde henüz oturum bulunmuyor",
-                'date' => $event->created_at,
-                'link' => route('admin.events.show', $event),
-                'priority' => 'high',
-            ]);
-        }
-
-        return response()->json([
-            'notifications' => $notifications->sortByDesc('date')->take(10)->values(),
-            'unread_count' => $notifications->count(),
-        ]);
+        return response()->json(
+            app(AdminNotificationService::class)->forUser($user)
+        );
     }
 
     /**
@@ -299,7 +259,7 @@ class DashboardController extends Controller
         $user = $request->user();
         $timeframe = $request->get('timeframe', '30'); // days
 
-        $fromDate = now()->subDays((int)$timeframe);
+        $fromDate = now()->subDays((int) $timeframe);
 
         if ($user->isAdmin()) {
             $stats = [

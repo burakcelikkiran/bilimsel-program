@@ -66,17 +66,17 @@
         <!-- Empty State for Day -->
         <div v-if="dayData.venues.length === 0" class="text-center py-12">
             <div
-                class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8"
+                class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-8"
             >
-                <div class="mx-auto h-16 w-16 text-gray-400 mb-4">
+                <div class="mx-auto h-16 w-16 text-slate-400 mb-4">
                     <CalendarDaysIcon class="h-full w-full" />
                 </div>
                 <h3
-                    class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2"
+                    class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2"
                 >
                     Bu gün için program yok
                 </h3>
-                <p class="text-gray-500 dark:text-gray-400">
+                <p class="text-slate-500 dark:text-slate-400">
                     {{ dayData.display_name || dayData.title }} günü için henüz
                     program oluşturulmamış.
                 </p>
@@ -86,12 +86,12 @@
         <!-- Day Summary Footer -->
         <div v-if="dayData.venues.length > 0" class="day-footer mt-6">
             <div
-                class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4"
+                class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4"
             >
                 <div class="flex items-center justify-between">
                     <!-- Time Range -->
                     <div
-                        class="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400"
+                        class="flex items-center space-x-4 text-sm text-slate-600 dark:text-slate-400"
                     >
                         <div class="flex items-center space-x-1">
                             <ClockIcon class="h-4 w-4" />
@@ -108,7 +108,7 @@
                     <!-- Session Types Summary -->
                     <div class="flex items-center space-x-2">
                         <span
-                            class="text-sm text-gray-600 dark:text-gray-400 mr-2"
+                            class="text-sm text-slate-600 dark:text-slate-400 mr-2"
                             >Oturum Tipleri:</span
                         >
                         <div
@@ -121,7 +121,7 @@
                                 class="w-3 h-3 rounded-full"
                             ></div>
                             <span
-                                class="text-xs text-gray-600 dark:text-gray-400"
+                                class="text-xs text-slate-600 dark:text-slate-400"
                                 >{{ count }}</span
                             >
                         </div>
@@ -249,11 +249,11 @@ const getSessionTypeColor = (sessionType) => {
         parallel: "bg-blue-500",
         workshop: "bg-green-500",
         poster: "bg-yellow-500",
-        break: "bg-gray-400",
+        break: "bg-slate-400",
         lunch: "bg-orange-500",
         social: "bg-pink-500",
     };
-    return colors[sessionType] || "bg-gray-500";
+    return colors[sessionType] || "bg-slate-500";
 };
 </script>
 

@@ -23,11 +23,11 @@
                         <!-- Venue Info -->
                         <div>
                             <h3
-                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                                class="text-lg font-semibold text-slate-900 dark:text-white"
                             >
                                 {{ venueData.display_name || venueData.name }}
                             </h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                            <p class="text-sm text-slate-500 dark:text-slate-400">
                                 {{
                                     venueData.capacity
                                         ? `Kapasite: ${venueData.capacity}`
@@ -40,11 +40,11 @@
                     <!-- Venue Stats -->
                     <div class="text-right">
                         <div
-                            class="text-lg font-bold text-gray-900 dark:text-white"
+                            class="text-lg font-bold text-slate-900 dark:text-white"
                         >
                             {{ venueData.sessions.length }}
                         </div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                        <div class="text-sm text-slate-500 dark:text-slate-400">
                             Oturum
                         </div>
                     </div>
@@ -69,17 +69,17 @@
         <!-- Empty Sessions State -->
         <div v-if="venueData.sessions.length === 0" class="empty-sessions">
             <div
-                class="bg-gray-50 dark:bg-gray-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-8 text-center"
+                class="bg-slate-50 dark:bg-slate-800 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 p-8 text-center"
             >
-                <div class="mx-auto h-12 w-12 text-gray-400 mb-3">
+                <div class="mx-auto h-12 w-12 text-slate-400 mb-3">
                     <ClockIcon class="h-full w-full" />
                 </div>
                 <h4
-                    class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1"
+                    class="text-sm font-medium text-slate-900 dark:text-slate-100 mb-1"
                 >
                     Bu salonda oturum yok
                 </h4>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
+                <p class="text-xs text-slate-500 dark:text-slate-400">
                     {{ venueData.display_name || venueData.name }} salonu için
                     bu gün program bulunmuyor.
                 </p>
@@ -123,17 +123,17 @@
         <!-- Venue Summary Footer -->
         <div v-if="venueData.sessions.length > 0" class="venue-summary mt-4">
             <div
-                class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-3"
+                class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-3"
             >
                 <div class="grid grid-cols-3 gap-3 text-center text-xs">
                     <!-- Total Duration -->
                     <div>
                         <div
-                            class="font-semibold text-gray-900 dark:text-white"
+                            class="font-semibold text-slate-900 dark:text-white"
                         >
                             {{ venueTotalDuration }}
                         </div>
-                        <div class="text-gray-500 dark:text-gray-400">
+                        <div class="text-slate-500 dark:text-slate-400">
                             Toplam Süre
                         </div>
                     </div>
@@ -141,11 +141,11 @@
                     <!-- Time Range -->
                     <div>
                         <div
-                            class="font-semibold text-gray-900 dark:text-white"
+                            class="font-semibold text-slate-900 dark:text-white"
                         >
                             {{ venueTimeRange }}
                         </div>
-                        <div class="text-gray-500 dark:text-gray-400">
+                        <div class="text-slate-500 dark:text-slate-400">
                             Zaman Aralığı
                         </div>
                     </div>
@@ -153,11 +153,11 @@
                     <!-- Total Presentations -->
                     <div>
                         <div
-                            class="font-semibold text-gray-900 dark:text-white"
+                            class="font-semibold text-slate-900 dark:text-white"
                         >
                             {{ totalPresentations }}
                         </div>
-                        <div class="text-gray-500 dark:text-gray-400">
+                        <div class="text-slate-500 dark:text-slate-400">
                             Sunum
                         </div>
                     </div>
@@ -166,10 +166,10 @@
                 <!-- Session Types Distribution -->
                 <div
                     v-if="sessionTypeDistribution.length > 0"
-                    class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700"
+                    class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700"
                 >
                     <div class="flex items-center justify-center space-x-2">
-                        <span class="text-xs text-gray-500 dark:text-gray-400"
+                        <span class="text-xs text-slate-500 dark:text-slate-400"
                             >Oturum Tipleri:</span
                         >
                         <div class="flex space-x-1">
@@ -183,7 +183,7 @@
                                     class="w-2 h-2 rounded-full"
                                 ></div>
                                 <span
-                                    class="text-xs text-gray-600 dark:text-gray-400"
+                                    class="text-xs text-slate-600 dark:text-slate-400"
                                     >{{ type.count }}</span
                                 >
                             </div>
@@ -338,11 +338,11 @@ const getSessionTypeColor = (sessionType) => {
         parallel: "bg-blue-500",
         workshop: "bg-green-500",
         poster: "bg-yellow-500",
-        break: "bg-gray-400",
+        break: "bg-slate-400",
         lunch: "bg-orange-500",
         social: "bg-pink-500",
     };
-    return colors[sessionType] || "bg-gray-500";
+    return colors[sessionType] || "bg-slate-500";
 };
 
 const calculateTimeDifference = (time1, time2) => {

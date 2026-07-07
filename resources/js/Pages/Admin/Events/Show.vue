@@ -5,21 +5,21 @@
 
     <div class="w-full space-y-8">
       <!-- Header Section -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
         <div class="relative">
           <!-- Banner with gray gradient -->
-          <div class="h-48 bg-gradient-to-r from-gray-800 to-gray-900 relative overflow-hidden">
+          <div class="h-48 bg-gradient-to-r from-slate-800 to-slate-900 relative overflow-hidden rounded-t-xl">
             <div class="absolute inset-0 bg-black/20"></div>
             <div class="absolute inset-0 flex items-end">
               <div class="p-8 text-white w-full">
                 <div class="flex items-end justify-between">
                   <div class="flex items-center space-x-4">
-                    <div class="h-16 w-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <div class="h-16 w-16 bg-white dark:bg-slate-800/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                       <CalendarIcon class="h-10 w-10" />
                     </div>
                     <div>
                       <h1 class="text-3xl font-bold mb-1">{{ event?.name || 'Etkinlik Detayı' }}</h1>
-                      <p class="text-gray-300 text-lg">{{ eventDateRange || 'Tarih belirtilmemiş' }}</p>
+                      <p class="text-slate-300 text-lg">{{ eventDateRange || 'Tarih belirtilmemiş' }}</p>
                     </div>
                   </div>
 
@@ -44,11 +44,11 @@
           </div>
 
           <!-- Meta Bar -->
-          <div class="px-8 py-6 bg-gray-50 border-b border-gray-200">
+          <div class="px-8 py-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
             <div class="flex flex-wrap items-center gap-6">
               <!-- Status -->
               <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-500">Durum:</span>
+                <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Durum:</span>
                 <span :class="[
                   'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
                   statusClasses
@@ -62,40 +62,40 @@
 
               <!-- Organization Info -->
               <div class="flex items-center space-x-2">
-                <BuildingOfficeIcon class="h-5 w-5 text-gray-400" />
+                <BuildingOfficeIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900">{{ event?.organization?.name || 'Organizasyon Yok' }}
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ event?.organization?.name || 'Organizasyon Yok' }}
                   </div>
-                  <div class="text-xs text-gray-500">Organizasyon</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Organizasyon</div>
                 </div>
               </div>
 
               <!-- Location Info -->
               <div v-if="event?.location" class="flex items-center space-x-2">
-                <MapPinIcon class="h-5 w-5 text-gray-400" />
+                <MapPinIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900">{{ event.location }}</div>
-                  <div class="text-xs text-gray-500">Konum</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ event.location }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Konum</div>
                 </div>
               </div>
 
               <!-- Published Status -->
               <div class="flex items-center space-x-2">
-                <component :is="event?.is_published ? EyeIcon : EyeSlashIcon" class="h-5 w-5 text-gray-400" />
+                <component :is="event?.is_published ? EyeIcon : EyeSlashIcon" class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900">{{ event?.is_published ? 'Yayında' : 'Taslak' }}</div>
-                  <div class="text-xs text-gray-500">Yayın Durumu</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ event?.is_published ? 'Yayında' : 'Taslak' }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Yayın Durumu</div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Actions Bar -->
-          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white">
+          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-slate-800">
             <div class="flex items-center space-x-3">
               <!-- Back to List -->
               <Link :href="route('admin.events.index')"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm">
+                class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm">
               <ArrowLeftIcon class="h-4 w-4 mr-2" />
               Etkinlik Listesi
               </Link>
@@ -104,7 +104,7 @@
 
             <div class="flex items-center space-x-3">
               <!-- ✅ DÜZELTME: Timeline Butonları -->
-              <div class="flex items-center space-x-3 border-l border-gray-200 pl-4">
+              <div class="flex items-center space-x-3 border-l border-slate-200 dark:border-slate-700 pl-4">
                 <!-- Timeline View Button -->
                 <Link :href="route('admin.timeline.show', event?.slug)"
                   class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm font-medium rounded-lg hover:from-purple-700 hover:to-blue-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl">
@@ -117,77 +117,47 @@
                   class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-medium rounded-lg hover:from-orange-700 hover:to-red-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl">
                 <CursorArrowRaysIcon class="h-4 w-4 mr-2" />
                 <span>Editör</span>
-                <span class="ml-1 px-1.5 py-0.5 bg-white/20 text-xs rounded-full">Beta</span>
+                <span class="ml-1 px-1.5 py-0.5 bg-white dark:bg-slate-800/20 text-xs rounded-full">Beta</span>
                 </Link>
               </div>
 
-              <!-- Timeline Export Dropdown -->
-              <div class="relative">
-                <button @click="showTimelineExportMenu = !showTimelineExportMenu"
-                  class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm">
+              <!-- Export Dropdown -->
+              <div class="relative" :ref="bindExportMenuTrigger" data-floating-menu>
+                <button type="button" @click.stop="openExclusiveMenu(exportMenu)"
+                  class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm">
                   <DocumentArrowDownIcon class="h-4 w-4 mr-2" />
-                  Timeline Dışa Aktar
+                  Dışa Aktar
                   <ChevronDownIcon class="h-4 w-4 ml-1" />
                 </button>
-
-                <!-- Export Menu -->
-                <teleport to="body">
-                  <div v-if="showTimelineExportMenu"
-                    class="fixed bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-[99999] min-w-[16rem]"
-                    :style="timelineExportStyle" @click.stop>
-                    <div class="px-4 py-2 border-b border-gray-200">
-                      <h3 class="text-sm font-medium text-gray-900">Timeline Dışa Aktarım</h3>
-                    </div>
-
-                    <div class="py-1">
-                      <button @click="exportTimeline('pdf')"
-                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center transition-colors">
-                        <DocumentIcon class="h-4 w-4 mr-3 text-red-500" />
-                        <div>
-                          <div class="font-medium">PDF Timeline Raporu</div>
-                          <div class="text-xs text-gray-500">Yazdırılabilir program çizelgesi</div>
-                        </div>
-                      </button>
-
-                      <button @click="exportTimeline('excel')"
-                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center transition-colors">
-                        <TableCellsIcon class="h-4 w-4 mr-3 text-green-500" />
-                        <div>
-                          <div class="font-medium">Excel Timeline Tablosu</div>
-                          <div class="text-xs text-gray-500">Düzenlenebilir veri tablosu</div>
-                        </div>
-                      </button>
-
-                      <button @click="exportTimeline('image')"
-                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center transition-colors">
-                        <PhotoIcon class="h-4 w-4 mr-3 text-blue-500" />
-                        <div>
-                          <div class="font-medium">Timeline Görüntüsü</div>
-                          <div class="text-xs text-gray-500">PNG/JPEG format</div>
-                        </div>
-                      </button>
-
-                      <div class="border-t border-gray-200 my-1"></div>
-
-                      <button @click="shareTimeline"
-                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center transition-colors">
-                        <ShareIcon class="h-4 w-4 mr-3 text-purple-500" />
-                        <div>
-                          <div class="font-medium">Timeline Linkini Paylaş</div>
-                          <div class="text-xs text-gray-500">Bağlantıyı kopyala</div>
-                        </div>
-                      </button>
-                    </div>
-                  </div>
-                </teleport>
               </div>
+
+              <teleport to="body">
+                <div v-if="isExportMenuOpen" data-floating-menu
+                  class="fixed w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 z-dropdown"
+                  :style="exportMenuStyle" @click.stop>
+                  <div class="py-1">
+                    <button @click="exportTimeline('pdf')"
+                      class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      PDF olarak dışa aktar
+                    </button>
+                    <button @click="exportTimeline('excel')"
+                      class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      Excel olarak dışa aktar
+                    </button>
+                    <button @click="exportTimeline('json')"
+                      class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      JSON olarak dışa aktar
+                    </button>
+                  </div>
+                </div>
+              </teleport>
 
               <!-- Publish/Unpublish -->
               <button v-if="event?.can_publish" @click="togglePublishStatus" :disabled="processing" :class="[
                 'inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-lg focus:ring-2 focus:ring-offset-2 transition-colors shadow-sm',
                 event.is_published
-                  ? 'bg-gray-700 hover:bg-gray-800 focus:ring-gray-500'
-                  : 'bg-gray-800 hover:bg-gray-900 focus:ring-gray-600',
+                  ? 'bg-slate-700 hover:bg-slate-800 focus:ring-slate-500'
+                  : 'bg-slate-800 hover:bg-slate-900 focus:ring-slate-600',
                 processing && 'opacity-50 cursor-not-allowed'
               ]">
                 <component :is="event.is_published ? EyeSlashIcon : EyeIcon" class="h-4 w-4 mr-2" />
@@ -196,64 +166,63 @@
 
               <!-- Edit Button -->
               <Link :href="route('admin.events.edit', event?.slug || 'default')"
-                class="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm">
+                class="inline-flex items-center px-4 py-2 bg-slate-600 text-white text-sm font-medium rounded-lg hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm">
               <PencilSquareIcon class="h-4 w-4 mr-2" />
               Düzenle
               </Link>
 
               <!-- More Actions -->
-              <div class="relative" ref="actionsMenuRef">
-                <button @click="showActionsMenu = !showActionsMenu"
-                  class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm">
+              <div class="relative" :ref="bindActionsMenuTrigger" data-floating-menu>
+                <button type="button" @click.stop="openExclusiveMenu(actionsMenu)"
+                  class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm">
                   <EllipsisVerticalIcon class="h-4 w-4 mr-2" />
                   Diğer
                   <ChevronDownIcon class="h-4 w-4 ml-2" />
                 </button>
-
-                <!-- Dropdown Menu -->
-                <teleport to="body">
-                  <div v-if="showActionsMenu"
-                    class="fixed bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-200 min-w-[14rem]"
-                    :style="dropdownStyle" style="z-index: 99999 !important;">
-                    <div class="py-1">
-                      <button @click="duplicateEvent"
-                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                        <DocumentDuplicateIcon class="h-4 w-4 mr-3" />
-                        Etkinliği Kopyala
-                      </button>
-
-                      <button @click="exportEvent"
-                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                        <DocumentArrowDownIcon class="h-4 w-4 mr-3" />
-                        Dışa Aktar
-                      </button>
-
-                      <hr class="my-1 border-gray-200" />
-
-                      <button v-if="event?.can_delete" @click="confirmDelete"
-                        class="flex items-center w-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
-                        <TrashIcon class="h-4 w-4 mr-3" />
-                        Etkinliği Sil
-                      </button>
-                    </div>
-                  </div>
-                </teleport>
               </div>
+
+              <teleport to="body">
+                <div v-if="isActionsMenuOpen" data-floating-menu
+                  class="fixed min-w-[14rem] bg-white dark:bg-slate-800 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border border-slate-200 dark:border-slate-700 z-dropdown"
+                  :style="actionsMenuStyle" @click.stop>
+                  <div class="py-1">
+                    <button @click="duplicateEvent"
+                      class="flex items-center w-full px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                      <DocumentDuplicateIcon class="h-4 w-4 mr-3" />
+                      Etkinliği Kopyala
+                    </button>
+
+                    <button @click="exportEvent"
+                      class="flex items-center w-full px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                      <DocumentArrowDownIcon class="h-4 w-4 mr-3" />
+                      Dışa Aktar
+                    </button>
+
+                    <hr class="my-1 border-slate-200 dark:border-slate-700" />
+
+                    <button v-if="event?.can_delete" @click="confirmDelete"
+                      class="flex items-center w-full px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                      <TrashIcon class="h-4 w-4 mr-3" />
+                      Etkinliği Sil
+                    </button>
+                  </div>
+                </div>
+              </teleport>
             </div>
           </div>
         </div>
       </div>
 
       <!-- ✅ Tab Navigation -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
         <!-- Tab Headers -->
-        <div class="border-b border-gray-200">
+        <div class="border-b border-slate-200 dark:border-slate-700">
           <nav class="px-8 flex space-x-8" aria-label="Tabs">
             <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" :class="[
               'py-4 px-1 border-b-2 font-medium text-sm transition-colors',
               activeTab === tab.id
                 ? 'border-indigo-500 text-indigo-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-300 hover:border-slate-300'
             ]">
               <component :is="tab.icon" class="h-5 w-5 mr-2 inline" />
               {{ tab.name }}
@@ -261,7 +230,7 @@
                 'ml-2 py-0.5 px-2 rounded-full text-xs',
                 activeTab === tab.id
                   ? 'bg-indigo-100 text-indigo-600'
-                  : 'bg-gray-100 text-gray-600'
+                  : 'bg-slate-100 text-slate-600 dark:text-slate-400'
               ]">
                 {{ tab.count }}
               </span>
@@ -275,50 +244,50 @@
           <div v-if="activeTab === 'overview'" class="space-y-8">
             <!-- Description -->
             <div v-if="event?.description">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Açıklama</h3>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Açıklama</h3>
               <div class="prose max-w-none">
-                <p class="text-gray-700 leading-relaxed" v-html="event.description"></p>
+                <p class="text-slate-700 dark:text-slate-300 leading-relaxed" v-html="event.description"></p>
               </div>
             </div>
 
             <!-- Quick Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div class="bg-gray-50 rounded-lg p-6">
+              <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-6">
                 <div class="flex items-center">
                   <CalendarDaysIcon class="h-8 w-8 text-blue-600" />
                   <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Toplam Gün</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ event?.event_days_count || 0 }}</p>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Toplam Gün</p>
+                    <p class="text-2xl font-bold text-slate-900 dark:text-white">{{ event?.event_days_count || 0 }}</p>
                   </div>
                 </div>
               </div>
 
-              <div class="bg-gray-50 rounded-lg p-6">
+              <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-6">
                 <div class="flex items-center">
                   <SpeakerWaveIcon class="h-8 w-8 text-green-600" />
                   <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Toplam Oturum</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ event?.total_sessions || 0 }}</p>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Toplam Oturum</p>
+                    <p class="text-2xl font-bold text-slate-900 dark:text-white">{{ event?.total_sessions || 0 }}</p>
                   </div>
                 </div>
               </div>
 
-              <div class="bg-gray-50 rounded-lg p-6">
+              <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-6">
                 <div class="flex items-center">
                   <MapPinIcon class="h-8 w-8 text-purple-600" />
                   <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Toplam Salon</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ event?.total_venues || 0 }}</p>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Toplam Salon</p>
+                    <p class="text-2xl font-bold text-slate-900 dark:text-white">{{ event?.total_venues || 0 }}</p>
                   </div>
                 </div>
               </div>
 
-              <div class="bg-gray-50 rounded-lg p-6">
+              <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-6">
                 <div class="flex items-center">
                   <UsersIcon class="h-8 w-8 text-orange-600" />
                   <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-500">Toplam Sunum</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ event?.total_presentations || 0 }}</p>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Toplam Sunum</p>
+                    <p class="text-2xl font-bold text-slate-900 dark:text-white">{{ event?.total_presentations || 0 }}</p>
                   </div>
                 </div>
               </div>
@@ -330,22 +299,46 @@
             <div class="mb-6">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">Program Zaman Çizelgesi</h3>
-                  <p class="text-sm text-gray-600 mt-1">Etkinlik programını görsel zaman çizelgesi üzerinde görüntüleyin
+                  <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Program Zaman Çizelgesi</h3>
+                  <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Etkinlik programını görsel zaman çizelgesi üzerinde görüntüleyin
                   </p>
                 </div>
 
                 <div class="flex items-center space-x-3">
-                  <!-- Timeline Export Button -->
-                  <button @click="showTimelineExportModal = true"
-                    class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
-                    <ArrowDownTrayIcon class="h-4 w-4 mr-2" />
-                    Dışa Aktar
-                  </button>
+                  <!-- Export Dropdown -->
+                  <div class="relative" :ref="bindTimelineTabExportMenuTrigger" data-floating-menu>
+                    <button type="button" @click.stop="openExclusiveMenu(timelineTabExportMenu)"
+                      class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
+                      <DocumentArrowDownIcon class="h-4 w-4 mr-2" />
+                      Dışa Aktar
+                      <ChevronDownIcon class="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+
+                  <teleport to="body">
+                    <div v-if="isTimelineTabExportMenuOpen" data-floating-menu
+                      class="fixed w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 z-dropdown"
+                      :style="timelineTabExportMenuStyle" @click.stop>
+                      <div class="py-1">
+                        <button @click="exportTimeline('pdf')"
+                          class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                          PDF olarak dışa aktar
+                        </button>
+                        <button @click="exportTimeline('excel')"
+                          class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                          Excel olarak dışa aktar
+                        </button>
+                        <button @click="exportTimeline('json')"
+                          class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                          JSON olarak dışa aktar
+                        </button>
+                      </div>
+                    </div>
+                  </teleport>
 
                   <!-- Full Timeline View -->
                   <Link :href="route('admin.timeline.show', event?.slug)"
-                    class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 text-sm font-medium rounded-lg transition-colors">
+                    class="inline-flex items-center px-4 py-2 border border-slate-300 text-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-sm font-medium rounded-lg transition-colors">
                   <ArrowTopRightOnSquareIcon class="h-4 w-4 mr-2" />
                   Tam Ekran
                   </Link>
@@ -354,30 +347,30 @@
             </div>
 
             <!-- Timeline Component (Embedded) -->
-            <div class="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+            <div class="bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
               <!-- ✅ ÇÖZÜM: Timeline preview component'i -->
               <div v-if="timelineData?.sessions?.length > 0" class="p-6">
                 <div class="text-center">
                   <ClockIcon class="h-12 w-12 text-indigo-600 mx-auto mb-4" />
-                  <h3 class="text-lg font-medium text-gray-900 mb-2">Timeline Verileri Mevcut</h3>
-                  <p class="text-gray-500 mb-4">{{ timelineData.sessions.length }} oturum bulundu</p>
+                  <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Timeline Verileri Mevcut</h3>
+                  <p class="text-slate-500 dark:text-slate-400 mb-4">{{ timelineData.sessions.length }} oturum bulundu</p>
 
                   <!-- Timeline preview -->
                   <div class="mt-6">
-                    <h4 class="text-sm font-semibold text-gray-900 mb-3">Oturum Özeti:</h4>
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-3">Oturum Özeti:</h4>
                     <div class="space-y-2 max-h-60 overflow-y-auto">
                       <div v-for="session in timelineData.sessions.slice(0, 5)" :key="session.id"
-                        class="text-left p-3 bg-white border border-gray-200 rounded text-sm hover:shadow-sm transition-shadow cursor-pointer"
+                        class="text-left p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-sm hover:shadow-sm transition-shadow cursor-pointer"
                         @click="handleTimelineSessionClick(session)">
-                        <div class="font-medium text-gray-900">{{ session.title }}</div>
-                        <div class="text-gray-500 text-xs mt-1 flex items-center space-x-4">
+                        <div class="font-medium text-slate-900 dark:text-white">{{ session.title }}</div>
+                        <div class="text-slate-500 dark:text-slate-400 text-xs mt-1 flex items-center space-x-4">
                           <span>{{ session.venue?.display_name || 'Salon belirtilmemiş' }}</span>
                           <span>{{ session.start_time || 'Zaman belirtilmemiş' }}</span>
                           <span>{{ session.presentations?.length || 0 }} sunum</span>
                         </div>
                       </div>
                     </div>
-                    <p v-if="timelineData.sessions.length > 5" class="text-xs text-gray-500 mt-2">
+                    <p v-if="timelineData.sessions.length > 5" class="text-xs text-slate-500 dark:text-slate-400 mt-2">
                       ... ve {{ timelineData.sessions.length - 5 }} oturum daha
                     </p>
                   </div>
@@ -385,9 +378,9 @@
               </div>
 
               <div v-else class="text-center py-16">
-                <ClockIcon class="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 class="text-lg font-medium text-gray-900 mb-2">Henüz program yok</h3>
-                <p class="text-gray-500 mb-6">Bu etkinlik için program oturumları oluşturmaya başlayın.</p>
+                <ClockIcon class="h-16 w-16 text-slate-400 mx-auto mb-4" />
+                <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Henüz program yok</h3>
+                <p class="text-slate-500 dark:text-slate-400 mb-6">Bu etkinlik için program oturumları oluşturmaya başlayın.</p>
 
                 <Link :href="route('admin.program-sessions.create') + '?event=' + event?.slug"
                   class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
@@ -402,8 +395,8 @@
           <div v-if="activeTab === 'days'">
             <div class="flex items-center justify-between mb-6">
               <div>
-                <h3 class="text-lg font-semibold text-gray-900">Etkinlik Günleri</h3>
-                <p class="text-sm text-gray-600 mt-1">Etkinlik günlerini yönetin ve organize edin</p>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Etkinlik Günleri</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Etkinlik günlerini yönetin ve organize edin</p>
               </div>
               <Link v-if="event?.can_manage_days" :href="route('admin.events.days.create', event?.slug)"
                 class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
@@ -415,17 +408,17 @@
             <!-- Days List -->
             <div v-if="event?.event_days?.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div v-for="day in event.event_days" :key="day.id"
-                class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-6 hover:shadow-md transition-shadow">
                 <div class="flex items-start justify-between mb-4">
                   <div class="flex-1">
-                    <h4 class="text-lg font-semibold text-gray-900 mb-2">
+                    <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">
                       {{ day.title }}
                     </h4>
-                    <div class="flex items-center text-sm text-gray-500 mb-2">
+                    <div class="flex items-center text-sm text-slate-500 dark:text-slate-400 mb-2">
                       <ClockIcon class="h-4 w-4 mr-1" />
                       {{ formatDate(day.date) }}
                     </div>
-                    <div class="flex items-center text-sm text-gray-500">
+                    <div class="flex items-center text-sm text-slate-500 dark:text-slate-400">
                       <SpeakerWaveIcon class="h-4 w-4 mr-1" />
                       {{ day.sessions_count || 0 }} oturum
                     </div>
@@ -433,9 +426,9 @@
                 </div>
 
                 <!-- Day Actions -->
-                <div class="flex items-center space-x-2 pt-4 border-t border-gray-200">
+                <div class="flex items-center space-x-2 pt-4 border-t border-slate-200 dark:border-slate-700">
                   <Link :href="route('admin.events.days.show', [event?.slug, day.id])"
-                    class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                    class="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
                   <EyeIcon class="h-4 w-4 mr-1" />
                   Görüntüle
                   </Link>
@@ -450,9 +443,9 @@
 
             <!-- Empty Days State -->
             <div v-else class="text-center py-16">
-              <CalendarDaysIcon class="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h3 class="text-lg font-medium text-gray-900 mb-2">Henüz gün yok</h3>
-              <p class="text-gray-500 mb-6">Bu etkinlik için günler eklemeye başlayın.</p>
+              <CalendarDaysIcon class="h-16 w-16 text-slate-400 mx-auto mb-4" />
+              <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Henüz gün yok</h3>
+              <p class="text-slate-500 dark:text-slate-400 mb-6">Bu etkinlik için günler eklemeye başlayın.</p>
               <Link v-if="event?.can_manage_days" :href="route('admin.events.days.create', event?.slug)"
                 class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
               <CalendarDaysIcon class="h-5 w-5 mr-2" />
@@ -464,21 +457,21 @@
           <!-- Management Tab -->
           <div v-if="activeTab === 'management'">
             <div class="mb-6">
-              <h3 class="text-lg font-semibold text-gray-900">Yönetim Araçları</h3>
-              <p class="text-sm text-gray-600 mt-1">Etkinlik bileşenlerini yönetin</p>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Yönetim Araçları</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Etkinlik bileşenlerini yönetin</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <!-- Days Management -->
               <Link :href="route('admin.events.days.index', event?.slug)"
-                class="group p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
+                class="group p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
               <div class="flex items-center justify-between mb-4">
                 <CalendarDaysIcon class="h-8 w-8 text-blue-600" />
                 <ArrowTopRightOnSquareIcon
-                  class="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+                  class="h-5 w-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Günleri Yönet</h4>
-              <p class="text-sm text-gray-600 mb-4">Etkinlik günlerini ekleyin ve düzenleyin</p>
+              <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Günleri Yönet</h4>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Etkinlik günlerini ekleyin ve düzenleyin</p>
               <div class="text-sm font-medium text-indigo-600">
                 {{ event?.event_days_count || 0 }} gün
               </div>
@@ -486,14 +479,14 @@
 
               <!-- Venues Management -->
               <Link :href="route('admin.venues.index') + '?event=' + event?.slug"
-                class="group p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
+                class="group p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
               <div class="flex items-center justify-between mb-4">
                 <MapPinIcon class="h-8 w-8 text-purple-600" />
                 <ArrowTopRightOnSquareIcon
-                  class="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+                  class="h-5 w-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Salonları Yönet</h4>
-              <p class="text-sm text-gray-600 mb-4">Etkinlik salonlarını organize edin</p>
+              <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Salonları Yönet</h4>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Etkinlik salonlarını organize edin</p>
               <div class="text-sm font-medium text-indigo-600">
                 {{ event?.total_venues || 0 }} salon
               </div>
@@ -501,14 +494,14 @@
 
               <!-- Sessions Management -->
               <Link :href="route('admin.program-sessions.index') + '?event=' + event?.slug"
-                class="group p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
+                class="group p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
               <div class="flex items-center justify-between mb-4">
                 <SpeakerWaveIcon class="h-8 w-8 text-green-600" />
                 <ArrowTopRightOnSquareIcon
-                  class="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+                  class="h-5 w-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Oturumları Yönet</h4>
-              <p class="text-sm text-gray-600 mb-4">Program oturumlarını oluşturun ve düzenleyin</p>
+              <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Oturumları Yönet</h4>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Program oturumlarını oluşturun ve düzenleyin</p>
               <div class="text-sm font-medium text-indigo-600">
                 {{ event?.total_sessions || 0 }} oturum
               </div>
@@ -516,14 +509,14 @@
 
               <!-- Presentations Management -->
               <Link :href="route('admin.presentations.index') + '?event=' + event?.slug"
-                class="group p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
+                class="group p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
               <div class="flex items-center justify-between mb-4">
                 <DocumentTextIcon class="h-8 w-8 text-orange-600" />
                 <ArrowTopRightOnSquareIcon
-                  class="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+                  class="h-5 w-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Sunumları Yönet</h4>
-              <p class="text-sm text-gray-600 mb-4">Etkinlik sunumlarını organize edin</p>
+              <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Sunumları Yönet</h4>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Etkinlik sunumlarını organize edin</p>
               <div class="text-sm font-medium text-indigo-600">
                 {{ event?.total_presentations || 0 }} sunum
               </div>
@@ -531,14 +524,14 @@
 
               <!-- Participants Management -->
               <Link :href="route('admin.participants.index') + '?event=' + event?.slug"
-                class="group p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
+                class="group p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
               <div class="flex items-center justify-between mb-4">
                 <UsersIcon class="h-8 w-8 text-indigo-600" />
                 <ArrowTopRightOnSquareIcon
-                  class="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+                  class="h-5 w-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Katılımcıları Yönet</h4>
-              <p class="text-sm text-gray-600 mb-4">Konuşmacı ve moderatörleri yönetin</p>
+              <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Katılımcıları Yönet</h4>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Konuşmacı ve moderatörleri yönetin</p>
               <div class="text-sm font-medium text-indigo-600">
                 {{ event?.total_participants || 0 }} katılımcı
               </div>
@@ -546,14 +539,14 @@
 
               <!-- Timeline Management -->
               <Link :href="route('admin.timeline.show', event?.slug)"
-                class="group p-6 bg-white border border-gray-200 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
+                class="group p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
               <div class="flex items-center justify-between mb-4">
                 <ClockIcon class="h-8 w-8 text-red-600" />
                 <ArrowTopRightOnSquareIcon
-                  class="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
+                  class="h-5 w-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
               </div>
-              <h4 class="text-lg font-semibold text-gray-900 mb-2">Zaman Çizelgesi</h4>
-              <p class="text-sm text-gray-600 mb-4">Program zaman çizelgesini görüntüleyin</p>
+              <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Zaman Çizelgesi</h4>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Program zaman çizelgesini görüntüleyin</p>
               <div class="text-sm font-medium text-indigo-600">
                 Görsel timeline
               </div>
@@ -564,62 +557,66 @@
       </div>
 
       <!-- Session Detail Modal -->
-      <div v-if="selectedTimelineSession"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        @click="selectedTimelineSession = null">
-        <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" @click.stop>
-          <div class="px-6 py-4 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900">Oturum Detayları</h3>
-              <button @click="selectedTimelineSession = null" class="text-gray-400 hover:text-gray-600">
-                <XMarkIcon class="h-6 w-6" />
-              </button>
-            </div>
-          </div>
-
-          <div class="p-6">
-            <div class="space-y-4">
-              <div>
-                <h4 class="text-xl font-semibold text-gray-900">
-                  {{ selectedTimelineSession.title }}
-                </h4>
-                <p v-if="selectedTimelineSession.description" class="text-gray-600 mt-2">
-                  {{ selectedTimelineSession.description }}
-                </p>
+      <teleport to="body">
+        <div v-if="selectedTimelineSession"
+          class="fixed inset-0 z-modal-backdrop bg-black/50 flex items-center justify-center p-4"
+          @click="selectedTimelineSession = null">
+          <div class="relative z-modal bg-white dark:bg-slate-800 rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            @click.stop>
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Oturum Detayları</h3>
+                <button @click="selectedTimelineSession = null" class="text-slate-400 hover:text-slate-600 dark:text-slate-400">
+                  <XMarkIcon class="h-6 w-6" />
+                </button>
               </div>
+            </div>
 
-              <div class="grid grid-cols-2 gap-4">
+            <div class="p-6">
+              <div class="space-y-4">
                 <div>
-                  <span class="text-sm font-medium text-gray-500">Tarih & Saat:</span>
-                  <p class="text-gray-900">
-                    {{ formatDate(selectedTimelineSession.venue?.event_day?.date) }}<br>
-                    {{ formatTimeRange(selectedTimelineSession) }}
+                  <h4 class="text-xl font-semibold text-slate-900 dark:text-white">
+                    {{ selectedTimelineSession.title }}
+                  </h4>
+                  <p v-if="selectedTimelineSession.description" class="text-slate-600 dark:text-slate-400 mt-2">
+                    {{ selectedTimelineSession.description }}
                   </p>
                 </div>
-                <div>
-                  <span class="text-sm font-medium text-gray-500">Salon:</span>
-                  <p class="text-gray-900">{{ selectedTimelineSession.venue?.display_name }}</p>
-                </div>
-              </div>
 
-              <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
-                <Link :href="route('admin.program-sessions.show', selectedTimelineSession.id)"
-                  class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
-                <EyeIcon class="h-4 w-4 mr-2" />
-                Detaylı Görünüm
-                </Link>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Tarih & Saat:</span>
+                    <p class="text-slate-900 dark:text-white">
+                      {{ formatDate(selectedTimelineSession.venue?.event_day?.date) }}<br>
+                      {{ formatTimeRange(selectedTimelineSession) }}
+                    </p>
+                  </div>
+                  <div>
+                    <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Salon:</span>
+                    <p class="text-slate-900 dark:text-white">{{ selectedTimelineSession.venue?.display_name }}</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-200 dark:border-slate-700">
+                  <Link :href="route('admin.program-sessions.show', selectedTimelineSession.id)"
+                    class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
+                  <EyeIcon class="h-4 w-4 mr-2" />
+                  Detaylı Görünüm
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </teleport>
     </div>
   </AdminLayout>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Head, Link, router } from '@inertiajs/vue3'
+import { useFloatingMenu } from '@/Composables/useFloatingMenu'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import {
   ArrowLeftIcon,
@@ -642,13 +639,8 @@ import {
   DocumentTextIcon,
   ArrowTopRightOnSquareIcon,
   XMarkIcon,
-  ArrowDownTrayIcon,
   Cog6ToothIcon,
   CursorArrowRaysIcon,
-  DocumentIcon,
-  TableCellsIcon,
-  PhotoIcon,
-  ShareIcon
 } from '@heroicons/vue/24/outline'
 
 // Props
@@ -676,15 +668,33 @@ const props = defineProps({
   }
 })
 
+const exportMenu = useFloatingMenu()
+const actionsMenu = useFloatingMenu({ menuWidth: 224 })
+const timelineTabExportMenu = useFloatingMenu()
+
+const {
+  isOpen: isExportMenuOpen,
+  menuStyle: exportMenuStyle,
+  bindTrigger: bindExportMenuTrigger,
+} = exportMenu
+
+const {
+  isOpen: isActionsMenuOpen,
+  menuStyle: actionsMenuStyle,
+  bindTrigger: bindActionsMenuTrigger,
+} = actionsMenu
+
+const {
+  isOpen: isTimelineTabExportMenuOpen,
+  menuStyle: timelineTabExportMenuStyle,
+  bindTrigger: bindTimelineTabExportMenuTrigger,
+} = timelineTabExportMenu
+
+const floatingMenus = [exportMenu, actionsMenu, timelineTabExportMenu]
+
 // State
-const showActionsMenu = ref(false)
-const showTimelineExportMenu = ref(false)
 const processing = ref(false)
-const actionsMenuRef = ref(null)
-const dropdownStyle = ref({})
-const timelineExportStyle = ref({})
 const activeTab = ref('overview')
-const showTimelineExportModal = ref(false)
 const selectedTimelineSession = ref(null)
 const timelineLoading = ref(false)
 
@@ -777,11 +787,11 @@ const formatTimeRange = (session) => {
 
 const getStatusClasses = (status) => {
   const classes = {
-    draft: 'bg-gray-100 text-gray-800',
-    upcoming: 'bg-gray-200 text-gray-900',
-    ongoing: 'bg-gray-300 text-gray-900',
-    completed: 'bg-gray-400 text-white',
-    published: 'bg-gray-600 text-white'
+    draft: 'bg-slate-100 text-slate-800 dark:text-slate-200',
+    upcoming: 'bg-slate-200 text-slate-900 dark:text-white',
+    ongoing: 'bg-slate-300 text-slate-900 dark:text-white',
+    completed: 'bg-slate-400 text-white',
+    published: 'bg-slate-600 text-white'
   }
   return classes[status] || classes.draft
 }
@@ -806,84 +816,36 @@ const handleTimelineFilterChange = (filters) => {
   console.log('Timeline filters changed:', filters)
 }
 
-const handleTimelineExportComplete = (exportInfo) => {
-  console.log('Timeline export completed:', exportInfo)
-  setTimeout(() => {
-    showTimelineExportModal.value = false
-  }, 2000)
+const openExclusiveMenu = async (targetMenu) => {
+  const wasOpen = targetMenu.isOpen.value
+  floatingMenus.forEach((menu) => menu.close())
+
+  if (!wasOpen) {
+    await targetMenu.open()
+  }
+}
+
+const closeAllMenus = () => {
+  floatingMenus.forEach((menu) => menu.close())
 }
 
 // Export methods
 const exportTimeline = (format) => {
-  showTimelineExportMenu.value = false
+  closeAllMenus()
 
-  const exportData = {
-    format: format,
-    event_slug: event.value.slug
-  }
-
-  router.post(route('admin.timeline.export', event.value.slug), exportData, {
-    onSuccess: (page) => {
-      if (page.props.flash?.success) {
-        console.log('Timeline export başlatıldı:', format)
-      }
-    },
-    onError: (errors) => {
-      console.error('Timeline export error:', errors)
-      alert('Export işlemi sırasında hata oluştu.')
-    }
-  })
-}
-
-const shareTimeline = () => {
-  showTimelineExportMenu.value = false
-
-  const timelineUrl = route('admin.timeline.show', event.value.slug)
-  const fullUrl = window.location.origin + timelineUrl
-
-  if (navigator.share) {
-    navigator.share({
-      title: `${event.value.name} - Timeline`,
-      text: `${event.value.name} etkinliğinin timeline görünümü`,
-      url: fullUrl
-    }).catch(console.error)
+  if (format === 'pdf') {
+    window.location.href = route('admin.export.events.program-pdf', event.value.slug)
+  } else if (format === 'excel') {
+    window.location.href = route('admin.export.events.program-excel', event.value.slug)
   } else {
-    navigator.clipboard.writeText(fullUrl).then(() => {
-      alert('Timeline linki panoya kopyalandı!')
-    }).catch(() => {
-      prompt('Timeline linki:', fullUrl)
+    router.post(route('admin.timeline.export', event.value.slug), {
+      format: format,
+    }, {
+      onError: (errors) => {
+        console.error('Export error:', errors)
+        alert('Dışa aktarma işlemi sırasında hata oluştu.')
+      },
     })
-  }
-}
-
-// Dropdown positioning
-const calculateDropdownPosition = async (ref, type) => {
-  if (!ref.value) return
-  await nextTick()
-
-  const rect = ref.value.getBoundingClientRect()
-  const windowHeight = window.innerHeight
-
-  let top = rect.bottom + 8
-  let left = rect.right - 224
-
-  if (top + 300 > windowHeight) {
-    top = rect.top - 300
-  }
-
-  if (left < 8) {
-    left = 8
-  }
-
-  const style = {
-    top: `${top}px`,
-    left: `${left}px`
-  }
-
-  if (type === 'actions') {
-    dropdownStyle.value = style
-  } else if (type === 'timeline') {
-    timelineExportStyle.value = style
   }
 }
 
@@ -895,43 +857,26 @@ const togglePublishStatus = () => {
 }
 
 const duplicateEvent = () => {
-  showActionsMenu.value = false
+  closeAllMenus()
   console.log('Duplicate event:', props.event)
 }
 
 const exportEvent = () => {
-  showActionsMenu.value = false
+  closeAllMenus()
   console.log('Export event:', props.event)
 }
 
 const confirmDelete = () => {
-  showActionsMenu.value = false
+  closeAllMenus()
   console.log('Delete event:', props.event)
 }
 
 // Event handlers
 const handleClickOutside = (event) => {
-  if (showActionsMenu.value && !actionsMenuRef.value?.contains(event.target)) {
-    showActionsMenu.value = false
-  }
-  if (showTimelineExportMenu.value && !event.target.closest('.relative')) {
-    showTimelineExportMenu.value = false
+  if (!event.target.closest('[data-floating-menu]')) {
+    closeAllMenus()
   }
 }
-
-// Watch dropdown changes
-watch(showActionsMenu, (newValue) => {
-  if (newValue) {
-    calculateDropdownPosition(actionsMenuRef, 'actions')
-  }
-})
-
-watch(showTimelineExportMenu, (newValue) => {
-  if (newValue) {
-    const timelineExportRef = { value: event.target }
-    calculateDropdownPosition(timelineExportRef, 'timeline')
-  }
-})
 
 // Lifecycle
 onMounted(() => {
@@ -962,12 +907,6 @@ onUnmounted(() => {
 
 .management-card:hover {
   transform: translateY(-2px);
-}
-
-/* Z-index fixes */
-.dropdown-container {
-  position: relative;
-  z-index: 50;
 }
 
 /* Smooth transitions */

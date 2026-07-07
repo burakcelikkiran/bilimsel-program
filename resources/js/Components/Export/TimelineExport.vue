@@ -2,18 +2,18 @@
 <template>
   <div class="timeline-export-container">
     <!-- Export Controls -->
-    <div v-if="!printMode" class="export-controls bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+    <div v-if="!printMode" class="export-controls bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-4 mb-6">
       <div class="flex items-center justify-between">
         <div>
-          <h3 class="text-lg font-semibold text-gray-900">Dışa Aktarım Seçenekleri</h3>
-          <p class="text-sm text-gray-600 mt-1">Timeline'ı farklı formatlarda kaydedin</p>
+          <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Dışa Aktarım Seçenekleri</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Timeline'ı farklı formatlarda kaydedin</p>
         </div>
         
         <div class="flex items-center space-x-3">
           <!-- Export Format Selection -->
           <select
             v-model="exportFormat"
-            class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            class="border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="pdf">PDF</option>
             <option value="image">PNG Görsel</option>
@@ -23,7 +23,7 @@
           <!-- Export Settings -->
           <button
             @click="showSettings = !showSettings"
-            class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            class="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
           >
             <CogIcon class="h-5 w-5" />
           </button>
@@ -47,11 +47,11 @@
       </div>
       
       <!-- Export Settings Panel -->
-      <div v-if="showSettings" class="mt-4 pt-4 border-t border-gray-200">
+      <div v-if="showSettings" class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Sayfa Boyutu</label>
-            <select v-model="settings.pageSize" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Sayfa Boyutu</label>
+            <select v-model="settings.pageSize" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
               <option value="a4">A4</option>
               <option value="a3">A3</option>
               <option value="letter">Letter</option>
@@ -59,16 +59,16 @@
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Yönlendirme</label>
-            <select v-model="settings.orientation" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Yönlendirme</label>
+            <select v-model="settings.orientation" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
               <option value="landscape">Yatay</option>
               <option value="portrait">Dikey</option>
             </select>
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Kalite</label>
-            <select v-model="settings.quality" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Kalite</label>
+            <select v-model="settings.quality" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
               <option value="high">Yüksek</option>
               <option value="medium">Orta</option>
               <option value="low">Düşük</option>
@@ -81,27 +81,27 @@
             <input
               v-model="settings.includeStats"
               type="checkbox"
-              class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              class="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             >
-            <span class="ml-2 text-sm text-gray-700">İstatistikleri dahil et</span>
+            <span class="ml-2 text-sm text-slate-700 dark:text-slate-300">İstatistikleri dahil et</span>
           </label>
           
           <label class="flex items-center">
             <input
               v-model="settings.includeLegend"
               type="checkbox"
-              class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              class="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             >
-            <span class="ml-2 text-sm text-gray-700">Açıklamaları dahil et</span>
+            <span class="ml-2 text-sm text-slate-700 dark:text-slate-300">Açıklamaları dahil et</span>
           </label>
           
           <label class="flex items-center">
             <input
               v-model="settings.colorPrint"
               type="checkbox"
-              class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              class="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
             >
-            <span class="ml-2 text-sm text-gray-700">Renkli çıktı</span>
+            <span class="ml-2 text-sm text-slate-700 dark:text-slate-300">Renkli çıktı</span>
           </label>
         </div>
       </div>
@@ -630,14 +630,14 @@ const truncateText = (text, length) => {
 }
 
 .timeline-print-layout {
-  @apply bg-white text-gray-900;
+  @apply bg-white dark:bg-slate-800 text-slate-900 dark:text-white;
   font-family: 'Segoe UI', system-ui, sans-serif;
   font-size: 10px;
   line-height: 1.4;
 }
 
 .print-header {
-  @apply mb-6 pb-4 border-b-2 border-gray-800;
+  @apply mb-6 pb-4 border-b-2 border-slate-800;
 }
 
 .header-content {
@@ -645,15 +645,15 @@ const truncateText = (text, length) => {
 }
 
 .event-title {
-  @apply text-xl font-bold text-gray-900 mb-1;
+  @apply text-xl font-bold text-slate-900 dark:text-white mb-1;
 }
 
 .event-subtitle {
-  @apply text-sm text-gray-600 mb-3;
+  @apply text-sm text-slate-600 dark:text-slate-400 mb-3;
 }
 
 .event-details {
-  @apply flex flex-wrap gap-4 text-xs text-gray-600;
+  @apply flex flex-wrap gap-4 text-xs text-slate-600 dark:text-slate-400;
 }
 
 .detail-item {
@@ -661,11 +661,11 @@ const truncateText = (text, length) => {
 }
 
 .export-info {
-  @apply text-right text-xs text-gray-500;
+  @apply text-right text-xs text-slate-500 dark:text-slate-400;
 }
 
 .print-stats {
-  @apply mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200;
+  @apply mb-6 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700;
 }
 
 .stats-grid {
@@ -677,11 +677,11 @@ const truncateText = (text, length) => {
 }
 
 .stat-value {
-  @apply text-lg font-bold text-gray-900;
+  @apply text-lg font-bold text-slate-900 dark:text-white;
 }
 
 .stat-label {
-  @apply text-xs text-gray-600;
+  @apply text-xs text-slate-600 dark:text-slate-400;
 }
 
 .day-section {
@@ -690,19 +690,19 @@ const truncateText = (text, length) => {
 }
 
 .day-header {
-  @apply flex justify-between items-center mb-4 pb-2 border-b border-gray-300;
+  @apply flex justify-between items-center mb-4 pb-2 border-b border-slate-300;
 }
 
 .day-title {
-  @apply text-base font-bold text-gray-900;
+  @apply text-base font-bold text-slate-900 dark:text-white;
 }
 
 .day-date {
-  @apply text-xs text-gray-600;
+  @apply text-xs text-slate-600 dark:text-slate-400;
 }
 
 .day-stats {
-  @apply text-xs text-gray-500;
+  @apply text-xs text-slate-500 dark:text-slate-400;
 }
 
 .venues-container {
@@ -715,7 +715,7 @@ const truncateText = (text, length) => {
 }
 
 .venue-header {
-  @apply flex justify-between items-center mb-2 p-2 bg-gray-100 rounded;
+  @apply flex justify-between items-center mb-2 p-2 bg-slate-100 rounded;
 }
 
 .venue-info {
@@ -723,15 +723,15 @@ const truncateText = (text, length) => {
 }
 
 .venue-color {
-  @apply w-3 h-3 rounded-full mr-2 border border-gray-300;
+  @apply w-3 h-3 rounded-full mr-2 border border-slate-300;
 }
 
 .venue-name {
-  @apply text-sm font-semibold text-gray-900;
+  @apply text-sm font-semibold text-slate-900 dark:text-white;
 }
 
 .venue-stats {
-  @apply text-xs text-gray-600;
+  @apply text-xs text-slate-600 dark:text-slate-400;
 }
 
 .sessions-list {
@@ -739,7 +739,7 @@ const truncateText = (text, length) => {
 }
 
 .session-item {
-  @apply flex gap-3 p-3 border border-gray-200 rounded;
+  @apply flex gap-3 p-3 border border-slate-200 dark:border-slate-700 rounded;
   page-break-inside: avoid;
 }
 
@@ -748,11 +748,11 @@ const truncateText = (text, length) => {
 }
 
 .time-range {
-  @apply text-xs font-bold text-gray-700;
+  @apply text-xs font-bold text-slate-700 dark:text-slate-300;
 }
 
 .duration {
-  @apply text-xs text-gray-500 mt-1;
+  @apply text-xs text-slate-500 dark:text-slate-400 mt-1;
 }
 
 .session-content {
@@ -760,7 +760,7 @@ const truncateText = (text, length) => {
 }
 
 .session-title {
-  @apply text-sm font-semibold text-gray-900 mb-1 flex items-center justify-between;
+  @apply text-sm font-semibold text-slate-900 dark:text-white mb-1 flex items-center justify-between;
 }
 
 .session-badges {
@@ -784,11 +784,11 @@ const truncateText = (text, length) => {
 }
 
 .session-description {
-  @apply text-xs text-gray-600 mb-2;
+  @apply text-xs text-slate-600 dark:text-slate-400 mb-2;
 }
 
 .session-meta {
-  @apply flex gap-3 text-xs text-gray-500;
+  @apply flex gap-3 text-xs text-slate-500 dark:text-slate-400;
 }
 
 .meta-item {
@@ -796,12 +796,12 @@ const truncateText = (text, length) => {
 }
 
 .print-legend {
-  @apply mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200;
+  @apply mt-6 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700;
   page-break-inside: avoid;
 }
 
 .legend-title {
-  @apply text-sm font-semibold text-gray-900 mb-3;
+  @apply text-sm font-semibold text-slate-900 dark:text-white mb-3;
 }
 
 .legend-items {
@@ -809,7 +809,7 @@ const truncateText = (text, length) => {
 }
 
 .legend-item {
-  @apply flex items-center gap-2 text-xs text-gray-700;
+  @apply flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300;
 }
 
 .legend-color {
@@ -833,11 +833,11 @@ const truncateText = (text, length) => {
 }
 
 .print-footer {
-  @apply mt-6 pt-4 border-t border-gray-300;
+  @apply mt-6 pt-4 border-t border-slate-300;
 }
 
 .footer-content {
-  @apply flex justify-between text-xs text-gray-600;
+  @apply flex justify-between text-xs text-slate-600 dark:text-slate-400;
 }
 
 /* Print-specific styles */

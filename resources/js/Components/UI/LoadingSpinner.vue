@@ -46,7 +46,7 @@ const containerClasses = computed(() => {
   }
   
   if (props.overlay) {
-    classes.push('fixed inset-0 bg-white bg-opacity-75 dark:bg-gray-900 dark:bg-opacity-75 z-50')
+    classes.push('fixed inset-0 bg-white bg-opacity-75 dark:bg-slate-900 dark:bg-opacity-75 z-50')
   }
   
   if (props.text) {
@@ -71,9 +71,9 @@ const spinnerClasses = computed(() => {
 const borderClasses = computed(() => {
   const variants = {
     primary: 'border-blue-600 border-t-transparent',
-    secondary: 'border-gray-600 border-t-transparent',
+    secondary: 'border-slate-600 border-t-transparent',
     white: 'border-white border-t-transparent',
-    gray: 'border-gray-400 border-t-transparent'
+    gray: 'border-slate-400 border-t-transparent'
   }
   
   const sizes = {
@@ -88,6 +88,6 @@ const borderClasses = computed(() => {
 })
 
 const textClasses = computed(() => {
-  return 'text-sm text-gray-600 dark:text-gray-400'
+  return 'text-sm text-slate-600 dark:text-slate-400'
 })
 </script>

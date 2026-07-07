@@ -23,10 +23,10 @@
         <!-- Timeline Legend -->
         <div class="timeline-legend mt-8">
             <div
-                class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6"
             >
                 <h3
-                    class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                    class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                 >
                     Açıklamalar
                 </h3>
@@ -37,7 +37,7 @@
                     <!-- Session Types Legend -->
                     <div>
                         <h4
-                            class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
+                            class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3"
                         >
                             Oturum Tipleri
                         </h4>
@@ -52,7 +52,7 @@
                                     class="w-4 h-4 rounded"
                                 ></div>
                                 <span
-                                    class="text-sm text-gray-600 dark:text-gray-400"
+                                    class="text-sm text-slate-600 dark:text-slate-400"
                                     >{{ type.label }}</span
                                 >
                             </div>
@@ -62,7 +62,7 @@
                     <!-- Venue Colors Legend -->
                     <div>
                         <h4
-                            class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
+                            class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3"
                         >
                             Salon Renkleri
                         </h4>
@@ -77,7 +77,7 @@
                                     class="w-4 h-4 rounded"
                                 ></div>
                                 <span
-                                    class="text-sm text-gray-600 dark:text-gray-400"
+                                    class="text-sm text-slate-600 dark:text-slate-400"
                                     >{{ venue.name }}</span
                                 >
                             </div>
@@ -87,12 +87,12 @@
                     <!-- Drag & Drop Guide -->
                     <div>
                         <h4
-                            class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
+                            class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3"
                         >
                             Sürükle & Bırak Rehberi
                         </h4>
                         <div
-                            class="space-y-1 text-sm text-gray-600 dark:text-gray-400"
+                            class="space-y-1 text-sm text-slate-600 dark:text-slate-400"
                         >
                             <div class="flex items-center space-x-2">
                                 <div class="w-3 h-3 bg-green-500 rounded"></div>
@@ -106,7 +106,7 @@
                                 <div class="w-3 h-3 bg-blue-500 rounded"></div>
                                 <span>Aktif sürükleme</span>
                             </div>
-                            <div class="text-xs text-gray-500 mt-2">
+                            <div class="text-xs text-slate-500 mt-2">
                                 Oturumları farklı salon ve günlere
                                 taşıyabilirsiniz
                             </div>
@@ -224,7 +224,7 @@ const sessionTypeLegend = computed(() => [
     { value: "parallel", label: "Paralel Oturum", colorClass: "bg-blue-500" },
     { value: "workshop", label: "Workshop", colorClass: "bg-green-500" },
     { value: "poster", label: "Poster", colorClass: "bg-yellow-500" },
-    { value: "break", label: "Ara", colorClass: "bg-gray-400" },
+    { value: "break", label: "Ara", colorClass: "bg-slate-400" },
     { value: "lunch", label: "Öğle Arası", colorClass: "bg-orange-500" },
     { value: "social", label: "Sosyal", colorClass: "bg-pink-500" },
 ]);

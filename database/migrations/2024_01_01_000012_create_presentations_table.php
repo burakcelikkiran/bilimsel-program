@@ -18,12 +18,12 @@ return new class extends Migration
             $table->text('abstract')->nullable();
             $table->time('start_time');
             $table->time('end_time');
-            $table->enum('presentation_type', ['keynote', 'oral', 'case_presentation', 'symposium'])->default('oral');
+            $table->enum('presentation_type', ['keynote', 'oral', 'poster', 'panel', 'workshop'])->default('oral');
             $table->foreignId('sponsor_id')->nullable()->constrained()->onDelete('set null');
             $table->integer('sort_order')->default(0);
             $table->timestamps();
             $table->softDeletes();
-            
+
             // Indexes
             $table->index('program_session_id');
             $table->index('sponsor_id');

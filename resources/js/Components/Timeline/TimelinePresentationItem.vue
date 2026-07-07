@@ -10,15 +10,15 @@
       <!-- Presentation Info -->
       <div class="flex-1 min-w-0">
         <!-- Title -->
-        <h5 class="presentation-title text-xs font-medium text-gray-800 dark:text-gray-200 group-hover:text-purple-600 transition-colors leading-tight">
+        <h5 class="presentation-title text-xs font-medium text-slate-800 dark:text-slate-200 group-hover:text-purple-600 transition-colors leading-tight">
           {{ presentationData.title }}
         </h5>
         
         <!-- Time -->
         <div v-if="presentationTimeRange" class="presentation-time flex items-center space-x-1 mt-1">
-          <ClockIcon class="h-3 w-3 text-gray-400" />
-          <span class="text-xs text-gray-500 dark:text-gray-400">{{ presentationTimeRange }}</span>
-          <span v-if="presentationData.duration_minutes" class="text-xs text-gray-400">
+          <ClockIcon class="h-3 w-3 text-slate-400" />
+          <span class="text-xs text-slate-500 dark:text-slate-400">{{ presentationTimeRange }}</span>
+          <span v-if="presentationData.duration_minutes" class="text-xs text-slate-400">
             ({{ formatDuration(presentationData.duration_minutes) }})
           </span>
         </div>
@@ -41,7 +41,7 @@
 
     <!-- Abstract (if available) -->
     <div v-if="presentationData.abstract" class="presentation-abstract mt-2">
-      <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
+      <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">
         {{ presentationData.abstract }}
       </p>
     </div>
@@ -49,22 +49,22 @@
     <!-- Speakers -->
     <div v-if="presentationData.speakers && presentationData.speakers.length > 0" class="presentation-speakers mt-2">
       <div class="flex items-start space-x-1">
-        <UserIcon class="h-3 w-3 text-gray-400 mt-0.5 flex-shrink-0" />
+        <UserIcon class="h-3 w-3 text-slate-400 mt-0.5 flex-shrink-0" />
         <div class="flex flex-col space-y-0.5 min-w-0">
           <div 
             v-for="speaker in presentationData.speakers" 
             :key="speaker.id"
             class="flex items-center space-x-1"
           >
-            <span class="text-xs text-gray-700 dark:text-gray-300 font-medium truncate">
+            <span class="text-xs text-slate-700 dark:text-slate-300 font-medium truncate">
               {{ speaker.full_name }}
             </span>
             <span v-if="speaker.speaker_role && speaker.speaker_role !== 'speaker'" 
-                  class="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+                  class="text-xs text-slate-500 dark:text-slate-400 flex-shrink-0">
               ({{ getSpeakerRoleLabel(speaker.speaker_role) }})
             </span>
             <span v-if="speaker.affiliation" 
-                  class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  class="text-xs text-slate-500 dark:text-slate-400 truncate">
               - {{ speaker.affiliation }}
             </span>
           </div>
@@ -75,8 +75,8 @@
     <!-- Language (if not default) -->
     <div v-if="presentationData.language && presentationData.language !== 'tr'" class="presentation-language mt-2">
       <div class="flex items-center space-x-1">
-        <GlobeAltIcon class="h-3 w-3 text-gray-400" />
-        <span class="text-xs text-gray-500 dark:text-gray-400">
+        <GlobeAltIcon class="h-3 w-3 text-slate-400" />
+        <span class="text-xs text-slate-500 dark:text-slate-400">
           {{ getLanguageLabel(presentationData.language) }}
         </span>
       </div>
@@ -87,7 +87,7 @@
       <div class="flex items-center space-x-1">
         <button
           @click.stop="handlePresentationClick"
-          class="p-1 text-gray-400 hover:text-purple-600 transition-colors"
+          class="p-1 text-slate-400 hover:text-purple-600 transition-colors"
           title="Sunumu Görüntüle"
         >
           <EyeIcon class="h-3 w-3" />
@@ -95,7 +95,7 @@
         <button
           v-if="canEdit"
           @click.stop="handleEditClick"
-          class="p-1 text-gray-400 hover:text-orange-600 transition-colors"
+          class="p-1 text-slate-400 hover:text-orange-600 transition-colors"
           title="Sunumu Düzenle"
         >
           <PencilSquareIcon class="h-3 w-3" />
@@ -103,13 +103,13 @@
       </div>
       
       <!-- Presentation ID -->
-      <div class="text-xs text-gray-400">
+      <div class="text-xs text-slate-400">
         #{{ presentationData.id }}
       </div>
     </div>
 
     <!-- Bottom Border for Visual Separation -->
-    <div class="presentation-border mt-2 border-b border-gray-200 dark:border-gray-700 opacity-50"></div>
+    <div class="presentation-border mt-2 border-b border-slate-200 dark:border-slate-700 opacity-50"></div>
   </div>
 </template>
 
@@ -180,7 +180,7 @@ const presentationTypeBadgeClass = computed(() => {
     workshop: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200',
   }
   
-  return badgeClasses[props.presentationData.presentation_type] || 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200'
+  return badgeClasses[props.presentationData.presentation_type] || 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200'
 })
 
 const presentationTypeIcon = computed(() => {
@@ -264,11 +264,11 @@ const handleEditClick = () => {
 
 <style scoped>
 .timeline-presentation-item {
-  @apply bg-gray-50 dark:bg-gray-800 rounded-md p-3 border border-gray-200 dark:border-gray-700 transition-all duration-200;
+  @apply bg-slate-50 dark:bg-slate-800 rounded-md p-3 border border-slate-200 dark:border-slate-700 transition-all duration-200;
 }
 
 .timeline-presentation-item:hover {
-  @apply bg-white dark:bg-gray-700 shadow-sm border-purple-300 dark:border-purple-600;
+  @apply bg-white dark:bg-slate-700 shadow-sm border-purple-300 dark:border-purple-600;
   transform: translateX(2px);
 }
 
@@ -294,7 +294,7 @@ const handleEditClick = () => {
 }
 
 .presentation-default {
-  @apply border-l-2 border-l-gray-500;
+  @apply border-l-2 border-l-slate-500;
 }
 
 /* Presentation header */
@@ -309,12 +309,12 @@ const handleEditClick = () => {
 
 /* Speakers styling */
 .presentation-speakers {
-  @apply bg-white dark:bg-gray-900 rounded-sm p-2 border border-gray-100 dark:border-gray-600;
+  @apply bg-white dark:bg-slate-800 rounded-sm p-2 border border-slate-100 dark:border-slate-600;
 }
 
 /* Actions */
 .presentation-actions {
-  @apply pt-2 border-t border-gray-200 dark:border-gray-600;
+  @apply pt-2 border-t border-slate-200 dark:border-slate-600;
 }
 
 /* Mobile optimizations */
@@ -349,18 +349,18 @@ const handleEditClick = () => {
 
 /* Focus states */
 .timeline-presentation-item:focus-within {
-  @apply ring-1 ring-purple-500 ring-offset-1 dark:ring-offset-gray-800;
+  @apply ring-1 ring-purple-500 ring-offset-1 dark:ring-offset-slate-800;
 }
 
 /* Loading state */
 .presentation-loading {
-  @apply animate-pulse bg-gray-300 dark:bg-gray-600;
+  @apply animate-pulse bg-slate-300 dark:bg-slate-600;
 }
 
 .presentation-loading .presentation-title,
 .presentation-loading .presentation-time,
 .presentation-loading .presentation-speakers {
-  @apply bg-gray-400 dark:bg-gray-500 rounded;
+  @apply bg-slate-400 dark:bg-slate-500 rounded;
   height: 0.75rem;
   margin-bottom: 0.25rem;
 }
@@ -368,7 +368,7 @@ const handleEditClick = () => {
 /* Print styles */
 @media print {
   .timeline-presentation-item {
-    @apply shadow-none border border-gray-400 break-inside-avoid;
+    @apply shadow-none border border-slate-400 break-inside-avoid;
   }
   
   .presentation-actions {
@@ -378,7 +378,7 @@ const handleEditClick = () => {
 
 /* Accessibility */
 .timeline-presentation-item:focus {
-  @apply outline-none ring-2 ring-purple-500 ring-offset-2 dark:ring-offset-gray-900;
+  @apply outline-none ring-2 ring-purple-500 ring-offset-2 dark:ring-offset-slate-900;
 }
 
 /* Last item styling */

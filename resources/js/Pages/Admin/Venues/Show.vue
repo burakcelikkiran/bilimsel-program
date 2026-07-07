@@ -9,7 +9,7 @@
 
     <div class="w-full space-y-8">
       <!-- Header Section -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
         <div class="relative">
           <!-- Banner with venue color -->
           <div class="h-48 relative overflow-hidden" :style="{ backgroundColor: safeVenue.color || '#3B82F6' }">
@@ -58,52 +58,52 @@
           </div>
 
           <!-- Meta Bar -->
-          <div class="px-8 py-6 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
             <div class="flex flex-wrap items-center gap-6">
               <!-- Event Day Info -->
               <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Etkinlik Günü:</span>
-                <span class="text-sm font-medium text-gray-900 dark:text-white">
+                <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Etkinlik Günü:</span>
+                <span class="text-sm font-medium text-slate-900 dark:text-white">
                   {{ safeVenue.event_day?.display_name || 'Belirtilmemiş' }}
                 </span>
               </div>
 
               <!-- Event Info -->
               <div class="flex items-center space-x-2">
-                <CalendarIcon class="h-5 w-5 text-gray-400" />
+                <CalendarIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ safeVenue.event_day?.event?.name || 'Etkinlik yok' }}</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Etkinlik</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ safeVenue.event_day?.event?.name || 'Etkinlik yok' }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Etkinlik</div>
                 </div>
               </div>
 
               <!-- Capacity Info -->
               <div v-if="safeVenue.capacity" class="flex items-center space-x-2">
-                <UserGroupIcon class="h-5 w-5 text-gray-400" />
+                <UserGroupIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ formatCapacity(safeVenue.capacity) }}</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Kapasite</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ formatCapacity(safeVenue.capacity) }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Kapasite</div>
                 </div>
               </div>
 
               <!-- Color Info -->
               <div class="flex items-center space-x-2">
-                <div class="h-5 w-5 rounded border border-gray-300" :style="{ backgroundColor: safeVenue.color }"></div>
+                <div class="h-5 w-5 rounded border border-slate-300" :style="{ backgroundColor: safeVenue.color }"></div>
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ safeVenue.color }}</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Renk Kodu</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ safeVenue.color }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Renk Kodu</div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Actions Bar -->
-          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-gray-900">
+          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-slate-800">
             <div class="flex items-center space-x-3">
               <!-- Back to List -->
               <Link
                 :href="route('admin.venues.index')"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
               >
                 <ArrowLeftIcon class="h-4 w-4 mr-2" />
                 Salon Listesi
@@ -115,7 +115,7 @@
               <Link
                 v-if="safeVenue.can_edit"
                 :href="route('admin.venues.edit', safeVenue.id)"
-                class="inline-flex items-center px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                class="inline-flex items-center px-4 py-2 bg-slate-600 text-white text-sm font-medium rounded-lg hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
               >
                 <PencilSquareIcon class="h-4 w-4 mr-2" />
                 Düzenle
@@ -130,25 +130,25 @@
         <!-- Main Content -->
         <div class="xl:col-span-3 space-y-8">
           <!-- Program Sessions -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Program Oturumları</h3>
-              <span class="text-sm text-gray-500 dark:text-gray-400">
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Program Oturumları</h3>
+              <span class="text-sm text-slate-500 dark:text-slate-400">
                 {{ safeVenue.program_sessions?.length || 0 }} oturum
               </span>
             </div>
 
             <!-- Program Sessions List -->
-            <div v-if="safeVenue.program_sessions?.length > 0" class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div v-if="safeVenue.program_sessions?.length > 0" class="divide-y divide-slate-200 dark:divide-slate-700">
               <div
                 v-for="session in safeVenue.program_sessions"
                 :key="session.id"
-                class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
               >
                 <div class="flex items-start justify-between">
                   <div class="flex-1">
                     <div class="flex items-center space-x-3 mb-2">
-                      <h4 class="text-sm font-semibold text-gray-900 dark:text-white">
+                      <h4 class="text-sm font-semibold text-slate-900 dark:text-white">
                         {{ session.title }}
                       </h4>
                       <span v-if="session.is_break" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
@@ -159,7 +159,7 @@
                       </span>
                     </div>
                     
-                    <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    <div class="flex items-center space-x-4 text-sm text-slate-500 dark:text-slate-400 mb-3">
                       <div class="flex items-center">
                         <ClockIcon class="h-4 w-4 mr-1" />
                         {{ session.formatted_time_range || 'Zaman belirtilmemiş' }}
@@ -170,18 +170,18 @@
                       </div>
                     </div>
 
-                    <div v-if="session.description" class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                    <div v-if="session.description" class="text-sm text-slate-600 dark:text-slate-400 mb-3 line-clamp-2">
                       {{ session.description }}
                     </div>
 
                     <!-- Moderators -->
                     <div v-if="session.moderators?.length > 0" class="flex items-center space-x-2 mb-2">
-                      <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ session.moderator_title || 'Moderatör' }}:</span>
+                      <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ session.moderator_title || 'Moderatör' }}:</span>
                       <div class="flex flex-wrap gap-1">
                         <span
                           v-for="moderator in session.moderators"
                           :key="moderator.id"
-                          class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                          class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300"
                         >
                           {{ moderator.first_name }} {{ moderator.last_name }}
                         </span>
@@ -189,7 +189,7 @@
                     </div>
 
                     <!-- Presentations count -->
-                    <div v-if="session.presentations_count > 0" class="text-xs text-gray-500 dark:text-gray-400">
+                    <div v-if="session.presentations_count > 0" class="text-xs text-slate-500 dark:text-slate-400">
                       {{ session.presentations_count }} sunum
                     </div>
                   </div>
@@ -198,14 +198,14 @@
                   <div class="flex items-center space-x-2 ml-4">
                     <Link
                       :href="route('admin.program-sessions.show', session.id)"
-                      class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                       title="Oturumu Görüntüle"
                     >
                       <EyeIcon class="h-4 w-4" />
                     </Link>
                     <Link
                       :href="route('admin.program-sessions.edit', session.id)"
-                      class="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-400 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                       title="Oturumu Düzenle"
                     >
                       <PencilIcon class="h-4 w-4" />
@@ -217,14 +217,14 @@
 
             <!-- Empty Sessions State -->
             <div v-else class="text-center py-16">
-              <div class="mx-auto h-16 w-16 text-gray-400 mb-4">
+              <div class="mx-auto h-16 w-16 text-slate-400 mb-4">
                 <DocumentTextIcon class="h-full w-full" />
               </div>
-              <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Henüz oturum yok</h4>
-              <p class="text-gray-500 dark:text-gray-400 mb-4">Bu salonda henüz hiçbir program oturumu bulunmuyor.</p>
+              <h4 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">Henüz oturum yok</h4>
+              <p class="text-slate-500 dark:text-slate-400 mb-4">Bu salonda henüz hiçbir program oturumu bulunmuyor.</p>
               <Link
                 :href="route('admin.program-sessions.create', { venue_id: safeVenue.id })"
-                class="inline-flex items-center px-4 py-2 bg-gray-700 text-white text-sm font-medium rounded-lg hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                class="inline-flex items-center px-4 py-2 bg-slate-700 text-white text-sm font-medium rounded-lg hover:bg-slate-800 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
               >
                 <PlusIcon class="h-4 w-4 mr-2" />
                 İlk Oturumu Oluştur
@@ -233,17 +233,17 @@
           </div>
 
           <!-- Venue Timeline (if sessions exist) -->
-          <div v-if="safeVenue.program_sessions?.length > 0" class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Günlük Program</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Salondaki oturumların zaman çizelgesi</p>
+          <div v-if="safeVenue.program_sessions?.length > 0" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Günlük Program</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Salondaki oturumların zaman çizelgesi</p>
             </div>
 
             <!-- Timeline -->
             <div class="p-6">
               <div class="relative">
                 <!-- Timeline line -->
-                <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+                <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-700"></div>
                 
                 <div class="space-y-6">
                   <div
@@ -252,7 +252,7 @@
                     class="relative flex items-start space-x-4"
                   >
                     <!-- Timeline dot -->
-                    <div class="relative z-10 flex items-center justify-center w-12 h-12 rounded-full border-4 border-white dark:border-gray-900 shadow-sm"
+                    <div class="relative z-10 flex items-center justify-center w-12 h-12 rounded-full border-4 border-white dark:border-slate-900 shadow-sm"
                          :style="{ backgroundColor: session.is_break ? '#F59E0B' : safeVenue.color }"
                     >
                       <ClockIcon v-if="!session.is_break" class="h-5 w-5 text-white" />
@@ -263,10 +263,10 @@
                     <div class="flex-1 min-w-0 pb-8">
                       <div class="flex items-center justify-between">
                         <div class="flex-1">
-                          <h4 class="text-base font-semibold text-gray-900 dark:text-white">
+                          <h4 class="text-base font-semibold text-slate-900 dark:text-white">
                             {{ session.title }}
                           </h4>
-                          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
                             {{ session.formatted_time_range || 'Zaman belirtilmemiş' }}
                           </p>
                         </div>
@@ -280,17 +280,17 @@
                         </div>
                       </div>
                       
-                      <div v-if="session.description && !session.is_break" class="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                      <div v-if="session.description && !session.is_break" class="mt-2 text-sm text-slate-600 dark:text-slate-400 line-clamp-2">
                         {{ session.description }}
                       </div>
                       
                       <div v-if="session.moderators?.length > 0" class="mt-2 flex items-center space-x-2">
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ session.moderator_title || 'Moderatör' }}:</span>
+                        <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ session.moderator_title || 'Moderatör' }}:</span>
                         <div class="flex flex-wrap gap-1">
                           <span
                             v-for="moderator in session.moderators"
                             :key="moderator.id"
-                            class="text-xs text-gray-600 dark:text-gray-400"
+                            class="text-xs text-slate-600 dark:text-slate-400"
                           >
                             {{ moderator.first_name }} {{ moderator.last_name }}{{ session.moderators.length > 1 && session.moderators.indexOf(moderator) < session.moderators.length - 1 ? ',' : '' }}
                           </span>
@@ -307,100 +307,100 @@
         <!-- Sidebar -->
         <div class="space-y-6">
           <!-- Venue Details -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Salon Detayları</h3>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Salon Detayları</h3>
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <BuildingOffice2Icon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Salon Adı</span>
+                  <BuildingOffice2Icon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Salon Adı</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeVenue.name }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeVenue.name }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <EyeIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Görünen Ad</span>
+                  <EyeIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Görünen Ad</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeVenue.display_name || safeVenue.name }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeVenue.display_name || safeVenue.name }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <UserGroupIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Kapasite</span>
+                  <UserGroupIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Kapasite</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ formatCapacity(safeVenue.capacity) }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ formatCapacity(safeVenue.capacity) }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <DocumentTextIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Oturum Sayısı</span>
+                  <DocumentTextIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Oturum Sayısı</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeVenue.program_sessions?.length || 0 }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeVenue.program_sessions?.length || 0 }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <HashtagIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Sıra</span>
+                  <HashtagIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Sıra</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeVenue.sort_order || 'Belirtilmemiş' }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeVenue.sort_order || 'Belirtilmemiş' }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <div class="h-5 w-5 rounded border border-gray-300" :style="{ backgroundColor: safeVenue.color }"></div>
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Renk</span>
+                  <div class="h-5 w-5 rounded border border-slate-300" :style="{ backgroundColor: safeVenue.color }"></div>
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Renk</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeVenue.color }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeVenue.color }}</span>
               </div>
               
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
-                  <CalendarIcon class="h-5 w-5 text-gray-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Kayıt Tarihi</span>
+                  <CalendarIcon class="h-5 w-5 text-slate-500" />
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Kayıt Tarihi</span>
                 </div>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ formatDate(safeVenue.created_at) }}</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ formatDate(safeVenue.created_at) }}</span>
               </div>
             </div>
           </div>
 
           <!-- Event Day Information -->
-          <div v-if="safeVenue.event_day" class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Etkinlik Günü Bilgileri</h3>
+          <div v-if="safeVenue.event_day" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Etkinlik Günü Bilgileri</h3>
             <div class="space-y-3">
-              <div class="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                  <CalendarIcon class="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              <div class="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                <div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                  <CalendarIcon class="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
                 <div class="flex-1">
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ safeVenue.event_day.display_name }}</div>
-                  <div v-if="safeVenue.event_day.date" class="text-sm text-gray-600 dark:text-gray-400">{{ formatDate(safeVenue.event_day.date) }}</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ safeVenue.event_day.display_name }}</div>
+                  <div v-if="safeVenue.event_day.date" class="text-sm text-slate-600 dark:text-slate-400">{{ formatDate(safeVenue.event_day.date) }}</div>
                 </div>
               </div>
               
-              <div v-if="safeVenue.event_day.event" class="flex items-center space-x-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
-                <div class="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                  <BuildingOfficeIcon class="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              <div v-if="safeVenue.event_day.event" class="flex items-center space-x-3 p-3 border border-slate-200 dark:border-slate-700 rounded-lg">
+                <div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                  <BuildingOfficeIcon class="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </div>
                 <div class="flex-1">
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ safeVenue.event_day.event.name }}</div>
-                  <div v-if="safeVenue.event_day.event.description" class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{{ safeVenue.event_day.event.description }}</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ safeVenue.event_day.event.name }}</div>
+                  <div v-if="safeVenue.event_day.event.description" class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">{{ safeVenue.event_day.event.description }}</div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Quick Actions -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Hızlı İşlemler</h3>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Hızlı İşlemler</h3>
             <div class="space-y-3">
               <Link
                 :href="route('admin.program-sessions.create', { venue_id: safeVenue.id })"
-                class="w-full inline-flex items-center justify-center px-4 py-2 bg-gray-700 text-white text-sm font-medium rounded-lg hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                class="w-full inline-flex items-center justify-center px-4 py-2 bg-slate-700 text-white text-sm font-medium rounded-lg hover:bg-slate-800 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
               >
                 <PlusIcon class="h-4 w-4 mr-2" />
                 Yeni Oturum Ekle
@@ -409,7 +409,7 @@
               <Link
                 v-if="safeVenue.program_sessions?.length > 0"
                 :href="route('admin.program-sessions.index', { venue_id: safeVenue.id })"
-                class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                class="w-full inline-flex items-center justify-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
               >
                 <DocumentTextIcon class="h-4 w-4 mr-2" />
                 Tüm Oturumları Görüntüle
@@ -417,7 +417,7 @@
               
               <Link
                 :href="route('admin.venues.edit', safeVenue.id)"
-                class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                class="w-full inline-flex items-center justify-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
               >
                 <PencilIcon class="h-4 w-4 mr-2" />
                 Salon Bilgilerini Düzenle
@@ -426,27 +426,27 @@
           </div>
 
           <!-- Statistics Summary -->
-          <div v-if="safeVenue.program_sessions?.length > 0" class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">İstatistikler</h3>
+          <div v-if="safeVenue.program_sessions?.length > 0" class="bg-slate-50 dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">İstatistikler</h3>
             <div class="space-y-3">
               <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600 dark:text-gray-400">Toplam Oturum</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ safeVenue.program_sessions.length }}</span>
+                <span class="text-sm text-slate-600 dark:text-slate-400">Toplam Oturum</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ safeVenue.program_sessions.length }}</span>
               </div>
               
               <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600 dark:text-gray-400">Ara Sayısı</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ getBreakCount() }}</span>
+                <span class="text-sm text-slate-600 dark:text-slate-400">Ara Sayısı</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ getBreakCount() }}</span>
               </div>
               
               <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600 dark:text-gray-400">Sponsorlu Oturum</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ getSponsoredCount() }}</span>
+                <span class="text-sm text-slate-600 dark:text-slate-400">Sponsorlu Oturum</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ getSponsoredCount() }}</span>
               </div>
               
               <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600 dark:text-gray-400">Toplam Süre</span>
-                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ calculateTotalTime() }}</span>
+                <span class="text-sm text-slate-600 dark:text-slate-400">Toplam Süre</span>
+                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ calculateTotalTime() }}</span>
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 <!-- resources/js/Components/Layout/Navigation.vue -->
 <template>
-  <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+  <nav class="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <!-- Left side -->
@@ -8,7 +8,7 @@
           <!-- Mobile menu button -->
           <button
             @click="$emit('toggle-sidebar')"
-            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 lg:hidden dark:hover:bg-gray-700"
+            class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 lg:hidden dark:hover:bg-slate-700"
           >
             <span class="sr-only">Menüyü aç</span>
             <Bars3Icon v-if="!sidebarOpen" class="block h-6 w-6" />
@@ -17,7 +17,7 @@
 
           <!-- Breadcrumb for mobile -->
           <div class="ml-4 lg:hidden">
-            <h1 class="text-lg font-semibold text-gray-900 dark:text-white">
+            <h1 class="text-lg font-semibold text-slate-900 dark:text-white">
               {{ currentPageTitle }}
             </h1>
           </div>
@@ -26,13 +26,13 @@
           <div class="hidden lg:block lg:ml-6" ref="searchRef">
             <div class="relative max-w-lg">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" />
+                <MagnifyingGlassIcon class="h-5 w-5 text-slate-400" />
               </div>
               <input
                 v-model="searchQuery"
                 type="text"
                 placeholder="Genel arama... (Ctrl+K)"
-                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                class="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-md leading-5 bg-white placeholder-slate-500 focus:outline-none focus:placeholder-slate-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white"
                 @keydown.enter="performSearch"
                 @focus="showSearchDropdown = true"
               />
@@ -48,13 +48,13 @@
               >
                 <div
                   v-if="showSearchDropdown && (searchResults.length > 0 || searchQuery.length > 0)"
-                  class="absolute z-50 mt-1 w-full bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-gray-800"
+                  class="absolute z-50 mt-1 w-full bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-slate-800"
                   @click.stop
                 >
                   <div class="py-1 max-h-64 overflow-y-auto">
                     <!-- Quick Actions -->
                     <div v-if="searchQuery.length === 0" class="px-4 py-2">
-                      <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                      <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider dark:text-slate-400">
                         Hızlı İşlemler
                       </p>
                       <div class="mt-2 space-y-1">
@@ -62,10 +62,10 @@
                           v-for="action in quickActions"
                           :key="action.name"
                           :href="action.href"
-                          class="flex items-center px-2 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                          class="flex items-center px-2 py-2 text-sm text-slate-700 rounded-md hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
                           @click="closeSearchDropdown"
                         >
-                          <component :is="action.icon" class="mr-3 h-4 w-4 text-gray-400" />
+                          <component :is="action.icon" class="mr-3 h-4 w-4 text-slate-400" />
                           {{ action.name }}
                         </a>
                       </div>
@@ -78,7 +78,7 @@
                         :key="type"
                         class="px-4 py-2"
                       >
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider dark:text-gray-400">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider dark:text-slate-400">
                           {{ getTypeLabel(type) }}
                         </p>
                         <div class="mt-2 space-y-1">
@@ -86,13 +86,13 @@
                             v-for="result in group"
                             :key="result.id"
                             :href="result.url"
-                            class="flex items-center px-2 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                            class="flex items-center px-2 py-2 text-sm text-slate-700 rounded-md hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
                             @click="closeSearchDropdown"
                           >
-                            <component :is="result.icon" class="mr-3 h-4 w-4 text-gray-400" />
+                            <component :is="result.icon" class="mr-3 h-4 w-4 text-slate-400" />
                             <div class="flex-1">
                               <p class="font-medium">{{ result.title }}</p>
-                              <p v-if="result.subtitle" class="text-xs text-gray-500 dark:text-gray-400">
+                              <p v-if="result.subtitle" class="text-xs text-slate-500 dark:text-slate-400">
                                 {{ result.subtitle }}
                               </p>
                             </div>
@@ -103,7 +103,7 @@
 
                     <!-- No Results -->
                     <div v-else class="px-4 py-6 text-center">
-                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                      <p class="text-sm text-slate-500 dark:text-slate-400">
                         "{{ searchQuery }}" için sonuç bulunamadı
                       </p>
                     </div>
@@ -129,8 +129,8 @@
 
           <!-- Theme Toggle -->
           <button
-            @click="$emit('toggle-theme')"
-            class="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-150"
+            @click="toggleTheme"
+            class="p-2 text-slate-400 hover:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors duration-150"
             title="Tema Değiştir"
           >
             <SunIcon v-if="isDark" class="h-5 w-5" />
@@ -141,8 +141,8 @@
           <div class="relative" ref="notificationsRef">
             <button
               @click="toggleNotifications"
-              class="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md relative transition-colors duration-150"
-              :class="{ 'bg-gray-100 dark:bg-gray-700': showNotifications }"
+              class="p-2 text-slate-400 hover:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md relative transition-colors duration-150"
+              :class="{ 'bg-slate-100 dark:bg-slate-700': showNotifications }"
             >
               <span class="sr-only">Bildirimler</span>
               <BellIcon class="h-6 w-6" />
@@ -165,12 +165,12 @@
             >
               <div
                 v-if="showNotifications"
-                class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50 dark:bg-gray-800 dark:ring-gray-700"
+                class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50 dark:bg-slate-800 dark:ring-slate-700"
                 @click.stop
               >
-                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="p-4 border-b border-slate-200 dark:border-slate-700">
                   <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Bildirimler</h3>
+                    <h3 class="text-lg font-medium text-slate-900 dark:text-white">Bildirimler</h3>
                     <button
                       v-if="unreadNotificationsCount > 0"
                       @click="markAllAsRead"
@@ -183,14 +183,14 @@
 
                 <div class="max-h-64 overflow-y-auto">
                   <div v-if="notifications.length === 0" class="p-4 text-center">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Bildirim bulunmuyor</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Bildirim bulunmuyor</p>
                   </div>
 
-                  <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
+                  <div v-else class="divide-y divide-slate-200 dark:divide-slate-700">
                     <div
                       v-for="notification in notifications"
                       :key="notification.id"
-                      class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-150"
+                      class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition-colors duration-150"
                       :class="!notification.read_at ? 'bg-blue-50 dark:bg-blue-900/20' : ''"
                       @click="handleNotificationClick(notification)"
                     >
@@ -203,13 +203,13 @@
                           />
                         </div>
                         <div class="ml-3 flex-1">
-                          <p class="text-sm font-medium text-gray-900 dark:text-white">
+                          <p class="text-sm font-medium text-slate-900 dark:text-white">
                             {{ notification.data.title }}
                           </p>
-                          <p class="text-sm text-gray-500 dark:text-gray-400">
+                          <p class="text-sm text-slate-500 dark:text-slate-400">
                             {{ notification.data.message }}
                           </p>
-                          <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                          <p class="text-xs text-slate-400 dark:text-slate-500 mt-1">
                             {{ formatRelativeTime(notification.created_at) }}
                           </p>
                         </div>
@@ -221,7 +221,7 @@
                   </div>
                 </div>
 
-                <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="p-4 border-t border-slate-200 dark:border-slate-700">
                   <Link
                     :href="route('admin.notifications.index')"
                     class="block w-full text-center text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 transition-colors duration-150"
@@ -250,7 +250,7 @@
               />
               <!-- Dropdown arrow -->
               <svg 
-                class="w-4 h-4 text-gray-500 transition-transform duration-200"
+                class="w-4 h-4 text-slate-500 transition-transform duration-200"
                 :class="{ 'rotate-180': showUserMenu }"
                 fill="none" 
                 stroke="currentColor" 
@@ -271,11 +271,11 @@
             >
               <div
                 v-if="showUserMenu"
-                class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50 dark:bg-gray-800 dark:ring-gray-700"
+                class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50 dark:bg-slate-800 dark:ring-slate-700"
                 @click.stop
               >
                 <!-- User Info Header -->
-                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
                   <div class="flex items-center space-x-3">
                     <img
                       class="h-10 w-10 rounded-full object-cover"
@@ -283,10 +283,10 @@
                       :alt="currentUser?.name"
                     />
                     <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      <p class="text-sm font-medium text-slate-900 dark:text-white truncate">
                         {{ currentUser?.name }}
                       </p>
-                      <p class="text-sm text-gray-500 dark:text-gray-400 truncate">
+                      <p class="text-sm text-slate-500 dark:text-slate-400 truncate">
                         {{ currentUser?.email }}
                       </p>
                     </div>
@@ -306,13 +306,13 @@
                     :class="[
                       item.destructive 
                         ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20' 
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
                     ]"
                   >
                     <component 
                       :is="item.icon" 
                       class="mr-3 h-4 w-4 flex-shrink-0" 
-                      :class="item.destructive ? 'text-red-500' : 'text-gray-400'"
+                      :class="item.destructive ? 'text-red-500' : 'text-slate-400'"
                     />
                     <span>{{ item.name }}</span>
                   </Link>
@@ -328,7 +328,8 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3'
+import { Link, usePage, router } from '@inertiajs/vue3'
+import { useTheme } from '@/Composables/useTheme'
 import { debounce } from 'lodash'
 import {
   Bars3Icon,
@@ -366,11 +367,11 @@ const props = defineProps({
 })
 
 // Emits
-const emit = defineEmits(['toggle-sidebar', 'toggle-theme', 'mark-notification-read'])
+const emit = defineEmits(['toggle-sidebar', 'mark-notification-read'])
 
 // Page data
 const page = usePage()
-const isDark = computed(() => page.props.theme === 'dark')
+const { isDark, toggleTheme } = useTheme()
 
 // Template refs
 const searchRef = ref(null)
@@ -379,7 +380,7 @@ const userMenuRef = ref(null)
 
 // State
 const searchQuery = ref('')
-const searchResults = ref([])
+const searchResults = computed(() => page.props.searchResults ?? [])
 const showSearchDropdown = ref(false)
 const showNotifications = ref(false)
 const showUserMenu = ref(false)
@@ -477,26 +478,16 @@ const closeSearchDropdown = () => {
 }
 
 // Search functionality
-const performSearch = debounce(async () => {
+const performSearch = debounce(() => {
   if (searchQuery.value.length < 2) {
-    searchResults.value = []
     return
   }
 
-  try {
-    // Note: Replace with your actual search API endpoint
-    const response = await fetch('/api/search?' + new URLSearchParams({
-      q: searchQuery.value
-    }))
-    
-    if (response.ok) {
-      const data = await response.json()
-      searchResults.value = data.results || []
-    }
-  } catch (error) {
-    console.error('Search error:', error)
-    searchResults.value = []
-  }
+  router.get(route('admin.search'), { q: searchQuery.value }, {
+    only: ['searchResults'],
+    preserveState: true,
+    preserveScroll: true,
+  })
 }, 300)
 
 // Utility functions
@@ -673,11 +664,11 @@ input[type="text"]:focus {
 }
 
 /* Hover effects for better UX */
-.hover\:bg-gray-50:hover {
+.hover\:bg-slate-50:hover {
   background-color: rgb(249 250 251);
 }
 
-.dark .hover\:bg-gray-700:hover {
+.dark .hover\:bg-slate-700:hover {
   background-color: rgb(55 65 81);
 }
 

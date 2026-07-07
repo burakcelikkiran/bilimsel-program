@@ -7,16 +7,16 @@
         <Head :title="pageTitle" />
 
         <div
-            class="min-h-screen bg-gray-50 dark:bg-gray-900 -mx-8 -my-6 px-4 py-3"
+            class="min-h-screen bg-slate-50 dark:bg-slate-950 -mx-8 -my-6 px-4 py-3"
         >
             <div class="max-w-5xl mx-auto">
                 <!-- Corporate Header Section -->
                 <div
-                    class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-6"
+                    class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden mb-6"
                 >
                     <!-- Professional Corporate Header with Status -->
                     <div class="relative">
-                        <div class="bg-gray-800 dark:bg-gray-900 px-6 py-6">
+                        <div class="bg-slate-800 dark:bg-slate-900 px-6 py-6">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-4">
                                     <div class="flex-shrink-0">
@@ -35,7 +35,7 @@
                                             Bilimsel Etkinlik Düzenle
                                         </h1>
                                         <p
-                                            class="text-gray-300 text-sm font-medium"
+                                            class="text-slate-300 text-sm font-medium"
                                         >
                                             {{ eventName }}
                                         </p>
@@ -46,7 +46,7 @@
                                 <div class="flex items-center space-x-3">
                                     <div class="text-right">
                                         <div
-                                            class="text-xs text-gray-300 mb-1 font-medium"
+                                            class="text-xs text-slate-300 mb-1 font-medium"
                                         >
                                             Durum
                                         </div>
@@ -74,32 +74,39 @@
                             <!-- Professional Progress -->
                             <div class="mt-4 flex items-center space-x-3">
                                 <div
-                                    class="h-2 w-2 bg-gray-400 rounded-full animate-pulse shadow-sm"
+                                    class="h-2 w-2 bg-slate-400 rounded-full animate-pulse shadow-sm"
                                 ></div>
-                                <span class="text-gray-300 text-sm font-medium"
+                                <span class="text-slate-300 text-sm font-medium"
                                     >Bilgileri düzenleme aşaması</span
                                 >
                             </div>
                         </div>
 
                         <!-- Corporate Border -->
-                        <div class="h-1 bg-gray-600 dark:bg-gray-700"></div>
+                        <div class="h-1 bg-slate-600 dark:bg-slate-700"></div>
                     </div>
 
                     <!-- Main Form Section -->
                     <form @submit.prevent="submitForm" class="p-6 space-y-8">
+                        <div
+                            v-if="form.errors.error"
+                            class="rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-700 dark:bg-red-950/40 dark:text-red-300"
+                        >
+                            {{ form.errors.error }}
+                        </div>
+
                         <!-- Event Information Section -->
                         <div class="space-y-6">
                             <div class="flex items-center space-x-4 mb-6">
                                 <div
-                                    class="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+                                    class="h-8 w-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center"
                                 >
                                     <DocumentTextIcon
-                                        class="h-4 w-4 text-gray-600 dark:text-gray-300"
+                                        class="h-4 w-4 text-slate-600 dark:text-slate-300"
                                     />
                                 </div>
                                 <h3
-                                    class="text-lg font-bold text-gray-900 dark:text-gray-100"
+                                    class="text-lg font-bold text-slate-900 dark:text-slate-100"
                                 >
                                     Etkinlik Bilgileri
                                 </h3>
@@ -110,11 +117,11 @@
                                 <div class="lg:col-span-2">
                                     <label
                                         for="title"
-                                        class="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-slate-100 mb-2"
                                     >
                                         Etkinlik Adı *
                                         <span
-                                            class="text-xs font-normal text-gray-600 ml-2"
+                                            class="text-xs font-normal text-slate-600 ml-2"
                                             >(Resmi kongre/konferans adı)</span
                                         >
                                     </label>
@@ -123,39 +130,39 @@
                                         v-model="form.title"
                                         type="text"
                                         required
-                                        class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200"
+                                        class="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm placeholder-slate-400 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200"
                                         :class="
-                                            errors.title
+                                            form.errors.title
                                                 ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
                                                 : ''
                                         "
                                         placeholder="Örn: 25. Ulusal Pediatri Kongresi"
                                     />
                                     <p
-                                        v-if="errors.title"
+                                        v-if="form.errors.title"
                                         class="mt-1 text-xs text-red-600 flex items-center"
                                     >
                                         <ExclamationCircleIcon
                                             class="h-3 w-3 mr-1"
                                         />
-                                        {{ errors.title }}
+                                        {{ form.errors.title }}
                                     </p>
 
                                     <!-- Enhanced Corporate Slug Preview -->
                                     <div
                                         v-if="form.title"
-                                        class="mt-3 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600"
+                                        class="mt-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-300 dark:border-slate-600"
                                     >
                                         <div class="flex items-center text-sm">
                                             <LinkIcon
-                                                class="h-4 w-4 mr-2 text-gray-600"
+                                                class="h-4 w-4 mr-2 text-slate-600"
                                             />
                                             <span
-                                                class="text-gray-800 dark:text-gray-200 mr-2 font-medium"
+                                                class="text-slate-800 dark:text-slate-200 mr-2 font-medium"
                                                 >URL Adı:</span
                                             >
                                             <code
-                                                class="bg-white dark:bg-gray-700 px-2 py-1 rounded text-gray-700 dark:text-gray-200 font-mono text-xs font-medium"
+                                                class="bg-white dark:bg-slate-700 px-2 py-1 rounded text-slate-700 dark:text-slate-200 font-mono text-xs font-medium"
                                             >
                                                 {{ generateSlug(form.title) }}
                                             </code>
@@ -167,11 +174,11 @@
                                 <div class="lg:col-span-1">
                                     <label
                                         for="organization_id"
-                                        class="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-slate-100 mb-2"
                                     >
                                         Organizasyon *
                                         <span
-                                            class="text-xs font-normal text-gray-600 ml-2"
+                                            class="text-xs font-normal text-slate-600 ml-2"
                                             >(Düzenleyen kurum)</span
                                         >
                                     </label>
@@ -179,9 +186,9 @@
                                         id="organization_id"
                                         v-model="form.organization_id"
                                         required
-                                        class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200"
+                                        class="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200"
                                         :class="
-                                            errors.organization_id
+                                            form.errors.organization_id
                                                 ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
                                                 : ''
                                         "
@@ -198,13 +205,13 @@
                                         </option>
                                     </select>
                                     <p
-                                        v-if="errors.organization_id"
+                                        v-if="form.errors.organization_id"
                                         class="mt-1 text-xs text-red-600 flex items-center"
                                     >
                                         <ExclamationCircleIcon
                                             class="h-3 w-3 mr-1"
                                         />
-                                        {{ errors.organization_id }}
+                                        {{ form.errors.organization_id }}
                                     </p>
                                 </div>
                             </div>
@@ -212,18 +219,18 @@
 
                         <!-- Date and Location Section -->
                         <div
-                            class="space-y-6 pt-6 border-t border-gray-200 dark:border-gray-700"
+                            class="space-y-6 pt-6 border-t border-slate-200 dark:border-slate-700"
                         >
                             <div class="flex items-center space-x-4 mb-6">
                                 <div
-                                    class="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+                                    class="h-8 w-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center"
                                 >
                                     <ClockIcon
-                                        class="h-4 w-4 text-gray-600 dark:text-gray-300"
+                                        class="h-4 w-4 text-slate-600 dark:text-slate-300"
                                     />
                                 </div>
                                 <h3
-                                    class="text-lg font-bold text-gray-900 dark:text-gray-100"
+                                    class="text-lg font-bold text-slate-900 dark:text-slate-100"
                                 >
                                     Tarih ve Konum
                                 </h3>
@@ -240,26 +247,26 @@
                                     </label>
                                     <div class="relative">
                                         <CalendarDaysIcon
-                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500"
+                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500"
                                         />
                                         <input
                                             id="start_date"
                                             v-model="form.start_date"
                                             type="date"
                                             required
-                                            class="block w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200"
+                                            class="block w-full pl-8 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200"
                                             :class="
-                                                errors.start_date
+                                                form.errors.start_date
                                                     ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
                                                     : ''
                                             "
                                         />
                                     </div>
                                     <p
-                                        v-if="errors.start_date"
+                                        v-if="form.errors.start_date"
                                         class="mt-1 text-xs text-red-600"
                                     >
-                                        {{ errors.start_date }}
+                                        {{ form.errors.start_date }}
                                     </p>
                                 </div>
 
@@ -267,22 +274,22 @@
                                 <div class="lg:col-span-1">
                                     <label
                                         for="end_date"
-                                        class="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-slate-100 mb-2"
                                     >
                                         Bitiş Tarihi *
                                     </label>
                                     <div class="relative">
                                         <CalendarDaysIcon
-                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500"
+                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500"
                                         />
                                         <input
                                             id="end_date"
                                             v-model="form.end_date"
                                             type="date"
                                             required
-                                            class="block w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200"
+                                            class="block w-full pl-8 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200"
                                             :class="
-                                                errors.end_date
+                                                form.errors.end_date
                                                     ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
                                                     : ''
                                             "
@@ -290,10 +297,10 @@
                                         />
                                     </div>
                                     <p
-                                        v-if="errors.end_date"
+                                        v-if="form.errors.end_date"
                                         class="mt-1 text-xs text-red-600"
                                     >
-                                        {{ errors.end_date }}
+                                        {{ form.errors.end_date }}
                                     </p>
                                 </div>
 
@@ -303,15 +310,15 @@
                                     class="lg:col-span-1"
                                 >
                                     <label
-                                        class="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-slate-100 mb-2"
                                     >
                                         Süre
                                     </label>
                                     <div
-                                        class="px-1 py-1 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"
+                                        class="px-1 py-1 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg"
                                     >
                                         <div
-                                            class="flex items-center justify-center text-gray-800 dark:text-gray-100"
+                                            class="flex items-center justify-center text-slate-800 dark:text-slate-100"
                                         >
                                             <span class="text-xl font-bold">{{
                                                 calculateDuration(
@@ -330,21 +337,21 @@
                                 <div class="lg:col-span-2">
                                     <label
                                         for="location"
-                                        class="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-slate-100 mb-2"
                                     >
                                         Etkinlik Konumu
                                     </label>
                                     <div class="relative">
                                         <MapPinIcon
-                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500"
+                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500"
                                         />
                                         <input
                                             id="location"
                                             v-model="form.location"
                                             type="text"
-                                            class="block w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200"
+                                            class="block w-full pl-8 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm placeholder-slate-400 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200"
                                             :class="
-                                                errors.location
+                                                form.errors.location
                                                     ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
                                                     : ''
                                             "
@@ -352,10 +359,10 @@
                                         />
                                     </div>
                                     <p
-                                        v-if="errors.location"
+                                        v-if="form.errors.location"
                                         class="mt-1 text-xs text-red-600"
                                     >
-                                        {{ errors.location }}
+                                        {{ form.errors.location }}
                                     </p>
                                 </div>
                             </div>
@@ -363,18 +370,18 @@
 
                         <!-- Description and Publication Section -->
                         <div
-                            class="space-y-6 pt-6 border-t border-gray-200 dark:border-gray-700"
+                            class="space-y-6 pt-6 border-t border-slate-200 dark:border-slate-700"
                         >
                             <div class="flex items-center space-x-4 mb-6">
                                 <div
-                                    class="h-8 w-8 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+                                    class="h-8 w-8 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center"
                                 >
                                     <DocumentTextIcon
-                                        class="h-4 w-4 text-gray-600 dark:text-gray-300"
+                                        class="h-4 w-4 text-slate-600 dark:text-slate-300"
                                     />
                                 </div>
                                 <h3
-                                    class="text-lg font-bold text-gray-900 dark:text-gray-100"
+                                    class="text-lg font-bold text-slate-900 dark:text-slate-100"
                                 >
                                     Akademik İçerik ve Yayın
                                 </h3>
@@ -385,11 +392,11 @@
                                 <div class="lg:col-span-3">
                                     <label
                                         for="description"
-                                        class="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-slate-100 mb-2"
                                     >
                                         Etkinlik Açıklaması
                                         <span
-                                            class="text-xs font-normal text-gray-600 ml-2"
+                                            class="text-xs font-normal text-slate-600 ml-2"
                                             >(Bilimsel amaç, hedef kitle ve
                                             program hakkında)</span
                                         >
@@ -399,9 +406,9 @@
                                             id="description"
                                             v-model="form.description"
                                             rows="4"
-                                            class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm placeholder-gray-400 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all duration-200 resize-none leading-normal font-normal"
+                                            class="block w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm placeholder-slate-400 focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-all duration-200 resize-none leading-normal font-normal"
                                             :class="
-                                                errors.description
+                                                form.errors.description
                                                     ? 'border-red-400 focus:ring-red-500/30 focus:border-red-500'
                                                     : ''
                                             "
@@ -412,7 +419,7 @@
                                             class="absolute bottom-2 right-2 flex items-center space-x-1"
                                         >
                                             <span
-                                                class="text-xs text-gray-500 bg-white dark:bg-gray-800 px-2 py-1 rounded font-medium"
+                                                class="text-xs text-slate-500 bg-white dark:bg-slate-800 px-2 py-1 rounded font-medium"
                                                 >{{
                                                     (form.description || "")
                                                         .length
@@ -421,22 +428,22 @@
                                         </div>
                                     </div>
                                     <p
-                                        v-if="errors.description"
+                                        v-if="form.errors.description"
                                         class="mt-1 text-xs text-red-600"
                                     >
-                                        {{ errors.description }}
+                                        {{ form.errors.description }}
                                     </p>
                                 </div>
 
                                 <!-- Publication Status Enhanced Corporate Panel -->
                                 <div class="lg:col-span-1">
                                     <label
-                                        class="block text-sm font-bold text-gray-900 dark:text-gray-100 mb-2"
+                                        class="block text-sm font-bold text-slate-900 dark:text-slate-100 mb-2"
                                     >
                                         Yayın Durumu
                                     </label>
                                     <div
-                                        class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 border border-gray-300 dark:border-gray-600"
+                                        class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 border border-slate-300 dark:border-slate-600"
                                     >
                                         <label
                                             class="flex items-start space-x-3 cursor-pointer"
@@ -444,16 +451,16 @@
                                             <input
                                                 v-model="form.is_published"
                                                 type="checkbox"
-                                                class="mt-0.5 h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded transition-colors"
+                                                class="mt-0.5 h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded transition-colors"
                                             />
                                             <div>
                                                 <span
-                                                    class="text-sm font-bold text-gray-900 dark:text-gray-100"
+                                                    class="text-sm font-bold text-slate-900 dark:text-slate-100"
                                                 >
                                                     Etkinliği yayınla
                                                 </span>
                                                 <p
-                                                    class="text-xs text-gray-700 dark:text-gray-300 mt-1 leading-normal"
+                                                    class="text-xs text-slate-700 dark:text-slate-300 mt-1 leading-normal"
                                                 >
                                                     Yayınlandığında katılımcılar
                                                     tarafından görülebilir
@@ -465,7 +472,7 @@
 
                                         <!-- Corporate Status Preview -->
                                         <div
-                                            class="mt-4 pt-4 border-t border-gray-300 dark:border-gray-600"
+                                            class="mt-4 pt-4 border-t border-slate-300 dark:border-slate-600"
                                         >
                                             <div
                                                 class="flex items-center space-x-3"
@@ -494,7 +501,7 @@
                                                 </span>
                                             </div>
                                             <p
-                                                class="text-xs text-gray-600 dark:text-gray-300 mt-2"
+                                                class="text-xs text-slate-600 dark:text-slate-300 mt-2"
                                             >
                                                 {{
                                                     form.is_published
@@ -510,14 +517,14 @@
 
                         <!-- Form Actions -->
                         <div
-                            class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700"
+                            class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-700"
                         >
                             <div class="flex items-center space-x-3">
                                 <Link
                                     :href="
                                         route('admin.events.show', eventSlug)
                                     "
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 transition-all duration-200"
+                                    class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 transition-all duration-200"
                                 >
                                     <ArrowLeftIcon class="h-4 w-4 mr-1.5" />
                                     Geri Dön
@@ -525,7 +532,7 @@
 
                                 <Link
                                     :href="route('admin.events.index')"
-                                    class="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors font-medium"
+                                    class="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100 transition-colors font-medium"
                                 >
                                     Listeye Dön
                                 </Link>
@@ -536,8 +543,8 @@
                                 <button
                                     type="button"
                                     @click="resetForm"
-                                    :disabled="processing || !hasChanges"
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    :disabled="form.processing || !hasChanges"
+                                    class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <ArrowPathIcon class="h-4 w-4 mr-1.5" />
                                     Sıfırla
@@ -546,10 +553,10 @@
                                 <!-- Update Event -->
                                 <button
                                     type="submit"
-                                    :disabled="processing || !hasChanges"
-                                    class="inline-flex items-center px-6 py-2 bg-gray-800 hover:bg-gray-900 dark:bg-gray-600 dark:hover:bg-gray-700 text-white text-sm font-medium rounded-lg focus:ring-2 focus:ring-gray-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    :disabled="form.processing || !hasChanges"
+                                    class="inline-flex items-center px-6 py-2 bg-slate-800 hover:bg-slate-900 dark:bg-slate-600 dark:hover:bg-slate-700 text-white text-sm font-medium rounded-lg focus:ring-2 focus:ring-slate-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <template v-if="processing">
+                                    <template v-if="form.processing">
                                         <div
                                             class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"
                                         ></div>
@@ -623,8 +630,8 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from "vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { computed } from "vue";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {
     PencilSquareIcon,
@@ -649,10 +656,6 @@ const props = defineProps({
     organizations: {
         type: Array,
         default: () => [],
-    },
-    errors: {
-        type: Object,
-        default: () => ({}),
     },
 });
 
@@ -683,33 +686,30 @@ const breadcrumbs = computed(() => [
 ]);
 
 // Form state
-const form = reactive({
+const initialFormState = () => ({
     title: props.event?.name || "",
     description: props.event?.description || "",
     start_date: props.event?.start_date || "",
     end_date: props.event?.end_date || "",
     location: props.event?.location || "",
-    organization_id: props.event?.organization_id || null,
+    organization_id: props.event?.organization_id ?? "",
     is_published: Boolean(props.event?.is_published),
 });
 
-const processing = ref(false);
-
-// Store original values
-const originalForm = {
-    title: props.event?.name || "",
-    description: props.event?.description || "",
-    start_date: props.event?.start_date || "",
-    end_date: props.event?.end_date || "",
-    location: props.event?.location || "",
-    organization_id: props.event?.organization_id || null,
-    is_published: Boolean(props.event?.is_published),
-};
+const form = useForm(initialFormState());
 
 const hasChanges = computed(() => {
-    return Object.keys(originalForm).some((key) => {
-        return form[key] !== originalForm[key];
-    });
+    const initial = initialFormState();
+
+    return (
+        form.title !== initial.title ||
+        form.description !== initial.description ||
+        form.start_date !== initial.start_date ||
+        form.end_date !== initial.end_date ||
+        form.location !== initial.location ||
+        String(form.organization_id) !== String(initial.organization_id) ||
+        form.is_published !== initial.is_published
+    );
 });
 
 // Methods
@@ -754,34 +754,26 @@ const generateSlug = (name) => {
         .trim("-");
 };
 
-const submitForm = async () => {
-    processing.value = true;
-
-    try {
-        await router.put(route("admin.events.update", eventSlug.value), form, {
-            onSuccess: () => {
-                Object.keys(originalForm).forEach((key) => {
-                    originalForm[key] = form[key];
-                });
-                processing.value = false;
-            },
-            onError: () => {
-                processing.value = false;
-            },
-            onFinish: () => {
-                processing.value = false;
-            },
-        });
-    } catch (error) {
-        console.error("Submit error:", error);
-        processing.value = false;
-    }
+const submitForm = () => {
+    form.put(route("admin.events.update", eventSlug.value), {
+        preserveScroll: true,
+        onSuccess: () => {
+            form.clearErrors();
+        },
+    });
 };
 
 const resetForm = () => {
-    Object.keys(originalForm).forEach((key) => {
-        form[key] = originalForm[key];
-    });
+    const initial = initialFormState();
+
+    form.title = initial.title;
+    form.description = initial.description;
+    form.start_date = initial.start_date;
+    form.end_date = initial.end_date;
+    form.location = initial.location;
+    form.organization_id = initial.organization_id;
+    form.is_published = initial.is_published;
+    form.clearErrors();
 };
 </script>
 

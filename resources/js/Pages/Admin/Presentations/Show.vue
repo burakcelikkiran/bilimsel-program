@@ -9,16 +9,16 @@
         <Head :title="cleanTitle" />
 
         <!-- Full Screen Container -->
-        <div class="min-h-screen bg-gray-50 dark:bg-gray-900 -m-6 p-6">
+        <div class="min-h-screen bg-slate-50 dark:bg-slate-950 -m-6 p-6">
             <!-- Header Section -->
-            <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg mb-6">
+            <div class="bg-white dark:bg-slate-800 shadow-sm rounded-lg mb-6">
                 <div class="px-8 py-6">
                     <div
                         class="flex flex-col lg:flex-row lg:items-center lg:justify-between"
                     >
                         <div class="mb-4 lg:mb-0">
                             <h1
-                                class="text-3xl font-bold text-gray-900 dark:text-white"
+                                class="text-3xl font-bold text-slate-900 dark:text-white"
                             >
                                 {{ presentation.title }}
                             </h1>
@@ -47,7 +47,7 @@
                                 </span>
                                 <span
                                     v-if="presentation.language"
-                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                    class="text-sm text-slate-500 dark:text-slate-400"
                                 >
                                     {{
                                         getLanguageLabel(presentation.language)
@@ -55,7 +55,7 @@
                                 </span>
                                 <span
                                     v-if="presentation.duration_minutes"
-                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                    class="text-sm text-slate-500 dark:text-slate-400"
                                 >
                                     {{
                                         formatDuration(
@@ -75,7 +75,7 @@
                                         presentation.id
                                     )
                                 "
-                                class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors"
+                                class="inline-flex items-center px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-lg transition-colors"
                             >
                                 <PencilIcon class="h-4 w-4 mr-2" />
                                 Düzenle
@@ -83,7 +83,7 @@
 
                             <button
                                 @click="duplicatePresentation"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium rounded-lg transition-colors"
                             >
                                 <DocumentDuplicateIcon class="h-4 w-4 mr-2" />
                                 Kopyala
@@ -91,7 +91,7 @@
 
                             <Link
                                 :href="route('admin.presentations.index')"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium rounded-lg transition-colors"
                             >
                                 <ArrowLeftIcon class="h-4 w-4 mr-2" />
                                 Geri Dön
@@ -108,13 +108,13 @@
                     <!-- Abstract Card -->
                     <div
                         v-if="presentation.abstract"
-                        class="bg-white dark:bg-gray-800 shadow-sm rounded-lg"
+                        class="bg-white dark:bg-slate-800 shadow-sm rounded-lg"
                     >
                         <div
-                            class="px-8 py-6 border-b border-gray-200 dark:border-gray-700"
+                            class="px-8 py-6 border-b border-slate-200 dark:border-slate-700"
                         >
                             <h2
-                                class="text-xl font-semibold text-gray-900 dark:text-white"
+                                class="text-xl font-semibold text-slate-900 dark:text-white"
                             >
                                 Özet
                             </h2>
@@ -122,7 +122,7 @@
                         <div class="p-8">
                             <div class="prose dark:prose-invert max-w-none">
                                 <p
-                                    class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line"
+                                    class="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line"
                                 >
                                     {{ presentation.abstract }}
                                 </p>
@@ -131,12 +131,12 @@
                     </div>
 
                     <!-- Session Information Card -->
-                    <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg">
+                    <div class="bg-white dark:bg-slate-800 shadow-sm rounded-lg">
                         <div
-                            class="px-8 py-6 border-b border-gray-200 dark:border-gray-700"
+                            class="px-8 py-6 border-b border-slate-200 dark:border-slate-700"
                         >
                             <h2
-                                class="text-xl font-semibold text-gray-900 dark:text-white"
+                                class="text-xl font-semibold text-slate-900 dark:text-white"
                             >
                                 Program Oturumu
                             </h2>
@@ -150,7 +150,7 @@
                                 <!-- Session Title -->
                                 <div>
                                     <h3
-                                        class="text-lg font-medium text-gray-900 dark:text-white"
+                                        class="text-lg font-medium text-slate-900 dark:text-white"
                                     >
                                         {{ presentation.programSession.title }}
                                     </h3>
@@ -162,12 +162,12 @@
                                 >
                                     <div>
                                         <label
-                                            class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                            class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1"
                                         >
                                             Etkinlik
                                         </label>
                                         <p
-                                            class="text-gray-900 dark:text-white"
+                                            class="text-slate-900 dark:text-white"
                                         >
                                             {{
                                                 presentation.programSession
@@ -179,12 +179,12 @@
 
                                     <div>
                                         <label
-                                            class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                            class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1"
                                         >
                                             Salon
                                         </label>
                                         <p
-                                            class="text-gray-900 dark:text-white"
+                                            class="text-slate-900 dark:text-white"
                                         >
                                             {{
                                                 presentation.programSession
@@ -202,15 +202,15 @@
                                     "
                                 >
                                     <label
-                                        class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1"
+                                        class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1"
                                     >
                                         Oturum Zamanı
                                     </label>
                                     <div
-                                        class="flex items-center text-gray-900 dark:text-white"
+                                        class="flex items-center text-slate-900 dark:text-white"
                                     >
                                         <ClockIcon
-                                            class="h-5 w-5 mr-2 text-gray-400"
+                                            class="h-5 w-5 mr-2 text-slate-400"
                                         />
                                         {{
                                             formatTimeRange(
@@ -230,7 +230,7 @@
                                     "
                                 >
                                     <label
-                                        class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-2"
+                                        class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2"
                                     >
                                         Kategoriler
                                     </label>
@@ -239,7 +239,7 @@
                                             v-for="category in presentation
                                                 .programSession.categories"
                                             :key="category.id"
-                                            class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                                            class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300"
                                         >
                                             {{ category.name }}
                                         </span>
@@ -249,7 +249,7 @@
 
                             <div
                                 v-else
-                                class="text-gray-500 dark:text-gray-400 italic"
+                                class="text-slate-500 dark:text-slate-400 italic"
                             >
                                 Program oturumu bilgisi bulunamadı
                             </div>
@@ -259,20 +259,20 @@
                     <!-- Notes -->
                     <div
                         v-if="presentation.notes"
-                        class="bg-white dark:bg-gray-800 shadow-sm rounded-lg"
+                        class="bg-white dark:bg-slate-800 shadow-sm rounded-lg"
                     >
                         <div
-                            class="px-8 py-6 border-b border-gray-200 dark:border-gray-700"
+                            class="px-8 py-6 border-b border-slate-200 dark:border-slate-700"
                         >
                             <h2
-                                class="text-xl font-semibold text-gray-900 dark:text-white"
+                                class="text-xl font-semibold text-slate-900 dark:text-white"
                             >
                                 Notlar
                             </h2>
                         </div>
                         <div class="p-8">
                             <p
-                                class="text-gray-700 dark:text-gray-300 whitespace-pre-line"
+                                class="text-slate-700 dark:text-slate-300 whitespace-pre-line"
                             >
                                 {{ presentation.notes }}
                             </p>
@@ -283,12 +283,12 @@
                 <!-- Right Column - Sidebar (1/4 width on xl screens) -->
                 <div class="xl:col-span-1 space-y-6">
                     <!-- Speakers -->
-                    <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg">
+                    <div class="bg-white dark:bg-slate-800 shadow-sm rounded-lg">
                         <div
-                            class="px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+                            class="px-6 py-4 border-b border-slate-200 dark:border-slate-700"
                         >
                             <h2
-                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                                class="text-lg font-semibold text-slate-900 dark:text-white"
                             >
                                 Konuşmacılar
                             </h2>
@@ -305,25 +305,25 @@
                                 <div
                                     v-for="speaker in presentation.speakers"
                                     :key="speaker.id"
-                                    class="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                                    class="flex items-start space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg"
                                 >
                                     <div
-                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center"
+                                        class="flex-shrink-0 h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-600 flex items-center justify-center"
                                     >
                                         <UserIcon
-                                            class="h-6 w-6 text-gray-600 dark:text-gray-400"
+                                            class="h-6 w-6 text-slate-600 dark:text-slate-400"
                                         />
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <h4
-                                            class="text-sm font-semibold text-gray-900 dark:text-white"
+                                            class="text-sm font-semibold text-slate-900 dark:text-white"
                                         >
                                             {{ speaker.first_name }}
                                             {{ speaker.last_name }}
                                         </h4>
                                         <p
                                             v-if="speaker.pivot?.speaker_role"
-                                            class="text-xs text-gray-500 dark:text-gray-400"
+                                            class="text-xs text-slate-500 dark:text-slate-400"
                                         >
                                             {{
                                                 getSpeakerRoleLabel(
@@ -333,13 +333,13 @@
                                         </p>
                                         <p
                                             v-if="speaker.email"
-                                            class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                                            class="text-xs text-slate-500 dark:text-slate-400 mt-1"
                                         >
                                             {{ speaker.email }}
                                         </p>
                                         <p
                                             v-if="speaker.affiliation"
-                                            class="text-xs text-gray-500 dark:text-gray-400"
+                                            class="text-xs text-slate-500 dark:text-slate-400"
                                         >
                                             {{ speaker.affiliation }}
                                         </p>
@@ -349,9 +349,9 @@
 
                             <div v-else class="text-center py-6">
                                 <UserGroupIcon
-                                    class="h-12 w-12 text-gray-400 mx-auto mb-3"
+                                    class="h-12 w-12 text-slate-400 mx-auto mb-3"
                                 />
-                                <p class="text-gray-500 dark:text-gray-400">
+                                <p class="text-slate-500 dark:text-slate-400">
                                     Henüz konuşmacı atanmamış
                                 </p>
                             </div>
@@ -359,12 +359,12 @@
                     </div>
 
                     <!-- Technical Details -->
-                    <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg">
+                    <div class="bg-white dark:bg-slate-800 shadow-sm rounded-lg">
                         <div
-                            class="px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+                            class="px-6 py-4 border-b border-slate-200 dark:border-slate-700"
                         >
                             <h2
-                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                                class="text-lg font-semibold text-slate-900 dark:text-white"
                             >
                                 Teknik Detaylar
                             </h2>
@@ -373,22 +373,22 @@
                         <div class="p-6 space-y-3">
                             <div class="flex justify-between">
                                 <span
-                                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400"
                                     >ID</span
                                 >
                                 <span
-                                    class="text-sm text-gray-900 dark:text-white"
+                                    class="text-sm text-slate-900 dark:text-white"
                                     >#{{ presentation.id }}</span
                                 >
                             </div>
 
                             <div class="flex justify-between">
                                 <span
-                                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400"
                                     >Oluşturulma</span
                                 >
                                 <span
-                                    class="text-sm text-gray-900 dark:text-white"
+                                    class="text-sm text-slate-900 dark:text-white"
                                 >
                                     {{ formatDate(presentation.created_at) }}
                                 </span>
@@ -402,11 +402,11 @@
                                 class="flex justify-between"
                             >
                                 <span
-                                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400"
                                     >Son Güncelleme</span
                                 >
                                 <span
-                                    class="text-sm text-gray-900 dark:text-white"
+                                    class="text-sm text-slate-900 dark:text-white"
                                 >
                                     {{ formatDate(presentation.updated_at) }}
                                 </span>
@@ -417,11 +417,11 @@
                                 class="flex justify-between"
                             >
                                 <span
-                                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400"
                                     >Sıra</span
                                 >
                                 <span
-                                    class="text-sm text-gray-900 dark:text-white"
+                                    class="text-sm text-slate-900 dark:text-white"
                                     >{{ presentation.sort_order }}</span
                                 >
                             </div>
@@ -429,12 +429,12 @@
                     </div>
 
                     <!-- Quick Actions -->
-                    <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg">
+                    <div class="bg-white dark:bg-slate-800 shadow-sm rounded-lg">
                         <div
-                            class="px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+                            class="px-6 py-4 border-b border-slate-200 dark:border-slate-700"
                         >
                             <h2
-                                class="text-lg font-semibold text-gray-900 dark:text-white"
+                                class="text-lg font-semibold text-slate-900 dark:text-white"
                             >
                                 Hızlı İşlemler
                             </h2>
@@ -448,7 +448,7 @@
                                         presentation.id
                                     )
                                 "
-                                class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors"
+                                class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-lg transition-colors"
                             >
                                 <PencilIcon class="h-4 w-4 mr-2" />
                                 Sunumu Düzenle
@@ -456,7 +456,7 @@
 
                             <button
                                 @click="duplicatePresentation"
-                                class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg transition-colors"
+                                class="w-full inline-flex items-center justify-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium rounded-lg transition-colors"
                             >
                                 <DocumentDuplicateIcon class="h-4 w-4 mr-2" />
                                 Kopyala
@@ -481,21 +481,21 @@
             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         >
             <div
-                class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4"
+                class="bg-white dark:bg-slate-800 rounded-lg p-6 max-w-md w-full mx-4"
             >
                 <h3
-                    class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                    class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                 >
                     Sunumu Sil
                 </h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">
+                <p class="text-slate-600 dark:text-slate-400 mb-6">
                     "{{ presentation.title }}" sunumunu silmek istediğinize emin
                     misiniz? Bu işlem geri alınamaz.
                 </p>
                 <div class="flex items-center justify-end space-x-3">
                     <button
                         @click="showDeleteModal = false"
-                        class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                        class="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700"
                     >
                         İptal
                     </button>
@@ -556,15 +556,15 @@ const cleanTitle = computed(() => {
 const getPresentationTypeClasses = (presentationType) => {
     const classes = {
         keynote:
-            "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
-        oral: "bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-200",
-        poster: "bg-gray-300 text-gray-900 dark:bg-gray-600 dark:text-gray-200",
-        panel: "bg-gray-400 text-white dark:bg-gray-500 dark:text-gray-200",
-        workshop: "bg-gray-500 text-white dark:bg-gray-400 dark:text-gray-900",
+            "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200",
+        oral: "bg-slate-200 text-slate-900 dark:bg-slate-700 dark:text-slate-200",
+        poster: "bg-slate-300 text-slate-900 dark:bg-slate-600 dark:text-slate-200",
+        panel: "bg-slate-400 text-white dark:bg-slate-500 dark:text-slate-200",
+        workshop: "bg-slate-500 text-white dark:bg-slate-400 dark:text-slate-900",
     };
     return (
         classes[presentationType] ||
-        "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+        "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300"
     );
 };
 

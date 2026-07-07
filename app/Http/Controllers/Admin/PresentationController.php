@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Participant;
 use App\Models\Presentation;
 use App\Models\ProgramSession;
-use App\Models\Participant;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 
 class PresentationController extends Controller
 {
@@ -25,7 +27,7 @@ class PresentationController extends Controller
         $user = auth()->user();
         $organizationId = $this->getCurrentOrganizationId($user);
 
-        if (!$organizationId) {
+        if (! $organizationId) {
             return $this->renderEmptyIndex($request);
         }
 
@@ -36,7 +38,7 @@ class PresentationController extends Controller
             ->with([
                 'programSession.venue.eventDay.event',
                 'programSession.venue',
-                'speakers'
+                'speakers',
             ])
             ->withCount('speakers');
 
@@ -58,7 +60,7 @@ class PresentationController extends Controller
             'presentations' => $presentations,
             'events' => $this->getEventsForFilter($organizationId),
             'filters' => $request->all(),
-            'stats' => $this->calculateStats($organizationId)
+            'stats' => $this->calculateStats($organizationId),
         ]);
     }
 
@@ -70,7 +72,7 @@ class PresentationController extends Controller
         $user = auth()->user();
         $organizationId = $this->getCurrentOrganizationId($user);
 
-        if (!$organizationId) {
+        if (! $organizationId) {
             return redirect()->route('admin.dashboard')
                 ->with('error', 'Organizasyon bulunamadı.');
         }
@@ -78,8 +80,6 @@ class PresentationController extends Controller
         $programSessions = $this->getProgramSessionsForForm($organizationId);
         $participants = $this->getParticipantsForForm($organizationId);
         $preselectedSession = $this->getPreselectedSession($request);
-
-
 
         return Inertia::render('Admin/Presentations/Create', [
             'programSessions' => $programSessions,
@@ -96,7 +96,7 @@ class PresentationController extends Controller
         $validated = $this->validatePresentationData($request);
 
         // Check session belongs to user's organization
-        if (!$this->validateSessionAccess($validated['program_session_id'])) {
+        if (! $this->validateSessionAccess($validated['program_session_id'])) {
             return back()->withErrors(['error' => 'Bu oturuma sunum ekleyemezsiniz.']);
         }
 
@@ -116,7 +116,7 @@ class PresentationController extends Controller
 
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'Sunum oluşturulurken bir hata oluştu: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Sunum oluşturulurken bir hata oluştu: '.$e->getMessage()]);
         }
     }
 
@@ -130,7 +130,7 @@ class PresentationController extends Controller
         $presentation->load([
             'programSession.venue.eventDay.event',
             'programSession.categories',
-            'speakers'
+            'speakers',
         ]);
 
         return Inertia::render('Admin/Presentations/Show', [
@@ -182,7 +182,7 @@ class PresentationController extends Controller
 
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'Sunum güncellenirken bir hata oluştu: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Sunum güncellenirken bir hata oluştu: '.$e->getMessage()]);
         }
     }
 
@@ -209,7 +209,7 @@ class PresentationController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Sunum silinirken bir hata oluştu: ' . $e->getMessage()
+                'error' => 'Sunum silinirken bir hata oluştu: '.$e->getMessage(),
             ]);
         }
     }
@@ -225,7 +225,7 @@ class PresentationController extends Controller
             DB::beginTransaction();
 
             $newPresentation = $presentation->replicate();
-            $newPresentation->title = $presentation->title . ' (Kopya)';
+            $newPresentation->title = $presentation->title.' (Kopya)';
             $newPresentation->save();
 
             // Copy speakers
@@ -247,7 +247,7 @@ class PresentationController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Sunum kopyalanırken bir hata oluştu: ' . $e->getMessage()
+                'error' => 'Sunum kopyalanırken bir hata oluştu: '.$e->getMessage(),
             ]);
         }
     }
@@ -272,6 +272,7 @@ class PresentationController extends Controller
 
         if ($user->isAdmin()) {
             $firstOrg = \App\Models\Organization::first();
+
             return $firstOrg ? $firstOrg->id : null;
         }
 
@@ -290,7 +291,7 @@ class PresentationController extends Controller
                 'current_page' => 1,
                 'last_page' => 1,
                 'from' => null,
-                'to' => null
+                'to' => null,
             ],
             'events' => [],
             'filters' => $request->all(),
@@ -298,9 +299,9 @@ class PresentationController extends Controller
                 'total' => 0,
                 'with_speakers' => 0,
                 'without_speakers' => 0,
-                'keynote' => 0
+                'keynote' => 0,
             ],
-            'error' => 'Organizasyon bulunamadı. Lütfen bir organizasyona bağlı olduğunuzdan emin olun.'
+            'error' => 'Organizasyon bulunamadı. Lütfen bir organizasyona bağlı olduğunuzdan emin olun.',
         ]);
     }
 
@@ -365,7 +366,7 @@ class PresentationController extends Controller
     private function transformPresentationForIndex($presentation): array
     {
         $programSession = $presentation->programSession;
-        
+
         return [
             'id' => $presentation->id,
             'title' => $this->cleanString($presentation->title),
@@ -426,7 +427,7 @@ class PresentationController extends Controller
                     'role' => $speaker->pivot->speaker_role ?? 'primary',
                     'sort_order' => $speaker->pivot->sort_order ?? 0,
                 ];
-            })->toArray()
+            })->toArray(),
         ];
     }
 
@@ -435,7 +436,9 @@ class PresentationController extends Controller
      */
     private function transformProgramSession($session): ?array
     {
-        if (!$session) return null;
+        if (! $session) {
+            return null;
+        }
 
         return [
             'id' => $session->id,
@@ -449,9 +452,9 @@ class PresentationController extends Controller
                     'event' => $session->venue->eventDay->event ? [
                         'id' => $session->venue->eventDay->event->id,
                         'name' => $this->cleanString($session->venue->eventDay->event->name),
-                    ] : null
-                ] : null
-            ] : null
+                    ] : null,
+                ] : null,
+            ] : null,
         ];
     }
 
@@ -460,7 +463,9 @@ class PresentationController extends Controller
      */
     private function transformProgramSessionDetailed($session): ?array
     {
-        if (!$session) return null;
+        if (! $session) {
+            return null;
+        }
 
         return [
             'id' => $session->id,
@@ -477,15 +482,15 @@ class PresentationController extends Controller
                     'event' => $session->venue->eventDay->event ? [
                         'id' => $session->venue->eventDay->event->id,
                         'name' => $this->cleanString($session->venue->eventDay->event->name),
-                    ] : null
-                ] : null
+                    ] : null,
+                ] : null,
             ] : null,
             'categories' => $session->categories ? $session->categories->map(function ($category) {
                 return [
                     'id' => $category->id,
                     'name' => $this->cleanString($category->name),
                 ];
-            })->toArray() : []
+            })->toArray() : [],
         ];
     }
 
@@ -494,7 +499,9 @@ class PresentationController extends Controller
      */
     private function transformSpeakers($speakers): array
     {
-        if (!$speakers) return [];
+        if (! $speakers) {
+            return [];
+        }
 
         return $speakers->map(function ($speaker) {
             return [
@@ -507,8 +514,8 @@ class PresentationController extends Controller
                     'last_name' => $this->cleanString($speaker->last_name),
                 ],
                 'pivot' => [
-                    'speaker_role' => $speaker->pivot->speaker_role ?? 'primary'
-                ]
+                    'speaker_role' => $speaker->pivot->speaker_role ?? 'primary',
+                ],
             ];
         })->toArray();
     }
@@ -518,7 +525,9 @@ class PresentationController extends Controller
      */
     private function transformSpeakersDetailed($speakers): array
     {
-        if (!$speakers) return [];
+        if (! $speakers) {
+            return [];
+        }
 
         return $speakers->map(function ($speaker) {
             return [
@@ -530,7 +539,7 @@ class PresentationController extends Controller
                 'pivot' => [
                     'speaker_role' => $speaker->pivot->speaker_role ?? 'primary',
                     'sort_order' => $speaker->pivot->sort_order ?? 0,
-                ]
+                ],
             ];
         })->toArray();
     }
@@ -560,16 +569,16 @@ class PresentationController extends Controller
     private function getProgramSessionsForForm($organizationId): array
     {
         $user = auth()->user();
-        
+
         // Admin kullanıcılar tüm organizasyonların oturumlarını görebilir
         $query = ProgramSession::query();
-        
-        if (!$user->isAdmin()) {
+
+        if (! $user->isAdmin()) {
             $query->whereHas('venue.eventDay.event', function ($q) use ($organizationId) {
                 $q->where('organization_id', $organizationId);
             });
         }
-        
+
         return $query->with(['venue.eventDay.event', 'venue'])
             ->orderBy('start_time')
             ->get()
@@ -589,9 +598,9 @@ class PresentationController extends Controller
                             'event' => $session->venue->eventDay->event ? [
                                 'id' => $session->venue->eventDay->event->id,
                                 'name' => $this->cleanString($session->venue->eventDay->event->name),
-                            ] : null
-                        ] : null
-                    ] : null
+                            ] : null,
+                        ] : null,
+                    ] : null,
                 ];
             })
             ->toArray();
@@ -603,14 +612,14 @@ class PresentationController extends Controller
     private function getParticipantsForForm($organizationId): array
     {
         $user = auth()->user();
-        
+
         // Admin kullanıcılar tüm organizasyonların katılımcılarını görebilir
         $query = Participant::query();
-        
-        if (!$user->isAdmin()) {
+
+        if (! $user->isAdmin()) {
             $query->where('organization_id', $organizationId);
         }
-        
+
         return $query->orderBy('last_name')
             ->get()
             ->map(function ($participant) {
@@ -630,11 +639,15 @@ class PresentationController extends Controller
     private function getPreselectedSession($request): ?array
     {
         $sessionId = $request->get('program_session_id') ?? $request->get('session_id');
-        
-        if (!$sessionId) return null;
+
+        if (! $sessionId) {
+            return null;
+        }
 
         $session = ProgramSession::find($sessionId);
-        if (!$session) return null;
+        if (! $session) {
+            return null;
+        }
 
         return [
             'id' => $session->id,
@@ -655,7 +668,7 @@ class PresentationController extends Controller
             'total' => $baseQuery->count(),
             'with_speakers' => $baseQuery->has('speakers')->count(),
             'without_speakers' => $baseQuery->doesntHave('speakers')->count(),
-            'keynote' => $baseQuery->where('presentation_type', 'keynote')->count()
+            'keynote' => $baseQuery->where('presentation_type', 'keynote')->count(),
         ];
     }
 
@@ -688,13 +701,14 @@ class PresentationController extends Controller
     private function validateSessionAccess($sessionId): bool
     {
         $user = auth()->user();
-        
+
         // Admin kullanıcılar tüm oturumlara sunum ekleyebilir
         if ($user->isAdmin()) {
             $session = ProgramSession::find($sessionId);
+
             return $session !== null;
         }
-        
+
         // Normal kullanıcılar için organizasyon kontrolü
         $organizationId = $this->getCurrentOrganizationId($user);
         $session = ProgramSession::with('venue.eventDay.event')->find($sessionId);
@@ -740,7 +754,9 @@ class PresentationController extends Controller
      */
     private function cleanString($string): ?string
     {
-        if ($string === null) return null;
+        if ($string === null) {
+            return null;
+        }
 
         $cleaned = mb_convert_encoding($string, 'UTF-8', 'UTF-8');
         $cleaned = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $cleaned);
@@ -750,12 +766,127 @@ class PresentationController extends Controller
     }
 
     /**
+     * Move presentation to another session (AJAX)
+     */
+    public function moveToSession(Request $request, Presentation $presentation): JsonResponse
+    {
+        $request->validate([
+            'target_session_id' => 'required|exists:program_sessions,id',
+        ]);
+
+        $this->authorize('update', $presentation);
+
+        $targetSession = ProgramSession::findOrFail($request->target_session_id);
+        $this->authorize('update', $targetSession);
+
+        $presentation->update([
+            'program_session_id' => $targetSession->id,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sunum oturuma taşındı.',
+            'data' => ['id' => $presentation->id, 'program_session_id' => $targetSession->id],
+        ]);
+    }
+
+    /**
+     * Change presentation time (AJAX)
+     */
+    public function changeTime(Request $request, Presentation $presentation): JsonResponse
+    {
+        $request->validate([
+            'start_time' => 'required|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i|after:start_time',
+        ]);
+
+        $this->authorize('update', $presentation);
+
+        $presentation->update([
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sunum zamanı güncellendi.',
+            'data' => [
+                'id' => $presentation->id,
+                'start_time' => $presentation->start_time,
+                'end_time' => $presentation->end_time,
+            ],
+        ]);
+    }
+
+    /**
+     * Reorder presentations within a session (AJAX)
+     */
+    public function reorderInSession(Request $request): JsonResponse
+    {
+        $request->validate([
+            'presentation_ids' => 'required|array|min:1',
+            'presentation_ids.*' => 'integer|exists:presentations,id',
+        ]);
+
+        foreach ($request->presentation_ids as $index => $presentationId) {
+            $presentation = Presentation::findOrFail($presentationId);
+            $this->authorize('update', $presentation);
+            $presentation->update(['sort_order' => $index + 1]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sunum sırası güncellendi.',
+        ]);
+    }
+
+    /**
+     * Validate presentation move operation (AJAX)
+     */
+    public function validateMove(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'presentation_id' => 'required|exists:presentations,id',
+            'target_session_id' => 'required|exists:program_sessions,id',
+            'new_start_time' => 'nullable|date_format:H:i',
+            'new_end_time' => 'nullable|date_format:H:i|after:new_start_time',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'valid' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $presentation = Presentation::findOrFail($request->presentation_id);
+        $targetSession = ProgramSession::findOrFail($request->target_session_id);
+
+        $this->authorize('update', $presentation);
+
+        if (! auth()->user()->can('update', $targetSession)) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Hedef oturum için yetkiniz yok.',
+            ], 403);
+        }
+
+        return response()->json([
+            'valid' => true,
+            'message' => 'Sunum taşıma işlemi geçerli.',
+            'presentation_id' => $presentation->id,
+            'target_session_id' => $targetSession->id,
+        ]);
+    }
+
+    /**
      * Check authorization safely
      */
     private function canAuthorize($action, $resource): bool
     {
         try {
             $this->authorize($action, $resource);
+
             return true;
         } catch (\Exception $e) {
             return false;

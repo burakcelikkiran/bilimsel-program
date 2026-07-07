@@ -36,12 +36,35 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
+            'role' => 'editor',
+            'is_active' => true,
         ];
     }
 
     /**
      * Indicate that the model's email address should be unverified.
      */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+        ]);
+    }
+
+    public function editor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'editor',
+        ]);
+    }
+
+    public function organizer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'organizer',
+        ]);
+    }
+
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [

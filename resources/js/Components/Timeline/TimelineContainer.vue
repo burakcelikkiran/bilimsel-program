@@ -18,10 +18,10 @@
         <!-- Timeline Legend -->
         <div class="timeline-legend mt-8">
             <div
-                class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6"
             >
                 <h3
-                    class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                    class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                 >
                     Açıklamalar
                 </h3>
@@ -32,7 +32,7 @@
                     <!-- Session Types Legend -->
                     <div>
                         <h4
-                            class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
+                            class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3"
                         >
                             Oturum Tipleri
                         </h4>
@@ -47,7 +47,7 @@
                                     class="w-4 h-4 rounded"
                                 ></div>
                                 <span
-                                    class="text-sm text-gray-600 dark:text-gray-400"
+                                    class="text-sm text-slate-600 dark:text-slate-400"
                                     >{{ type.label }}</span
                                 >
                             </div>
@@ -57,7 +57,7 @@
                     <!-- Venue Colors Legend -->
                     <div>
                         <h4
-                            class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
+                            class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3"
                         >
                             Salon Renkleri
                         </h4>
@@ -72,7 +72,7 @@
                                     class="w-4 h-4 rounded"
                                 ></div>
                                 <span
-                                    class="text-sm text-gray-600 dark:text-gray-400"
+                                    class="text-sm text-slate-600 dark:text-slate-400"
                                     >{{ venue.name }}</span
                                 >
                             </div>
@@ -82,12 +82,12 @@
                     <!-- Statistics -->
                     <div>
                         <h4
-                            class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
+                            class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3"
                         >
                             İstatistikler
                         </h4>
                         <div
-                            class="space-y-1 text-sm text-gray-600 dark:text-gray-400"
+                            class="space-y-1 text-sm text-slate-600 dark:text-slate-400"
                         >
                             <div>Toplam Gün: {{ stats.total_days }}</div>
                             <div>Toplam Salon: {{ stats.total_venues }}</div>
@@ -157,7 +157,7 @@ const sessionTypeLegend = computed(() => [
     { value: "parallel", label: "Paralel Oturum", colorClass: "bg-blue-500" },
     { value: "workshop", label: "Workshop", colorClass: "bg-green-500" },
     { value: "poster", label: "Poster", colorClass: "bg-yellow-500" },
-    { value: "break", label: "Ara", colorClass: "bg-gray-400" },
+    { value: "break", label: "Ara", colorClass: "bg-slate-400" },
     { value: "lunch", label: "Öğle Arası", colorClass: "bg-orange-500" },
     { value: "social", label: "Sosyal", colorClass: "bg-pink-500" },
 ]);
@@ -169,11 +169,11 @@ const getSessionTypeColor = (sessionType) => {
         parallel: "bg-blue-500",
         workshop: "bg-green-500",
         poster: "bg-yellow-500",
-        break: "bg-gray-400",
+        break: "bg-slate-400",
         lunch: "bg-orange-500",
         social: "bg-pink-500",
     };
-    return colors[sessionType] || "bg-gray-500";
+    return colors[sessionType] || "bg-slate-500";
 };
 
 // Lifecycle
@@ -239,7 +239,7 @@ onMounted(() => {
 }
 
 .session-break {
-    @apply bg-gray-100 border-gray-300 dark:bg-gray-800 dark:border-gray-600;
+    @apply bg-slate-100 border-slate-300 dark:bg-slate-800 dark:border-slate-600;
 }
 
 .session-lunch {

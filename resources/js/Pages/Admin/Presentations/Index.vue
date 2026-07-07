@@ -9,24 +9,24 @@
         <Head title="Sunumlar" />
 
         <!-- Full Screen Container -->
-        <div class="min-h-screen bg-gray-50 dark:bg-gray-900 -m-6 p-6">
+        <div class="min-h-screen bg-slate-50 dark:bg-slate-950 -m-6 p-6">
             <!-- Hero Section with Quick Stats -->
-            <div class="mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div
-                        class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 text-white shadow-lg border border-gray-700"
+                        class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 text-white shadow border border-slate-700"
                     >
                         <div class="flex items-center">
                             <div
-                                class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                                class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                             >
-                                <DocumentTextIcon class="h-8 w-8" />
+                                <DocumentTextIcon class="h-5 w-5" />
                             </div>
-                            <div class="ml-4">
-                                <p class="text-gray-300 text-sm">
+                            <div class="ml-3">
+                                <p class="text-slate-300 text-xs">
                                     Toplam Sunum
                                 </p>
-                                <p class="text-2xl font-bold">
+                                <p class="text-lg font-bold">
                                     {{ enhancedStats.total }}
                                 </p>
                             </div>
@@ -34,17 +34,17 @@
                     </div>
 
                     <div
-                        class="bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl p-6 text-white shadow-lg border border-gray-600"
+                        class="bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg p-4 text-white shadow border border-slate-600"
                     >
                         <div class="flex items-center">
                             <div
-                                class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                                class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                             >
-                                <UserGroupIcon class="h-8 w-8" />
+                                <UserGroupIcon class="h-5 w-5" />
                             </div>
-                            <div class="ml-4">
-                                <p class="text-gray-300 text-sm">Konuşmacılı</p>
-                                <p class="text-2xl font-bold">
+                            <div class="ml-3">
+                                <p class="text-slate-300 text-xs">Konuşmacılı</p>
+                                <p class="text-lg font-bold">
                                     {{ enhancedStats.with_speakers }}
                                 </p>
                             </div>
@@ -52,19 +52,19 @@
                     </div>
 
                     <div
-                        class="bg-gradient-to-br from-gray-600 to-gray-700 rounded-xl p-6 text-white shadow-lg border border-gray-500"
+                        class="bg-gradient-to-br from-slate-600 to-slate-700 rounded-lg p-4 text-white shadow border border-slate-500"
                     >
                         <div class="flex items-center">
                             <div
-                                class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                                class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                             >
-                                <ExclamationTriangleIcon class="h-8 w-8" />
+                                <ExclamationTriangleIcon class="h-5 w-5" />
                             </div>
-                            <div class="ml-4">
-                                <p class="text-gray-300 text-sm">
+                            <div class="ml-3">
+                                <p class="text-slate-300 text-xs">
                                     Konuşmacısız
                                 </p>
-                                <p class="text-2xl font-bold">
+                                <p class="text-lg font-bold">
                                     {{ enhancedStats.without_speakers }}
                                 </p>
                             </div>
@@ -72,17 +72,17 @@
                     </div>
 
                     <div
-                        class="bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl p-6 text-white shadow-lg border border-gray-400"
+                        class="bg-gradient-to-br from-slate-500 to-slate-600 rounded-lg p-4 text-white shadow border border-slate-400"
                     >
                         <div class="flex items-center">
                             <div
-                                class="p-3 bg-white/10 rounded-lg backdrop-blur-sm"
+                                class="p-2 bg-white/10 rounded-lg backdrop-blur-sm"
                             >
-                                <StarIcon class="h-8 w-8" />
+                                <StarIcon class="h-5 w-5" />
                             </div>
-                            <div class="ml-4">
-                                <p class="text-gray-300 text-sm">Keynote</p>
-                                <p class="text-2xl font-bold">
+                            <div class="ml-3">
+                                <p class="text-slate-300 text-xs">Keynote</p>
+                                <p class="text-lg font-bold">
                                     {{ enhancedStats.keynote }}
                                 </p>
                             </div>
@@ -93,38 +93,38 @@
 
             <!-- Modern Data Table -->
             <div
-                class="bg-white dark:bg-gray-900 shadow-xl rounded-2xl overflow-visible border border-gray-200/50 dark:border-gray-800/50"
+                class="bg-white dark:bg-slate-800 shadow-lg rounded-lg overflow-visible border border-slate-200/50 dark:border-slate-800/50"
             >
                 <!-- Enhanced Header -->
                 <div
-                    class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 px-8 py-6 border-b border-gray-200 dark:border-gray-800"
+                    class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 px-4 py-4 border-b border-slate-200 dark:border-slate-800"
                 >
                     <div
-                        class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0"
+                        class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-3 lg:space-y-0"
                     >
                         <!-- Left: Title and Description -->
                         <div>
                             <h2
-                                class="text-2xl font-bold text-gray-900 dark:text-white"
+                                class="text-lg font-bold text-slate-900 dark:text-white"
                             >
                                 Sunum Yönetimi
                             </h2>
-                            <p class="text-gray-600 dark:text-gray-400 mt-1">
+                            <p class="text-slate-600 dark:text-slate-400 text-sm">
                                 Etkinlik sunumlarını düzenleyin ve yönetin
                             </p>
                         </div>
 
                         <!-- Right: Actions -->
-                        <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
                             <!-- Quick Filters -->
                             <div class="flex items-center space-x-2">
                                 <button
                                     @click="quickFilter('all')"
                                     :class="[
-                                        'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                                        'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                         currentQuickFilter === 'all'
-                                            ? 'bg-gray-800 text-white shadow-lg border border-gray-700'
-                                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                            ? 'bg-slate-800 text-white shadow-lg border border-slate-700'
+                                            : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                     ]"
                                 >
                                     Tümü
@@ -132,10 +132,10 @@
                                 <button
                                     @click="quickFilter('keynote')"
                                     :class="[
-                                        'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                                        'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                         currentQuickFilter === 'keynote'
-                                            ? 'bg-gray-700 text-white shadow-lg border border-gray-600'
-                                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                            ? 'bg-slate-700 text-white shadow-lg border border-slate-600'
+                                            : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                     ]"
                                 >
                                     Keynote
@@ -143,10 +143,10 @@
                                 <button
                                     @click="quickFilter('oral')"
                                     :class="[
-                                        'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                                        'px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200',
                                         currentQuickFilter === 'oral'
-                                            ? 'bg-gray-600 text-white shadow-lg border border-gray-500'
-                                            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700',
+                                            ? 'bg-slate-600 text-white shadow-lg border border-slate-500'
+                                            : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700',
                                     ]"
                                 >
                                     Sözlü
@@ -155,29 +155,29 @@
 
                             <!-- View Toggle -->
                             <div
-                                class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1"
+                                class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-md p-0.5"
                             >
                                 <button
                                     @click="viewMode = 'list'"
                                     :class="[
-                                        'px-3 py-1 text-sm font-medium rounded-md transition-colors',
+                                        'px-2 py-1 text-xs font-medium rounded-sm transition-colors',
                                         viewMode === 'list'
-                                            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
+                                            ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300',
                                     ]"
                                 >
-                                    <ListBulletIcon class="h-4 w-4" />
+                                    <ListBulletIcon class="h-3 w-3" />
                                 </button>
                                 <button
                                     @click="viewMode = 'grid'"
                                     :class="[
-                                        'px-3 py-1 text-sm font-medium rounded-md transition-colors',
+                                        'px-2 py-1 text-xs font-medium rounded-sm transition-colors',
                                         viewMode === 'grid'
-                                            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
+                                            ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300',
                                     ]"
                                 >
-                                    <Squares2X2Icon class="h-4 w-4" />
+                                    <Squares2X2Icon class="h-3 w-3" />
                                 </button>
                             </div>
 
@@ -189,9 +189,9 @@
                                         '/admin/presentations/create'
                                     )
                                 "
-                                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 border border-gray-700"
+                                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white text-sm font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200 border border-slate-700"
                             >
-                                <PlusIcon class="h-5 w-5 mr-2" />
+                                <PlusIcon class="h-4 w-4 mr-1.5" />
                                 Yeni Sunum
                             </Link>
                         </div>
@@ -199,44 +199,44 @@
 
                     <!-- Enhanced Search and Filters -->
                     <div
-                        class="mt-6 flex flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-4"
+                        class="mt-4 flex flex-col lg:flex-row lg:items-center space-y-3 lg:space-y-0 lg:space-x-3"
                     >
                         <!-- Search Bar -->
                         <div class="flex-1 relative">
                             <div
-                                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
                             >
                                 <MagnifyingGlassIcon
-                                    class="h-5 w-5 text-gray-400"
+                                    class="h-5 w-5 text-slate-400"
                                 />
                             </div>
                             <input
                                 v-model="searchQuery"
                                 type="text"
                                 placeholder="Sunum başlığı, özet veya konuşmacı ile ara..."
-                                class="block w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent shadow-sm"
+                                class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                                 @input="handleSearchDebounced"
                             />
                             <div
                                 v-if="searchQuery"
-                                class="absolute inset-y-0 right-0 pr-4 flex items-center"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center"
                             >
                                 <button
                                     @click="clearSearch"
-                                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                    class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                                 >
-                                    <XMarkIcon class="h-5 w-5" />
+                                    <XMarkIcon class="h-4 w-4" />
                                 </button>
                             </div>
                         </div>
 
                         <!-- Advanced Filters -->
-                        <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
                             <!-- Event Filter -->
                             <select
                                 v-model="activeFilters.event_id"
                                 @change="applyFilters"
-                                class="px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-sm"
+                                class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                             >
                                 <option value="">Tüm Etkinlikler</option>
                                 <option
@@ -252,7 +252,7 @@
                             <select
                                 v-model="activeFilters.session_id"
                                 @change="applyFilters"
-                                class="px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-sm"
+                                class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                             >
                                 <option value="">Tüm Oturumlar</option>
                                 <option
@@ -268,7 +268,7 @@
                             <select
                                 v-model="activeFilters.presentation_type"
                                 @change="applyFilters"
-                                class="px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-sm"
+                                class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                             >
                                 <option value="">Tüm Türler</option>
                                 <option value="keynote">Keynote</option>
@@ -282,10 +282,10 @@
                             <button
                                 v-if="hasActiveFilters"
                                 @click="clearFilters"
-                                class="px-4 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
+                                class="px-2 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200"
                                 title="Filtreleri Temizle"
                             >
-                                <XMarkIcon class="h-5 w-5" />
+                                <XMarkIcon class="h-4 w-4" />
                             </button>
                         </div>
                     </div>
@@ -298,9 +298,9 @@
                 >
                     <div class="flex flex-col items-center space-y-4">
                         <div
-                            class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600"
+                            class="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600"
                         ></div>
-                        <p class="text-gray-600 dark:text-gray-400 font-medium">
+                        <p class="text-slate-600 dark:text-slate-400 font-medium">
                             Yükleniyor...
                         </p>
                     </div>
@@ -316,24 +316,24 @@
                     <!-- Bulk Actions -->
                     <div
                         v-if="selectedPresentations.length > 0"
-                        class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-8 py-4"
+                        class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-2"
                     >
                         <div class="flex items-center justify-between">
                             <p
-                                class="text-gray-800 dark:text-gray-200 font-medium"
+                                class="text-slate-800 dark:text-slate-200 font-medium"
                             >
                                 {{ selectedPresentations.length }} sunum seçildi
                             </p>
-                            <div class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-2">
                                 <button
                                     @click="bulkDuplicate"
-                                    class="px-4 py-2 bg-gray-700 hover:bg-gray-800 text-white rounded-lg text-sm font-medium transition-all duration-200"
+                                    class="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-lg text-sm font-medium transition-all duration-200"
                                 >
                                     Kopyala
                                 </button>
                                 <button
                                     @click="bulkDelete"
-                                    class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg text-sm font-medium transition-all duration-200"
+                                    class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-sm font-medium transition-all duration-200"
                                 >
                                     Sil
                                 </button>
@@ -344,24 +344,24 @@
                     <!-- Table View -->
                     <div class="overflow-visible">
                         <table
-                            class="w-full divide-y divide-gray-200 dark:divide-gray-800"
+                            class="w-full divide-y divide-slate-200 dark:divide-slate-800"
                         >
-                            <thead class="bg-gray-50 dark:bg-gray-800/50">
+                            <thead class="bg-slate-50 dark:bg-slate-800/50">
                                 <tr>
                                     <!-- Select All -->
-                                    <th class="px-8 py-4 text-left w-12">
+                                    <th class="px-3 py-2 text-left w-10">
                                         <input
                                             type="checkbox"
                                             :checked="isAllSelected"
                                             :indeterminate="isIndeterminate"
                                             @change="toggleSelectAll"
-                                            class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                                            class="h-3.5 w-3.5 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                                         />
                                     </th>
 
                                     <!-- Presentation Header -->
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200"
+                                        class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200"
                                         @click="handleSort('title')"
                                     >
                                         <div
@@ -374,8 +374,8 @@
                                                     :class="
                                                         sortField === 'title' &&
                                                         sortDirection === 'asc'
-                                                            ? 'text-gray-600'
-                                                            : 'text-gray-300'
+                                                            ? 'text-slate-600'
+                                                            : 'text-slate-300'
                                                     "
                                                 />
                                                 <ChevronDownIcon
@@ -383,8 +383,8 @@
                                                     :class="
                                                         sortField === 'title' &&
                                                         sortDirection === 'desc'
-                                                            ? 'text-gray-600'
-                                                            : 'text-gray-300'
+                                                            ? 'text-slate-600'
+                                                            : 'text-slate-300'
                                                     "
                                                 />
                                             </div>
@@ -393,28 +393,28 @@
 
                                     <!-- Type Header -->
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32"
+                                        class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-28"
                                     >
                                         Tür
                                     </th>
 
                                     <!-- Session Header -->
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48"
+                                        class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-40"
                                     >
                                         Oturum
                                     </th>
 
                                     <!-- Speakers Header -->
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48"
+                                        class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-40"
                                     >
                                         Konuşmacılar
                                     </th>
 
                                     <!-- Time Header -->
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-200 w-32"
+                                        class="px-3 py-2 text-left text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all duration-200 w-28"
                                         @click="handleSort('start_time')"
                                     >
                                         <div
@@ -428,8 +428,8 @@
                                                         sortField ===
                                                             'start_time' &&
                                                         sortDirection === 'asc'
-                                                            ? 'text-gray-600'
-                                                            : 'text-gray-300'
+                                                            ? 'text-slate-600'
+                                                            : 'text-slate-300'
                                                     "
                                                 />
                                                 <ChevronDownIcon
@@ -438,8 +438,8 @@
                                                         sortField ===
                                                             'start_time' &&
                                                         sortDirection === 'desc'
-                                                            ? 'text-gray-600'
-                                                            : 'text-gray-300'
+                                                            ? 'text-slate-600'
+                                                            : 'text-slate-300'
                                                     "
                                                 />
                                             </div>
@@ -448,7 +448,7 @@
 
                                     <!-- Actions Header -->
                                     <th
-                                        class="px-6 py-4 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-60"
+                                        class="px-3 py-2 text-center text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-32"
                                     >
                                         İşlemler
                                     </th>
@@ -456,31 +456,31 @@
                             </thead>
 
                             <tbody
-                                class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800"
+                                class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-800"
                             >
                                 <tr
                                     v-for="presentation in displayedPresentations"
                                     :key="presentation.id"
-                                    class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200"
+                                    class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all duration-200"
                                 >
                                     <!-- Checkbox -->
-                                    <td class="px-8 py-6 w-12">
+                                    <td class="px-3 py-2 w-10">
                                         <input
                                             type="checkbox"
                                             :value="presentation.id"
                                             v-model="selectedPresentations"
-                                            class="h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                                            class="h-3.5 w-3.5 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                                         />
                                     </td>
 
                                     <!-- Presentation Info -->
-                                    <td class="px-6 py-6">
-                                        <div class="flex items-start">
+                                    <td class="px-3 py-2">
+                                        <div class="flex items-center">
                                             <div
-                                                class="flex-shrink-0 h-12 w-12"
+                                                class="flex-shrink-0 h-8 w-8"
                                             >
                                                 <div
-                                                    class="h-12 w-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-md"
+                                                    class="h-8 w-8 rounded-lg bg-gradient-to-br flex items-center justify-center"
                                                     :class="
                                                         getPresentationTypeGradient(
                                                             presentation.presentation_type
@@ -493,11 +493,11 @@
                                                                 presentation.presentation_type
                                                             )
                                                         "
-                                                        class="h-6 w-6 text-white"
+                                                        class="h-4 w-4 text-white"
                                                     />
                                                 </div>
                                             </div>
-                                            <div class="ml-4">
+                                            <div class="ml-2.5 min-w-0">
                                                 <Link
                                                     :href="
                                                         safeRoute(
@@ -506,7 +506,7 @@
                                                             presentation.id
                                                         )
                                                     "
-                                                    class="text-lg font-semibold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-200"
+                                                    class="text-sm font-medium text-slate-900 dark:text-white hover:text-slate-600 dark:hover:text-slate-400 transition-colors duration-200"
                                                 >
                                                     {{
                                                         presentation.title ||
@@ -515,26 +515,28 @@
                                                 </Link>
                                                 <p
                                                     v-if="presentation.abstract"
-                                                    class="text-gray-600 dark:text-gray-400 mt-1 line-clamp-2 max-w-md"
+                                                    class="text-slate-500 dark:text-slate-400 text-xs line-clamp-1 max-w-xs"
                                                 >
                                                     {{ presentation.abstract }}
                                                 </p>
                                                 <div
-                                                    class="flex items-center mt-2 text-sm text-gray-500 dark:text-gray-400"
+                                                    class="flex items-center mt-0.5 text-xs text-slate-500 dark:text-slate-400 gap-2"
                                                 >
-                                                    <ClockIcon
-                                                        class="h-4 w-4 mr-1"
-                                                    />
-                                                    <span>{{
-                                                        formatDuration(
-                                                            presentation
-                                                        )
-                                                    }}</span>
+                                                    <span class="inline-flex items-center">
+                                                        <ClockIcon
+                                                            class="h-3 w-3 mr-0.5"
+                                                        />
+                                                        {{
+                                                            formatDuration(
+                                                                presentation
+                                                            )
+                                                        }}
+                                                    </span>
                                                     <span
                                                         v-if="
                                                             presentation.language
                                                         "
-                                                        class="ml-4 px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs"
+                                                        class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-700 rounded text-[10px]"
                                                     >
                                                         {{
                                                             presentation.language?.toUpperCase()
@@ -546,9 +548,9 @@
                                     </td>
 
                                     <!-- Type -->
-                                    <td class="px-6 py-6 w-32">
+                                    <td class="px-3 py-2 w-28">
                                         <span
-                                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+                                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
                                             :class="
                                                 getPresentationTypeClasses(
                                                     presentation.presentation_type
@@ -570,10 +572,10 @@
                                     </td>
 
                                     <!-- Session -->
-                                    <td class="px-6 py-6 w-48">
-                                        <div class="text-sm">
+                                    <td class="px-3 py-2 w-40">
+                                        <div class="text-xs">
                                             <div
-                                                class="font-medium text-gray-900 dark:text-white"
+                                                class="font-medium text-slate-900 dark:text-white line-clamp-1"
                                             >
                                                 {{
                                                     presentation.program_session
@@ -582,42 +584,41 @@
                                                 }}
                                             </div>
                                             <div
-                                                class="text-gray-500 dark:text-gray-400 flex items-center mt-1"
+                                                class="text-slate-500 dark:text-slate-400 flex items-center mt-0.5"
                                             >
                                                 <BuildingOfficeIcon
-                                                    class="h-4 w-4 mr-1"
+                                                    class="h-3 w-3 mr-0.5 flex-shrink-0"
                                                 />
-                                                {{
+                                                <span class="truncate">{{
                                                     presentation.program_session
                                                         ?.venue?.display_name ||
                                                     "Salon belirtilmemiş"
-                                                }}
+                                                }}</span>
                                             </div>
                                             <div
-                                                class="text-gray-500 dark:text-gray-400 flex items-center mt-1"
+                                                class="text-slate-500 dark:text-slate-400 flex items-center mt-0.5"
                                             >
                                                 <CalendarIcon
-                                                    class="h-4 w-4 mr-1"
+                                                    class="h-3 w-3 mr-0.5 flex-shrink-0"
                                                 />
-                                                {{
+                                                <span class="truncate">{{
                                                     formatEventInfo(
                                                         presentation
                                                     )
-                                                }}
+                                                }}</span>
                                             </div>
                                         </div>
                                     </td>
 
                                     <!-- Speakers -->
-                                    <td class="px-6 py-6 w-48">
-                                        <div class="space-y-1">
+                                    <td class="px-3 py-2 w-40">
+                                        <div>
                                             <div
                                                 v-if="
                                                     presentation.speakers &&
                                                     presentation.speakers
                                                         .length > 0
                                                 "
-                                                class="space-y-1"
                                             >
                                                 <div
                                                     v-for="speaker in presentation.speakers.slice(
@@ -625,17 +626,17 @@
                                                         2
                                                     )"
                                                     :key="speaker.id"
-                                                    class="flex items-center text-sm"
+                                                    class="flex items-center text-xs mb-0.5"
                                                 >
                                                     <div
-                                                        class="flex-shrink-0 h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center mr-2"
+                                                        class="flex-shrink-0 h-5 w-5 rounded-full bg-slate-200 dark:bg-slate-600 flex items-center justify-center mr-1"
                                                     >
                                                         <UserIcon
-                                                            class="h-3 w-3 text-gray-600 dark:text-gray-300"
+                                                            class="h-2.5 w-2.5 text-slate-600 dark:text-slate-300"
                                                         />
                                                     </div>
                                                     <span
-                                                        class="text-gray-900 dark:text-white font-medium"
+                                                        class="text-slate-900 dark:text-white font-medium truncate"
                                                     >
                                                         {{
                                                             speaker.participant
@@ -651,7 +652,7 @@
                                                             speaker.pivot
                                                                 ?.speaker_role
                                                         "
-                                                        class="ml-2 px-2 py-1 rounded text-xs"
+                                                        class="ml-1 px-1 py-0.5 rounded text-[10px] flex-shrink-0"
                                                         :class="
                                                             getSpeakerRoleClasses(
                                                                 speaker.pivot
@@ -672,7 +673,7 @@
                                                         presentation.speakers
                                                             .length > 2
                                                     "
-                                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                                    class="text-[11px] text-slate-500 dark:text-slate-400"
                                                 >
                                                     +{{
                                                         presentation.speakers
@@ -683,10 +684,10 @@
                                             </div>
                                             <div
                                                 v-else
-                                                class="text-sm text-gray-500 dark:text-gray-400 flex items-center"
+                                                class="text-xs text-slate-500 dark:text-slate-400 flex items-center"
                                             >
                                                 <ExclamationTriangleIcon
-                                                    class="h-4 w-4 mr-1 text-yellow-500"
+                                                    class="h-3 w-3 mr-0.5 text-yellow-500"
                                                 />
                                                 Konuşmacı atanmamış
                                             </div>
@@ -694,10 +695,10 @@
                                     </td>
 
                                     <!-- Time -->
-                                    <td class="px-6 py-6 w-32">
-                                        <div class="text-sm">
+                                    <td class="px-3 py-2 w-28">
+                                        <div class="text-xs">
                                             <div
-                                                class="font-medium text-gray-900 dark:text-white"
+                                                class="font-medium text-slate-900 dark:text-white"
                                             >
                                                 {{
                                                     presentation.formatted_time_range ||
@@ -708,7 +709,7 @@
                                                 }}
                                             </div>
                                             <div
-                                                class="text-gray-500 dark:text-gray-400"
+                                                class="text-slate-500 dark:text-slate-400"
                                             >
                                                 {{
                                                     formatDuration(presentation)
@@ -718,9 +719,9 @@
                                     </td>
 
                                     <!-- Actions -->
-                                    <td class="px-6 py-6 w-60">
+                                    <td class="px-3 py-2 w-32">
                                         <div
-                                            class="flex flex-wrap items-center gap-2"
+                                            class="flex flex-wrap items-center gap-1"
                                         >
                                             <!-- View -->
                                             <div class="relative">
@@ -732,10 +733,10 @@
                                                         presentation.id
                                                     )
                                                 "
-                                                class="inline-flex items-center px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
+                                                class="inline-flex items-center p-1 bg-slate-600 hover:bg-slate-700 text-white rounded shadow-sm transition-all duration-200"
                                                 title="Görüntüle"
                                             >
-                                                <EyeIcon class="h-4 w-4" />
+                                                <EyeIcon class="h-3.5 w-3.5" />
                                             </Link>
                                             </div>
 
@@ -750,11 +751,11 @@
                                                         presentation.id
                                                     )
                                                 "
-                                                class="inline-flex items-center px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
+                                                class="inline-flex items-center p-1 bg-slate-500 hover:bg-slate-600 text-white rounded shadow-sm transition-all duration-200"
                                                 title="Düzenle"
                                             >
                                                 <PencilIcon
-                                                    class="h-4 w-4"
+                                                    class="h-3.5 w-3.5"
                                                 />
                                             </Link>
                                             </div>
@@ -767,11 +768,11 @@
                                                             presentation.id
                                                         )
                                                     "
-                                                    class="inline-flex items-center px-2 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs font-medium rounded shadow-sm transition-all duration-200"
+                                                    class="inline-flex items-center p-1 bg-slate-500 hover:bg-slate-600 text-white rounded shadow-sm transition-all duration-200"
                                                     title="Daha Fazla"
                                                 >
                                                     <EllipsisVerticalIcon
-                                                        class="h-4 w-4"
+                                                        class="h-3.5 w-3.5"
                                                     />
                                                 </button>
 
@@ -781,7 +782,7 @@
                                                         showActionsMenu ===
                                                         presentation.id
                                                     "
-                                                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-[9999] border border-gray-200 dark:border-gray-700"
+                                                    class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl ring-1 ring-black ring-opacity-5 z-[9999] border border-slate-200 dark:border-slate-700"
                                                 >
                                                     <div class="py-1">
                                                         <!-- Duplicate -->
@@ -791,7 +792,7 @@
                                                                     presentation
                                                                 )
                                                             "
-                                                            class="flex items-center w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                                            class="flex items-center w-full px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                                                         >
                                                             <DocumentDuplicateIcon
                                                                 class="h-4 w-4 mr-2"
@@ -809,7 +810,7 @@
                                                                     presentation
                                                                 )
                                                             "
-                                                            class="flex items-center w-full px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                                            class="flex items-center w-full px-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700"
                                                         >
                                                             <TrashIcon
                                                                 class="h-4 w-4 mr-2"
@@ -837,11 +838,11 @@
                     <div
                         v-for="presentation in displayedPresentations"
                         :key="presentation.id"
-                        class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700"
+                        class="bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl p-6 hover:shadow-lg transition-all duration-200 border border-slate-200 dark:border-slate-700"
                     >
                         <!-- Card Header -->
                         <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-2">
                                 <div
                                     class="h-10 w-10 rounded-lg bg-gradient-to-br flex items-center justify-center shadow-md"
                                     :class="
@@ -861,7 +862,7 @@
                                 </div>
                                 <div class="flex-1">
                                     <h4
-                                        class="text-lg font-semibold text-gray-900 dark:text-white line-clamp-2"
+                                        class="text-lg font-semibold text-slate-900 dark:text-white line-clamp-2"
                                     >
                                         {{
                                             presentation.title ||
@@ -869,7 +870,7 @@
                                         }}
                                     </h4>
                                     <p
-                                        class="text-sm text-gray-500 dark:text-gray-400"
+                                        class="text-sm text-slate-500 dark:text-slate-400"
                                     >
                                         {{
                                             presentation.program_session
@@ -898,7 +899,7 @@
 
                         <!-- Card Content -->
                         <div
-                            class="space-y-3 text-sm text-gray-600 dark:text-gray-400"
+                            class="space-y-3 text-sm text-slate-600 dark:text-slate-400"
                         >
                             <div class="flex items-center">
                                 <ClockIcon class="h-4 w-4 mr-2" />
@@ -938,14 +939,14 @@
                                         2
                                     )"
                                     :key="speaker.id"
-                                    class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                                    class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200"
                                 >
                                     {{ speaker.participant?.first_name }}
                                     {{ speaker.participant?.last_name }}
                                 </span>
                                 <span
                                     v-if="presentation.speakers.length > 2"
-                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                    class="text-xs text-slate-500 dark:text-slate-400"
                                 >
                                     +{{ presentation.speakers.length - 2 }}
                                 </span>
@@ -954,7 +955,7 @@
 
                         <!-- Card Actions -->
                         <div
-                            class="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-600"
+                            class="flex items-center justify-between mt-6 pt-4 border-t border-slate-200 dark:border-slate-600"
                         >
                             <div class="flex items-center space-x-2">
                                 <Link
@@ -965,7 +966,7 @@
                                             presentation.id
                                         )
                                     "
-                                    class="p-2 text-gray-600 hover:text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                    class="p-2 text-slate-600 hover:text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                                     title="Görüntüle"
                                 >
                                     <EyeIcon class="h-4 w-4" />
@@ -980,14 +981,14 @@
                                             presentation.id
                                         )
                                     "
-                                    class="p-2 text-gray-600 hover:text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                                    class="p-2 text-slate-600 hover:text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
                                     title="Düzenle"
                                 >
                                     <PencilIcon class="h-4 w-4" />
                                 </Link>
                             </div>
 
-                            <span class="text-xs text-gray-400">
+                            <span class="text-xs text-slate-400">
                                 {{ formatEventInfo(presentation) }}
                             </span>
                         </div>
@@ -998,12 +999,12 @@
                 <div v-else class="py-16">
                     <div class="text-center">
                         <div
-                            class="mx-auto h-24 w-24 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl flex items-center justify-center"
+                            class="mx-auto h-24 w-24 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl flex items-center justify-center"
                         >
-                            <DocumentTextIcon class="h-12 w-12 text-gray-400" />
+                            <DocumentTextIcon class="h-12 w-12 text-slate-400" />
                         </div>
                         <h3
-                            class="mt-6 text-xl font-semibold text-gray-900 dark:text-white"
+                            class="mt-6 text-xl font-semibold text-slate-900 dark:text-white"
                         >
                             {{
                                 searchQuery || hasActiveFilters
@@ -1011,7 +1012,7 @@
                                     : "Henüz sunum yok"
                             }}
                         </h3>
-                        <p class="mt-2 text-gray-600 dark:text-gray-400">
+                        <p class="mt-2 text-slate-600 dark:text-slate-400">
                             {{
                                 searchQuery || hasActiveFilters
                                     ? "Arama kriterlerinizi değiştirip tekrar deneyin."
@@ -1027,15 +1028,15 @@
                                         '/admin/presentations/create'
                                     )
                                 "
-                                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-900 hover:to-black text-white text-sm font-medium rounded-lg shadow hover:shadow-lg transition-all duration-200"
                             >
-                                <PlusIcon class="h-5 w-5 mr-2" />
+                                <PlusIcon class="h-4 w-4 mr-1.5" />
                                 İlk Sunumu Oluşturun
                             </Link>
                             <button
                                 v-else
                                 @click="clearAllFilters"
-                                class="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
                             >
                                 <XMarkIcon class="h-5 w-5 mr-2" />
                                 Filtreleri Temizle
@@ -1047,11 +1048,11 @@
                 <!-- Enhanced Pagination -->
                 <div
                     v-if="presentations?.last_page > 1"
-                    class="bg-gray-50 dark:bg-gray-800/50 px-8 py-6 border-t border-gray-200 dark:border-gray-800"
+                    class="bg-slate-50 dark:bg-slate-800/50 px-4 py-3 border-t border-slate-200 dark:border-slate-800"
                 >
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
-                            <p class="text-sm text-gray-700 dark:text-gray-300">
+                            <p class="text-sm text-slate-700 dark:text-slate-300">
                                 <span class="font-medium">{{
                                     presentations.from || 0
                                 }}</span>
@@ -1069,7 +1070,7 @@
                             <select
                                 v-model="pageSize"
                                 @change="handlePageSizeChange"
-                                class="px-3 py-1 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-sm"
+                                class="px-3 py-1 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-sm"
                             >
                                 <option value="15">15</option>
                                 <option value="25">25</option>
@@ -1085,7 +1086,7 @@
                                     goToPage(presentations.current_page - 1)
                                 "
                                 :disabled="presentations.current_page <= 1"
-                                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700"
+                                class="px-3 py-2 text-sm font-medium text-slate-500 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-700"
                             >
                                 Önceki
                             </button>
@@ -1102,10 +1103,10 @@
                                     :class="[
                                         'px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200',
                                         page === presentations.current_page
-                                            ? 'bg-gray-800 text-white shadow-lg'
+                                            ? 'bg-slate-800 text-white shadow-lg'
                                             : page === '...'
-                                            ? 'text-gray-500 cursor-default'
-                                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700',
+                                            ? 'text-slate-500 cursor-default'
+                                            : 'text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700',
                                     ]"
                                 >
                                     {{ page }}
@@ -1121,7 +1122,7 @@
                                     presentations.current_page >=
                                     presentations.last_page
                                 "
-                                class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700"
+                                class="px-3 py-2 text-sm font-medium text-slate-500 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-700"
                             >
                                 Sonraki
                             </button>
@@ -1341,27 +1342,27 @@ const visiblePages = computed(() => {
 const getPresentationTypeClasses = (presentationType) => {
     const classes = {
         keynote:
-            "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
-        oral: "bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-200",
-        poster: "bg-gray-300 text-gray-900 dark:bg-gray-600 dark:text-gray-200",
-        panel: "bg-gray-400 text-white dark:bg-gray-500 dark:text-gray-200",
-        workshop: "bg-gray-500 text-white dark:bg-gray-400 dark:text-gray-900",
+            "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200",
+        oral: "bg-slate-200 text-slate-900 dark:bg-slate-700 dark:text-slate-200",
+        poster: "bg-slate-300 text-slate-900 dark:bg-slate-600 dark:text-slate-200",
+        panel: "bg-slate-400 text-white dark:bg-slate-500 dark:text-slate-200",
+        workshop: "bg-slate-500 text-white dark:bg-slate-400 dark:text-slate-900",
     };
     return (
         classes[presentationType] ||
-        "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+        "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300"
     );
 };
 
 const getPresentationTypeGradient = (presentationType) => {
     const gradients = {
-        keynote: "from-gray-800 to-gray-900",
-        oral: "from-gray-700 to-gray-800",
-        poster: "from-gray-600 to-gray-700",
-        panel: "from-gray-500 to-gray-600",
-        workshop: "from-gray-400 to-gray-500",
+        keynote: "from-slate-800 to-slate-900",
+        oral: "from-slate-700 to-slate-800",
+        poster: "from-slate-600 to-slate-700",
+        panel: "from-slate-500 to-slate-600",
+        workshop: "from-slate-400 to-slate-500",
     };
-    return gradients[presentationType] || "from-gray-500 to-gray-600";
+    return gradients[presentationType] || "from-slate-500 to-slate-600";
 };
 
 const getPresentationIcon = (presentationType) => {
@@ -1389,15 +1390,15 @@ const getPresentationTypeLabel = (presentationType) => {
 const getSpeakerRoleClasses = (role) => {
     const classes = {
         primary:
-            "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
+            "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300",
         co_speaker:
-            "bg-gray-200 text-gray-900 dark:bg-gray-600 dark:text-gray-300",
+            "bg-slate-200 text-slate-900 dark:bg-slate-600 dark:text-slate-300",
         discussant:
-            "bg-gray-300 text-gray-900 dark:bg-gray-500 dark:text-gray-300",
+            "bg-slate-300 text-slate-900 dark:bg-slate-500 dark:text-slate-300",
     };
     return (
         classes[role] ||
-        "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+        "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300"
     );
 };
 
@@ -1725,6 +1726,13 @@ onUnmounted(() => {
 
 <style scoped>
 /* Line clamp utility */
+.line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -1738,15 +1746,15 @@ onUnmounted(() => {
 }
 
 .overflow-x-auto::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-800;
+    @apply bg-slate-100 dark:bg-slate-800;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+    @apply bg-slate-300 dark:bg-slate-600 rounded-full;
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400 dark:bg-gray-500;
+    @apply bg-slate-400 dark:bg-slate-500;
 }
 
 /* Smooth transitions */

@@ -5,15 +5,63 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\EventDay;
-use App\Models\Venue;
 use App\Models\ProgramSession;
-use App\Models\Presentation;
-use Illuminate\Http\Request;
+use App\Models\Venue;
+use App\Services\EventProgramBuilder;
+use App\Services\ProgramJsonExporter;
 use Illuminate\Http\JsonResponse;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class EventProgramController extends Controller
 {
+    public function __construct(
+        private EventProgramBuilder $programBuilder,
+    ) {}
+
+    /**
+     * Export program in legacy program.json format
+     * GET /api/v1/events/{slug}/program.json
+     */
+    public function exportProgramJson(Request $request, Event $event): JsonResponse
+    {
+        try {
+            if (! $this->canAccessProgramJson($request, $event)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Etkinlik bulunamadı.',
+                ], 404);
+            }
+
+            $programData = app(ProgramJsonExporter::class)->export($event);
+
+            $headers = ['Content-Type' => 'application/json'];
+
+            if ($request->boolean('download')) {
+                $fileName = $event->slug.'_program_'.now()->format('Y-m-d').'.json';
+                $headers['Content-Disposition'] = 'attachment; filename="'.$fileName.'"';
+            }
+
+            return response()->json($programData, 200, $headers);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Program export edilirken bir hata oluştu.',
+                'error' => config('app.debug') ? $e->getMessage() : 'INTERNAL_ERROR',
+            ], 500);
+        }
+    }
+
+    private function canAccessProgramJson(Request $request, Event $event): bool
+    {
+        if ($event->is_published) {
+            return true;
+        }
+
+        $user = $request->user();
+
+        return $user !== null && $user->can('view', $event);
+    }
+
     /**
      * Get full event program as JSON
      * GET /api/v1/events/{slug}/program
@@ -21,141 +69,12 @@ class EventProgramController extends Controller
     public function getProgram(Request $request, string $slug): JsonResponse
     {
         try {
-            $event = Event::with([
-                'organization',
-                'eventDays' => function ($query) {
-                    $query->where('is_active', true)->orderBy('date');
-                },
-                'eventDays.venues' => function ($query) {
-                    $query->orderBy('sort_order');
-                },
-                'eventDays.venues.programSessions' => function ($query) {
-                    $query->with([
-                        'sponsor',
-                        'categories',
-                        'presentations.speakers',
-                        'moderators'
-                    ])->orderBy('start_time');
-                },
-            ])
+            $event = Event::query()
                 ->where('slug', $slug)
                 ->where('is_published', true)
                 ->firstOrFail();
 
-            // Statistics hesaplama - manuel ve güvenli
-            $totalVenues = 0;
-            $totalSessions = 0;
-            $totalPresentations = 0;
-
-            foreach ($event->eventDays as $day) {
-                $totalVenues += $day->venues->count();
-                foreach ($day->venues as $venue) {
-                    if ($venue->programSessions) {
-                        $totalSessions += $venue->programSessions->count();
-                        foreach ($venue->programSessions as $session) {
-                            if ($session->presentations) {
-                                $totalPresentations += $session->presentations->count();
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Build program structure
-            $program = [
-                'event' => [
-                    'id' => $event->id,
-                    'name' => $event->name,
-                    'slug' => $event->slug,
-                    'description' => $event->description,
-                    'start_date' => $event->start_date,
-                    'end_date' => $event->end_date,
-                    'timezone' => $event->timezone,
-                    'venue_address' => $event->venue_address,
-                    'contact_email' => $event->contact_email,
-                    'contact_phone' => $event->contact_phone,
-                    'website_url' => $event->website_url,
-                    'organization' => $event->organization ? [
-                        'id' => $event->organization->id,
-                        'name' => $event->organization->name,
-                        'website_url' => $event->organization->website_url ?? null,
-                    ] : null,
-                ],
-                'statistics' => [
-                    'total_days' => $event->eventDays->count(),
-                    'total_venues' => $totalVenues,
-                    'total_sessions' => $totalSessions,
-                    'total_presentations' => $totalPresentations,
-                ],
-                'days' => $event->eventDays->map(function ($day) {
-                    return [
-                        'id' => $day->id,
-                        'title' => $day->title,
-                        'date' => $day->date,
-                        'formatted_date' => $day->date->format('d M Y'),
-                        'day_name' => $day->date->format('l'),
-                        'venues' => $day->venues->map(function ($venue) {
-                            return [
-                                'id' => $venue->id,
-                                'name' => $venue->name,
-                                'display_name' => $venue->display_name,
-                                'color' => $venue->color,
-                                'capacity' => $venue->capacity,
-                                'sessions' => $venue->programSessions ? $venue->programSessions->map(function ($session) {
-                                    return [
-                                        'id' => $session->id,
-                                        'title' => $session->title,
-                                        'description' => $session->description,
-                                        'start_time' => $session->start_time,
-                                        'end_time' => $session->end_time,
-                                        'session_type' => $session->session_type,
-                                        'is_break' => $session->is_break ?? false,
-                                        'moderator_title' => $session->moderator_title,
-                                        'sponsor' => $session->sponsor ? [
-                                            'id' => $session->sponsor->id,
-                                            'name' => $session->sponsor->name,
-                                            'logo' => $session->sponsor->logo ? 
-                                                asset('storage/' . $session->sponsor->logo) : null,
-                                        ] : null,
-                                        'categories' => $session->categories ? $session->categories->map(function ($category) {
-                                            return [
-                                                'id' => $category->id,
-                                                'name' => $category->name,
-                                                'color' => $category->color,
-                                            ];
-                                        }) : [],
-                                        'moderators' => $session->moderators ? $session->moderators->map(function ($moderator) {
-                                            return [
-                                                'id' => $moderator->id,
-                                                'full_name' => $moderator->full_name ?? ($moderator->first_name . ' ' . $moderator->last_name),
-                                                'title' => $moderator->title,
-                                                'institution' => $moderator->institution,
-                                            ];
-                                        }) : [],
-                                        'presentations' => $session->presentations ? $session->presentations->map(function ($presentation) {
-                                            return [
-                                                'id' => $presentation->id,
-                                                'title' => $presentation->title,
-                                                'abstract' => $presentation->abstract,
-                                                'sort_order' => $presentation->sort_order,
-                                                'speakers' => $presentation->speakers ? $presentation->speakers->map(function ($speaker) {
-                                                    return [
-                                                        'id' => $speaker->id,
-                                                        'full_name' => $speaker->full_name ?? ($speaker->first_name . ' ' . $speaker->last_name),
-                                                        'title' => $speaker->title,
-                                                        'institution' => $speaker->institution,
-                                                        'bio' => $speaker->bio,
-                                                    ];
-                                                }) : [],
-                                            ];
-                                        }) : [],
-                                    ];
-                                }) : [],
-                            ];
-                        }),
-                    ];
-                }),
-            ];
+            $program = $this->programBuilder->build($event);
 
             return response()->json([
                 'success' => true,
@@ -167,7 +86,7 @@ class EventProgramController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Program yüklenirken bir hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'INTERNAL_ERROR'
+                'error' => config('app.debug') ? $e->getMessage() : 'INTERNAL_ERROR',
             ], 500);
         }
     }
@@ -189,9 +108,9 @@ class EventProgramController extends Controller
                         'categories',
                         'presentations.speakers',
                         'moderators',
-                        'sponsor'
+                        'sponsor',
                     ])->orderBy('start_time');
-                }
+                },
             ])
                 ->where('event_id', $event->id)
                 ->where('date', $date)
@@ -201,7 +120,7 @@ class EventProgramController extends Controller
             $dayProgram = [
                 'day' => [
                     'id' => $eventDay->id,
-                    'title' => $eventDay->title,
+                    'title' => $eventDay->display_name,
                     'date' => $eventDay->date,
                     'formatted_date' => $eventDay->date->format('d M Y'),
                     'day_name' => $eventDay->date->format('l'),
@@ -267,13 +186,13 @@ class EventProgramController extends Controller
                         'categories',
                         'presentations.speakers',
                         'moderators',
-                        'sponsor'
+                        'sponsor',
                     ])->orderBy('start_time');
-                }
+                },
             ])->findOrFail($venueId);
 
             // Verify venue belongs to this event - DÜZELTME
-            if (!$venue->eventDay || $venue->eventDay->event_id !== $event->id) {
+            if (! $venue->eventDay || $venue->eventDay->event_id !== $event->id) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Mekan bu etkinlikte bulunamadı.',
@@ -291,7 +210,7 @@ class EventProgramController extends Controller
                 ],
                 'day' => [
                     'id' => $venue->eventDay->id,
-                    'title' => $venue->eventDay->title,
+                    'title' => $venue->eventDay->display_name,
                     'date' => $venue->eventDay->date,
                     'formatted_date' => $venue->eventDay->date->format('d M Y'),
                 ],
@@ -309,7 +228,7 @@ class EventProgramController extends Controller
                         ] : null,
                         'categories' => $session->categories ? $session->categories->pluck('name') : [],
                         'moderators' => $session->moderators ? $session->moderators->map(function ($moderator) {
-                            return $moderator->full_name ?? ($moderator->first_name . ' ' . $moderator->last_name);
+                            return $moderator->full_name ?? ($moderator->first_name.' '.$moderator->last_name);
                         })->filter() : [],
                         'presentations_count' => $session->presentations ? $session->presentations->count() : 0,
                         'presentations' => $session->presentations ? $session->presentations->map(function ($presentation) {
@@ -317,7 +236,7 @@ class EventProgramController extends Controller
                                 'id' => $presentation->id,
                                 'title' => $presentation->title,
                                 'speakers' => $presentation->speakers ? $presentation->speakers->map(function ($speaker) {
-                                    return $speaker->full_name ?? ($speaker->first_name . ' ' . $speaker->last_name);
+                                    return $speaker->full_name ?? ($speaker->first_name.' '.$speaker->last_name);
                                 })->filter() : [],
                             ];
                         }) : [],
@@ -347,7 +266,7 @@ class EventProgramController extends Controller
     {
         try {
             $query = $request->input('q');
-            
+
             if (empty($query)) {
                 return response()->json([
                     'success' => false,
@@ -372,13 +291,13 @@ class EventProgramController extends Controller
                     $sessions = ProgramSession::whereHas('venue.eventDay', function ($q) use ($event) {
                         $q->where('event_id', $event->id);
                     })
-                    ->where(function ($q) use ($query) {
-                        $q->where('title', 'like', "%{$query}%")
-                          ->orWhere('description', 'like', "%{$query}%");
-                    })
-                    ->with(['venue.eventDay'])
-                    ->limit(10)
-                    ->get();
+                        ->where(function ($q) use ($query) {
+                            $q->where('title', 'like', "%{$query}%")
+                                ->orWhere('description', 'like', "%{$query}%");
+                        })
+                        ->with(['venue.eventDay'])
+                        ->limit(10)
+                        ->get();
 
                     $results['sessions'] = $sessions->map(function ($session) {
                         return [
@@ -420,7 +339,7 @@ class EventProgramController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'PDF export henüz implemente edilmedi.',
-                'note' => 'Blade view template gerekli: resources/views/exports/program-pdf.blade.php'
+                'note' => 'Blade view template gerekli: resources/views/exports/program-pdf.blade.php',
             ], 501);
 
         } catch (\Exception $e) {
@@ -443,7 +362,7 @@ class EventProgramController extends Controller
                 ->where('is_published', true)
                 ->firstOrFail();
 
-            $filename = $event->slug . '-program.csv';
+            $filename = $event->slug.'-program.csv';
             $headers = [
                 'Content-Type' => 'text/csv; charset=UTF-8',
                 'Content-Disposition' => "attachment; filename=\"{$filename}\"",
@@ -451,10 +370,10 @@ class EventProgramController extends Controller
 
             $callback = function () use ($event) {
                 $file = fopen('php://output', 'w');
-                
+
                 // UTF-8 BOM for Excel compatibility
                 fprintf($file, "\xEF\xBB\xBF");
-                
+
                 // CSV headers
                 fputcsv($file, [
                     'Event ID',
@@ -463,7 +382,7 @@ class EventProgramController extends Controller
                     'Venue Name',
                     'Day',
                     'Date',
-                    'Status'
+                    'Status',
                 ]);
 
                 // Basic event data
@@ -474,7 +393,7 @@ class EventProgramController extends Controller
                     'N/A',
                     'N/A',
                     $event->start_date->format('Y-m-d'),
-                    'Published'
+                    'Published',
                 ]);
 
                 fclose($file);

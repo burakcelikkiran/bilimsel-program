@@ -9,8 +9,8 @@
 
     <div class="w-full">
       <!-- Header Section -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-8">
-        <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden mb-8">
+        <div class="px-6 py-5 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20">
           <div class="flex items-center">
             <div class="flex-shrink-0">
               <div class="h-10 w-10 bg-purple-600 rounded-lg flex items-center justify-center">
@@ -18,8 +18,8 @@
               </div>
             </div>
             <div class="ml-4">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Yeni Etkinlik Günü</h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">{{ event.name }} - {{ formatEventDateRange(event.start_date, event.end_date) }}</p>
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Yeni Etkinlik Günü</h3>
+              <p class="text-sm text-slate-500 dark:text-slate-400">{{ event.name }} - {{ formatEventDateRange(event.start_date, event.end_date) }}</p>
             </div>
           </div>
         </div>
@@ -30,7 +30,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Display Name -->
             <div class="lg:col-span-2">
-              <label for="display_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label for="display_name" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Gün Başlığı *
               </label>
               <input
@@ -38,7 +38,7 @@
                 v-model="form.display_name"
                 type="text"
                 required
-                class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                 :class="form.errors.display_name ? 'border-red-300 focus:ring-red-500' : ''"
                 placeholder="Örn: Kongre 1. Gün"
               />
@@ -47,7 +47,7 @@
 
             <!-- Sort Order -->
             <div>
-              <label for="sort_order" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label for="sort_order" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Sıra No
               </label>
               <input
@@ -55,7 +55,7 @@
                 v-model.number="form.sort_order"
                 type="number"
                 min="0"
-                class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                 :class="form.errors.sort_order ? 'border-red-300 focus:ring-red-500' : ''"
                 placeholder="0"
               />
@@ -67,31 +67,31 @@
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Date -->
             <div>
-              <label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label for="date" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Tarih *
               </label>
               <div class="relative">
-                <CalendarDaysIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <CalendarDaysIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                 <input
                   id="date"
                   v-model="form.date"
                   type="date"
                   required
-                  class="block w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
+                  class="block w-full pl-10 pr-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
                   :class="form.errors.date ? 'border-red-300 focus:ring-red-500' : ''"
                   :min="event.start_date"
                   :max="event.end_date"
                 />
               </div>
               <p v-if="form.errors.date" class="mt-2 text-sm text-red-600">{{ form.errors.date }}</p>
-              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 Tarih {{ formatDate(event.start_date) }} - {{ formatDate(event.end_date) }} arasında olmalıdır
               </p>
             </div>
 
             <!-- Day Preview -->
             <div v-if="form.date">
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Tarih Önizleme
               </label>
               <div class="px-4 py-3 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
@@ -107,34 +107,34 @@
           </div>
 
           <!-- Status Options -->
-          <div class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 space-y-4">
-            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Durum Ayarları</h4>
+          <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 space-y-4">
+            <h4 class="text-sm font-medium text-slate-900 dark:text-white">Durum Ayarları</h4>
             
             <div class="flex items-start space-x-3">
               <label class="flex items-center">
                 <input
                   v-model="form.is_active"
                   type="checkbox"
-                  class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded transition-colors"
+                  class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-slate-300 rounded transition-colors"
                 />
-                <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                <span class="ml-3 text-sm text-slate-700 dark:text-slate-300">
                   Günü aktif yap
                 </span>
               </label>
             </div>
             
-            <div class="text-xs text-gray-500 dark:text-gray-400">
+            <div class="text-xs text-slate-500 dark:text-slate-400">
               <p>• Aktif günler program oluşturma için kullanılabilir</p>
               <p>• Pasif günler gizli kalır ve programa dahil edilmez</p>
             </div>
           </div>
 
           <!-- Form Actions -->
-          <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-700">
             <div class="flex items-center space-x-3">
               <Link
                 :href="route('admin.events.days.index', event.slug)"
-                class="inline-flex items-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm"
+                class="inline-flex items-center px-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm"
               >
                 <ArrowLeftIcon class="h-4 w-4 mr-2" />
                 İptal
@@ -147,7 +147,7 @@
                 type="button"
                 @click="submitForm(false)"
                 :disabled="form.processing"
-                class="inline-flex items-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                class="inline-flex items-center px-4 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <EyeSlashIcon class="h-4 w-4 mr-2" />
                 Pasif Kaydet

@@ -26,14 +26,14 @@
             leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95"
           >
-            <DialogPanel class="w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white shadow-xl transition-all">
+            <DialogPanel :class="['w-full max-w-6xl transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-xl transition-all', { dark: isDark }]">
               <!-- Modal Header -->
-              <div class="flex items-center justify-between p-6 border-b border-gray-200 bg-gray-50">
+              <div class="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50 dark:bg-slate-900/50">
                 <div>
-                  <DialogTitle as="h3" class="text-lg font-semibold text-gray-900">
+                  <DialogTitle as="h3" class="text-lg font-semibold text-slate-900 dark:text-white">
                     Program Zaman Çizelgesi - Dışa Aktarım
                   </DialogTitle>
-                  <p class="text-sm text-gray-600 mt-1">
+                  <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
                     {{ event?.name || 'Etkinlik' }} programını farklı formatlarda kaydedin
                   </p>
                 </div>
@@ -60,7 +60,7 @@
                   
                   <button
                     @click="closeModal"
-                    class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                    class="p-2 text-slate-400 hover:text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
                   >
                     <XMarkIcon class="h-5 w-5" />
                   </button>
@@ -124,8 +124,8 @@
               </div>
 
               <!-- Modal Footer -->
-              <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center">
-                <div class="text-sm text-gray-600">
+              <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 dark:bg-slate-900/50 flex justify-between items-center">
+                <div class="text-sm text-slate-600 dark:text-slate-400">
                   <span class="font-medium">{{ sessions.length }}</span> oturum •
                   <span class="font-medium">{{ eventDays.length }}</span> gün •
                   <span class="font-medium">{{ uniqueVenues }}</span> salon
@@ -134,7 +134,7 @@
                 <div class="flex space-x-3">
                   <button
                     @click="previewMode = !previewMode"
-                    class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 text-sm font-medium rounded-lg transition-colors"
+                    class="inline-flex items-center px-4 py-2 border border-slate-300 text-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-sm font-medium rounded-lg transition-colors"
                   >
                     <EyeIcon class="h-4 w-4 mr-2" />
                     {{ previewMode ? 'Düzenleme Moduna Dön' : 'Önizleme' }}
@@ -142,7 +142,7 @@
                   
                   <button
                     @click="closeModal"
-                    class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 text-sm font-medium rounded-lg transition-colors"
+                    class="inline-flex items-center px-4 py-2 border border-slate-300 text-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-sm font-medium rounded-lg transition-colors"
                   >
                     Kapat
                   </button>
@@ -158,6 +158,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useTheme } from '@/Composables/useTheme'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import TimelineExport from './TimelineExport.vue'
 import {
@@ -195,6 +196,8 @@ const props = defineProps({
 
 // Emits
 const emit = defineEmits(['close', 'export-complete'])
+
+const { isDark } = useTheme()
 
 // State
 const exporting = ref(false)

@@ -26,7 +26,7 @@ resources/js/Components/Forms/FormInput.vue
         <label
             v-if="label"
             :for="inputId"
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
             :class="{ 'text-red-600 dark:text-red-400': hasError }"
         >
             {{ label }}
@@ -40,7 +40,7 @@ resources/js/Components/Forms/FormInput.vue
                 v-if="leftIcon"
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
             >
-                <component :is="leftIcon" class="h-5 w-5 text-gray-400" />
+                <component :is="leftIcon" class="h-5 w-5 text-slate-400" />
             </div>
 
             <!-- Input Element -->
@@ -71,7 +71,7 @@ resources/js/Components/Forms/FormInput.vue
                         'border-green-300 dark:border-green-600 focus:border-green-500 focus:ring-green-500':
                             hasSuccess && !hasError,
                         'opacity-50 cursor-not-allowed': disabled,
-                        'bg-gray-50 dark:bg-gray-800': readonly,
+                        'bg-slate-50 dark:bg-slate-800': readonly,
                     },
                 ]"
                 @input="handleInput"
@@ -88,7 +88,7 @@ resources/js/Components/Forms/FormInput.vue
                 <button
                     v-if="clearable && inputValue && !disabled"
                     type="button"
-                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                     @click="clearInput"
                 >
                     <XMarkIcon class="h-5 w-5" />
@@ -96,7 +96,7 @@ resources/js/Components/Forms/FormInput.vue
                 <component
                     v-else-if="rightIcon"
                     :is="rightIcon"
-                    class="h-5 w-5 text-gray-400"
+                    class="h-5 w-5 text-slate-400"
                 />
             </div>
 
@@ -105,14 +105,14 @@ resources/js/Components/Forms/FormInput.vue
                 v-if="loading"
                 class="absolute inset-y-0 right-0 pr-3 flex items-center"
             >
-                <LoadingSpinner class="h-5 w-5 text-gray-400" />
+                <LoadingSpinner class="h-5 w-5 text-slate-400" />
             </div>
         </div>
 
         <!-- Help Text -->
         <p
             v-if="helpText && !hasError"
-            class="mt-1 text-sm text-gray-500 dark:text-gray-400"
+            class="mt-1 text-sm text-slate-500 dark:text-slate-400"
         >
             {{ helpText }}
         </p>
@@ -132,7 +132,7 @@ resources/js/Components/Forms/FormInput.vue
 
         <!-- Character Counter -->
         <div v-if="maxlength && showCounter" class="mt-1 text-right">
-            <span class="text-xs text-gray-500 dark:text-gray-400">
+            <span class="text-xs text-slate-500 dark:text-slate-400">
                 {{ inputValue?.length || 0 }} / {{ maxlength }}
             </span>
         </div>
@@ -302,12 +302,12 @@ const inputClasses = computed(() => {
         "shadow-sm",
         "transition-colors",
         "duration-200",
-        "placeholder-gray-400",
-        "dark:placeholder-gray-500",
+        "placeholder-slate-400",
+        "dark:placeholder-slate-500",
         "bg-white",
-        "dark:bg-gray-900",
-        "text-gray-900",
-        "dark:text-gray-100",
+        "dark:bg-slate-900",
+        "text-slate-900",
+        "dark:text-slate-100",
         "focus:outline-none",
         "focus:ring-2",
         "focus:ring-offset-0",
@@ -323,26 +323,26 @@ const inputClasses = computed(() => {
     // Variant classes
     const variantClasses = {
         default: [
-            "border-gray-300",
-            "dark:border-gray-600",
+            "border-slate-300",
+            "dark:border-slate-600",
             "focus:border-blue-500",
             "focus:ring-blue-500",
         ],
         outlined: [
             "border-2",
-            "border-gray-300",
-            "dark:border-gray-600",
+            "border-slate-300",
+            "dark:border-slate-600",
             "focus:border-blue-500",
             "focus:ring-blue-500",
         ],
         filled: [
             "border-transparent",
-            "bg-gray-50",
-            "dark:bg-gray-800",
+            "bg-slate-50",
+            "dark:bg-slate-800",
             "focus:border-blue-500",
             "focus:ring-blue-500",
             "focus:bg-white",
-            "dark:focus:bg-gray-900",
+            "dark:focus:bg-slate-900",
         ],
     };
 

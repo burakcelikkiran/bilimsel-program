@@ -23,7 +23,7 @@ resources/js/Components/Forms/FormTimePicker.vue
     <label 
       v-if="label" 
       :for="timepickerId" 
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
       :class="{ 'text-red-600 dark:text-red-400': hasError }"
     >
       {{ label }}
@@ -63,7 +63,7 @@ resources/js/Components/Forms/FormTimePicker.vue
       <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
         <button
           type="button"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
           :disabled="disabled"
           @click="openTimePicker"
         >
@@ -75,7 +75,7 @@ resources/js/Components/Forms/FormTimePicker.vue
       <button
         v-if="clearable && selectedTime && !disabled"
         type="button"
-        class="absolute inset-y-0 right-8 flex items-center pr-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        class="absolute inset-y-0 right-8 flex items-center pr-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
         @click="clearTime"
       >
         <XMarkIcon class="h-4 w-4" />
@@ -92,15 +92,15 @@ resources/js/Components/Forms/FormTimePicker.vue
       >
         <div
           v-if="isOpen"
-          class="absolute z-50 mt-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 p-4 min-w-[280px]"
+          class="absolute z-50 mt-1 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-600 p-4 min-w-[280px]"
           :class="dropdownPosition === 'up' ? 'bottom-full mb-1' : 'top-full'"
         >
           <!-- Time Display -->
           <div class="text-center mb-4">
-            <div class="text-2xl font-mono font-bold text-gray-900 dark:text-gray-100">
+            <div class="text-2xl font-mono font-bold text-slate-900 dark:text-slate-100">
               {{ formatTimeDisplay(tempHour, tempMinute, tempSecond, tempPeriod) }}
             </div>
-            <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <div class="text-sm text-slate-500 dark:text-slate-400 mt-1">
               {{ use24Hour ? '24-hour format' : '12-hour format' }}
             </div>
           </div>
@@ -109,7 +109,7 @@ resources/js/Components/Forms/FormTimePicker.vue
           <div class="grid grid-cols-3 gap-4 mb-4" :class="{ 'grid-cols-4': !use24Hour }">
             <!-- Hours -->
             <div class="text-center">
-              <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+              <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
                 Hours
               </label>
               <div class="flex flex-col space-y-1">
@@ -141,7 +141,7 @@ resources/js/Components/Forms/FormTimePicker.vue
 
             <!-- Minutes -->
             <div class="text-center">
-              <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+              <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
                 Minutes
               </label>
               <div class="flex flex-col space-y-1">
@@ -173,7 +173,7 @@ resources/js/Components/Forms/FormTimePicker.vue
 
             <!-- Seconds (if enabled) -->
             <div v-if="showSeconds" class="text-center">
-              <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+              <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
                 Seconds
               </label>
               <div class="flex flex-col space-y-1">
@@ -205,7 +205,7 @@ resources/js/Components/Forms/FormTimePicker.vue
 
             <!-- AM/PM (12-hour format) -->
             <div v-if="!use24Hour" class="text-center">
-              <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+              <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
                 Period
               </label>
               <div class="flex flex-col space-y-1">
@@ -232,7 +232,7 @@ resources/js/Components/Forms/FormTimePicker.vue
 
           <!-- Quick Time Presets -->
           <div v-if="showPresets" class="mb-4">
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">
               Quick Select
             </label>
             <div class="grid grid-cols-3 gap-2">
@@ -261,10 +261,10 @@ resources/js/Components/Forms/FormTimePicker.vue
           </div>
 
           <!-- Action Buttons -->
-          <div class="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-600">
+          <div class="flex justify-between pt-4 border-t border-slate-200 dark:border-slate-600">
             <button
               type="button"
-              class="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+              class="px-3 py-1 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
               @click="closeTimePicker"
             >
               Cancel
@@ -282,7 +282,7 @@ resources/js/Components/Forms/FormTimePicker.vue
     </div>
 
     <!-- Help Text -->
-    <p v-if="helpText && !hasError" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <p v-if="helpText && !hasError" class="mt-1 text-sm text-slate-500 dark:text-slate-400">
       {{ helpText }}
     </p>
 
@@ -470,9 +470,9 @@ const hasSuccess = computed(() => Boolean(props.successMessage))
 const inputClasses = computed(() => {
   const baseClasses = [
     'block', 'w-full', 'rounded-md', 'border', 'shadow-sm', 'transition-colors', 'duration-200',
-    'placeholder-gray-400', 'dark:placeholder-gray-500',
-    'bg-white', 'dark:bg-gray-900',
-    'text-gray-900', 'dark:text-gray-100',
+    'placeholder-slate-400', 'dark:placeholder-slate-500',
+    'bg-white', 'dark:bg-slate-900',
+    'text-slate-900', 'dark:text-slate-100',
     'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-0',
     'focus:border-blue-500', 'focus:ring-blue-500',
     'pr-16' // Space for icons
@@ -487,7 +487,7 @@ const inputClasses = computed(() => {
   return [
     ...baseClasses,
     ...sizeClasses[props.size].split(' '),
-    'border-gray-300', 'dark:border-gray-600'
+    'border-slate-300', 'dark:border-slate-600'
   ]
 })
 
@@ -751,7 +751,7 @@ defineExpose({
 }
 
 .time-control-btn {
-  @apply w-8 h-6 flex items-center justify-center rounded text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150;
+  @apply w-8 h-6 flex items-center justify-center rounded text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-150;
 }
 
 .time-control-btn:focus {
@@ -759,12 +759,12 @@ defineExpose({
 }
 
 .time-input {
-  @apply w-12 h-8 text-center text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500;
+  @apply w-12 h-8 text-center text-sm border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
 .preset-btn {
-  @apply px-3 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150 text-gray-700 dark:text-gray-300;
+  @apply px-3 py-1 text-xs border border-slate-300 dark:border-slate-600 rounded hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors duration-150 text-slate-700 dark:text-slate-300;
 }
 
 .preset-btn:focus {

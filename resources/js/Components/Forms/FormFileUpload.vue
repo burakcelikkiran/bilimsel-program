@@ -26,7 +26,7 @@ resources/js/Components/Forms/FormFileUpload.vue
     <!-- Label -->
     <label 
       v-if="label" 
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
       :class="{ 'text-red-600 dark:text-red-400': hasError }"
     >
       {{ label }}
@@ -67,22 +67,22 @@ resources/js/Components/Forms/FormFileUpload.vue
         <div class="mx-auto mb-4">
           <component 
             :is="isDragOver ? CloudArrowUpIcon : CloudArrowUpIcon"
-            class="h-12 w-12 text-gray-400 mx-auto"
+            class="h-12 w-12 text-slate-400 mx-auto"
             :class="{ 'text-blue-500 animate-bounce': isDragOver }"
           />
         </div>
 
         <!-- Upload Text -->
         <div class="space-y-2">
-          <p class="text-lg font-medium text-gray-700 dark:text-gray-300">
+          <p class="text-lg font-medium text-slate-700 dark:text-slate-300">
             {{ isDragOver ? 'Drop files here' : (uploadText || defaultUploadText) }}
           </p>
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+          <p class="text-sm text-slate-500 dark:text-slate-400">
             {{ dragDrop ? 'Drag and drop files here, or click to browse' : 'Click to browse files' }}
           </p>
           
           <!-- File Type Info -->
-          <p v-if="acceptedTypes.length" class="text-xs text-gray-400 dark:text-gray-500">
+          <p v-if="acceptedTypes.length" class="text-xs text-slate-400 dark:text-slate-500">
             Accepted: {{ acceptedTypes.join(', ').toUpperCase() }}
             <span v-if="maxSize"> • Max size: {{ maxSize }}MB</span>
             <span v-if="multiple && maxFiles"> • Max files: {{ maxFiles }}</span>
@@ -93,7 +93,7 @@ resources/js/Components/Forms/FormFileUpload.vue
         <button
           v-if="!isDragOver"
           type="button"
-          class="mt-4 inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          class="mt-4 inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
           :disabled="disabled"
         >
           <FolderOpenIcon class="h-4 w-4 mr-2" />
@@ -105,7 +105,7 @@ resources/js/Components/Forms/FormFileUpload.vue
     <!-- File List -->
     <div v-if="fileList.length > 0" class="mt-4 space-y-3">
       <div class="flex items-center justify-between">
-        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">
           Selected Files ({{ fileList.length }})
         </h4>
         <button
@@ -127,7 +127,7 @@ resources/js/Components/Forms/FormFileUpload.vue
           :class="{
             'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20': file.error,
             'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20': file.uploaded,
-            'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800': !file.error && !file.uploaded
+            'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800': !file.error && !file.uploaded
           }"
         >
           <div class="flex items-center space-x-3">
@@ -136,7 +136,7 @@ resources/js/Components/Forms/FormFileUpload.vue
               <!-- Image Preview -->
               <div
                 v-if="file.preview && showPreview"
-                class="w-10 h-10 rounded overflow-hidden bg-gray-100 dark:bg-gray-700"
+                class="w-10 h-10 rounded overflow-hidden bg-slate-100 dark:bg-slate-700"
               >
                 <img
                   :src="file.preview"
@@ -147,11 +147,11 @@ resources/js/Components/Forms/FormFileUpload.vue
               <!-- File Icon -->
               <div
                 v-else
-                class="w-10 h-10 rounded bg-gray-100 dark:bg-gray-700 flex items-center justify-center"
+                class="w-10 h-10 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center"
               >
                 <component
                   :is="getFileIcon(file.type)"
-                  class="h-5 w-5 text-gray-500 dark:text-gray-400"
+                  class="h-5 w-5 text-slate-500 dark:text-slate-400"
                 />
               </div>
             </div>
@@ -159,12 +159,12 @@ resources/js/Components/Forms/FormFileUpload.vue
             <!-- File Info -->
             <div class="flex-1 min-w-0">
               <div class="flex items-center justify-between">
-                <p class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                <p class="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
                   {{ file.name }}
                 </p>
                 <button
                   type="button"
-                  class="ml-2 flex-shrink-0 text-gray-400 hover:text-red-500 dark:hover:text-red-400"
+                  class="ml-2 flex-shrink-0 text-slate-400 hover:text-red-500 dark:hover:text-red-400"
                   @click="removeFile(index)"
                 >
                   <XMarkIcon class="h-4 w-4" />
@@ -172,7 +172,7 @@ resources/js/Components/Forms/FormFileUpload.vue
               </div>
               
               <div class="flex items-center space-x-2 mt-1">
-                <p class="text-xs text-gray-500 dark:text-gray-400">
+                <p class="text-xs text-slate-500 dark:text-slate-400">
                   {{ formatFileSize(file.size) }}
                 </p>
                 
@@ -200,7 +200,7 @@ resources/js/Components/Forms/FormFileUpload.vue
               <!-- Progress Bar -->
               <div
                 v-if="file.uploading && file.progress > 0"
-                class="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1"
+                class="mt-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1"
               >
                 <div
                   class="bg-blue-600 h-1 rounded-full transition-all duration-300"
@@ -215,13 +215,13 @@ resources/js/Components/Forms/FormFileUpload.vue
 
     <!-- Upload Actions -->
     <div v-if="fileList.length > 0 && !autoUpload" class="mt-4 flex justify-between">
-      <div class="text-sm text-gray-500 dark:text-gray-400">
+      <div class="text-sm text-slate-500 dark:text-slate-400">
         {{ fileList.filter(f => !f.error).length }} of {{ fileList.length }} files ready
       </div>
       <div class="space-x-2">
         <button
           type="button"
-          class="px-3 py-1 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+          class="px-3 py-1 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
           @click="clearAllFiles"
         >
           Clear
@@ -238,7 +238,7 @@ resources/js/Components/Forms/FormFileUpload.vue
     </div>
 
     <!-- Help Text -->
-    <p v-if="helpText && !hasError" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <p v-if="helpText && !hasError" class="mt-1 text-sm text-slate-500 dark:text-slate-400">
       {{ helpText }}
     </p>
 
@@ -385,14 +385,14 @@ const uploadContainerClasses = computed(() => [
   'relative',
   'border-2',
   'border-dashed',
-  'border-gray-300',
-  'dark:border-gray-600',
+  'border-slate-300',
+  'dark:border-slate-600',
   'rounded-lg',
   'cursor-pointer',
   'transition-colors',
   'duration-200',
-  'hover:border-gray-400',
-  'dark:hover:border-gray-500',
+  'hover:border-slate-400',
+  'dark:hover:border-slate-500',
   'focus-within:border-blue-500',
   'focus-within:ring-2',
   'focus-within:ring-blue-500',
@@ -684,7 +684,7 @@ defineExpose({
 /* Custom scrollbar for file list */
 .overflow-y-auto {
   scrollbar-width: thin;
-  scrollbar-color: rgb(156 163 175) transparent;
+  scrollbar-color: rgb(148 163 184) transparent;
 }
 
 .overflow-y-auto::-webkit-scrollbar {
@@ -696,12 +696,12 @@ defineExpose({
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background-color: rgb(156 163 175);
+  background-color: rgb(148 163 184);
   border-radius: 3px;
 }
 
 .dark .overflow-y-auto::-webkit-scrollbar-thumb {
-  background-color: rgb(75 85 99);
+  background-color: rgb(71 85 105);
 }
 
 /* Drag animation */

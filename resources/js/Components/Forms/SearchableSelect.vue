@@ -9,10 +9,10 @@
                 type="text"
                 :placeholder="placeholder"
                 :class="[
-                    'w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200 cursor-pointer',
+                    'w-full px-4 py-3 border rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all duration-200 cursor-pointer',
                     hasError
                         ? 'border-red-500'
-                        : 'border-gray-300 dark:border-gray-600',
+                        : 'border-slate-300 dark:border-slate-600',
                     isOpen ? 'rounded-b-none border-b-0' : '',
                 ]"
                 @click="handleInputClick"
@@ -30,7 +30,7 @@
             >
                 <ChevronDownIcon
                     :class="[
-                        'h-5 w-5 text-gray-400 transition-transform duration-200 hover:text-gray-600',
+                        'h-5 w-5 text-slate-400 transition-transform duration-200 hover:text-slate-600',
                         isOpen ? 'transform rotate-180' : '',
                     ]"
                 />
@@ -41,7 +41,7 @@
                 v-if="selectedOption && !readonly"
                 type="button"
                 @click="clearSelection"
-                class="absolute inset-y-0 right-8 flex items-center pr-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                class="absolute inset-y-0 right-8 flex items-center pr-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
             >
                 <XMarkIcon class="h-4 w-4" />
             </button>
@@ -50,16 +50,16 @@
         <!-- Dropdown Options -->
         <div
             v-show="isOpen"
-            class="absolute z-50 w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 border-t-0 rounded-b-lg shadow-lg max-h-64 overflow-y-auto"
+            class="absolute z-50 w-full bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 border-t-0 rounded-b-lg shadow-lg max-h-64 overflow-y-auto"
         >
             <!-- Search Input Inside Dropdown -->
-            <div class="p-3 border-b border-gray-200 dark:border-gray-600">
+            <div class="p-3 border-b border-slate-200 dark:border-slate-600">
                 <input
                     ref="searchInputDropdown"
                     v-model="searchQuery"
                     type="text"
                     placeholder="Oturum adı ile ara..."
-                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm"
+                    class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 text-sm"
                     @keydown.down.prevent="navigateDown"
                     @keydown.up.prevent="navigateUp"
                     @keydown.enter.prevent="selectHighlighted"
@@ -73,7 +73,7 @@
                 <template v-for="group in filteredOptions" :key="group.id">
                     <!-- Group Header -->
                     <div
-                        class="px-4 py-2 bg-gray-50 dark:bg-gray-800 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider border-b border-gray-200 dark:border-gray-600"
+                        class="px-4 py-2 bg-slate-50 dark:bg-slate-800 text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-600"
                     >
                         {{ group.name }}
                     </div>
@@ -93,28 +93,28 @@
                             )
                         "
                         :class="[
-                            'px-4 py-3 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0',
+                            'px-4 py-3 cursor-pointer border-b border-slate-100 dark:border-slate-600 last:border-b-0',
                             highlightedIndex ===
                             getGlobalIndex(group.id, itemIndex)
-                                ? 'bg-gray-100 dark:bg-gray-600'
-                                : 'hover:bg-gray-50 dark:hover:bg-gray-600',
+                                ? 'bg-slate-100 dark:bg-slate-600'
+                                : 'hover:bg-slate-50 dark:hover:bg-slate-600',
                         ]"
                     >
                         <div class="flex flex-col">
                             <span
-                                class="text-sm font-medium text-gray-900 dark:text-white"
+                                class="text-sm font-medium text-slate-900 dark:text-white"
                             >
                                 {{ item.title }}
                             </span>
                             <span
-                                class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                                class="text-xs text-slate-500 dark:text-slate-400 mt-1"
                             >
                                 {{ item.venue?.display_name }} •
                                 {{ formatTime(item.start_time) }} -
                                 {{ formatTime(item.end_time) }}
                                 <span
                                     v-if="item.session_type_display"
-                                    class="ml-2 px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-xs"
+                                    class="ml-2 px-2 py-1 bg-slate-200 dark:bg-slate-700 rounded-full text-xs"
                                 >
                                     {{ item.session_type_display }}
                                 </span>
@@ -127,10 +127,10 @@
             <!-- No Results -->
             <div
                 v-else-if="searchQuery.trim()"
-                class="px-4 py-6 text-center text-gray-500 dark:text-gray-400"
+                class="px-4 py-6 text-center text-slate-500 dark:text-slate-400"
             >
                 <MagnifyingGlassIcon
-                    class="h-8 w-8 mx-auto mb-2 text-gray-300 dark:text-gray-600"
+                    class="h-8 w-8 mx-auto mb-2 text-slate-300 dark:text-slate-600"
                 />
                 <p class="text-sm">"{{ searchQuery }}" için sonuç bulunamadı</p>
                 <p class="text-xs mt-1">Farklı bir arama terimi deneyin</p>
@@ -139,10 +139,10 @@
             <!-- No Options Available -->
             <div
                 v-else
-                class="px-4 py-6 text-center text-gray-500 dark:text-gray-400"
+                class="px-4 py-6 text-center text-slate-500 dark:text-slate-400"
             >
                 <MagnifyingGlassIcon
-                    class="h-8 w-8 mx-auto mb-2 text-gray-300 dark:text-gray-600"
+                    class="h-8 w-8 mx-auto mb-2 text-slate-300 dark:text-slate-600"
                 />
                 <p class="text-sm">Henüz program oturumu bulunmuyor</p>
                 <p class="text-xs mt-1">Önce program oturumları oluşturun</p>
@@ -465,14 +465,14 @@ onMounted(() => {
 }
 
 .max-h-64::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-gray-800;
+    @apply bg-slate-100 dark:bg-slate-800;
 }
 
 .max-h-64::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+    @apply bg-slate-300 dark:bg-slate-600 rounded-full;
 }
 
 .max-h-64::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400 dark:bg-gray-500;
+    @apply bg-slate-400 dark:bg-slate-500;
 }
 </style>

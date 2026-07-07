@@ -1,19 +1,19 @@
 <!-- resources/js/Components/Charts/EventChart.vue -->
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">
           Etkinlik Analizi
         </h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400">
+        <p class="text-sm text-slate-500 dark:text-slate-400">
           Son {{ timeRange }} günlük veriler
         </p>
       </div>
       
       <!-- Time Range Selector -->
-      <div class="flex rounded-lg bg-gray-100 dark:bg-gray-700 p-1">
+      <div class="flex rounded-lg bg-slate-100 dark:bg-slate-700 p-1">
         <button
           v-for="range in timeRanges"
           :key="range.value"
@@ -21,8 +21,8 @@
           :class="[
             'px-3 py-1 text-sm font-medium rounded-md transition-all duration-200',
             selectedTimeRange === range.value
-              ? 'bg-white dark:bg-gray-800 text-blue-600 shadow-sm'
-              : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+              ? 'bg-white dark:bg-slate-800 text-blue-600 shadow-sm'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
           ]"
         >
           {{ range.label }}
@@ -31,7 +31,7 @@
     </div>
 
     <!-- Chart Tabs -->
-    <div class="border-b border-gray-200 dark:border-gray-700 mb-6">
+    <div class="border-b border-slate-200 dark:border-slate-700 mb-6">
       <nav class="-mb-px flex space-x-8">
         <button
           v-for="tab in chartTabs"
@@ -41,7 +41,7 @@
             'py-2 px-1 border-b-2 font-medium text-sm transition-colors duration-200',
             activeTab === tab.key
               ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+              : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'
           ]"
         >
           <component :is="tab.icon" class="inline h-4 w-4 mr-2" />
@@ -56,7 +56,7 @@
       <div v-if="activeTab === 'overview'" class="grid grid-cols-2 gap-6 h-full">
         <!-- Status Distribution -->
         <div class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4">
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
             Etkinlik Durumları
           </h4>
           <div class="relative h-40">
@@ -66,22 +66,22 @@
             <div v-for="status in statusData" :key="status.label" class="flex items-center justify-between text-xs">
               <div class="flex items-center">
                 <div :class="['w-3 h-3 rounded-full mr-2', status.color]"></div>
-                <span class="text-gray-600 dark:text-gray-400">{{ status.label }}</span>
+                <span class="text-slate-600 dark:text-slate-400">{{ status.label }}</span>
               </div>
-              <span class="font-medium text-gray-900 dark:text-gray-100">{{ status.count }}</span>
+              <span class="font-medium text-slate-900 dark:text-slate-100">{{ status.count }}</span>
             </div>
           </div>
         </div>
 
         <!-- Monthly Trend -->
         <div class="bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg p-4">
-          <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
             Aylık Trend
           </h4>
           <div class="relative h-40">
             <canvas ref="trendChart"></canvas>
           </div>
-          <div class="mt-3 flex justify-between text-xs text-gray-500 dark:text-gray-400">
+          <div class="mt-3 flex justify-between text-xs text-slate-500 dark:text-slate-400">
             <span>Bu ay: {{ currentMonthEvents }} etkinlik</span>
             <span class="text-green-600 dark:text-green-400">+{{ monthlyGrowth }}% artış</span>
           </div>
@@ -92,7 +92,7 @@
       <div v-if="activeTab === 'timeline'" class="h-full">
         <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4 h-full">
           <div class="flex justify-between items-center mb-4">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">
               Etkinlik Zaman Çizelgesi
             </h4>
             <div class="flex space-x-2">
@@ -117,7 +117,7 @@
         <div class="grid grid-cols-3 gap-4 h-full">
           <!-- Sessions per Event -->
           <div class="bg-gradient-to-br from-orange-50 to-red-100 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg p-4">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
               Oturum Dağılımı
             </h4>
             <div class="relative h-32">
@@ -127,7 +127,7 @@
               <div class="text-lg font-bold text-orange-600 dark:text-orange-400">
                 {{ averageSessionsPerEvent.toFixed(1) }}
               </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
+              <div class="text-xs text-slate-500 dark:text-slate-400">
                 ortalama oturum/etkinlik
               </div>
             </div>
@@ -135,7 +135,7 @@
 
           <!-- Participants -->
           <div class="bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-lg p-4">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
               Katılımcı Analizi
             </h4>
             <div class="relative h-32">
@@ -145,7 +145,7 @@
               <div class="text-lg font-bold text-cyan-600 dark:text-cyan-400">
                 {{ totalParticipants }}
               </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
+              <div class="text-xs text-slate-500 dark:text-slate-400">
                 toplam katılımcı
               </div>
             </div>
@@ -153,7 +153,7 @@
 
           <!-- Organizations -->
           <div class="bg-gradient-to-br from-violet-50 to-purple-100 dark:from-violet-900/20 dark:to-purple-900/20 rounded-lg p-4">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
               Organizasyon Bazlı
             </h4>
             <div class="relative h-32">
@@ -163,7 +163,7 @@
               <div class="text-lg font-bold text-violet-600 dark:text-violet-400">
                 {{ activeOrganizations }}
               </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
+              <div class="text-xs text-slate-500 dark:text-slate-400">
                 aktif organizasyon
               </div>
             </div>
@@ -175,10 +175,10 @@
       <div v-if="activeTab === 'performance'" class="h-full">
         <div class="bg-gradient-to-br from-indigo-50 to-blue-100 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-lg p-4 h-full">
           <div class="flex justify-between items-center mb-4">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <h4 class="text-sm font-medium text-slate-700 dark:text-slate-300">
               Performans Metrikleri
             </h4>
-            <div class="text-xs text-gray-500 dark:text-gray-400">
+            <div class="text-xs text-slate-500 dark:text-slate-400">
               Son güncellenme: {{ lastUpdated }}
             </div>
           </div>
@@ -190,7 +190,7 @@
               <div class="text-lg font-bold text-indigo-600 dark:text-indigo-400">
                 {{ completionRate }}%
               </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
+              <div class="text-xs text-slate-500 dark:text-slate-400">
                 Tamamlanma Oranı
               </div>
             </div>
@@ -198,7 +198,7 @@
               <div class="text-lg font-bold text-green-600 dark:text-green-400">
                 {{ avgEventDuration }}
               </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
+              <div class="text-xs text-slate-500 dark:text-slate-400">
                 Ort. Etkinlik Süresi (gün)
               </div>
             </div>
@@ -206,7 +206,7 @@
               <div class="text-lg font-bold text-purple-600 dark:text-purple-400">
                 {{ totalPresentations }}
               </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
+              <div class="text-xs text-slate-500 dark:text-slate-400">
                 Toplam Sunum
               </div>
             </div>
@@ -214,7 +214,7 @@
               <div class="text-lg font-bold text-orange-600 dark:text-orange-400">
                 {{ sponsorshipRate }}%
               </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
+              <div class="text-xs text-slate-500 dark:text-slate-400">
                 Sponsorluk Oranı
               </div>
             </div>
@@ -223,30 +223,30 @@
       </div>
 
       <!-- Loading State -->
-      <div v-if="loading" class="absolute inset-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg flex items-center justify-center">
+      <div v-if="loading" class="absolute inset-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-lg flex items-center justify-center">
         <div class="flex items-center space-x-2">
           <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-          <span class="text-sm text-gray-600 dark:text-gray-400">Veriler yükleniyor...</span>
+          <span class="text-sm text-slate-600 dark:text-slate-400">Veriler yükleniyor...</span>
         </div>
       </div>
     </div>
 
     <!-- Export Actions -->
     <div class="mt-6 flex justify-between items-center">
-      <div class="text-xs text-gray-500 dark:text-gray-400">
+      <div class="text-xs text-slate-500 dark:text-slate-400">
         {{ events.length }} etkinlik analiz edildi
       </div>
       <div class="flex space-x-2">
         <button
           @click="exportChart"
-          class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
+          class="inline-flex items-center px-3 py-1 border border-slate-300 rounded-md text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
         >
           <ArrowDownTrayIcon class="w-3 h-3 mr-1" />
           Dışa Aktar
         </button>
         <button
           @click="refreshData"
-          class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600"
+          class="inline-flex items-center px-3 py-1 border border-slate-300 rounded-md text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-600"
         >
           <ArrowPathIcon class="w-3 h-3 mr-1" />
           Yenile
@@ -328,7 +328,7 @@ const statusData = computed(() => [
   { label: 'Yayında', count: props.events.filter(e => e.is_published && e.status === 'upcoming').length, color: 'bg-green-500' },
   { label: 'Taslak', count: props.events.filter(e => !e.is_published).length, color: 'bg-yellow-500' },
   { label: 'Devam Ediyor', count: props.events.filter(e => e.status === 'ongoing').length, color: 'bg-blue-500' },
-  { label: 'Tamamlandı', count: props.events.filter(e => e.status === 'past').length, color: 'bg-gray-500' }
+  { label: 'Tamamlandı', count: props.events.filter(e => e.status === 'past').length, color: 'bg-slate-500' }
 ])
 
 const upcomingEvents = computed(() => props.events.filter(e => e.status === 'upcoming').length)

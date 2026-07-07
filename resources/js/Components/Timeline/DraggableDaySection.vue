@@ -69,7 +69,7 @@
               ></div>
               <span class="text-sm font-medium">{{ venue.display_name || venue.name }}</span>
             </div>
-            <div class="text-xs text-gray-500 mt-1">
+            <div class="text-xs text-slate-500 mt-1">
               {{ venue.sessions.length }} oturum
             </div>
           </div>
@@ -123,7 +123,7 @@ const gridCols = computed(() => {
 // Methods
 const getCrossZoneClass = (venue) => {
   if (!dragContext?.dragState.isDragging) {
-    return 'border-gray-300 dark:border-gray-600 text-gray-500'
+    return 'border-slate-300 dark:border-slate-600 text-slate-500'
   }
   
   const sourceVenueId = dragContext.dragState.sourceVenue?.id
@@ -141,7 +141,7 @@ const getCrossZoneClass = (venue) => {
     }
   }
   
-  return 'border-gray-300 dark:border-gray-600 text-gray-500 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20'
+  return 'border-slate-300 dark:border-slate-600 text-slate-500 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20'
 }
 
 const hasTimeConflict = (venue, session) => {

@@ -26,7 +26,7 @@ resources/js/Components/Forms/FormColorPicker.vue
     <label 
       v-if="label" 
       :for="colorPickerId" 
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
       :class="{ 'text-red-600 dark:text-red-400': hasError }"
     >
       {{ label }}
@@ -59,7 +59,7 @@ resources/js/Components/Forms/FormColorPicker.vue
           
           <!-- No Color Indicator -->
           <div v-if="!displayColor" class="absolute inset-0 flex items-center justify-center">
-            <XMarkIcon class="h-4 w-4 text-gray-400" />
+            <XMarkIcon class="h-4 w-4 text-slate-400" />
           </div>
         </button>
 
@@ -124,7 +124,7 @@ resources/js/Components/Forms/FormColorPicker.vue
       >
         <div
           v-if="isOpen"
-          class="absolute z-50 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 p-4"
+          class="absolute z-50 mt-2 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-600 p-4"
           :class="dropdownPosition === 'up' ? 'bottom-full mb-2' : 'top-full'"
           style="min-width: 280px;"
         >
@@ -194,7 +194,7 @@ resources/js/Components/Forms/FormColorPicker.vue
           <div class="mb-4 grid grid-cols-2 gap-3 text-sm">
             <!-- HEX -->
             <div>
-              <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">HEX</label>
+              <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">HEX</label>
               <input
                 v-model="hexValue"
                 type="text"
@@ -206,7 +206,7 @@ resources/js/Components/Forms/FormColorPicker.vue
 
             <!-- RGB -->
             <div>
-              <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">RGB</label>
+              <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">RGB</label>
               <input
                 v-model="rgbValue"
                 type="text"
@@ -218,7 +218,7 @@ resources/js/Components/Forms/FormColorPicker.vue
 
             <!-- HSL -->
             <div>
-              <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">HSL</label>
+              <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">HSL</label>
               <input
                 v-model="hslValue"
                 type="text"
@@ -230,7 +230,7 @@ resources/js/Components/Forms/FormColorPicker.vue
 
             <!-- Alpha -->
             <div v-if="allowTransparency">
-              <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Alpha</label>
+              <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Alpha</label>
               <input
                 v-model.number="transparency"
                 type="number"
@@ -245,7 +245,7 @@ resources/js/Components/Forms/FormColorPicker.vue
 
           <!-- Preset Colors -->
           <div v-if="presetColors.length > 0" class="mb-4">
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Presets</label>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Presets</label>
             <div class="grid grid-cols-8 gap-1">
               <button
                 v-for="(color, index) in presetColors"
@@ -262,7 +262,7 @@ resources/js/Components/Forms/FormColorPicker.vue
 
           <!-- Recent Colors -->
           <div v-if="showRecent && recentColors.length > 0" class="mb-4">
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Recent</label>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-2">Recent</label>
             <div class="grid grid-cols-8 gap-1">
               <button
                 v-for="(color, index) in recentColors"
@@ -278,10 +278,10 @@ resources/js/Components/Forms/FormColorPicker.vue
           </div>
 
           <!-- Action Buttons -->
-          <div class="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-600">
+          <div class="flex justify-between pt-4 border-t border-slate-200 dark:border-slate-600">
             <button
               type="button"
-              class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+              class="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
               @click="closePicker"
             >
               Cancel
@@ -299,7 +299,7 @@ resources/js/Components/Forms/FormColorPicker.vue
     </div>
 
     <!-- Help Text -->
-    <p v-if="helpText && !hasError" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <p v-if="helpText && !hasError" class="mt-1 text-sm text-slate-500 dark:text-slate-400">
       {{ helpText }}
     </p>
 
@@ -320,7 +320,7 @@ import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 
 // Mock EyeDropper icon
-const EyeDropperIcon = { template: '<div class="w-4 h-4 bg-gray-400 rounded"></div>' }
+const EyeDropperIcon = { template: '<div class="w-4 h-4 bg-slate-400 rounded"></div>' }
 
 // Props
 const props = defineProps({
@@ -483,9 +483,9 @@ const hasSuccess = computed(() => Boolean(props.successMessage))
 const inputClasses = computed(() => {
   const baseClasses = [
     'block', 'w-full', 'rounded-md', 'border', 'shadow-sm', 'transition-colors', 'duration-200',
-    'placeholder-gray-400', 'dark:placeholder-gray-500',
-    'bg-white', 'dark:bg-gray-900',
-    'text-gray-900', 'dark:text-gray-100',
+    'placeholder-slate-400', 'dark:placeholder-slate-500',
+    'bg-white', 'dark:bg-slate-900',
+    'text-slate-900', 'dark:text-slate-100',
     'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-0',
     'focus:border-blue-500', 'focus:ring-blue-500',
     'font-mono', 'text-sm'
@@ -500,7 +500,7 @@ const inputClasses = computed(() => {
   return [
     ...baseClasses,
     ...sizeClasses[props.size].split(' '),
-    'border-gray-300', 'dark:border-gray-600'
+    'border-slate-300', 'dark:border-slate-600'
   ]
 })
 
@@ -981,7 +981,7 @@ defineExpose({
 
 <style scoped>
 .color-preview {
-  @apply relative w-10 h-10 rounded-md border-2 border-gray-300 dark:border-gray-600 cursor-pointer transition-colors duration-200 hover:border-gray-400 dark:hover:border-gray-500;
+  @apply relative w-10 h-10 rounded-md border-2 border-slate-300 dark:border-slate-600 cursor-pointer transition-colors duration-200 hover:border-slate-400 dark:hover:border-slate-500;
 }
 
 .hex-input {
@@ -990,11 +990,11 @@ defineExpose({
 
 .eyedropper-btn,
 .clear-btn {
-  @apply p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors;
+  @apply p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors;
 }
 
 .color-canvas {
-  @apply rounded border border-gray-200 dark:border-gray-600;
+  @apply rounded border border-slate-200 dark:border-slate-600;
 }
 
 .color-cursor {
@@ -1003,20 +1003,20 @@ defineExpose({
 
 .hue-slider,
 .alpha-slider {
-  @apply rounded border border-gray-200 dark:border-gray-600 relative;
+  @apply rounded border border-slate-200 dark:border-slate-600 relative;
 }
 
 .hue-cursor,
 .alpha-cursor {
-  @apply absolute top-0 w-2 h-full bg-white border border-gray-300 dark:border-gray-600 rounded-sm shadow-sm pointer-events-none transform -translate-x-1/2;
+  @apply absolute top-0 w-2 h-full bg-white border border-slate-300 dark:border-slate-600 rounded-sm shadow-sm pointer-events-none transform -translate-x-1/2;
 }
 
 .color-value-input {
-  @apply w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500;
+  @apply w-full px-2 py-1 text-xs border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500;
 }
 
 .preset-color {
-  @apply w-6 h-6 rounded border border-gray-200 dark:border-gray-600 cursor-pointer transition-all duration-150 hover:scale-110;
+  @apply w-6 h-6 rounded border border-slate-200 dark:border-slate-600 cursor-pointer transition-all duration-150 hover:scale-110;
 }
 
 .preset-color:focus {

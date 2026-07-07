@@ -6,19 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreEventRequest;
 use App\Http\Requests\Admin\UpdateEventRequest;
 use App\Models\Event;
+use App\Models\EventDay;
 use App\Models\Organization;
 use App\Models\ProgramSession;
-use App\Models\ProgramSessionCategory;
-use App\Models\EventDay;
+use Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
-use Carbon;
 
 class EventController extends Controller
 {
@@ -81,7 +80,7 @@ class EventController extends Controller
 
         // Check user organizations
         try {
-            if (!$user->isAdmin()) {
+            if (! $user->isAdmin()) {
                 $userOrganizations = $user->organizations();
                 $organizationIds = $userOrganizations->pluck('organizations.id');
 
@@ -108,10 +107,10 @@ class EventController extends Controller
             ->withCount(['eventDays']);
 
         // Apply user access restrictions
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             Log::info('🔒 Applying organization restriction', [
-                'organization_ids' => $organizationIds->toArray()
+                'organization_ids' => $organizationIds->toArray(),
             ]);
             $query->whereIn('organization_id', $organizationIds);
         }
@@ -209,13 +208,13 @@ class EventController extends Controller
                         'per_page' => 15,
                         'to' => 0,
                         'total' => 0,
-                    ]
+                    ],
                 ],
                 'organizations' => [],
                 'filters' => [],
                 'stats' => ['total' => 0, 'published' => 0, 'upcoming' => 0, 'ongoing' => 0],
                 'can_create' => false,
-                'debug_error' => 'Pagination error: ' . $e->getMessage(),
+                'debug_error' => 'Pagination error: '.$e->getMessage(),
             ]);
         }
 
@@ -236,7 +235,7 @@ class EventController extends Controller
             } catch (\Exception $e) {
                 Log::warning('Error calculating event stats', [
                     'event_id' => $event->id,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
                 $totalSessions = 0;
                 $totalPresentations = 0;
@@ -285,7 +284,7 @@ class EventController extends Controller
         });
 
         Log::info('✅ Event transformation completed', [
-            'transformed_events_count' => $transformedEvents->count()
+            'transformed_events_count' => $transformedEvents->count(),
         ]);
 
         // Get organizations for filter dropdown
@@ -325,7 +324,7 @@ class EventController extends Controller
                     'per_page' => $events->perPage(),
                     'to' => $events->lastItem(),
                     'total' => $events->total(),
-                ]
+                ],
             ],
             'organizations' => $organizations,
             'filters' => [
@@ -402,7 +401,7 @@ class EventController extends Controller
             $event = Event::create($data);
 
             // Auto create days if requested
-            if (!empty($data['auto_create_days']) && $event->start_date && $event->end_date) {
+            if (! empty($data['auto_create_days']) && $event->start_date && $event->end_date) {
                 $this->autoCreateEventDays($event);
             }
 
@@ -420,7 +419,7 @@ class EventController extends Controller
             ]);
 
             return back()
-                ->withErrors(['error' => 'Etkinlik oluşturulurken bir hata oluştu: ' . $e->getMessage()])
+                ->withErrors(['error' => 'Etkinlik oluşturulurken bir hata oluştu: '.$e->getMessage()])
                 ->withInput();
         }
     }
@@ -432,18 +431,18 @@ class EventController extends Controller
     {
         try {
             $eventDaysData = $event->generateEventDaysData();
-            
+
             // Bulk insert for better performance
             EventDay::insert($eventDaysData);
-            
+
             Log::info('Auto-created event days', [
                 'event_id' => $event->id,
-                'days_created' => count($eventDaysData)
+                'days_created' => count($eventDaysData),
             ]);
         } catch (\Exception $e) {
             Log::error('Auto create event days failed', [
                 'event_id' => $event->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
             throw $e; // Re-throw to be caught by transaction
         }
@@ -466,7 +465,7 @@ class EventController extends Controller
             },
             'programSessionCategories' => function ($query) {
                 $query->orderBy('sort_order')->withCount('programSessions');
-            }
+            },
         ]);
 
         // Get event statistics with error handling
@@ -567,7 +566,7 @@ class EventController extends Controller
                     'presentations.participants',
                     'category',
                     'moderators',
-                    'sponsor'
+                    'sponsor',
                 ])
                 ->orderBy('start_time')
                 ->get();
@@ -653,7 +652,7 @@ class EventController extends Controller
         } catch (\Exception $e) {
             Log::warning('Error preparing timeline data', [
                 'event_id' => $event->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return [
@@ -735,10 +734,17 @@ class EventController extends Controller
         try {
             $data = $request->validated();
 
+            if (isset($data['title'])) {
+                $data['name'] = $data['title'];
+                unset($data['title']);
+            }
+
             // Generate unique slug if name changed
             if (isset($data['name']) && $data['name'] !== $event->name && empty($data['slug'])) {
                 $data['slug'] = Event::generateUniqueSlug($data['name'], $event->slug);
             }
+
+            $data = array_intersect_key($data, array_flip($event->getFillable()));
 
             $event->update($data);
 
@@ -757,7 +763,7 @@ class EventController extends Controller
             ]);
 
             return back()
-                ->withErrors(['error' => 'Etkinlik güncellenirken bir hata oluştu: ' . $e->getMessage()])
+                ->withErrors(['error' => 'Etkinlik güncellenirken bir hata oluştu: '.$e->getMessage()])
                 ->withInput();
         }
     }
@@ -770,13 +776,13 @@ class EventController extends Controller
         $this->authorize('publish', $event);
 
         try {
-            if (!$event->is_published && !$this->canEventBePublished($event)) {
+            if (! $event->is_published && ! $this->canEventBePublished($event)) {
                 return back()->withErrors([
-                    'error' => 'Etkinlik yayınlanabilmesi için en az bir gün ve salona sahip olmalıdır.'
+                    'error' => 'Etkinlik yayınlanabilmesi için en az bir gün ve salona sahip olmalıdır.',
                 ]);
             }
 
-            $event->update(['is_published' => !$event->is_published]);
+            $event->update(['is_published' => ! $event->is_published]);
 
             $message = $event->is_published
                 ? 'Etkinlik başarıyla yayınlandı.'
@@ -790,7 +796,7 @@ class EventController extends Controller
             ]);
 
             return back()->withErrors([
-                'error' => 'Etkinlik durumu değiştirilirken bir hata oluştu.'
+                'error' => 'Etkinlik durumu değiştirilirken bir hata oluştu.',
             ]);
         }
     }
@@ -807,7 +813,7 @@ class EventController extends Controller
 
         try {
             $newEvent = $event->replicate();
-            $newEvent->name = $event->name . ' (Kopya)';
+            $newEvent->name = $event->name.' (Kopya)';
             $newEvent->slug = Event::generateUniqueSlug($newEvent->name);
             $newEvent->is_published = false;
             $newEvent->created_by = auth()->id();
@@ -847,7 +853,7 @@ class EventController extends Controller
             ]);
 
             return back()->withErrors([
-                'error' => 'Etkinlik kopyalanırken bir hata oluştu: ' . $e->getMessage()
+                'error' => 'Etkinlik kopyalanırken bir hata oluştu: '.$e->getMessage(),
             ]);
         }
     }
@@ -863,7 +869,7 @@ class EventController extends Controller
             // Check if event is published
             if ($event->is_published) {
                 return back()->withErrors([
-                    'error' => 'Yayınlanmış etkinlik silinemez. Önce yayından kaldırın.'
+                    'error' => 'Yayınlanmış etkinlik silinemez. Önce yayından kaldırın.',
                 ]);
             }
 
@@ -886,7 +892,7 @@ class EventController extends Controller
             ]);
 
             return back()->withErrors([
-                'error' => 'Etkinlik silinirken bir hata oluştu.'
+                'error' => 'Etkinlik silinirken bir hata oluştu.',
             ]);
         }
     }
@@ -903,7 +909,7 @@ class EventController extends Controller
         // This will be implemented in ExportController
         return redirect()->route('admin.export.event-program', [
             'event' => $event,
-            'format' => $format
+            'format' => $format,
         ]);
     }
 
@@ -912,7 +918,7 @@ class EventController extends Controller
      */
     public function publicProgram(Event $event): RedirectResponse
     {
-        if (!$event->is_published) {
+        if (! $event->is_published) {
             abort(404);
         }
 
@@ -929,7 +935,7 @@ class EventController extends Controller
      */
     private function determineEventStatus($event): string
     {
-        if (!$event->is_published) {
+        if (! $event->is_published) {
             return 'draft';
         }
 
@@ -937,7 +943,7 @@ class EventController extends Controller
         $startDate = $event->start_date;
         $endDate = $event->end_date;
 
-        if (!$startDate) {
+        if (! $startDate) {
             return 'draft';
         }
 
@@ -949,7 +955,7 @@ class EventController extends Controller
             return 'completed';
         }
 
-        if ($startDate <= $now && (!$endDate || $endDate >= $now)) {
+        if ($startDate <= $now && (! $endDate || $endDate >= $now)) {
             return 'ongoing';
         }
 
@@ -961,17 +967,18 @@ class EventController extends Controller
      */
     private function formatDateRange($startDate, $endDate): string
     {
-        if (!$startDate) {
+        if (! $startDate) {
             return '-';
         }
 
         $start = $startDate->format('d.m.Y');
 
-        if (!$endDate || $startDate->format('Y-m-d') === $endDate->format('Y-m-d')) {
+        if (! $endDate || $startDate->format('Y-m-d') === $endDate->format('Y-m-d')) {
             return $start;
         }
 
         $end = $endDate->format('d.m.Y');
+
         return "{$start} - {$end}";
     }
 
@@ -991,8 +998,9 @@ class EventController extends Controller
         } catch (\Exception $e) {
             Log::warning('Error calculating total sessions', [
                 'event_id' => $event->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return 0;
         }
     }
@@ -1014,8 +1022,9 @@ class EventController extends Controller
         } catch (\Exception $e) {
             Log::warning('Error calculating total presentations', [
                 'event_id' => $event->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return 0;
         }
     }
@@ -1028,7 +1037,7 @@ class EventController extends Controller
         try {
             $baseQuery = Event::query();
 
-            if (!$user->isAdmin()) {
+            if (! $user->isAdmin()) {
                 $organizationIds = $user->organizations()->pluck('organizations.id');
                 $baseQuery->whereIn('organization_id', $organizationIds);
             }
@@ -1044,7 +1053,7 @@ class EventController extends Controller
         } catch (\Exception $e) {
             Log::warning('Error calculating dashboard stats', [
                 'user_id' => $user->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return [
@@ -1075,6 +1084,7 @@ class EventController extends Controller
                     return $day->venues->flatMap(function ($venue) {
                         $moderators = $venue->programSessions->flatMap->moderators;
                         $speakers = $venue->programSessions->flatMap->presentations->flatMap->speakers;
+
                         return $moderators->merge($speakers);
                     });
                 })
@@ -1091,7 +1101,7 @@ class EventController extends Controller
         } catch (\Exception $e) {
             Log::warning('Error calculating event statistics', [
                 'event_id' => $event->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return [
@@ -1128,7 +1138,7 @@ class EventController extends Controller
         } catch (\Exception $e) {
             Log::warning('Error getting recent activities', [
                 'event_id' => $event->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return [];
@@ -1146,8 +1156,9 @@ class EventController extends Controller
         } catch (\Exception $e) {
             Log::warning('Error checking if event can be published', [
                 'event_id' => $event->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
+
             return false;
         }
     }
@@ -1194,7 +1205,7 @@ class EventController extends Controller
                     'sponsor',
                     'moderators',
                     'categories',
-                    'presentations'
+                    'presentations',
                 ])
                 ->orderBy('start_time')
                 ->get()
@@ -1259,7 +1270,7 @@ class EventController extends Controller
             Log::error('Event timeline load failed', [
                 'event_id' => $event->id,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             // ✅ FIX: Use redirect with proper route instead of back()
@@ -1270,9 +1281,7 @@ class EventController extends Controller
 
     /**
      * Export event timeline in various formats
-     * 
-     * @param Request $request
-     * @param Event $event
+     *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|JsonResponse|RedirectResponse
      */
     public function exportTimeline(Request $request, Event $event)
@@ -1294,7 +1303,7 @@ class EventController extends Controller
                     'sponsor',
                     'moderators',
                     'categories',
-                    'presentations'
+                    'presentations',
                 ])
                 ->orderBy('start_time')
                 ->get();
@@ -1316,7 +1325,7 @@ class EventController extends Controller
             Log::error('Timeline export failed', [
                 'event_id' => $event->id,
                 'format' => $format,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             // ✅ FIX: Use redirect with proper route instead of back()
@@ -1327,9 +1336,8 @@ class EventController extends Controller
 
     /**
      * Detect time conflicts between sessions
-     * 
-     * @param \Illuminate\Support\Collection|array $sessions
-     * @return array
+     *
+     * @param  \Illuminate\Support\Collection|array  $sessions
      */
     private function detectTimeConflicts($sessions): array
     {
@@ -1348,10 +1356,10 @@ class EventController extends Controller
 
                 // ✅ FIX: Proper array access for mapped data
                 if (
-                    !isset($currentSession['start_time']) || !isset($currentSession['end_time']) ||
-                    !isset($nextSession['start_time']) || !isset($nextSession['end_time']) ||
-                    !$currentSession['start_time'] || !$currentSession['end_time'] ||
-                    !$nextSession['start_time'] || !$nextSession['end_time']
+                    ! isset($currentSession['start_time']) || ! isset($currentSession['end_time']) ||
+                    ! isset($nextSession['start_time']) || ! isset($nextSession['end_time']) ||
+                    ! $currentSession['start_time'] || ! $currentSession['end_time'] ||
+                    ! $nextSession['start_time'] || ! $nextSession['end_time']
                 ) {
                     continue;
                 }
@@ -1386,10 +1394,6 @@ class EventController extends Controller
 
     /**
      * Calculate overlap in minutes between two times
-     * 
-     * @param string $endTime
-     * @param string $startTime
-     * @return int
      */
     private function calculateOverlapMinutes(string $endTime, string $startTime): int
     {
@@ -1409,18 +1413,17 @@ class EventController extends Controller
 
     /**
      * Export timeline as PDF
-     * 
-     * @param Event $event
-     * @param \Illuminate\Database\Eloquent\Collection $sessions
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection  $sessions
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     private function exportTimelinePdf(Event $event, $sessions)
     {
         // ✅ FIX: Check if PDF package is available
-        if (!class_exists('Barryvdh\DomPDF\Facade\Pdf')) {
+        if (! class_exists('Barryvdh\DomPDF\Facade\Pdf')) {
             return response()->json([
                 'error' => 'PDF export paketi yüklü değil. Lütfen barryvdh/laravel-dompdf paketini yükleyin.',
-                'format' => 'pdf'
+                'format' => 'pdf',
             ], 500);
         }
 
@@ -1434,36 +1437,35 @@ class EventController extends Controller
                 'exportDate' => now(),
             ]);
 
-            $filename = Event::createSlugFromTurkish($event->name) . '-program-' . now()->format('Y-m-d') . '.pdf';
+            $filename = Event::createSlugFromTurkish($event->name).'-program-'.now()->format('Y-m-d').'.pdf';
 
             return $pdf->download($filename);
         } catch (\Exception $e) {
             Log::error('PDF export failed', [
                 'event_id' => $event->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return response()->json([
-                'error' => 'PDF oluşturulurken hata oluştu: ' . $e->getMessage(),
-                'format' => 'pdf'
+                'error' => 'PDF oluşturulurken hata oluştu: '.$e->getMessage(),
+                'format' => 'pdf',
             ], 500);
         }
     }
 
     /**
      * Export timeline as Excel
-     * 
-     * @param Event $event
-     * @param \Illuminate\Database\Eloquent\Collection $sessions
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection  $sessions
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     private function exportTimelineExcel(Event $event, $sessions)
     {
         // ✅ FIX: Check if Excel package is available
-        if (!class_exists('Rap2hpoutre\FastExcel\FastExcel')) {
+        if (! class_exists('Rap2hpoutre\FastExcel\FastExcel')) {
             return response()->json([
                 'error' => 'Excel export paketi yüklü değil. Lütfen rap2hpoutre/fast-excel paketini yükleyin.',
-                'format' => 'excel'
+                'format' => 'excel',
             ], 500);
         }
 
@@ -1487,19 +1489,19 @@ class EventController extends Controller
             ];
         }
 
-        $filename = Event::createSlugFromTurkish($event->name) . '-program-' . now()->format('Y-m-d') . '.xlsx';
+        $filename = Event::createSlugFromTurkish($event->name).'-program-'.now()->format('Y-m-d').'.xlsx';
 
         try {
             return (new \Rap2hpoutre\FastExcel\FastExcel($data))->download($filename);
         } catch (\Exception $e) {
             Log::error('Excel export failed', [
                 'event_id' => $event->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return response()->json([
-                'error' => 'Excel dosyası oluşturulurken hata oluştu: ' . $e->getMessage(),
-                'format' => 'excel'
+                'error' => 'Excel dosyası oluşturulurken hata oluştu: '.$e->getMessage(),
+                'format' => 'excel',
             ], 500);
         }
     }

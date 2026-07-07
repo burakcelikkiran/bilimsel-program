@@ -10,7 +10,7 @@
         <div class="w-full space-y-8">
             <!-- Header Section -->
             <div
-                class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+                class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden"
             >
                 <div class="relative">
                     <!-- Banner with venue color -->
@@ -105,17 +105,17 @@
 
                     <!-- Meta Bar -->
                     <div
-                        class="px-8 py-6 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
+                        class="px-8 py-6 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700"
                     >
                         <div class="flex flex-wrap items-center gap-6">
                             <!-- Event Day Info -->
                             <div class="flex items-center space-x-2">
                                 <span
-                                    class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                                    class="text-sm font-medium text-slate-500 dark:text-slate-400"
                                     >Etkinlik Günü:</span
                                 >
                                 <span
-                                    class="text-sm font-medium text-gray-900 dark:text-white"
+                                    class="text-sm font-medium text-slate-900 dark:text-white"
                                 >
                                     {{
                                         venue.event_day?.display_name ||
@@ -126,10 +126,10 @@
 
                             <!-- Event Info -->
                             <div class="flex items-center space-x-2">
-                                <CalendarIcon class="h-5 w-5 text-gray-400" />
+                                <CalendarIcon class="h-5 w-5 text-slate-400" />
                                 <div>
                                     <div
-                                        class="text-sm font-medium text-gray-900 dark:text-white"
+                                        class="text-sm font-medium text-slate-900 dark:text-white"
                                     >
                                         {{
                                             venue.event_day?.event?.name ||
@@ -137,7 +137,7 @@
                                         }}
                                     </div>
                                     <div
-                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                        class="text-xs text-slate-500 dark:text-slate-400"
                                     >
                                         Etkinlik
                                     </div>
@@ -146,10 +146,10 @@
 
                             <!-- Display Name Preview -->
                             <div class="flex items-center space-x-2">
-                                <EyeIcon class="h-5 w-5 text-gray-400" />
+                                <EyeIcon class="h-5 w-5 text-slate-400" />
                                 <div>
                                     <div
-                                        class="text-sm font-medium text-gray-900 dark:text-white"
+                                        class="text-sm font-medium text-slate-900 dark:text-white"
                                     >
                                         {{
                                             form.display_name ||
@@ -158,7 +158,7 @@
                                         }}
                                     </div>
                                     <div
-                                        class="text-xs text-gray-500 dark:text-gray-400"
+                                        class="text-xs text-slate-500 dark:text-slate-400"
                                     >
                                         Görünen Ad (Önizleme)
                                     </div>
@@ -169,13 +169,13 @@
 
                     <!-- Actions Bar -->
                     <div
-                        class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-gray-900"
+                        class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-slate-800"
                     >
                         <div class="flex items-center space-x-3">
                             <!-- Back to List -->
                             <Link
                                 :href="route('admin.venues.index')"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
                             >
                                 <ArrowLeftIcon class="h-4 w-4 mr-2" />
                                 Salon Listesi
@@ -184,7 +184,7 @@
                             <!-- View Original -->
                             <Link
                                 :href="route('admin.venues.show', venue.id)"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
                             >
                                 <EyeIcon class="h-4 w-4 mr-2" />
                                 Orijinali Görüntüle
@@ -196,7 +196,7 @@
                             <button
                                 type="button"
                                 @click="resetForm"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors shadow-sm"
                             >
                                 <ArrowPathIcon class="h-4 w-4 mr-2" />
                                 Sıfırla
@@ -207,7 +207,7 @@
                                 type="submit"
                                 form="edit-venue-form"
                                 :disabled="form.processing"
-                                class="inline-flex items-center px-6 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm border border-gray-700"
+                                class="inline-flex items-center px-6 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-900 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm border border-slate-700"
                             >
                                 <span
                                     v-if="form.processing"
@@ -251,18 +251,18 @@
                 <div class="xl:col-span-3 space-y-8">
                     <!-- Form Card -->
                     <div
-                        class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+                        class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden"
                     >
                         <form
                             id="edit-venue-form"
                             @submit.prevent="updateVenue"
-                            class="divide-y divide-gray-200 dark:divide-gray-700"
+                            class="divide-y divide-slate-200 dark:divide-slate-700"
                         >
                             <!-- Basic Information -->
                             <div class="p-6 space-y-6">
                                 <div>
                                     <h3
-                                        class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                                        class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                                     >
                                         Temel Bilgiler
                                     </h3>
@@ -273,14 +273,14 @@
                                         <!-- Event Day -->
                                         <div class="md:col-span-2">
                                             <label
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                             >
                                                 Etkinlik Günü *
                                             </label>
                                             <select
                                                 v-model="form.event_day_id"
                                                 required
-                                                class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-gray-500 focus:ring-gray-500"
+                                                class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-slate-500 focus:ring-slate-500"
                                                 :class="
                                                     form.errors.event_day_id
                                                         ? 'border-red-500'
@@ -348,7 +348,7 @@
                                             >
                                                 <template #helper>
                                                     <p
-                                                        class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                                                        class="text-xs text-slate-500 dark:text-slate-400 mt-1"
                                                     >
                                                         Programda görünecek
                                                         isim. Boş bırakılırsa
@@ -380,7 +380,7 @@
                             <div class="p-6 space-y-6">
                                 <div>
                                     <h3
-                                        class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                                        class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                                     >
                                         Tasarım ve Ayarlar
                                     </h3>
@@ -391,7 +391,7 @@
                                         <!-- Color -->
                                         <div>
                                             <label
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                                             >
                                                 Salon Rengi
                                             </label>
@@ -399,13 +399,13 @@
                                                 <input
                                                     v-model="form.color"
                                                     type="color"
-                                                    class="h-12 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 cursor-pointer"
+                                                    class="h-12 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 cursor-pointer"
                                                 />
                                                 <input
                                                     v-model="form.color"
                                                     type="text"
                                                     placeholder="#3B82F6"
-                                                    class="block w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-gray-500 focus:ring-gray-500"
+                                                    class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:border-slate-500 focus:ring-slate-500"
                                                 />
                                             </div>
                                             <p
@@ -431,7 +431,7 @@
                                             >
                                                 <template #helper>
                                                     <p
-                                                        class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                                                        class="text-xs text-slate-500 dark:text-slate-400 mt-1"
                                                     >
                                                         Salonların
                                                         sıralanmasında
@@ -448,12 +448,12 @@
                             <div class="p-6 space-y-6">
                                 <div>
                                     <h3
-                                        class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                                        class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                                     >
                                         Hızlı Şablonlar
                                     </h3>
                                     <p
-                                        class="text-sm text-gray-600 dark:text-gray-400 mb-4"
+                                        class="text-sm text-slate-600 dark:text-slate-400 mb-4"
                                     >
                                         Salon türüne göre önceden tanımlanmış
                                         ayarları kullanabilirsiniz.
@@ -466,7 +466,7 @@
                                         <button
                                             type="button"
                                             @click="applyTemplate('auditorium')"
-                                            class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group"
+                                            class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left group"
                                         >
                                             <div class="flex items-center mb-2">
                                                 <div
@@ -477,13 +477,13 @@
                                                     />
                                                 </div>
                                                 <h4
-                                                    class="font-medium text-gray-900 dark:text-white"
+                                                    class="font-medium text-slate-900 dark:text-white"
                                                 >
                                                     Auditorium
                                                 </h4>
                                             </div>
                                             <p
-                                                class="text-sm text-gray-500 dark:text-gray-400"
+                                                class="text-sm text-slate-500 dark:text-slate-400"
                                             >
                                                 Büyük konferans salonu
                                             </p>
@@ -493,7 +493,7 @@
                                         <button
                                             type="button"
                                             @click="applyTemplate('conference')"
-                                            class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group"
+                                            class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left group"
                                         >
                                             <div class="flex items-center mb-2">
                                                 <div
@@ -504,13 +504,13 @@
                                                     />
                                                 </div>
                                                 <h4
-                                                    class="font-medium text-gray-900 dark:text-white"
+                                                    class="font-medium text-slate-900 dark:text-white"
                                                 >
                                                     Konferans
                                                 </h4>
                                             </div>
                                             <p
-                                                class="text-sm text-gray-500 dark:text-gray-400"
+                                                class="text-sm text-slate-500 dark:text-slate-400"
                                             >
                                                 Orta boy salon
                                             </p>
@@ -520,7 +520,7 @@
                                         <button
                                             type="button"
                                             @click="applyTemplate('meeting')"
-                                            class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group"
+                                            class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left group"
                                         >
                                             <div class="flex items-center mb-2">
                                                 <div
@@ -531,13 +531,13 @@
                                                     />
                                                 </div>
                                                 <h4
-                                                    class="font-medium text-gray-900 dark:text-white"
+                                                    class="font-medium text-slate-900 dark:text-white"
                                                 >
                                                     Toplantı
                                                 </h4>
                                             </div>
                                             <p
-                                                class="text-sm text-gray-500 dark:text-gray-400"
+                                                class="text-sm text-slate-500 dark:text-slate-400"
                                             >
                                                 Küçük toplantı salonu
                                             </p>
@@ -547,7 +547,7 @@
                                         <button
                                             type="button"
                                             @click="applyTemplate('workshop')"
-                                            class="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left group"
+                                            class="p-4 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left group"
                                         >
                                             <div class="flex items-center mb-2">
                                                 <div
@@ -558,13 +558,13 @@
                                                     />
                                                 </div>
                                                 <h4
-                                                    class="font-medium text-gray-900 dark:text-white"
+                                                    class="font-medium text-slate-900 dark:text-white"
                                                 >
                                                     Atölye
                                                 </h4>
                                             </div>
                                             <p
-                                                class="text-sm text-gray-500 dark:text-gray-400"
+                                                class="text-sm text-slate-500 dark:text-slate-400"
                                             >
                                                 Workshop salonu
                                             </p>
@@ -575,12 +575,12 @@
 
                             <!-- Form Actions -->
                             <div
-                                class="px-6 py-4 bg-gray-50 dark:bg-gray-800 flex items-center justify-between"
+                                class="px-6 py-4 bg-slate-50 dark:bg-slate-800 flex items-center justify-between"
                             >
                                 <div class="flex items-center space-x-4">
                                     <Link
                                         :href="route('admin.venues.index')"
-                                        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                                        class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
                                     >
                                         İptal
                                     </Link>
@@ -588,7 +588,7 @@
                                     <button
                                         type="button"
                                         @click="resetForm"
-                                        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                                        class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
                                     >
                                         Sıfırla
                                     </button>
@@ -600,7 +600,7 @@
                                         :href="
                                             route('admin.venues.show', venue.id)
                                         "
-                                        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                                        class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
                                     >
                                         <EyeIcon class="h-4 w-4 mr-2" />
                                         Görüntüle
@@ -609,7 +609,7 @@
                                     <button
                                         type="submit"
                                         :disabled="form.processing"
-                                        class="inline-flex items-center px-6 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-gray-700"
+                                        class="inline-flex items-center px-6 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-900 focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-slate-700"
                                     >
                                         <span
                                             v-if="form.processing"
@@ -649,10 +649,10 @@
                 <div class="space-y-6">
                     <!-- Live Preview -->
                     <div
-                        class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                        class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6"
                     >
                         <h3
-                            class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                            class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                         >
                             Önizleme
                         </h3>
@@ -660,29 +660,29 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
                                     <BuildingOfficeIcon
-                                        class="h-5 w-5 text-gray-500"
+                                        class="h-5 w-5 text-slate-500"
                                     />
                                     <span
-                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                        class="text-sm text-slate-600 dark:text-slate-400"
                                         >Salon Adı</span
                                     >
                                 </div>
                                 <span
-                                    class="text-sm font-semibold text-gray-900 dark:text-white"
+                                    class="text-sm font-semibold text-slate-900 dark:text-white"
                                     >{{ form.name || "Belirtilmemiş" }}</span
                                 >
                             </div>
 
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
-                                    <EyeIcon class="h-5 w-5 text-gray-500" />
+                                    <EyeIcon class="h-5 w-5 text-slate-500" />
                                     <span
-                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                        class="text-sm text-slate-600 dark:text-slate-400"
                                         >Görünen Ad</span
                                     >
                                 </div>
                                 <span
-                                    class="text-sm font-semibold text-gray-900 dark:text-white"
+                                    class="text-sm font-semibold text-slate-900 dark:text-white"
                                     >{{
                                         form.display_name ||
                                         form.name ||
@@ -694,15 +694,15 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
                                     <UserGroupIcon
-                                        class="h-5 w-5 text-gray-500"
+                                        class="h-5 w-5 text-slate-500"
                                     />
                                     <span
-                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                        class="text-sm text-slate-600 dark:text-slate-400"
                                         >Kapasite</span
                                     >
                                 </div>
                                 <span
-                                    class="text-sm font-semibold text-gray-900 dark:text-white"
+                                    class="text-sm font-semibold text-slate-900 dark:text-white"
                                     >{{
                                         form.capacity || "Belirtilmemiş"
                                     }}</span
@@ -712,16 +712,16 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
                                     <div
-                                        class="h-5 w-5 rounded border border-gray-300"
+                                        class="h-5 w-5 rounded border border-slate-300"
                                         :style="{ backgroundColor: form.color }"
                                     ></div>
                                     <span
-                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                        class="text-sm text-slate-600 dark:text-slate-400"
                                         >Renk</span
                                     >
                                 </div>
                                 <span
-                                    class="text-sm font-semibold text-gray-900 dark:text-white"
+                                    class="text-sm font-semibold text-slate-900 dark:text-white"
                                     >{{ form.color }}</span
                                 >
                             </div>
@@ -729,15 +729,15 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
                                     <HashtagIcon
-                                        class="h-5 w-5 text-gray-500"
+                                        class="h-5 w-5 text-slate-500"
                                     />
                                     <span
-                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                        class="text-sm text-slate-600 dark:text-slate-400"
                                         >Sıra</span
                                     >
                                 </div>
                                 <span
-                                    class="text-sm font-semibold text-gray-900 dark:text-white"
+                                    class="text-sm font-semibold text-slate-900 dark:text-white"
                                     >{{ form.sort_order || "Otomatik" }}</span
                                 >
                             </div>
@@ -747,20 +747,20 @@
                     <!-- Changes Summary -->
                     <div
                         v-if="hasChanges"
-                        class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+                        class="bg-slate-50 dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700"
                     >
                         <div class="flex items-start">
                             <ExclamationTriangleIcon
-                                class="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5 flex-shrink-0"
+                                class="h-5 w-5 text-slate-600 dark:text-slate-400 mt-0.5 flex-shrink-0"
                             />
                             <div class="ml-3">
                                 <h4
-                                    class="text-sm font-medium text-gray-900 dark:text-gray-100"
+                                    class="text-sm font-medium text-slate-900 dark:text-slate-100"
                                 >
                                     Kaydedilmemiş Değişiklikler
                                 </h4>
                                 <div
-                                    class="mt-2 text-sm text-gray-700 dark:text-gray-200"
+                                    class="mt-2 text-sm text-slate-700 dark:text-slate-200"
                                 >
                                     <p>
                                         Formu değiştirdiniz ancak henüz
@@ -774,10 +774,10 @@
 
                     <!-- Current Venue Details -->
                     <div
-                        class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+                        class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6"
                     >
                         <h3
-                            class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+                            class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
                         >
                             Mevcut Salon Bilgileri
                         </h3>
@@ -785,29 +785,29 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
                                     <CalendarIcon
-                                        class="h-5 w-5 text-gray-500"
+                                        class="h-5 w-5 text-slate-500"
                                     />
                                     <span
-                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                        class="text-sm text-slate-600 dark:text-slate-400"
                                         >Kayıt Tarihi</span
                                     >
                                 </div>
                                 <span
-                                    class="text-sm font-semibold text-gray-900 dark:text-white"
+                                    class="text-sm font-semibold text-slate-900 dark:text-white"
                                     >{{ formatDate(venue.created_at) }}</span
                                 >
                             </div>
 
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-2">
-                                    <ClockIcon class="h-5 w-5 text-gray-500" />
+                                    <ClockIcon class="h-5 w-5 text-slate-500" />
                                     <span
-                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                        class="text-sm text-slate-600 dark:text-slate-400"
                                         >Son Güncelleme</span
                                     >
                                 </div>
                                 <span
-                                    class="text-sm font-semibold text-gray-900 dark:text-white"
+                                    class="text-sm font-semibold text-slate-900 dark:text-white"
                                     >{{ formatDate(venue.updated_at) }}</span
                                 >
                             </div>

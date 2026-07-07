@@ -25,98 +25,39 @@
         }
     ],
     "paths": {
-        "/api/v1/organizations": {
+        "/api/v1/ajax/events/for-select": {
             "get": {
                 "tags": [
-                    "Organizations"
+                    "Events",
+                    "AJAX"
                 ],
-                "summary": "Organizasyonları listele",
-                "description": "Mevcut organizasyonları sayfalama, filtreleme ve arama ile birlikte listeler",
-                "operationId": "5812c950de77aa5c38c80b05be6f9b52",
+                "summary": "Get events for select dropdown",
+                "description": "Returns a list of events formatted for use in select dropdowns",
+                "operationId": "cf5553303e5e996b65139de0608d1bd8",
                 "parameters": [
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "Arama terimi (isim, açıklama, email)",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "status",
-                        "in": "query",
-                        "description": "Durum filtresi",
+                        "description": "Search term for event name",
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "enum": [
-                                "active",
-                                "inactive"
-                            ]
+                            "maxLength": 100
                         }
                     },
                     {
-                        "name": "user_role",
+                        "name": "organization_id",
                         "in": "query",
-                        "description": "Kullanıcı rolü filtresi",
+                        "description": "Filter by organization ID",
                         "required": false,
                         "schema": {
-                            "type": "string",
-                            "enum": [
-                                "admin",
-                                "editor",
-                                "viewer"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "sort",
-                        "in": "query",
-                        "description": "Sıralama alanı",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "default": "name",
-                            "enum": [
-                                "name",
-                                "created_at",
-                                "events_count",
-                                "participants_count",
-                                "sponsors_count"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "direction",
-                        "in": "query",
-                        "description": "Sıralama yönü",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "default": "asc",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "Sayfa başına öğe sayısı (max: 100)",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 15,
-                            "maximum": 100,
-                            "minimum": 1
+                            "type": "integer"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Başarılı",
+                        "description": "Events retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -128,836 +69,29 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/OrganizationSummary"
-                                            }
-                                        },
-                                        "meta": {
-                                            "properties": {
-                                                "current_page": {
-                                                    "type": "integer"
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "label": {
+                                                        "type": "string",
+                                                        "example": "AI Conference 2025"
+                                                    },
+                                                    "slug": {
+                                                        "type": "string",
+                                                        "example": "ai-conference-2025"
+                                                    },
+                                                    "date_range": {
+                                                        "type": "string",
+                                                        "example": "15.06.2025 - 17.06.2025"
+                                                    },
+                                                    "is_published": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    }
                                                 },
-                                                "per_page": {
-                                                    "type": "integer"
-                                                },
-                                                "total": {
-                                                    "type": "integer"
-                                                },
-                                                "last_page": {
-                                                    "type": "integer"
-                                                },
-                                                "from": {
-                                                    "type": "integer"
-                                                },
-                                                "to": {
-                                                    "type": "integer"
-                                                }
-                                            },
-                                            "type": "object"
-                                        },
-                                        "links": {
-                                            "properties": {
-                                                "first": {
-                                                    "type": "string"
-                                                },
-                                                "last": {
-                                                    "type": "string"
-                                                },
-                                                "prev": {
-                                                    "type": "string",
-                                                    "nullable": true
-                                                },
-                                                "next": {
-                                                    "type": "string",
-                                                    "nullable": true
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Sunucu hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Yeni organizasyon oluştur",
-                "description": "Yeni bir organizasyon oluşturur ve mevcut kullanıcıyı admin olarak ekler",
-                "operationId": "4676987fd0a00de6d8fa6acf6f54a21c",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "description": "Organizasyon adı",
-                                        "type": "string",
-                                        "maxLength": 255,
-                                        "example": "Akademik Kongreler Derneği"
-                                    },
-                                    "description": {
-                                        "description": "Organizasyon açıklaması",
-                                        "type": "string",
-                                        "maxLength": 5000,
-                                        "nullable": true
-                                    },
-                                    "contact_email": {
-                                        "description": "İletişim email",
-                                        "type": "string",
-                                        "format": "email",
-                                        "maxLength": 255,
-                                        "nullable": true
-                                    },
-                                    "contact_phone": {
-                                        "description": "İletişim telefonu",
-                                        "type": "string",
-                                        "maxLength": 20,
-                                        "nullable": true
-                                    },
-                                    "website_url": {
-                                        "description": "Website URL",
-                                        "type": "string",
-                                        "format": "url",
-                                        "maxLength": 255,
-                                        "nullable": true
-                                    },
-                                    "logo": {
-                                        "description": "Logo dosyası (jpeg,png,jpg,gif - max: 2MB)",
-                                        "type": "string",
-                                        "format": "binary",
-                                        "nullable": true
-                                    },
-                                    "is_active": {
-                                        "description": "Aktif durumu",
-                                        "type": "boolean",
-                                        "default": true
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Organizasyon başarıyla oluşturuldu",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Organizasyon başarıyla oluşturuldu."
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/OrganizationDetail"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validasyon hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Sunucu hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/organizations/{organization}": {
-            "get": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Organizasyon detaylarını görüntüle",
-                "description": "Belirtilen organizasyonun detaylı bilgilerini döner",
-                "operationId": "ab97f252110579d044003cf3035a58d2",
-                "parameters": [
-                    {
-                        "name": "organization",
-                        "in": "path",
-                        "description": "Organizasyon ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Başarılı",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/OrganizationDetailWithRelations"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Organizasyon bulunamadı",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Sunucu hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "put": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Organizasyonu güncelle",
-                "description": "Mevcut organizasyonun bilgilerini günceller",
-                "operationId": "f78dd12f9eb3a16b35102db0856907bf",
-                "parameters": [
-                    {
-                        "name": "organization",
-                        "in": "path",
-                        "description": "Organizasyon ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "description": "Organizasyon adı",
-                                        "type": "string",
-                                        "maxLength": 255
-                                    },
-                                    "description": {
-                                        "description": "Organizasyon açıklaması",
-                                        "type": "string",
-                                        "maxLength": 5000,
-                                        "nullable": true
-                                    },
-                                    "contact_email": {
-                                        "description": "İletişim email",
-                                        "type": "string",
-                                        "format": "email",
-                                        "maxLength": 255,
-                                        "nullable": true
-                                    },
-                                    "contact_phone": {
-                                        "description": "İletişim telefonu",
-                                        "type": "string",
-                                        "maxLength": 20,
-                                        "nullable": true
-                                    },
-                                    "website_url": {
-                                        "description": "Website URL",
-                                        "type": "string",
-                                        "format": "url",
-                                        "maxLength": 255,
-                                        "nullable": true
-                                    },
-                                    "logo": {
-                                        "description": "Logo dosyası (jpeg,png,jpg,gif - max: 2MB)",
-                                        "type": "string",
-                                        "format": "binary",
-                                        "nullable": true
-                                    },
-                                    "remove_logo": {
-                                        "description": "Mevcut logoyu kaldır",
-                                        "type": "boolean",
-                                        "default": false
-                                    },
-                                    "is_active": {
-                                        "description": "Aktif durumu",
-                                        "type": "boolean"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Organizasyon başarıyla güncellendi",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Organizasyon başarıyla güncellendi."
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/OrganizationDetail"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validasyon hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Sunucu hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Organizasyonu sil",
-                "description": "Organizasyonu soft delete ile siler. Aktif etkinlikleri olan organizasyonlar silinemez.",
-                "operationId": "7b60fdecc934528aeb5c5ff682bf362c",
-                "parameters": [
-                    {
-                        "name": "organization",
-                        "in": "path",
-                        "description": "Organizasyon ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Organizasyon başarıyla silindi",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Organizasyon başarıyla silindi."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Aktif etkinlikleri olan organizasyon silinemez",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Bu organizasyonun aktif etkinlikleri bulunduğu için silinemez."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Sunucu hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/organizations/{organization}/users": {
-            "post": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Organizasyona kullanıcı ekle",
-                "description": "Belirtilen kullanıcıyı organizasyona belirtilen rolle ekler",
-                "operationId": "24bc8901ee455ce9199be6854d22c467",
-                "parameters": [
-                    {
-                        "name": "organization",
-                        "in": "path",
-                        "description": "Organizasyon ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "user_id": {
-                                        "description": "Kullanıcı ID",
-                                        "type": "integer"
-                                    },
-                                    "role": {
-                                        "description": "Kullanıcı rolü",
-                                        "type": "string",
-                                        "enum": [
-                                            "admin",
-                                            "editor",
-                                            "viewer"
-                                        ]
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Kullanıcı başarıyla eklendi",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Kullanıcı başarıyla organizasyona eklendi."
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/OrganizationUser"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Kullanıcı zaten organizasyona ekli veya validasyon hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/organizations/{organization}/users/{user}": {
-            "delete": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Organizasyondan kullanıcı çıkar",
-                "description": "Belirtilen kullanıcıyı organizasyondan çıkarır. Son admin kullanıcı çıkarılamaz.",
-                "operationId": "f1f428abe8f8c4f81ba0587992e733c0",
-                "parameters": [
-                    {
-                        "name": "organization",
-                        "in": "path",
-                        "description": "Organizasyon ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "user",
-                        "in": "path",
-                        "description": "Kullanıcı ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Kullanıcı başarıyla çıkarıldı",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Kullanıcı başarıyla organizasyondan çıkarıldı."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Kullanıcı organizasyonda bulunamadı",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Son admin kullanıcı çıkarılamaz",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Son yönetici kullanıcı çıkarılamaz."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/organizations/{organization}/users/{user}/role": {
-            "patch": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Kullanıcı rolünü güncelle",
-                "description": "Organizasyondaki kullanıcının rolünü günceller. Son admin kullanıcının rolü değiştirilemez.",
-                "operationId": "bd15ca62d31ca50a81ce2694af38677f",
-                "parameters": [
-                    {
-                        "name": "organization",
-                        "in": "path",
-                        "description": "Organizasyon ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "user",
-                        "in": "path",
-                        "description": "Kullanıcı ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "role": {
-                                        "description": "Yeni kullanıcı rolü",
-                                        "type": "string",
-                                        "enum": [
-                                            "admin",
-                                            "editor",
-                                            "viewer"
-                                        ]
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Kullanıcı rolü başarıyla güncellendi",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Kullanıcı rolü başarıyla güncellendi."
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/OrganizationUser"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Kullanıcı organizasyonda bulunamadı",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Son admin kullanıcının rolü değiştirilemez",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": false
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Son yönetici kullanıcının rolü değiştirilemez."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/organizations/{organization}/available-users": {
-            "get": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Organizasyona eklenebilir kullanıcıları listele",
-                "description": "Henüz organizasyona eklenmemiş aktif kullanıcıları listeler",
-                "operationId": "7bb9a7db6d6f675c989194db6076d812",
-                "parameters": [
-                    {
-                        "name": "organization",
-                        "in": "path",
-                        "description": "Organizasyon ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Başarılı",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/UserSummary"
+                                                "type": "object"
                                             }
                                         }
                                     },
@@ -966,12 +100,25 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "Yetki hatası",
+                    "500": {
+                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Events could not be loaded."
+                                        },
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -984,19 +131,20 @@
                 ]
             }
         },
-        "/api/v1/organizations/{organization}/export": {
+        "/api/v1/events/{event}/analytics": {
             "get": {
                 "tags": [
-                    "Organizations"
+                    "Events",
+                    "Analytics"
                 ],
-                "summary": "Organizasyon verilerini dışa aktar",
-                "description": "Organizasyonun tüm verilerini JSON formatında dışa aktarır",
-                "operationId": "b16228006305a9626bc881458514cb63",
+                "summary": "Get event statistics for dashboard",
+                "description": "Returns comprehensive analytics data for a specific event",
+                "operationId": "ec08f77417b0a91d0fe3c58c89846606",
                 "parameters": [
                     {
-                        "name": "organization",
+                        "name": "event",
                         "in": "path",
-                        "description": "Organizasyon ID",
+                        "description": "Event ID",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1005,7 +153,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Başarılı",
+                        "description": "Analytics data retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1015,20 +163,107 @@
                                             "example": true
                                         },
                                         "data": {
-                                            "$ref": "#/components/schemas/OrganizationExport"
-                                        },
-                                        "meta": {
                                             "properties": {
-                                                "format": {
-                                                    "type": "string",
-                                                    "example": "json"
+                                                "basic": {
+                                                    "properties": {
+                                                        "total_days": {
+                                                            "type": "integer",
+                                                            "example": 3
+                                                        },
+                                                        "total_venues": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "total_sessions": {
+                                                            "type": "integer",
+                                                            "example": 24
+                                                        },
+                                                        "total_presentations": {
+                                                            "type": "integer",
+                                                            "example": 48
+                                                        },
+                                                        "total_speakers": {
+                                                            "type": "integer",
+                                                            "example": 32
+                                                        },
+                                                        "total_moderators": {
+                                                            "type": "integer",
+                                                            "example": 12
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 },
-                                                "exported_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
+                                                "by_day": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "date": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2025-06-15"
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Gün 1"
+                                                            },
+                                                            "venues": {
+                                                                "type": "integer",
+                                                                "example": 5
+                                                            },
+                                                            "sessions": {
+                                                                "type": "integer",
+                                                                "example": 8
+                                                            },
+                                                            "presentations": {
+                                                                "type": "integer",
+                                                                "example": 16
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 },
-                                                "organization_name": {
-                                                    "type": "string"
+                                                "by_session_type": {
+                                                    "properties": {
+                                                        "main": {
+                                                            "type": "integer",
+                                                            "example": 12
+                                                        },
+                                                        "satellite": {
+                                                            "type": "integer",
+                                                            "example": 6
+                                                        },
+                                                        "oral_presentation": {
+                                                            "type": "integer",
+                                                            "example": 24
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "sponsors": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 8
+                                                        },
+                                                        "by_level": {
+                                                            "properties": {
+                                                                "platinum": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "gold": {
+                                                                    "type": "integer",
+                                                                    "example": 3
+                                                                },
+                                                                "silver": {
+                                                                    "type": "integer",
+                                                                    "example": 3
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"
@@ -1040,67 +275,18 @@
                         }
                     },
                     "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/organizations/{organization}/toggle-status": {
-            "patch": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Organizasyon durumunu değiştir",
-                "description": "Organizasyonun aktif/pasif durumunu tersine çevirir",
-                "operationId": "988b6e7d062225679943379cccd40677",
-                "parameters": [
-                    {
-                        "name": "organization",
-                        "in": "path",
-                        "description": "Organizasyon ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Durum başarıyla değiştirildi",
+                        "description": "Unauthorized access",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "success": {
                                             "type": "boolean",
-                                            "example": true
+                                            "example": false
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Organizasyon aktif hale getirildi."
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer"
-                                                },
-                                                "is_active": {
-                                                    "type": "boolean"
-                                                }
-                                            },
-                                            "type": "object"
+                                            "example": "Unauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -1108,73 +294,22 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/organizations/{organization}/duplicate": {
-            "post": {
-                "tags": [
-                    "Organizations"
-                ],
-                "summary": "Organizasyonu kopyala",
-                "description": "Mevcut organizasyonu kopyalar (etkinlikler hariç)",
-                "operationId": "e8747b23399e18b1ffb4a21c3cba2a53",
-                "parameters": [
-                    {
-                        "name": "organization",
-                        "in": "path",
-                        "description": "Organizasyon ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Organizasyon başarıyla kopyalandı",
+                    "404": {
+                        "description": "Event not found",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "success": {
                                             "type": "boolean",
-                                            "example": true
+                                            "example": false
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Organizasyon başarıyla kopyalandı."
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/OrganizationSummary"
+                                            "example": "Event not found"
                                         }
                                     },
                                     "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
@@ -1187,19 +322,19 @@
                 ]
             }
         },
-        "/api/v1/participants": {
+        "/api/v1/admin/participants": {
             "get": {
                 "tags": [
                     "Participants"
                 ],
-                "summary": "Katılımcıları listele",
-                "description": "Mevcut katılımcıları sayfalama, filtreleme ve arama ile birlikte listeler",
-                "operationId": "97537615a56c1a2ecd20ea2cefe126dd",
+                "summary": "Get list of participants",
+                "description": "Returns a paginated list of participants with filtering, search and sorting capabilities",
+                "operationId": "getParticipants",
                 "parameters": [
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "Arama terimi (ad, soyad, email, kurum)",
+                        "description": "Search term for participant name, email, or affiliation",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -1208,7 +343,7 @@
                     {
                         "name": "organization_id",
                         "in": "query",
-                        "description": "Organizasyon filtresi",
+                        "description": "Filter by organization ID",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1217,7 +352,7 @@
                     {
                         "name": "role",
                         "in": "query",
-                        "description": "Rol filtresi",
+                        "description": "Filter by participant role",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -1232,7 +367,7 @@
                     {
                         "name": "affiliation",
                         "in": "query",
-                        "description": "Kurum filtresi",
+                        "description": "Filter by affiliation",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -1241,7 +376,7 @@
                     {
                         "name": "sort",
                         "in": "query",
-                        "description": "Sıralama alanı",
+                        "description": "Sort field",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -1260,7 +395,7 @@
                     {
                         "name": "direction",
                         "in": "query",
-                        "description": "Sıralama yönü",
+                        "description": "Sort direction",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -1274,19 +409,18 @@
                     {
                         "name": "per_page",
                         "in": "query",
-                        "description": "Sayfa başına öğe sayısı (max: 100)",
+                        "description": "Number of items per page (max 100)",
                         "required": false,
                         "schema": {
                             "type": "integer",
                             "default": 15,
-                            "maximum": 100,
-                            "minimum": 1
+                            "maximum": 100
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Başarılı",
+                        "description": "Successful operation",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1298,7 +432,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/ParticipantSummary"
+                                                "$ref": "#/components/schemas/ParticipantWithStats"
                                             }
                                         },
                                         "meta": {
@@ -1313,22 +447,32 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "Erişim engellendi",
+                    "401": {
+                        "description": "Unauthenticated",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - No accessible participants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
                     },
                     "500": {
-                        "description": "Sunucu hatası",
+                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
@@ -1344,9 +488,9 @@
                 "tags": [
                     "Participants"
                 ],
-                "summary": "Yeni katılımcı oluştur",
-                "description": "Yeni bir katılımcı oluşturur",
-                "operationId": "76bc32a554f5b535c2fbd19c40b6786d",
+                "summary": "Create a new participant",
+                "description": "Creates a new participant with the provided data",
+                "operationId": "storeParticipant",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1354,89 +498,71 @@
                             "schema": {
                                 "properties": {
                                     "organization_id": {
-                                        "description": "Organizasyon ID",
+                                        "description": "Organization ID",
                                         "type": "integer"
                                     },
                                     "first_name": {
-                                        "description": "Ad",
+                                        "description": "First name",
                                         "type": "string",
-                                        "maxLength": 255,
-                                        "example": "Ahmet"
+                                        "maxLength": 255
                                     },
                                     "last_name": {
-                                        "description": "Soyad",
+                                        "description": "Last name",
                                         "type": "string",
-                                        "maxLength": 255,
-                                        "example": "Yılmaz"
+                                        "maxLength": 255
                                     },
                                     "title": {
-                                        "description": "Ünvan",
+                                        "description": "Professional title",
                                         "type": "string",
-                                        "maxLength": 100,
-                                        "example": "Prof. Dr.",
+                                        "maxLength": 255,
                                         "nullable": true
                                     },
                                     "email": {
-                                        "description": "Email adresi",
+                                        "description": "Email address",
                                         "type": "string",
                                         "format": "email",
-                                        "maxLength": 255,
-                                        "example": "ahmet.yilmaz@example.com"
-                                    },
-                                    "phone": {
-                                        "description": "Telefon",
-                                        "type": "string",
-                                        "maxLength": 20,
-                                        "nullable": true
+                                        "maxLength": 255
                                     },
                                     "affiliation": {
-                                        "description": "Kurum",
+                                        "description": "Institutional affiliation",
                                         "type": "string",
-                                        "maxLength": 255,
-                                        "example": "Ankara Üniversitesi",
+                                        "maxLength": 500,
                                         "nullable": true
                                     },
                                     "bio": {
-                                        "description": "Biyografi",
+                                        "description": "Biography",
                                         "type": "string",
                                         "nullable": true
                                     },
                                     "photo": {
-                                        "description": "Fotoğraf dosyası",
+                                        "description": "Profile photo",
                                         "type": "string",
-                                        "format": "binary",
-                                        "nullable": true
+                                        "format": "binary"
                                     },
                                     "is_speaker": {
-                                        "description": "Konuşmacı mı?",
-                                        "type": "boolean",
-                                        "default": false
+                                        "description": "Can be a speaker",
+                                        "type": "boolean"
                                     },
                                     "is_moderator": {
-                                        "description": "Moderatör mü?",
-                                        "type": "boolean",
-                                        "default": false
+                                        "description": "Can be a moderator",
+                                        "type": "boolean"
                                     },
-                                    "website": {
-                                        "description": "Website",
+                                    "linkedin_url": {
+                                        "description": "LinkedIn profile URL",
                                         "type": "string",
                                         "format": "url",
                                         "nullable": true
                                     },
-                                    "linkedin": {
-                                        "description": "LinkedIn profili",
+                                    "twitter_url": {
+                                        "description": "Twitter profile URL",
                                         "type": "string",
                                         "format": "url",
                                         "nullable": true
                                     },
-                                    "twitter": {
-                                        "description": "Twitter kullanıcı adı",
+                                    "website_url": {
+                                        "description": "Personal website URL",
                                         "type": "string",
-                                        "nullable": true
-                                    },
-                                    "orcid": {
-                                        "description": "ORCID ID",
-                                        "type": "string",
+                                        "format": "url",
                                         "nullable": true
                                     }
                                 },
@@ -1447,7 +573,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Katılımcı başarıyla oluşturuldu",
+                        "description": "Participant created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1461,7 +587,7 @@
                                             "example": "Katılımcı başarıyla oluşturuldu."
                                         },
                                         "data": {
-                                            "$ref": "#/components/schemas/ParticipantDetail"
+                                            "$ref": "#/components/schemas/Participant"
                                         }
                                     },
                                     "type": "object"
@@ -1470,21 +596,41 @@
                         }
                     },
                     "422": {
-                        "description": "Validasyon hatası",
+                        "description": "Validation error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ValidationError"
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
                     },
                     "500": {
-                        "description": "Sunucu hatası",
+                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
@@ -1497,19 +643,19 @@
                 ]
             }
         },
-        "/api/v1/participants/{participant}": {
+        "/api/v1/admin/participants/{participant}": {
             "get": {
                 "tags": [
                     "Participants"
                 ],
-                "summary": "Katılımcı detaylarını görüntüle",
-                "description": "Belirtilen katılımcının detaylı bilgilerini ve katılım istatistiklerini döner",
-                "operationId": "028a130d321e214c8ff51bef17e046b2",
+                "summary": "Get participant details",
+                "description": "Returns detailed information about a specific participant including statistics and participations",
+                "operationId": "showParticipant",
                 "parameters": [
                     {
                         "name": "participant",
                         "in": "path",
-                        "description": "Katılımcı ID",
+                        "description": "Participant ID",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1518,7 +664,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Başarılı",
+                        "description": "Successful operation",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1528,7 +674,30 @@
                                             "example": true
                                         },
                                         "data": {
-                                            "$ref": "#/components/schemas/ParticipantDetailWithStats"
+                                            "properties": {
+                                                "participant": {
+                                                    "$ref": "#/components/schemas/ParticipantDetail"
+                                                },
+                                                "statistics": {
+                                                    "$ref": "#/components/schemas/ParticipantStatistics"
+                                                },
+                                                "participations_by_event": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ParticipationsByEvent"
+                                                    }
+                                                },
+                                                "recent_activities": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ParticipantActivity"
+                                                    }
+                                                },
+                                                "permissions": {
+                                                    "$ref": "#/components/schemas/ParticipantPermissions"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1537,21 +706,41 @@
                         }
                     },
                     "404": {
-                        "description": "Katılımcı bulunamadı",
+                        "description": "Participant not found",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
                     },
                     "500": {
-                        "description": "Sunucu hatası",
+                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
@@ -1567,14 +756,14 @@
                 "tags": [
                     "Participants"
                 ],
-                "summary": "Katılımcıyı güncelle",
-                "description": "Mevcut katılımcının bilgilerini günceller",
-                "operationId": "37d73f3e830fa408a48165e41f4ffdbf",
+                "summary": "Update participant",
+                "description": "Updates the specified participant with provided data",
+                "operationId": "updateParticipant",
                 "parameters": [
                     {
                         "name": "participant",
                         "in": "path",
-                        "description": "Katılımcı ID",
+                        "description": "Participant ID",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1588,82 +777,71 @@
                             "schema": {
                                 "properties": {
                                     "organization_id": {
-                                        "description": "Organizasyon ID",
+                                        "description": "Organization ID",
                                         "type": "integer"
                                     },
                                     "first_name": {
-                                        "description": "Ad",
+                                        "description": "First name",
                                         "type": "string",
                                         "maxLength": 255
                                     },
                                     "last_name": {
-                                        "description": "Soyad",
+                                        "description": "Last name",
                                         "type": "string",
                                         "maxLength": 255
                                     },
                                     "title": {
-                                        "description": "Ünvan",
-                                        "type": "string",
-                                        "maxLength": 100,
-                                        "nullable": true
-                                    },
-                                    "email": {
-                                        "description": "Email adresi",
-                                        "type": "string",
-                                        "format": "email",
-                                        "maxLength": 255
-                                    },
-                                    "phone": {
-                                        "description": "Telefon",
-                                        "type": "string",
-                                        "maxLength": 20,
-                                        "nullable": true
-                                    },
-                                    "affiliation": {
-                                        "description": "Kurum",
+                                        "description": "Professional title",
                                         "type": "string",
                                         "maxLength": 255,
                                         "nullable": true
                                     },
+                                    "email": {
+                                        "description": "Email address",
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255
+                                    },
+                                    "affiliation": {
+                                        "description": "Institutional affiliation",
+                                        "type": "string",
+                                        "maxLength": 500,
+                                        "nullable": true
+                                    },
                                     "bio": {
-                                        "description": "Biyografi",
+                                        "description": "Biography",
                                         "type": "string",
                                         "nullable": true
                                     },
                                     "photo": {
-                                        "description": "Fotoğraf dosyası",
+                                        "description": "Profile photo",
                                         "type": "string",
-                                        "format": "binary",
-                                        "nullable": true
+                                        "format": "binary"
                                     },
                                     "is_speaker": {
-                                        "description": "Konuşmacı mı?",
+                                        "description": "Can be a speaker",
                                         "type": "boolean"
                                     },
                                     "is_moderator": {
-                                        "description": "Moderatör mü?",
+                                        "description": "Can be a moderator",
                                         "type": "boolean"
                                     },
-                                    "website": {
-                                        "description": "Website",
+                                    "linkedin_url": {
+                                        "description": "LinkedIn profile URL",
                                         "type": "string",
                                         "format": "url",
                                         "nullable": true
                                     },
-                                    "linkedin": {
-                                        "description": "LinkedIn profili",
+                                    "twitter_url": {
+                                        "description": "Twitter profile URL",
                                         "type": "string",
                                         "format": "url",
                                         "nullable": true
                                     },
-                                    "twitter": {
-                                        "description": "Twitter kullanıcı adı",
+                                    "website_url": {
+                                        "description": "Personal website URL",
                                         "type": "string",
-                                        "nullable": true
-                                    },
-                                    "orcid": {
-                                        "description": "ORCID ID",
-                                        "type": "string",
+                                        "format": "url",
                                         "nullable": true
                                     }
                                 },
@@ -1674,7 +852,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Katılımcı başarıyla güncellendi",
+                        "description": "Participant updated successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1688,7 +866,7 @@
                                             "example": "Katılımcı başarıyla güncellendi."
                                         },
                                         "data": {
-                                            "$ref": "#/components/schemas/ParticipantDetail"
+                                            "$ref": "#/components/schemas/Participant"
                                         }
                                     },
                                     "type": "object"
@@ -1696,32 +874,52 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "Yetki hatası",
+                    "422": {
+                        "description": "Validation error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
                                 }
                             }
                         }
                     },
-                    "422": {
-                        "description": "Validasyon hatası",
+                    "404": {
+                        "description": "Participant not found",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ValidationError"
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
                     },
                     "500": {
-                        "description": "Sunucu hatası",
+                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
@@ -1737,14 +935,14 @@
                 "tags": [
                     "Participants"
                 ],
-                "summary": "Katılımcıyı sil",
-                "description": "Katılımcıyı siler. Sunum veya oturum moderatörlüğü olan katılımcılar silinemez.",
-                "operationId": "b0bad8c3293a939c960a15a7fd69d8bf",
+                "summary": "Delete participant",
+                "description": "Deletes the specified participant if they have no associated presentations or sessions",
+                "operationId": "deleteParticipant",
                 "parameters": [
                     {
                         "name": "participant",
                         "in": "path",
-                        "description": "Katılımcı ID",
+                        "description": "Participant ID",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1753,7 +951,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Katılımcı başarıyla silindi",
+                        "description": "Participant deleted successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1764,7 +962,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "'Ahmet Yılmaz' katılımcısı başarıyla silindi."
+                                            "example": "'John Doe' katılımcısı başarıyla silindi."
                                         }
                                     },
                                     "type": "object"
@@ -1772,18 +970,8 @@
                             }
                         }
                     },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
                     "422": {
-                        "description": "Sunum veya oturum moderatörlüğü olan katılımcı silinemez",
+                        "description": "Cannot delete participant with associated data",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1802,12 +990,42 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Sunucu hatası",
+                    "404": {
+                        "description": "Participant not found",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
@@ -1820,19 +1038,19 @@
                 ]
             }
         },
-        "/api/v1/participants/search": {
+        "/api/v1/admin/participants/search": {
             "get": {
                 "tags": [
                     "Participants"
                 ],
-                "summary": "Katılımcı ara (autocomplete)",
-                "description": "Katılımcı seçimi için arama yapar (max 20 sonuç)",
-                "operationId": "95f2a15cdbd07a74972ea8ad9c9bde12",
+                "summary": "Search participants",
+                "description": "Search participants for autocomplete/selection purposes",
+                "operationId": "searchParticipants",
                 "parameters": [
                     {
                         "name": "q",
                         "in": "query",
-                        "description": "Arama terimi (min: 2 karakter)",
+                        "description": "Search query (minimum 2 characters)",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -1843,7 +1061,7 @@
                     {
                         "name": "role",
                         "in": "query",
-                        "description": "Rol filtresi",
+                        "description": "Filter by role",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -1856,7 +1074,7 @@
                     {
                         "name": "organization_id",
                         "in": "query",
-                        "description": "Organizasyon filtresi",
+                        "description": "Filter by organization ID",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1865,7 +1083,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Başarılı",
+                        "description": "Successful operation",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1881,6 +1099,7 @@
                                             }
                                         },
                                         "total": {
+                                            "description": "Number of results returned",
                                             "type": "integer"
                                         }
                                     },
@@ -1890,21 +1109,31 @@
                         }
                     },
                     "422": {
-                        "description": "Validasyon hatası",
+                        "description": "Validation error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ValidationError"
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
                     },
                     "500": {
-                        "description": "Sunucu hatası",
+                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
@@ -1917,183 +1146,14 @@
                 ]
             }
         },
-        "/api/v1/participants/statistics": {
-            "get": {
-                "tags": [
-                    "Participants"
-                ],
-                "summary": "Katılımcı istatistikleri",
-                "description": "Katılımcılarla ilgili genel istatistikleri döner",
-                "operationId": "08fbe63d9f4e180b9b2065077f76b490",
-                "parameters": [
-                    {
-                        "name": "organization_id",
-                        "in": "query",
-                        "description": "Organizasyon filtresi",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Başarılı",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "$ref": "#/components/schemas/ParticipantStatistics"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Sunucu hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/participants/bulk": {
+        "/api/v1/admin/participants/import": {
             "post": {
                 "tags": [
                     "Participants"
                 ],
-                "summary": "Toplu işlemler",
-                "description": "Seçili katılımcılar üzerinde toplu işlem yapar",
-                "operationId": "edf2326fb28dc553ac5464011dff0514",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "action": {
-                                        "description": "Yapılacak işlem",
-                                        "type": "string",
-                                        "enum": [
-                                            "delete",
-                                            "update_roles",
-                                            "change_organization",
-                                            "export"
-                                        ]
-                                    },
-                                    "participant_ids": {
-                                        "description": "Katılımcı ID'leri",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer"
-                                        },
-                                        "minItems": 1
-                                    },
-                                    "is_speaker": {
-                                        "description": "Konuşmacı rolü (update_roles için)",
-                                        "type": "boolean",
-                                        "nullable": true
-                                    },
-                                    "is_moderator": {
-                                        "description": "Moderatör rolü (update_roles için)",
-                                        "type": "boolean",
-                                        "nullable": true
-                                    },
-                                    "organization_id": {
-                                        "description": "Yeni organizasyon (change_organization için)",
-                                        "type": "integer",
-                                        "nullable": true
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "İşlem başarılı",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "5 katılımcının rolleri güncellendi."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Yetki hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "İşlem gerçekleştirilemez",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Sunucu hatası",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/api/v1/participants/import": {
-            "post": {
-                "tags": [
-                    "Participants"
-                ],
-                "summary": "Katılımcı içe aktar",
-                "description": "CSV/Excel dosyasından katılımcı içe aktarır",
-                "operationId": "41541487fa74e21efd75e951f2dc6fec",
+                "summary": "Import participants from file",
+                "description": "Import participants from CSV or Excel file with field mapping",
+                "operationId": "importParticipants",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -2101,36 +1161,35 @@
                             "schema": {
                                 "properties": {
                                     "file": {
-                                        "description": "CSV/Excel dosyası (max: 10MB)",
+                                        "description": "CSV or Excel file (max 10MB)",
                                         "type": "string",
                                         "format": "binary"
                                     },
                                     "organization_id": {
-                                        "description": "Organizasyon ID",
+                                        "description": "Target organization ID",
                                         "type": "integer"
                                     },
                                     "mapping": {
-                                        "description": "Alan eşleştirmeleri",
+                                        "description": "Field mapping configuration",
                                         "properties": {
                                             "first_name": {
-                                                "description": "Ad alanı",
+                                                "description": "Column name for first name",
                                                 "type": "string"
                                             },
                                             "last_name": {
-                                                "description": "Soyad alanı",
+                                                "description": "Column name for last name",
                                                 "type": "string"
                                             },
                                             "email": {
-                                                "description": "Email alanı",
+                                                "description": "Column name for email",
                                                 "type": "string"
                                             }
                                         },
                                         "type": "object"
                                     },
                                     "update_existing": {
-                                        "description": "Mevcut kayıtları güncelle",
-                                        "type": "boolean",
-                                        "default": false
+                                        "description": "Update existing participants if found",
+                                        "type": "boolean"
                                     }
                                 },
                                 "type": "object"
@@ -2140,7 +1199,7 @@
                 },
                 "responses": {
                     "501": {
-                        "description": "Henüz implement edilmedi",
+                        "description": "Not implemented - redirect to ImportController",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2158,6 +1217,46 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -2167,14 +1266,14 @@
                 ]
             }
         },
-        "/api/v1/participants/export": {
+        "/api/v1/admin/participants/export": {
             "post": {
                 "tags": [
                     "Participants"
                 ],
-                "summary": "Katılımcı dışa aktar",
-                "description": "Katılımcıları CSV/Excel formatında dışa aktarır",
-                "operationId": "365c7e335dd6d38e646d6fe02cce892c",
+                "summary": "Export participants to file",
+                "description": "Export participants data to CSV or Excel format with customizable fields",
+                "operationId": "exportParticipants",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -2182,7 +1281,7 @@
                             "schema": {
                                 "properties": {
                                     "format": {
-                                        "description": "Dosya formatı",
+                                        "description": "Export format",
                                         "type": "string",
                                         "enum": [
                                             "csv",
@@ -2190,12 +1289,12 @@
                                         ]
                                     },
                                     "organization_id": {
-                                        "description": "Organizasyon filtresi",
+                                        "description": "Filter by organization",
                                         "type": "integer",
                                         "nullable": true
                                     },
                                     "role": {
-                                        "description": "Rol filtresi",
+                                        "description": "Filter by role",
                                         "type": "string",
                                         "enum": [
                                             "speaker",
@@ -2206,7 +1305,7 @@
                                         "nullable": true
                                     },
                                     "fields": {
-                                        "description": "Dahil edilecek alanlar",
+                                        "description": "Fields to include in export",
                                         "type": "array",
                                         "items": {
                                             "type": "string",
@@ -2229,7 +1328,7 @@
                 },
                 "responses": {
                     "501": {
-                        "description": "Henüz implement edilmedi",
+                        "description": "Not implemented - redirect to ExportController",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2247,6 +1346,46 @@
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -2256,17 +1395,226 @@
                 ]
             }
         },
-        "/api/v1/participants/options": {
+        "/api/v1/admin/participants/statistics": {
             "get": {
                 "tags": [
                     "Participants"
                 ],
-                "summary": "Katılımcı oluşturma seçenekleri",
-                "description": "Katılımcı oluştururken kullanılabilecek seçenekleri döner",
-                "operationId": "a82746d4f495c1156e36e1474df2b3fe",
+                "summary": "Get participant statistics",
+                "description": "Returns comprehensive statistics about participants",
+                "operationId": "getParticipantStatistics",
+                "parameters": [
+                    {
+                        "name": "organization_id",
+                        "in": "query",
+                        "description": "Filter by organization ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Başarılı",
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ParticipantGlobalStatistics"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/participants/bulk": {
+            "post": {
+                "tags": [
+                    "Participants"
+                ],
+                "summary": "Perform bulk operations on participants",
+                "description": "Perform various bulk operations like delete, update roles, or change organization on multiple participants",
+                "operationId": "bulkParticipantOperations",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "action": {
+                                        "description": "Bulk action to perform",
+                                        "type": "string",
+                                        "enum": [
+                                            "delete",
+                                            "update_roles",
+                                            "change_organization",
+                                            "export"
+                                        ]
+                                    },
+                                    "participant_ids": {
+                                        "description": "Array of participant IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "minItems": 1
+                                    },
+                                    "is_speaker": {
+                                        "description": "Speaker role (for update_roles action)",
+                                        "type": "boolean",
+                                        "nullable": true
+                                    },
+                                    "is_moderator": {
+                                        "description": "Moderator role (for update_roles action)",
+                                        "type": "boolean",
+                                        "nullable": true
+                                    },
+                                    "organization_id": {
+                                        "description": "Target organization ID (for change_organization action)",
+                                        "type": "integer",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Bulk operation completed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "5 katılımcının rolleri güncellendi."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error or operation not allowed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sunum veya oturum moderatörlüğü olan katılımcılar silinemez."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied to some participants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bazı katılımcılara erişim yetkiniz yok."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/participants/options": {
+            "get": {
+                "tags": [
+                    "Participants"
+                ],
+                "summary": "Get participant form options",
+                "description": "Returns available options for participant forms (organizations, titles, etc.)",
+                "operationId": "getParticipantOptions",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2280,21 +1628,15 @@
                                                 "organizations": {
                                                     "type": "array",
                                                     "items": {
-                                                        "$ref": "#/components/schemas/OrganizationOption"
+                                                        "$ref": "#/components/schemas/Organization"
                                                     }
                                                 },
                                                 "titles": {
+                                                    "description": "Common professional titles",
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string"
-                                                    },
-                                                    "example": [
-                                                        "Prof. Dr.",
-                                                        "Doç. Dr.",
-                                                        "Dr.",
-                                                        "Dr. Öğr. Üyesi",
-                                                        "Öğr. Gör."
-                                                    ]
+                                                    }
                                                 }
                                             },
                                             "type": "object"
@@ -2305,12 +1647,22 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Sunucu hatası",
+                    "401": {
+                        "description": "Unauthenticated",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
                                 }
                             }
                         }
@@ -5041,6 +4393,33 @@
                 },
                 "type": "object"
             },
+            "ParticipantWithStats": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ParticipantSummary"
+                    },
+                    {
+                        "properties": {
+                            "full_name": {
+                                "description": "Tam ad",
+                                "type": "string"
+                            },
+                            "total_participations": {
+                                "description": "Toplam katılım",
+                                "type": "integer"
+                            },
+                            "role_badge": {
+                                "description": "Rol etiketleri",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "ParticipantDetail": {
                 "allOf": [
                     {
@@ -5315,257 +4694,191 @@
                 },
                 "type": "object"
             },
+            "ParticipationsByEvent": {
+                "title": "Participations by Event",
+                "description": "Katılımcının etkinlik bazında katılımları",
+                "properties": {
+                    "event_id": {
+                        "description": "Etkinlik ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "event_name": {
+                        "description": "Etkinlik adı",
+                        "type": "string",
+                        "example": "38. Ulusal Kardiyoloji Kongresi"
+                    },
+                    "participations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ParticipantActivity"
+                        }
+                    },
+                    "total_count": {
+                        "description": "Toplam katılım sayısı",
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "moderator_count": {
+                        "description": "Moderatör katılım sayısı",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "speaker_count": {
+                        "description": "Konuşmacı katılım sayısı",
+                        "type": "integer",
+                        "example": 2
+                    }
+                },
+                "type": "object"
+            },
+            "ParticipantPermissions": {
+                "title": "Participant Permissions",
+                "description": "Katılımcı için kullanıcı yetkileri",
+                "properties": {
+                    "can_edit": {
+                        "description": "Düzenleme yetkisi",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "can_delete": {
+                        "description": "Silme yetkisi",
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "type": "object"
+            },
             "ParticipantStatistics": {
                 "title": "Participant Statistics",
-                "description": "Katılımcı istatistikleri",
+                "description": "Belirli bir katılımcı için detaylı istatistikler",
                 "properties": {
-                    "overview": {
-                        "description": "Genel istatistikler",
-                        "properties": {
-                            "total_participants": {
-                                "description": "Toplam katılımcı sayısı",
-                                "type": "integer",
-                                "example": 1250
-                            },
-                            "active_speakers": {
-                                "description": "Aktif konuşmacı sayısı",
-                                "type": "integer",
-                                "example": 185
-                            },
-                            "active_moderators": {
-                                "description": "Aktif moderatör sayısı",
-                                "type": "integer",
-                                "example": 95
-                            },
-                            "registered_participants": {
-                                "description": "Kayıtlı katılımcı sayısı",
-                                "type": "integer",
-                                "example": 980
-                            },
-                            "confirmed_participants": {
-                                "description": "Onaylı katılımcı sayısı",
-                                "type": "integer",
-                                "example": 850
-                            }
-                        },
-                        "type": "object"
+                    "total_sessions_moderated": {
+                        "description": "Toplam moderasyon sayısı",
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "total_presentations": {
+                        "description": "Toplam sunum sayısı",
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "primary_presentations": {
+                        "description": "Ana konuşmacı olduğu sunum sayısı",
+                        "type": "integer",
+                        "example": 8
+                    },
+                    "co_speaker_presentations": {
+                        "description": "Ortak konuşmacı olduğu sunum sayısı",
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "discussant_presentations": {
+                        "description": "Tartışmacı olduğu sunum sayısı",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "total_participations": {
+                        "description": "Toplam katılım sayısı",
+                        "type": "integer",
+                        "example": 17
+                    }
+                },
+                "type": "object"
+            },
+            "ParticipantGlobalStatistics": {
+                "title": "Global Participant Statistics",
+                "description": "Sistem genelinde katılımcı istatistikleri",
+                "properties": {
+                    "total_participants": {
+                        "description": "Toplam katılımcı sayısı",
+                        "type": "integer",
+                        "example": 1250
+                    },
+                    "speakers": {
+                        "description": "Konuşmacı sayısı",
+                        "type": "integer",
+                        "example": 185
+                    },
+                    "moderators": {
+                        "description": "Moderatör sayısı",
+                        "type": "integer",
+                        "example": 95
+                    },
+                    "both_roles": {
+                        "description": "Her iki role sahip katılımcı sayısı",
+                        "type": "integer",
+                        "example": 45
+                    },
+                    "no_role": {
+                        "description": "Rol atanmamış katılımcı sayısı",
+                        "type": "integer",
+                        "example": 920
                     },
                     "by_organization": {
-                        "description": "Organizasyon bazında istatistikler",
                         "type": "array",
                         "items": {
-                            "properties": {
-                                "organization_id": {
-                                    "description": "Organizasyon ID",
-                                    "type": "integer",
-                                    "example": 1
-                                },
-                                "organization_name": {
-                                    "description": "Organizasyon adı",
-                                    "type": "string",
-                                    "example": "Türk Kardiyoloji Derneği"
-                                },
-                                "participant_count": {
-                                    "description": "Katılımcı sayısı",
-                                    "type": "integer",
-                                    "example": 125
-                                },
-                                "speaker_count": {
-                                    "description": "Konuşmacı sayısı",
-                                    "type": "integer",
-                                    "example": 25
-                                },
-                                "moderator_count": {
-                                    "description": "Moderatör sayısı",
-                                    "type": "integer",
-                                    "example": 12
-                                }
-                            },
-                            "type": "object"
+                            "$ref": "#/components/schemas/ParticipantOrganizationStats"
                         }
                     },
-                    "by_role": {
-                        "description": "Rol bazında istatistikler",
-                        "properties": {
-                            "speakers_only": {
-                                "description": "Sadece konuşmacı",
-                                "type": "integer",
-                                "example": 140
-                            },
-                            "moderators_only": {
-                                "description": "Sadece moderatör",
-                                "type": "integer",
-                                "example": 70
-                            },
-                            "both_roles": {
-                                "description": "Hem konuşmacı hem moderatör",
-                                "type": "integer",
-                                "example": 45
-                            },
-                            "no_role": {
-                                "description": "Rolü olmayan",
-                                "type": "integer",
-                                "example": 995
-                            }
-                        },
+                    "top_affiliations": {
+                        "description": "En sık kurumlar ve katılımcı sayıları",
                         "type": "object"
                     },
-                    "by_specialty": {
-                        "description": "Uzmanlık alanı bazında istatistikler",
+                    "recent_additions": {
                         "type": "array",
                         "items": {
-                            "properties": {
-                                "specialty": {
-                                    "description": "Uzmanlık alanı",
-                                    "type": "string",
-                                    "example": "Kardiyoloji"
-                                },
-                                "count": {
-                                    "description": "Bu alandaki katılımcı sayısı",
-                                    "type": "integer",
-                                    "example": 85
-                                },
-                                "percentage": {
-                                    "description": "Yüzde oranı",
-                                    "type": "number",
-                                    "format": "float",
-                                    "example": 6.8
-                                }
-                            },
-                            "type": "object"
+                            "$ref": "#/components/schemas/RecentParticipant"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "ParticipantOrganizationStats": {
+                "title": "Participant Organization Statistics",
+                "description": "Organizasyon bazında katılımcı istatistikleri",
+                "properties": {
+                    "organization": {
+                        "description": "Organizasyon adı",
+                        "type": "string",
+                        "example": "Türk Kardiyoloji Derneği"
                     },
-                    "by_institution_type": {
-                        "description": "Kurum tipi bazında istatistikler",
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "type": {
-                                    "description": "Kurum tipi",
-                                    "type": "string",
-                                    "example": "Üniversite"
-                                },
-                                "count": {
-                                    "description": "Bu tipteki katılımcı sayısı",
-                                    "type": "integer",
-                                    "example": 450
-                                },
-                                "percentage": {
-                                    "description": "Yüzde oranı",
-                                    "type": "number",
-                                    "format": "float",
-                                    "example": 36
-                                }
-                            },
-                            "type": "object"
-                        }
+                    "total": {
+                        "description": "Toplam katılımcı",
+                        "type": "integer",
+                        "example": 125
                     },
-                    "registration_trends": {
-                        "description": "Kayıt trendleri",
-                        "properties": {
-                            "by_month": {
-                                "description": "Aylık kayıt sayıları",
-                                "type": "array",
-                                "items": {
-                                    "properties": {
-                                        "month": {
-                                            "description": "Ay",
-                                            "type": "string",
-                                            "example": "2024-10"
-                                        },
-                                        "count": {
-                                            "description": "O aydaki kayıt sayısı",
-                                            "type": "integer",
-                                            "example": 125
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            },
-                            "by_week": {
-                                "description": "Haftalık kayıt sayıları (son 8 hafta)",
-                                "type": "array",
-                                "items": {
-                                    "properties": {
-                                        "week": {
-                                            "description": "Hafta",
-                                            "type": "string",
-                                            "example": "2024-W42"
-                                        },
-                                        "count": {
-                                            "description": "O haftadaki kayıt sayısı",
-                                            "type": "integer",
-                                            "example": 35
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        },
-                        "type": "object"
+                    "speakers": {
+                        "description": "Konuşmacı sayısı",
+                        "type": "integer",
+                        "example": 25
                     },
-                    "top_institutions": {
-                        "description": "En çok katılımcıya sahip kurumlar",
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "institution": {
-                                    "description": "Kurum adı",
-                                    "type": "string",
-                                    "example": "İstanbul Üniversitesi"
-                                },
-                                "participant_count": {
-                                    "description": "Katılımcı sayısı",
-                                    "type": "integer",
-                                    "example": 45
-                                },
-                                "speaker_count": {
-                                    "description": "Konuşmacı sayısı",
-                                    "type": "integer",
-                                    "example": 8
-                                },
-                                "moderator_count": {
-                                    "description": "Moderatör sayısı",
-                                    "type": "integer",
-                                    "example": 3
-                                }
-                            },
-                            "type": "object"
-                        }
+                    "moderators": {
+                        "description": "Moderatör sayısı",
+                        "type": "integer",
+                        "example": 12
+                    }
+                },
+                "type": "object"
+            },
+            "RecentParticipant": {
+                "title": "Recent Participant",
+                "description": "Son eklenen katılımcı özeti",
+                "properties": {
+                    "id": {
+                        "description": "Katılımcı ID",
+                        "type": "integer",
+                        "example": 1
                     },
-                    "most_active_participants": {
-                        "description": "En aktif katılımcılar",
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "participant_id": {
-                                    "description": "Katılımcı ID",
-                                    "type": "integer",
-                                    "example": 1
-                                },
-                                "name": {
-                                    "description": "Katılımcı adı",
-                                    "type": "string",
-                                    "example": "Prof. Dr. Ahmet Yılmaz"
-                                },
-                                "total_presentations": {
-                                    "description": "Toplam sunum sayısı",
-                                    "type": "integer",
-                                    "example": 5
-                                },
-                                "total_moderations": {
-                                    "description": "Toplam moderasyon sayısı",
-                                    "type": "integer",
-                                    "example": 3
-                                },
-                                "activity_score": {
-                                    "description": "Aktivite skoru",
-                                    "type": "integer",
-                                    "example": 8
-                                }
-                            },
-                            "type": "object"
-                        }
+                    "name": {
+                        "description": "Tam ad",
+                        "type": "string",
+                        "example": "Prof. Dr. Ahmet Yılmaz"
+                    },
+                    "created_at": {
+                        "description": "Oluşturulma tarihi",
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -6051,8 +5364,8 @@
     },
     "tags": [
         {
-            "name": "Organizations",
-            "description": "Organizasyon yönetimi - şirketler, dernekler, kurumlar"
+            "name": "Events",
+            "description": "Etkinlik yönetimi - oluşturma, düzenleme, listeleme"
         },
         {
             "name": "Participants",
@@ -6061,6 +5374,14 @@
         {
             "name": "Venues",
             "description": "Mekan/Salon yönetimi - konferans salonları, toplantı odaları"
+        },
+        {
+            "name": "Analytics",
+            "description": "İstatistikler ve analitik veriler - raporlar, grafikler"
+        },
+        {
+            "name": "AJAX",
+            "description": "AJAX"
         }
     ],
     "security": [

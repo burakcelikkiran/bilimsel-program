@@ -6,20 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreProgramSessionRequest;
 use App\Http\Requests\Admin\UpdateProgramSessionRequest;
 use App\Models\Event;
+use App\Models\EventDay;
 use App\Models\Participant;
 use App\Models\ProgramSession;
 use App\Models\ProgramSessionCategory;
 use App\Models\Sponsor;
 use App\Models\Venue;
-use App\Models\EventDay;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
-use Carbon\Carbon;
 
 class ProgramSessionController extends Controller
 {
@@ -36,7 +36,7 @@ class ProgramSessionController extends Controller
             ->withCount(['presentations', 'moderators']);
 
         // Apply user access restrictions
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $query->whereHas('venue.eventDay.event', function ($eventQuery) use ($organizationIds) {
                 $eventQuery->whereIn('organization_id', $organizationIds);
@@ -187,7 +187,7 @@ class ProgramSessionController extends Controller
             $session = ProgramSession::create($data);
 
             // Attach moderators if provided
-            if (!empty($data['moderator_ids'])) {
+            if (! empty($data['moderator_ids'])) {
                 $moderators = collect($data['moderator_ids'])->mapWithKeys(function ($id, $index) {
                     return [$id => ['sort_order' => $index + 1]];
                 });
@@ -195,7 +195,7 @@ class ProgramSessionController extends Controller
             }
 
             // Attach categories if provided
-            if (!empty($data['category_ids'])) {
+            if (! empty($data['category_ids'])) {
                 $session->categories()->attach($data['category_ids']);
             }
 
@@ -208,7 +208,7 @@ class ProgramSessionController extends Controller
             DB::rollBack();
 
             return back()
-                ->withErrors(['error' => 'Oturum oluşturulurken bir hata oluştu: ' . $e->getMessage()])
+                ->withErrors(['error' => 'Oturum oluşturulurken bir hata oluştu: '.$e->getMessage()])
                 ->withInput();
         }
     }
@@ -233,17 +233,24 @@ class ProgramSessionController extends Controller
         return Inertia::render('Admin/ProgramSessions/Create', $formData);
     }
 
-
-
     /**
      * Get form data for create/edit forms with event context
      */
     private function getFormDataWithEventContext($user, $eventId = null, $eventDayId = null, $venueId = null)
     {
+        if ($venueId && (! $eventId || ! $eventDayId)) {
+            $venue = Venue::with('eventDay')->find($venueId);
+
+            if ($venue?->eventDay) {
+                $eventDayId = $eventDayId ?: $venue->event_day_id;
+                $eventId = $eventId ?: $venue->eventDay->event_id;
+            }
+        }
+
         // Get events accessible to user
         $eventsQuery = Event::with(['eventDays.venues']);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $eventsQuery->whereIn('organization_id', $organizationIds);
         }
@@ -280,7 +287,7 @@ class ProgramSessionController extends Controller
         // Get participants for moderators
         $participantsQuery = Participant::moderators();
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $participantsQuery->whereIn('organization_id', $organizationIds);
         }
@@ -290,7 +297,7 @@ class ProgramSessionController extends Controller
         // Get sponsors
         $sponsorsQuery = Sponsor::active();
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $sponsorsQuery->whereIn('organization_id', $organizationIds);
         }
@@ -299,7 +306,7 @@ class ProgramSessionController extends Controller
             return [
                 'id' => $sponsor->id,
                 'name' => $sponsor->name,
-                'logo_url' => $sponsor->logo ? asset('storage/' . $sponsor->logo) : null,
+                'logo_url' => $sponsor->logo ? asset('storage/'.$sponsor->logo) : null,
             ];
         });
 
@@ -331,17 +338,17 @@ class ProgramSessionController extends Controller
             'eventDays' => $eventDays->map(function ($day) {
                 return [
                     'id' => $day->id,
-                    'title' => $day->display_name ?? "Gün " . ($day->sort_order + 1),
+                    'title' => $day->display_name ?? 'Gün '.($day->sort_order + 1),
                     'date' => $day->date,
-                    'display_name' => $day->display_name ?? "Gün " . ($day->sort_order + 1),
+                    'display_name' => $day->display_name ?? 'Gün '.($day->sort_order + 1),
                 ];
             }),
 
             'selectedEventDay' => $selectedEventDay ? [
                 'id' => $selectedEventDay->id,
-                'title' => $selectedEventDay->display_name ?? "Gün " . ($selectedEventDay->sort_order + 1),
+                'title' => $selectedEventDay->display_name ?? 'Gün '.($selectedEventDay->sort_order + 1),
                 'date' => $selectedEventDay->date,
-                'display_name' => $selectedEventDay->display_name ?? "Gün " . ($selectedEventDay->sort_order + 1),
+                'display_name' => $selectedEventDay->display_name ?? 'Gün '.($selectedEventDay->sort_order + 1),
             ] : null,
 
             // Ensure venues is always a collection before calling map()
@@ -391,7 +398,6 @@ class ProgramSessionController extends Controller
         ];
     }
 
-
     /**
      * AJAX endpoint to get event days for selected event
      */
@@ -399,27 +405,27 @@ class ProgramSessionController extends Controller
     {
         $eventId = $request->get('event_id');
 
-        if (!$eventId) {
+        if (! $eventId) {
             return response()->json([
                 'success' => false,
-                'message' => 'Event ID gerekli'
+                'message' => 'Event ID gerekli',
             ], 400);
         }
 
         $user = auth()->user();
         $eventQuery = Event::where('id', $eventId);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $eventQuery->whereIn('organization_id', $organizationIds);
         }
 
         $event = $eventQuery->first();
 
-        if (!$event) {
+        if (! $event) {
             return response()->json([
                 'success' => false,
-                'message' => 'Etkinlik bulunamadı'
+                'message' => 'Etkinlik bulunamadı',
             ], 404);
         }
 
@@ -434,15 +440,13 @@ class ProgramSessionController extends Controller
             'data' => $eventDays->map(function ($day) {
                 return [
                     'id' => $day->id,
-                    'title' => $day->display_name ?? "Gün " . ($day->sort_order + 1),
+                    'title' => $day->display_name ?? 'Gün '.($day->sort_order + 1),
                     'date' => $day->date,
-                    'display_name' => $day->display_name ?? "Gün " . ($day->sort_order + 1),
+                    'display_name' => $day->display_name ?? 'Gün '.($day->sort_order + 1),
                 ];
-            })
+            }),
         ]);
     }
-
-
 
     /**
      * AJAX endpoint to get venues for selected event day
@@ -451,17 +455,17 @@ class ProgramSessionController extends Controller
     {
         $eventDayId = $request->get('event_day_id');
 
-        if (!$eventDayId) {
+        if (! $eventDayId) {
             return response()->json([
                 'success' => false,
-                'message' => 'Event Day ID gerekli'
+                'message' => 'Event Day ID gerekli',
             ], 400);
         }
 
         $user = auth()->user();
         $eventDayQuery = EventDay::where('id', $eventDayId);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $eventDayQuery->whereHas('event', function ($query) use ($organizationIds) {
                 $query->whereIn('organization_id', $organizationIds);
@@ -470,10 +474,10 @@ class ProgramSessionController extends Controller
 
         $eventDay = $eventDayQuery->first();
 
-        if (!$eventDay) {
+        if (! $eventDay) {
             return response()->json([
                 'success' => false,
-                'message' => 'Etkinlik günü bulunamadı'
+                'message' => 'Etkinlik günü bulunamadı',
             ], 404);
         }
 
@@ -488,10 +492,9 @@ class ProgramSessionController extends Controller
                     'display_name' => $venue->display_name ?? $venue->name,
                     'color' => $venue->color,
                 ];
-            })
+            }),
         ]);
     }
-
 
     /**
      * AJAX endpoint to get categories for selected event
@@ -500,27 +503,27 @@ class ProgramSessionController extends Controller
     {
         $eventId = $request->get('event_id');
 
-        if (!$eventId) {
+        if (! $eventId) {
             return response()->json([
                 'success' => false,
-                'message' => 'Event ID gerekli'
+                'message' => 'Event ID gerekli',
             ], 400);
         }
 
         $user = auth()->user();
         $eventQuery = Event::where('id', $eventId);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $eventQuery->whereIn('organization_id', $organizationIds);
         }
 
         $event = $eventQuery->first();
 
-        if (!$event) {
+        if (! $event) {
             return response()->json([
                 'success' => false,
-                'message' => 'Etkinlik bulunamadı'
+                'message' => 'Etkinlik bulunamadı',
             ], 404);
         }
 
@@ -528,11 +531,9 @@ class ProgramSessionController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $categories
+            'data' => $categories,
         ]);
     }
-
-
 
     /**
      * Display the specified program session
@@ -552,7 +553,7 @@ class ProgramSessionController extends Controller
                 $query->ordered()->with(['speakers' => function ($speakerQuery) {
                     $speakerQuery->orderBy('sort_order'); // pivot_sort_order yerine sort_order
                 }, 'sponsor']);
-            }
+            },
         ]);
 
         return Inertia::render('Admin/ProgramSessions/Show', [
@@ -652,7 +653,7 @@ class ProgramSessionController extends Controller
     /**
      * Show the form for editing program session - Mevcut uzun versiyonu korundu
      */
-    public function edit(ProgramSession $programSession): Response
+    public function edit(Request $request, ProgramSession $programSession): Response
     {
         $this->authorize('update', $programSession);
 
@@ -663,99 +664,23 @@ class ProgramSessionController extends Controller
             'venue.eventDay.event',
             'sponsor',
             'moderators',
-            'categories'
+            'categories',
         ]);
+
+        $defaultEventId = $programSession->venue->eventDay->event->id;
+        $defaultEventDayId = $programSession->venue->eventDay->id;
+        $defaultVenueId = $programSession->venue_id;
+
+        $eventId = $request->get('event_id', $defaultEventId);
+        $eventDayId = $request->get('event_day_id', $defaultEventDayId);
+        $venueId = $request->get('venue_id', $defaultVenueId);
+
+        $cascadeData = $this->getFormDataWithEventContext($user, $eventId, $eventDayId, $venueId);
 
         // Format times for frontend (HH:MM format)
         $startTime = $programSession->start_time ? $programSession->start_time->format('H:i') : '';
         $endTime = $programSession->end_time ? $programSession->end_time->format('H:i') : '';
 
-        // Get venues - same event's venues only
-        $venues = [];
-        if ($programSession->venue && $programSession->venue->eventDay && $programSession->venue->eventDay->event) {
-            $event = $programSession->venue->eventDay->event;
-            $venues = $event->eventDays()
-                ->with(['venues' => function ($query) {
-                    $query->ordered();
-                }])
-                ->get()
-                ->flatMap->venues
-                ->map(function ($venue) {
-                    return [
-                        'id' => $venue->id,
-                        'name' => $venue->display_name ?? $venue->name,
-                        'display_name' => $venue->display_name ?? $venue->name,
-                    ];
-                })
-                ->unique('id')
-                ->values();
-        }
-
-        // Get participants for moderators - unique participants only
-        $participantsQuery = Participant::moderators();
-        if (!$user->isAdmin()) {
-            $organizationIds = $user->organizations()->pluck('organizations.id');
-            $participantsQuery->whereIn('organization_id', $organizationIds);
-        }
-        $participants = $participantsQuery
-            ->orderBy('first_name')
-            ->get(['id', 'first_name', 'last_name', 'title', 'affiliation'])
-            ->unique(function ($participant) {
-                // Aynı ad ve soyadı olan kişileri tekrarlatma
-                return trim($participant->first_name . ' ' . $participant->last_name);
-            })
-            ->map(function ($participant) {
-                return [
-                    'id' => $participant->id,
-                    'full_name' => trim($participant->first_name . ' ' . $participant->last_name),
-                    'title' => $participant->title,
-                    'affiliation' => $participant->affiliation,
-                ];
-            })
-            ->values(); // Re-index
-
-        // Get sponsors - unique sponsors only
-        $sponsorsQuery = Sponsor::active();
-        if (!$user->isAdmin()) {
-            $organizationIds = $user->organizations()->pluck('organizations.id');
-            $sponsorsQuery->whereIn('organization_id', $organizationIds);
-        }
-        $sponsors = $sponsorsQuery
-            ->distinct('name') // Aynı isimli sponsor'ları tekrarlatma
-            ->orderBy('name')
-            ->get(['id', 'name'])
-            ->unique('name') // Double check - name'e göre unique yap
-            ->values(); // Re-index array
-
-        // Get categories for this event - unique categories only
-        $categories = [];
-        if ($programSession->venue && $programSession->venue->eventDay && $programSession->venue->eventDay->event) {
-            $categories = $programSession->venue->eventDay->event->programSessionCategories()
-                ->orderBy('sort_order')
-                ->get(['id', 'name', 'color'])
-                ->unique('name') // Aynı isimli kategorileri tekrarlatma
-                ->values(); // Re-index
-        }
-
-        // Session types - same as in create method
-        $sessionTypes = [
-            ['value' => 'main', 'label' => 'Ana Oturum'],
-            ['value' => 'satellite', 'label' => 'Uydu Sempozyumu'],
-            ['value' => 'oral_presentation', 'label' => 'Sözlü Bildiri'],
-            ['value' => 'special', 'label' => 'Özel Oturum'],
-            ['value' => 'break', 'label' => 'Ara'],
-        ];
-
-        // Moderator titles - same as in create method
-        $moderatorTitles = [
-            ['value' => 'Oturum Başkanı', 'label' => 'Oturum Başkanı'],
-            ['value' => 'Oturum Başkanları', 'label' => 'Oturum Başkanları'],
-            ['value' => 'Kolaylaştırıcı', 'label' => 'Kolaylaştırıcı'],
-            ['value' => 'Moderatör', 'label' => 'Moderatör'],
-            ['value' => 'Başkan', 'label' => 'Başkan'],
-        ];
-
-        // Add current session data with proper time formatting
         $formData = [
             'programSession' => [
                 'id' => $programSession->id,
@@ -786,52 +711,26 @@ class ProgramSessionController extends Controller
                             'id' => $programSession->venue->eventDay->event->id,
                             'name' => $programSession->venue->eventDay->event->name,
                             'slug' => $programSession->venue->eventDay->event->slug,
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'can_edit' => auth()->user()?->can('update', $programSession) ?? false,
                 'can_delete' => auth()->user()?->can('delete', $programSession) ?? false,
             ],
 
-            // Form options - düzgün formatlanmış
-            'venues' => $venues,
-            'participants' => $participants,
-            'sponsors' => $sponsors,
-            'categories' => $categories,
-            'sessionTypes' => $sessionTypes,
-            'moderatorTitles' => $moderatorTitles,
-
-            // Cascade seçimi için eklenen alanlar
-            'events' => collect([$programSession->venue->eventDay->event])->map(function ($event) {
-                return [
-                    'id' => $event->id,
-                    'name' => $event->name,
-                    'slug' => $event->slug,
-                    'formatted_date_range' => $event->formatted_date_range,
-                ];
-            }),
-            'selectedEvent' => [
-                'id' => $programSession->venue->eventDay->event->id,
-                'name' => $programSession->venue->eventDay->event->name,
-                'slug' => $programSession->venue->eventDay->event->slug,
-            ],
-            'eventDays' => collect([$programSession->venue->eventDay])->map(function ($day) {
-                return [
-                    'id' => $day->id,
-                    'title' => $day->title,
-                    'date' => $day->date,
-                    'display_name' => $day->display_name ?? $day->title,
-                ];
-            }),
-            'selectedEventDay' => [
-                'id' => $programSession->venue->eventDay->id,
-                'title' => $programSession->venue->eventDay->title,
-                'date' => $programSession->venue->eventDay->date,
-                'display_name' => $programSession->venue->eventDay->display_name ?? $programSession->venue->eventDay->title,
-            ],
-            'selectedEventId' => $programSession->venue->eventDay->event->id,
-            'selectedEventDayId' => $programSession->venue->eventDay->id,
-            'selectedVenueId' => $programSession->venue_id,
+            'venues' => $cascadeData['venues'],
+            'participants' => $cascadeData['participants'],
+            'sponsors' => $cascadeData['sponsors'],
+            'categories' => $cascadeData['categories'],
+            'sessionTypes' => $cascadeData['sessionTypes'],
+            'moderatorTitles' => $cascadeData['moderatorTitles'],
+            'events' => $cascadeData['events'],
+            'selectedEvent' => $cascadeData['selectedEvent'],
+            'eventDays' => $cascadeData['eventDays'],
+            'selectedEventDay' => $cascadeData['selectedEventDay'],
+            'selectedEventId' => $cascadeData['selectedEventId'],
+            'selectedEventDayId' => $cascadeData['selectedEventDayId'],
+            'selectedVenueId' => $cascadeData['selectedVenueId'],
         ];
 
         // Debug authorization and user data
@@ -846,7 +745,7 @@ class ProgramSessionController extends Controller
             'user_organizations' => $user->organizations()->get(['organizations.id', 'organizations.name', 'role'])->toArray(),
             'can_update' => $user->can('update', $programSession),
         ]);
-        
+
         // Debug backend data with counts
         \Log::info('🔍 ProgramSession Edit - Backend Data:', [
             'session_id' => $programSession->id,
@@ -854,11 +753,10 @@ class ProgramSessionController extends Controller
             'session_type' => $programSession->session_type,
             'session_type_display' => $programSession->session_type_display,
             'is_break' => $programSession->is_break,
-            'venues_count' => $venues->count(),
-            'participants_count' => $participants->count(),
-            'sponsors_count' => $sponsors->count(),
-            'categories_count' => $categories->count(),
-            'sponsors_list' => $sponsors->pluck('name')->toArray(), // Sponsor isimlerini logla
+            'venues_count' => count($cascadeData['venues']),
+            'participants_count' => count($cascadeData['participants']),
+            'sponsors_count' => count($cascadeData['sponsors']),
+            'categories_count' => count($cascadeData['categories']),
             'start_time_formatted' => $startTime,
             'end_time_formatted' => $endTime,
             'venue_id' => $programSession->venue_id,
@@ -880,20 +778,20 @@ class ProgramSessionController extends Controller
             'session_id' => $programSession->id,
             'user_id' => auth()->id(),
             'request_data' => $request->all(),
-            'validated_pending' => 'about to validate...'
+            'validated_pending' => 'about to validate...',
         ]);
-        
+
         $this->authorize('update', $programSession);
-        
+
         \Log::info('✅ Authorization passed for update');
 
         DB::beginTransaction();
 
         try {
             $data = $request->validated();
-            
+
             \Log::info('✅ Validation passed:', [
-                'validated_data' => $data
+                'validated_data' => $data,
             ]);
 
             // Update session
@@ -921,7 +819,7 @@ class ProgramSessionController extends Controller
             DB::rollBack();
 
             return back()
-                ->withErrors(['error' => 'Oturum güncellenirken bir hata oluştu: ' . $e->getMessage()])
+                ->withErrors(['error' => 'Oturum güncellenirken bir hata oluştu: '.$e->getMessage()])
                 ->withInput();
         }
     }
@@ -934,9 +832,9 @@ class ProgramSessionController extends Controller
         $this->authorize('delete', $programSession);
 
         try {
-            if (!$programSession->canBeDeleted()) {
+            if (! $programSession->canBeDeleted()) {
                 return back()->withErrors([
-                    'error' => 'Sunumları olan oturum silinemez.'
+                    'error' => 'Sunumları olan oturum silinemez.',
                 ]);
             }
 
@@ -954,7 +852,7 @@ class ProgramSessionController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Oturum silinirken bir hata oluştu.'
+                'error' => 'Oturum silinirken bir hata oluştu.',
             ]);
         }
     }
@@ -998,7 +896,7 @@ class ProgramSessionController extends Controller
                 $request->end_time
             );
 
-            if (!$moved) {
+            if (! $moved) {
                 return response()->json(['error' => 'Seçilen zaman diliminde çakışma var.'], 422);
             }
 
@@ -1018,7 +916,7 @@ class ProgramSessionController extends Controller
 
         try {
             $newSession = $programSession->duplicate([
-                'title' => $programSession->title . ' (Kopya)',
+                'title' => $programSession->title.' (Kopya)',
                 'start_time' => $programSession->end_time,
                 'end_time' => $programSession->end_time->addMinutes($programSession->duration_in_minutes),
             ]);
@@ -1028,7 +926,7 @@ class ProgramSessionController extends Controller
                 ->with('success', 'Oturum başarıyla kopyalandı.');
         } catch (\Exception $e) {
             return back()->withErrors([
-                'error' => 'Oturum kopyalanırken hata oluştu: ' . $e->getMessage()
+                'error' => 'Oturum kopyalanırken hata oluştu: '.$e->getMessage(),
             ]);
         }
     }
@@ -1042,7 +940,7 @@ class ProgramSessionController extends Controller
         $sponsorsQuery = Sponsor::active()->orderBy('name');
         $categoriesQuery = ProgramSessionCategory::orderBy('name');
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $eventsQuery->whereIn('organization_id', $organizationIds);
             $sponsorsQuery->whereIn('organization_id', $organizationIds);
@@ -1092,9 +990,9 @@ class ProgramSessionController extends Controller
             $selectedEvent = Event::where('slug', $eventSlug)->firstOrFail();
 
             // Check user access to this event
-            if (!$user->isAdmin()) {
+            if (! $user->isAdmin()) {
                 $organizationIds = $user->organizations()->pluck('organizations.id');
-                if (!$organizationIds->contains($selectedEvent->organization_id)) {
+                if (! $organizationIds->contains($selectedEvent->organization_id)) {
                     abort(403, 'Bu etkinliğe erişim yetkiniz yok.');
                 }
             }
@@ -1103,7 +1001,7 @@ class ProgramSessionController extends Controller
         // Get events accessible to user
         $eventsQuery = Event::with(['eventDays.venues']);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $eventsQuery->whereIn('organization_id', $organizationIds);
         }
@@ -1113,7 +1011,7 @@ class ProgramSessionController extends Controller
         // Get event days with venues
         $eventDaysQuery = \App\Models\EventDay::with(['venues', 'event']);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $eventDaysQuery->whereHas('event', function ($q) use ($organizationIds) {
                 $q->whereIn('organization_id', $organizationIds);
@@ -1132,7 +1030,7 @@ class ProgramSessionController extends Controller
         // Get venues
         $venuesQuery = Venue::with(['eventDay.event']);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $venuesQuery->whereHas('eventDay.event', function ($q) use ($organizationIds) {
                 $q->whereIn('organization_id', $organizationIds);
@@ -1155,10 +1053,10 @@ class ProgramSessionController extends Controller
             'moderators',
             'presentations',
             'categories',
-            'sponsor'
+            'sponsor',
         ])->withCount(['presentations', 'moderators']);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $sessionsQuery->whereHas('venue.eventDay.event', function ($q) use ($organizationIds) {
                 $q->whereIn('organization_id', $organizationIds);
@@ -1187,7 +1085,7 @@ class ProgramSessionController extends Controller
         // Get categories for filtering
         $categoriesQuery = ProgramSessionCategory::query();
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $categoriesQuery->whereIn('organization_id', $organizationIds);
         }
@@ -1197,7 +1095,7 @@ class ProgramSessionController extends Controller
         // Get participants for moderator selection
         $participantsQuery = Participant::query();
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $participantsQuery->whereIn('organization_id', $organizationIds);
         }
@@ -1242,8 +1140,8 @@ class ProgramSessionController extends Controller
                 'panel' => 'Panel',
                 'break' => 'Ara',
                 'lunch' => 'Öğle Arası',
-                'social' => 'Sosyal Etkinlik'
-            ]
+                'social' => 'Sosyal Etkinlik',
+            ],
         ]);
     }
 
@@ -1258,7 +1156,7 @@ class ProgramSessionController extends Controller
             ->with(['venue:id,display_name,event_day_id', 'venue.eventDay:id,title,event_id', 'venue.eventDay.event:id,name']);
 
         // Apply user access restrictions
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $query->whereHas('venue.eventDay.event', function ($eventQuery) use ($organizationIds) {
                 $eventQuery->whereIn('organization_id', $organizationIds);
@@ -1292,15 +1190,15 @@ class ProgramSessionController extends Controller
                     'value' => $session->id,
                     'label' => $session->title,
                     'time_range' => $session->start_time && $session->end_time ?
-                        $session->start_time->format('H:i') . ' - ' . $session->end_time->format('H:i') : '',
+                        $session->start_time->format('H:i').' - '.$session->end_time->format('H:i') : '',
                     'venue_name' => $session->venue->display_name ?? $session->venue->name ?? '',
-                    'event_name' => $session->venue->eventDay->event->name ?? ''
+                    'event_name' => $session->venue->eventDay->event->name ?? '',
                 ];
             });
 
         return response()->json([
             'success' => true,
-            'data' => $sessions
+            'data' => $sessions,
         ]);
     }
 
@@ -1312,7 +1210,7 @@ class ProgramSessionController extends Controller
         $request->validate([
             'session_ids' => 'required|array',
             'session_ids.*' => 'exists:program_sessions,id',
-            'venue_id' => 'nullable|exists:venues,id'
+            'venue_id' => 'nullable|exists:venues,id',
         ]);
 
         try {
@@ -1331,14 +1229,14 @@ class ProgramSessionController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Sıralama başarıyla güncellendi'
+                'message' => 'Sıralama başarıyla güncellendi',
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => 'Sıralama güncellenirken hata oluştu: ' . $e->getMessage()
+                'message' => 'Sıralama güncellenirken hata oluştu: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -1351,18 +1249,18 @@ class ProgramSessionController extends Controller
         $this->authorize('update', $programSession);
 
         try {
-            $newStatus = !$programSession->is_active;
+            $newStatus = ! $programSession->is_active;
             $programSession->update(['is_active' => $newStatus]);
 
             return response()->json([
                 'success' => true,
                 'message' => $newStatus ? 'Oturum aktifleştirildi' : 'Oturum pasifleştirildi',
-                'new_status' => $newStatus
+                'new_status' => $newStatus,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Durum değiştirilemedi: ' . $e->getMessage()
+                'message' => 'Durum değiştirilemedi: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -1380,13 +1278,13 @@ class ProgramSessionController extends Controller
             'venue_id' => 'required|exists:venues,id',
             'event_day_id' => 'nullable|exists:event_days,id',
             'maintain_time' => 'boolean',
-            'new_position' => 'nullable|integer|min:0'
+            'new_position' => 'nullable|integer|min:0',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -1406,11 +1304,11 @@ class ProgramSessionController extends Controller
                     $programSession->id
                 );
 
-                if (!empty($conflicts)) {
+                if (! empty($conflicts)) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Hedef salonda zaman çakışması var',
-                        'conflicts' => $conflicts
+                        'conflicts' => $conflicts,
                     ], 422);
                 }
             }
@@ -1430,14 +1328,14 @@ class ProgramSessionController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Oturum başarıyla taşındı',
-                'session' => $programSession->fresh()->load(['venue', 'venue.eventDay'])
+                'session' => $programSession->fresh()->load(['venue', 'venue.eventDay']),
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => 'Taşıma işlemi başarısız: ' . $e->getMessage()
+                'message' => 'Taşıma işlemi başarısız: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -1452,13 +1350,13 @@ class ProgramSessionController extends Controller
         $validator = Validator::make($request->all(), [
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
-            'event_day_id' => 'nullable|exists:event_days,id'
+            'event_day_id' => 'nullable|exists:event_days,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -1476,11 +1374,11 @@ class ProgramSessionController extends Controller
                 $programSession->id
             );
 
-            if (!empty($conflicts)) {
+            if (! empty($conflicts)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Yeni zaman diliminde çakışma var',
-                    'conflicts' => $conflicts
+                    'conflicts' => $conflicts,
                 ], 422);
             }
 
@@ -1495,14 +1393,14 @@ class ProgramSessionController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Oturum zamanı başarıyla güncellendi',
-                'session' => $programSession->fresh()
+                'session' => $programSession->fresh(),
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => 'Zaman güncelleme başarısız: ' . $e->getMessage()
+                'message' => 'Zaman güncelleme başarısız: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -1524,7 +1422,7 @@ class ProgramSessionController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -1538,7 +1436,7 @@ class ProgramSessionController extends Controller
                 $session = ProgramSession::findOrFail($update['session_id']);
 
                 // Check authorization
-                if (!auth()->user()->can('update', $session)) {
+                if (! auth()->user()->can('update', $session)) {
                     continue;
                 }
 
@@ -1552,12 +1450,13 @@ class ProgramSessionController extends Controller
                         $session->id
                     );
 
-                    if (!empty($sessionConflicts)) {
+                    if (! empty($sessionConflicts)) {
                         $conflicts[] = [
                             'session_id' => $session->id,
                             'session_title' => $session->title,
-                            'conflicts' => $sessionConflicts
+                            'conflicts' => $sessionConflicts,
                         ];
+
                         continue;
                     }
                 }
@@ -1568,8 +1467,12 @@ class ProgramSessionController extends Controller
                     'sort_order' => $update['sort_order'],
                 ];
 
-                if (isset($update['start_time'])) $updateData['start_time'] = $update['start_time'];
-                if (isset($update['end_time'])) $updateData['end_time'] = $update['end_time'];
+                if (isset($update['start_time'])) {
+                    $updateData['start_time'] = $update['start_time'];
+                }
+                if (isset($update['end_time'])) {
+                    $updateData['end_time'] = $update['end_time'];
+                }
 
                 $session->update($updateData);
                 $updated++;
@@ -1581,14 +1484,14 @@ class ProgramSessionController extends Controller
                 'success' => true,
                 'message' => "{$updated} oturum başarıyla güncellendi",
                 'updated_count' => $updated,
-                'conflicts' => $conflicts
+                'conflicts' => $conflicts,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => 'Toplu güncelleme başarısız: ' . $e->getMessage()
+                'message' => 'Toplu güncelleme başarısız: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -1602,13 +1505,13 @@ class ProgramSessionController extends Controller
             'venue_id' => 'required|exists:venues,id',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
-            'exclude_session_id' => 'nullable|exists:program_sessions,id'
+            'exclude_session_id' => 'nullable|exists:program_sessions,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -1625,13 +1528,13 @@ class ProgramSessionController extends Controller
 
             return response()->json([
                 'success' => true,
-                'has_conflicts' => !empty($conflicts),
-                'conflicts' => $conflicts
+                'has_conflicts' => ! empty($conflicts),
+                'conflicts' => $conflicts,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Çakışma kontrolü başarısız: ' . $e->getMessage()
+                'message' => 'Çakışma kontrolü başarısız: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -1645,13 +1548,13 @@ class ProgramSessionController extends Controller
             'event_id' => 'required|exists:events,id',
             'strategy' => 'in:time_optimized,venue_optimized,speaker_optimized',
             'session_ids' => 'nullable|array',
-            'session_ids.*' => 'exists:program_sessions,id'
+            'session_ids.*' => 'exists:program_sessions,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -1682,7 +1585,7 @@ class ProgramSessionController extends Controller
             if ($sessionsToSchedule->isEmpty()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Planlanacak oturum bulunamadı'
+                    'message' => 'Planlanacak oturum bulunamadı',
                 ]);
             }
 
@@ -1693,14 +1596,14 @@ class ProgramSessionController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => "{$scheduled} oturum otomatik planlandı",
-                'scheduled_count' => $scheduled
+                'scheduled_count' => $scheduled,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'success' => false,
-                'message' => 'Otomatik planlama başarısız: ' . $e->getMessage()
+                'message' => 'Otomatik planlama başarısız: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -1720,17 +1623,17 @@ class ProgramSessionController extends Controller
                 'available_days' => $this->getAvailableDays($event),
                 'available_time_slots' => $this->getAvailableTimeSlots(),
                 'current_conflicts' => $this->getCurrentConflicts($programSession),
-                'suggested_times' => $this->getSuggestedTimes($programSession)
+                'suggested_times' => $this->getSuggestedTimes($programSession),
             ];
 
             return response()->json([
                 'success' => true,
-                'options' => $options
+                'options' => $options,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Seçenekler alınamadı: ' . $e->getMessage()
+                'message' => 'Seçenekler alınamadı: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -1750,7 +1653,7 @@ class ProgramSessionController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'valid' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -1758,10 +1661,10 @@ class ProgramSessionController extends Controller
             $session = ProgramSession::findOrFail($request->session_id);
 
             // Check authorization
-            if (!auth()->user()->can('update', $session)) {
+            if (! auth()->user()->can('update', $session)) {
                 return response()->json([
                     'valid' => false,
-                    'message' => 'Bu işlem için yetkiniz yok'
+                    'message' => 'Bu işlem için yetkiniz yok',
                 ], 403);
             }
 
@@ -1783,7 +1686,7 @@ class ProgramSessionController extends Controller
                     $session->id
                 );
 
-                if (!empty($timeConflicts)) {
+                if (! empty($timeConflicts)) {
                     $isValid = false;
                     $message = 'Zaman çakışması var';
                     $conflicts = $timeConflicts;
@@ -1805,12 +1708,12 @@ class ProgramSessionController extends Controller
             return response()->json([
                 'valid' => $isValid,
                 'message' => $message,
-                'conflicts' => $conflicts
+                'conflicts' => $conflicts,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'valid' => false,
-                'message' => 'Doğrulama hatası: ' . $e->getMessage()
+                'message' => 'Doğrulama hatası: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -1846,13 +1749,13 @@ class ProgramSessionController extends Controller
                 $conflicts[] = [
                     'session_id' => $session->id,
                     'session_title' => $session->title,
-                    'time_range' => $session->start_time->format('H:i') . ' - ' . $session->end_time->format('H:i'),
+                    'time_range' => $session->start_time->format('H:i').' - '.$session->end_time->format('H:i'),
                     'overlap_minutes' => $this->calculateOverlapMinutes(
                         $startTime,
                         $endTime,
                         $session->start_time->format('H:i'),
                         $session->end_time->format('H:i')
-                    )
+                    ),
                 ];
             }
         }
@@ -1958,7 +1861,7 @@ class ProgramSessionController extends Controller
             $slotEnd = $start->copy()->addHour();
             $slots[] = [
                 'start' => $start->format('H:i'),
-                'end' => $slotEnd->format('H:i')
+                'end' => $slotEnd->format('H:i'),
             ];
             $start->addHour();
         }
@@ -1976,7 +1879,7 @@ class ProgramSessionController extends Controller
                 'id' => $venue->id,
                 'name' => $venue->display_name ?? $venue->name,
                 'capacity' => $venue->capacity,
-                'color' => $venue->color
+                'color' => $venue->color,
             ];
         })->values()->toArray();
     }
@@ -1990,7 +1893,7 @@ class ProgramSessionController extends Controller
             return [
                 'id' => $day->id,
                 'title' => $day->title,
-                'date' => $day->date->toDateString()
+                'date' => $day->date->toDateString(),
             ];
         })->toArray();
     }
@@ -2008,7 +1911,7 @@ class ProgramSessionController extends Controller
      */
     private function getCurrentConflicts(ProgramSession $session): array
     {
-        if (!$session->start_time || !$session->end_time || !$session->venue_id) {
+        if (! $session->start_time || ! $session->end_time || ! $session->venue_id) {
             return [];
         }
 
@@ -2037,7 +1940,7 @@ class ProgramSessionController extends Controller
         // Get events accessible to user
         $eventsQuery = Event::with(['eventDays.venues']);
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $eventsQuery->whereIn('organization_id', $organizationIds);
         }
@@ -2063,7 +1966,7 @@ class ProgramSessionController extends Controller
         // Get participants for moderators
         $participantsQuery = Participant::moderators();
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $participantsQuery->whereIn('organization_id', $organizationIds);
         }
@@ -2073,7 +1976,7 @@ class ProgramSessionController extends Controller
         // Get sponsors - Use actual database column 'logo'
         $sponsorsQuery = Sponsor::active();
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $sponsorsQuery->whereIn('organization_id', $organizationIds);
         }
@@ -2082,7 +1985,7 @@ class ProgramSessionController extends Controller
             return [
                 'id' => $sponsor->id,
                 'name' => $sponsor->name,
-                'logo_url' => $sponsor->logo ? asset('storage/' . $sponsor->logo) : null,
+                'logo_url' => $sponsor->logo ? asset('storage/'.$sponsor->logo) : null,
             ];
         });
 

@@ -7,20 +7,20 @@
             <Link
                 v-if="links[0].url"
                 :href="links[0].url"
-                class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:text-gray-400"
+                class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-slate-500 bg-white border border-slate-300 rounded-md hover:text-slate-400"
                 v-html="links[0].label"
             />
             <Link
                 v-if="links[links.length - 1].url"
                 :href="links[links.length - 1].url"
-                class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:text-gray-400"
+                class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-slate-500 bg-white border border-slate-300 rounded-md hover:text-slate-400"
                 v-html="links[links.length - 1].label"
             />
         </div>
 
         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
-                <p class="text-sm text-gray-700 dark:text-gray-300">
+                <p class="text-sm text-slate-700 dark:text-slate-300">
                     <span class="font-medium">{{ from }}</span>
                     -
                     <span class="font-medium">{{ to }}</span>
@@ -35,7 +35,7 @@
                     <template v-for="(link, key) in links" :key="key">
                         <Link
                             v-if="link.url === null"
-                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5"
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-slate-500 bg-white border border-slate-300 cursor-default leading-5"
                             :class="{
                                 'rounded-l-md': key === 0,
                                 'rounded-r-md': key === links.length - 1,
@@ -45,9 +45,9 @@
                         />
                         <Link
                             v-else
-                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out border border-gray-300 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue"
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium leading-5 transition duration-150 ease-in-out border border-slate-300 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue"
                             :class="{
-                                'bg-white text-gray-500 hover:text-gray-400': !link.active,
+                                'bg-white text-slate-500 hover:text-slate-400': !link.active,
                                 'bg-blue-50 border-blue-500 text-blue-600': link.active,
                                 'rounded-l-md': key === 0,
                                 'rounded-r-md': key === links.length - 1,

@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\API\PublicEventController;
+use App\Http\Controllers\API\Admin\EventDayController as AdminEventDayApiController;
+use App\Http\Controllers\API\Admin\ParticipantController as AdminParticipantApiController;
 use App\Http\Controllers\API\EventProgramController;
 use App\Http\Controllers\API\ProgramSessionApiController;
+use App\Http\Controllers\API\PublicEventController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +28,7 @@ Route::get('/test', function () {
         'headers' => [
             'host' => request()->header('host'),
             'user-agent' => request()->header('user-agent'),
-        ]
+        ],
     ]);
 });
 
@@ -59,10 +61,9 @@ Route::get('/docs', function () {
                 'test' => url('/api/test'),
             ],
             'admin' => [
-                'events' => url('/api/v1/events'),
-                'participants' => url('/api/v1/participants'),
-                'venues' => url('/api/v1/venues'),
-                'sponsors' => url('/api/v1/sponsors'),
+                'participants' => url('/api/v1/admin/participants'),
+                'participants_search' => url('/api/v1/admin/participants/search'),
+                'event_days' => url('/api/v1/admin/events/{event_id}/days'),
             ],
             'system' => [
                 'health' => url('/api/health'),
@@ -74,7 +75,7 @@ Route::get('/docs', function () {
 
 // Route debugging endpoint
 Route::get('/debug/routes', function () {
-    if (!app()->environment(['local', 'development'])) {
+    if (! app()->environment(['local', 'development'])) {
         abort(404);
     }
 
@@ -83,7 +84,7 @@ Route::get('/debug/routes', function () {
         if (str_starts_with($route->uri(), 'api/')) {
             $routes[] = [
                 'method' => implode('|', $route->methods()),
-                'uri' => '/' . $route->uri(),
+                'uri' => '/'.$route->uri(),
                 'name' => $route->getName(),
                 'action' => $route->getActionName(),
             ];
@@ -97,7 +98,7 @@ Route::get('/debug/routes', function () {
             'url' => request()->fullUrl(),
             'path' => request()->path(),
             'method' => request()->method(),
-        ]
+        ],
     ]);
 });
 
@@ -115,6 +116,10 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
         // Get specific event by slug
         Route::get('/{event:slug}', [PublicEventController::class, 'show'])->name('show');
+
+        // Legacy program.json export format
+        Route::get('/{event:slug}/program.json', [EventProgramController::class, 'exportProgramJson'])
+            ->name('program.export-json');
 
         // Event speakers
         Route::prefix('{event:slug}/speakers')->name('speakers.')->group(function () {
@@ -177,11 +182,22 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::get('/presentations', [PublicEventController::class, 'searchPresentations'])->name('presentations');
     });
 
-    Route::post('/program-sessions/bulk-update', [ProgramSessionApiController::class, 'bulkUpdate']);
-    Route::post('/program-sessions/{session}/update-venue', [ProgramSessionApiController::class, 'updateVenue']);
-    Route::post('/program-sessions/{session}/update-time', [ProgramSessionApiController::class, 'updateTime']);
-    Route::get('/program-sessions/timeline-data', [ProgramSessionApiController::class, 'getTimelineData']);
-    Route::post('/program-sessions/quick-create', [ProgramSessionApiController::class, 'quickCreate']);
+    Route::middleware(['auth:sanctum'])->prefix('program-sessions')->name('program-sessions.')->group(function () {
+        Route::post('/bulk-update', [ProgramSessionApiController::class, 'bulkUpdate'])->name('bulk-update');
+        Route::post('/{session}/update-venue', [ProgramSessionApiController::class, 'updateVenue'])->name('update-venue');
+        Route::post('/{session}/update-time', [ProgramSessionApiController::class, 'updateTime'])->name('update-time');
+        Route::get('/timeline-data', [ProgramSessionApiController::class, 'getTimelineData'])->name('timeline-data');
+        Route::post('/quick-create', [ProgramSessionApiController::class, 'quickCreate'])->name('quick-create');
+    });
+
+    Route::middleware(['auth:sanctum'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/participants/search', [AdminParticipantApiController::class, 'search'])->name('participants.search');
+        Route::get('/participants', [AdminParticipantApiController::class, 'index'])->name('participants.index');
+        Route::get('/participants/{participant}', [AdminParticipantApiController::class, 'show'])->name('participants.show');
+
+        Route::get('/events/{event:id}/days', [AdminEventDayApiController::class, 'index'])->name('events.days.index');
+        Route::get('/events/{event:id}/days/{eventDay}', [AdminEventDayApiController::class, 'show'])->name('events.days.show');
+    });
 
     // Import test endpoints
     Route::prefix('import')->name('import.')->group(function () {
@@ -193,7 +209,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
                     'participants' => '/api/v1/import/participants',
                     'presentations' => '/api/v1/import/presentations',
                     'sessions' => '/api/v1/import/sessions',
-                ]
+                ],
             ]);
         })->name('test');
 
@@ -203,7 +219,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
                 'message' => 'Participants import endpoint çalışıyor',
                 'method' => $request->method(),
                 'url' => $request->fullUrl(),
-                'note' => 'Bu bir test endpoint\'i - gerçek import henüz implemente edilmedi'
+                'note' => 'Bu bir test endpoint\'i - gerçek import henüz implemente edilmedi',
             ]);
         })->name('participants');
 
@@ -220,14 +236,14 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
 // Debug endpoint (only for development)
 Route::get('/debug/event/{slug}', function ($slug) {
-    if (!app()->environment(['local', 'development'])) {
+    if (! app()->environment(['local', 'development'])) {
         abort(404);
     }
 
     try {
         $event = \App\Models\Event::where('slug', $slug)->first();
 
-        if (!$event) {
+        if (! $event) {
             return response()->json(['error' => 'Event not found']);
         }
 
@@ -247,39 +263,39 @@ Route::get('/debug/event/{slug}', function ($slug) {
             $debug['relationships']['organization'] = $event->organization ?
                 ['id' => $event->organization->id, 'name' => $event->organization->name] : null;
         } catch (\Exception $e) {
-            $debug['relationships']['organization'] = 'ERROR: ' . $e->getMessage();
+            $debug['relationships']['organization'] = 'ERROR: '.$e->getMessage();
         }
 
         try {
             $debug['relationships']['eventDays'] = $event->eventDays->count();
         } catch (\Exception $e) {
-            $debug['relationships']['eventDays'] = 'ERROR: ' . $e->getMessage();
+            $debug['relationships']['eventDays'] = 'ERROR: '.$e->getMessage();
         }
 
         try {
             $debug['relationships']['venues'] = $event->venues->count();
         } catch (\Exception $e) {
-            $debug['relationships']['venues'] = 'ERROR: ' . $e->getMessage();
+            $debug['relationships']['venues'] = 'ERROR: '.$e->getMessage();
         }
 
         // Check table structures
         try {
             $debug['table_structures']['organizations'] = \Schema::getColumnListing('organizations');
         } catch (\Exception $e) {
-            $debug['table_structures']['organizations'] = 'ERROR: ' . $e->getMessage();
+            $debug['table_structures']['organizations'] = 'ERROR: '.$e->getMessage();
         }
 
         try {
             $debug['table_structures']['events'] = \Schema::getColumnListing('events');
         } catch (\Exception $e) {
-            $debug['table_structures']['events'] = 'ERROR: ' . $e->getMessage();
+            $debug['table_structures']['events'] = 'ERROR: '.$e->getMessage();
         }
 
         return response()->json($debug);
     } catch (\Exception $e) {
         return response()->json([
             'error' => $e->getMessage(),
-            'trace' => config('app.debug') ? $e->getTraceAsString() : null
+            'trace' => config('app.debug') ? $e->getTraceAsString() : null,
         ]);
     }
 })->name('debug-event');

@@ -41,4 +41,25 @@ class AuthenticationTest extends TestCase
 
         $this->assertGuest();
     }
+
+    public function test_users_can_authenticate_via_inertia_login(): void
+    {
+        $user = User::factory()->create();
+
+        $this->get('/login');
+
+        $token = session()->token();
+
+        $response = $this->withHeaders([
+            'X-Inertia' => 'true',
+            'X-Requested-With' => 'XMLHttpRequest',
+            'X-CSRF-TOKEN' => $token,
+        ])->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('dashboard', absolute: false));
+    }
 }

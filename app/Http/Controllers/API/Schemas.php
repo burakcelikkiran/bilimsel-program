@@ -7,19 +7,23 @@ namespace App\Http\Controllers\API;
  *     title="Event Management System API",
  *     version="1.0.0",
  *     description="Comprehensive API for managing events, participants, venues, sponsors and program sessions",
+ *
  *     @OA\Contact(
  *         email="support@eventmanagement.com",
  *         name="API Support Team"
  *     ),
+ *
  *     @OA\License(
  *         name="MIT",
  *         url="https://opensource.org/licenses/MIT"
  *     )
  * )
+ *
  * @OA\Server(
  *     url="/api/v1",
  *     description="API Version 1"
  * )
+ *
  * @OA\SecurityScheme(
  *     securityScheme="sanctum",
  *     type="http",
@@ -36,6 +40,7 @@ namespace App\Http\Controllers\API;
  *     title="User",
  *     description="Kullanıcı modeli",
  *     required={"id", "name", "email", "role"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Kullanıcı ID"),
  *     @OA\Property(property="name", type="string", example="Ahmet Yılmaz", description="Ad Soyad"),
  *     @OA\Property(property="email", type="string", format="email", example="ahmet@example.com", description="E-posta adresi"),
@@ -53,6 +58,7 @@ namespace App\Http\Controllers\API;
  *     title="User Summary",
  *     description="Kullanıcı özet bilgileri",
  *     required={"id", "name", "email"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Kullanıcı ID"),
  *     @OA\Property(property="name", type="string", example="Ahmet Yılmaz", description="Kullanıcı adı"),
  *     @OA\Property(property="email", type="string", format="email", example="ahmet@example.com", description="E-posta")
@@ -64,6 +70,7 @@ namespace App\Http\Controllers\API;
  *     title="Organization",
  *     description="Organizasyon modeli",
  *     required={"id", "name", "slug"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Organizasyon ID"),
  *     @OA\Property(property="name", type="string", example="Türk Kardiyoloji Derneği", description="Organizasyon adı"),
  *     @OA\Property(property="slug", type="string", example="tkd", description="URL dostu kısa ad"),
@@ -85,6 +92,7 @@ namespace App\Http\Controllers\API;
  *     title="Organization Summary",
  *     description="Organizasyon özet bilgileri",
  *     required={"id", "name"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Organizasyon ID"),
  *     @OA\Property(property="name", type="string", example="Akademik Kongreler Derneği", description="Organizasyon adı"),
  *     @OA\Property(property="slug", type="string", example="akademik-kongreler-dernegi", description="URL dostu kısa ad"),
@@ -122,35 +130,42 @@ namespace App\Http\Controllers\API;
  *         @OA\Schema(ref="#/components/schemas/OrganizationSummary")
  *     }
  * )
- *
  * @OA\Schema(
  *     schema="OrganizationDetailWithRelations",
  *     allOf={
  *         @OA\Schema(ref="#/components/schemas/OrganizationDetail"),
  *         @OA\Schema(
  *             type="object",
+ *
  *             @OA\Property(
  *                 property="users",
  *                 type="array",
  *                 description="Organizasyon kullanıcıları",
+ *
  *                 @OA\Items(ref="#/components/schemas/OrganizationUser")
  *             ),
+ *
  *             @OA\Property(
  *                 property="recent_events",
  *                 type="array",
  *                 description="Son etkinlikler",
+ *
  *                 @OA\Items(ref="#/components/schemas/EventSummary")
  *             ),
+ *
  *             @OA\Property(
  *                 property="recent_participants",
  *                 type="array",
  *                 description="Son katılımcılar",
+ *
  *                 @OA\Items(ref="#/components/schemas/ParticipantSummary")
  *             ),
+ *
  *             @OA\Property(
  *                 property="sponsors",
  *                 type="array",
  *                 description="Sponsorlar",
+ *
  *                 @OA\Items(ref="#/components/schemas/SponsorSummary")
  *             )
  *         )
@@ -163,6 +178,7 @@ namespace App\Http\Controllers\API;
  *     title="Organization User",
  *     description="Organizasyon kullanıcısı",
  *     required={"id", "name", "email", "role"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Kullanıcı ID"),
  *     @OA\Property(property="name", type="string", example="Ahmet Yılmaz", description="Kullanıcı adı"),
  *     @OA\Property(property="email", type="string", format="email", example="ahmet@example.com", description="E-posta"),
@@ -176,6 +192,7 @@ namespace App\Http\Controllers\API;
  *     title="Organization Option",
  *     description="Organizasyon seçenek formatı (dropdown için)",
  *     required={"value", "label"},
+ *
  *     @OA\Property(property="value", type="integer", example=1, description="Organizasyon ID"),
  *     @OA\Property(property="label", type="string", example="Türk Kardiyoloji Derneği", description="Organizasyon adı"),
  *     @OA\Property(property="slug", type="string", example="tkd", description="URL dostu kısa ad"),
@@ -187,6 +204,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Organization Export",
  *     description="Organizasyon dışa aktarım verisi",
+ *
  *     @OA\Property(
  *         property="organization",
  *         type="object",
@@ -202,26 +220,34 @@ namespace App\Http\Controllers\API;
  *         property="events",
  *         type="array",
  *         description="Organizasyonun etkinlikleri",
+ *
  *         @OA\Items(ref="#/components/schemas/EventSummary")
  *     ),
+ *
  *     @OA\Property(
  *         property="participants",
- *         type="array", 
+ *         type="array",
  *         description="Organizasyonun katılımcıları",
+ *
  *         @OA\Items(ref="#/components/schemas/ParticipantSummary")
  *     ),
+ *
  *     @OA\Property(
  *         property="sponsors",
  *         type="array",
  *         description="Organizasyonun sponsorları",
+ *
  *         @OA\Items(ref="#/components/schemas/SponsorSummary")
  *     ),
+ *
  *     @OA\Property(
  *         property="users",
  *         type="array",
  *         description="Organizasyon kullanıcıları",
+ *
  *         @OA\Items(ref="#/components/schemas/OrganizationUser")
  *     ),
+ *
  *     @OA\Property(
  *         property="statistics",
  *         type="object",
@@ -240,6 +266,7 @@ namespace App\Http\Controllers\API;
  *     title="Event",
  *     description="Etkinlik modeli",
  *     required={"id", "name", "slug", "organization_id"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Etkinlik ID"),
  *     @OA\Property(property="name", type="string", example="38. Ulusal Kardiyoloji Kongresi", description="Etkinlik adı"),
  *     @OA\Property(property="slug", type="string", example="38-ulusal-kardiyoloji-kongresi", description="URL dostu kısa ad"),
@@ -267,6 +294,7 @@ namespace App\Http\Controllers\API;
  *     title="Event Summary",
  *     description="Etkinlik özet bilgileri",
  *     required={"id", "name", "slug"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Etkinlik ID"),
  *     @OA\Property(property="name", type="string", example="38. Ulusal Kardiyoloji Kongresi", description="Etkinlik adı"),
  *     @OA\Property(property="slug", type="string", example="38-ulusal-kardiyoloji-kongresi", description="URL dostu kısa ad"),
@@ -286,6 +314,7 @@ namespace App\Http\Controllers\API;
  *     title="Event Day",
  *     description="Etkinlik günü modeli",
  *     required={"id", "title", "date", "event_id"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Etkinlik günü ID"),
  *     @OA\Property(property="title", type="string", example="1. Gün", description="Gün başlığı"),
  *     @OA\Property(property="date", type="string", format="date", example="2024-10-15", description="Tarih"),
@@ -305,6 +334,7 @@ namespace App\Http\Controllers\API;
  *     title="Venue",
  *     description="Salon/Mekan modeli",
  *     required={"id", "name", "event_day_id"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Salon ID"),
  *     @OA\Property(property="name", type="string", example="Ana Salon", description="Salon adı"),
  *     @OA\Property(property="slug", type="string", example="ana-salon", description="URL dostu kısa ad"),
@@ -316,18 +346,22 @@ namespace App\Http\Controllers\API;
  *         property="facilities",
  *         type="array",
  *         description="Salon özellikleri",
+ *
  *         @OA\Items(type="string"),
  *         example={"Projeksiyon", "Ses Sistemi", "Kablosuz Mikrofon"}
  *     ),
+ *
  *     @OA\Property(property="setup_notes", type="string", nullable=true, example="Kurulum öncesi ses testi gerekli", description="Kurulum notları"),
  *     @OA\Property(property="technical_specs", type="string", nullable=true, example="4K projeksiyon, Dolby ses sistemi", description="Teknik özellikler"),
  *     @OA\Property(
  *         property="equipment",
  *         type="array",
  *         description="Mevcut ekipmanlar",
+ *
  *         @OA\Items(type="string"),
  *         example={"Laptop", "Projektor", "Mikrofon"}
  *     ),
+ *
  *     @OA\Property(property="is_active", type="boolean", example=true, description="Aktif durumu"),
  *     @OA\Property(property="sort_order", type="integer", example=1, description="Sıralama"),
  *     @OA\Property(property="event_day_id", type="integer", example=1, description="Etkinlik günü ID"),
@@ -343,6 +377,7 @@ namespace App\Http\Controllers\API;
  *     title="Venue Resource",
  *     description="Venue API kaynak formatı",
  *     required={"id", "name", "event_day_id"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Salon ID"),
  *     @OA\Property(property="name", type="string", example="Ana Salon", description="Salon adı"),
  *     @OA\Property(property="display_name", type="string", example="Ana Salon - Zemin Kat", description="Görüntülenen tam ad"),
@@ -355,18 +390,22 @@ namespace App\Http\Controllers\API;
  *         property="facilities",
  *         type="array",
  *         description="Salon özellikleri",
+ *
  *         @OA\Items(type="string"),
  *         example={"Projeksiyon", "Ses Sistemi", "Kablosuz Mikrofon"}
  *     ),
+ *
  *     @OA\Property(property="setup_notes", type="string", nullable=true, example="Kurulum öncesi ses testi gerekli", description="Kurulum notları"),
  *     @OA\Property(property="technical_specs", type="string", nullable=true, example="4K projeksiyon, Dolby ses sistemi", description="Teknik özellikler"),
  *     @OA\Property(
  *         property="equipment",
  *         type="array",
  *         description="Mevcut ekipmanlar",
+ *
  *         @OA\Items(type="string"),
  *         example={"Laptop", "Projektor", "Mikrofon"}
  *     ),
+ *
  *     @OA\Property(property="is_active", type="boolean", example=true, description="Aktif durumu"),
  *     @OA\Property(property="sort_order", type="integer", example=1, description="Sıralama"),
  *     @OA\Property(property="event_day_id", type="integer", example=1, description="Etkinlik günü ID"),
@@ -394,8 +433,10 @@ namespace App\Http\Controllers\API;
  *         property="program_sessions",
  *         type="array",
  *         description="Bu salondaki program oturumları (isteğe bağlı)",
+ *
  *         @OA\Items(
  *             type="object",
+ *
  *             @OA\Property(property="id", type="integer", example=1, description="Oturum ID"),
  *             @OA\Property(property="title", type="string", example="Kalp Yetersizliği", description="Oturum başlığı"),
  *             @OA\Property(property="start_time", type="string", format="time", example="09:00:00", description="Başlangıç saati"),
@@ -426,6 +467,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     required={"event_day_id", "name"},
  *     description="Venue creation request schema",
+ *
  *     @OA\Property(
  *         property="event_day_id",
  *         type="integer",
@@ -501,6 +543,7 @@ namespace App\Http\Controllers\API;
  *     schema="VenueUpdateRequest",
  *     type="object",
  *     description="Venue update request schema",
+ *
  *     @OA\Property(
  *         property="event_day_id",
  *         type="integer",
@@ -577,11 +620,14 @@ namespace App\Http\Controllers\API;
  *         @OA\Schema(ref="#/components/schemas/VenueResource"),
  *         @OA\Schema(
  *             type="object",
+ *
  *             @OA\Property(
  *                 property="program_sessions",
  *                 type="array",
+ *
  *                 @OA\Items(
  *                     type="object",
+ *
  *                     @OA\Property(property="id", type="integer", example=1),
  *                     @OA\Property(property="title", type="string", example="Opening Session"),
  *                     @OA\Property(property="start_time", type="string", format="time", example="09:00:00"),
@@ -601,6 +647,7 @@ namespace App\Http\Controllers\API;
  *     schema="VenueStatistics",
  *     type="object",
  *     description="Venue usage statistics",
+ *
  *     @OA\Property(property="total_sessions", type="integer", description="Total number of sessions", example=8),
  *     @OA\Property(property="total_presentations", type="integer", description="Total number of presentations", example=25),
  *     @OA\Property(property="total_speakers", type="integer", description="Total number of speakers", example=30),
@@ -620,6 +667,7 @@ namespace App\Http\Controllers\API;
  *     schema="TimeConflict",
  *     type="object",
  *     description="Time conflict information",
+ *
  *     @OA\Property(
  *         property="session",
  *         type="object",
@@ -631,8 +679,10 @@ namespace App\Http\Controllers\API;
  *     @OA\Property(
  *         property="conflicts_with",
  *         type="array",
+ *
  *         @OA\Items(
  *             type="object",
+ *
  *             @OA\Property(property="id", type="integer", example=2),
  *             @OA\Property(property="title", type="string", example="Session B"),
  *             @OA\Property(property="start_time", type="string", format="time", example="09:30:00"),
@@ -645,6 +695,7 @@ namespace App\Http\Controllers\API;
  *     schema="VenueValidationError",
  *     type="object",
  *     description="Validation error response for venue operations",
+ *
  *     @OA\Property(property="success", type="boolean", example=false),
  *     @OA\Property(property="message", type="string", example="Girilen bilgiler geçersiz."),
  *     @OA\Property(
@@ -654,24 +705,31 @@ namespace App\Http\Controllers\API;
  *         @OA\Property(
  *             property="event_day_id",
  *             type="array",
+ *
  *             @OA\Items(type="string"),
  *             example={"Etkinlik günü seçimi zorunludur."}
  *         ),
+ *
  *         @OA\Property(
  *             property="name",
  *             type="array",
+ *
  *             @OA\Items(type="string"),
  *             example={"Bu etkinlik gününde aynı isimde bir mekan zaten var."}
  *         ),
+ *
  *         @OA\Property(
  *             property="capacity",
  *             type="array",
+ *
  *             @OA\Items(type="string"),
  *             example={"Kapasite en az 1 olmalıdır."}
  *         ),
+ *
  *         @OA\Property(
  *             property="color",
  *             type="array",
+ *
  *             @OA\Items(type="string"),
  *             example={"Renk geçerli hex formatında olmalıdır (#RRGGBB)."}
  *         )
@@ -682,6 +740,7 @@ namespace App\Http\Controllers\API;
  *     schema="VenueAccessError",
  *     type="object",
  *     description="Access denied error response",
+ *
  *     @OA\Property(property="success", type="boolean", example=false),
  *     @OA\Property(property="message", type="string", example="Bu etkinlik gününe mekan ekleyemezsiniz."),
  *     @OA\Property(
@@ -700,6 +759,7 @@ namespace App\Http\Controllers\API;
  *     title="Sponsor",
  *     description="Sponsor modeli",
  *     required={"id", "name", "sponsor_level", "organization_id"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Sponsor ID"),
  *     @OA\Property(property="name", type="string", example="Bayer Türk", description="Sponsor adı"),
  *     @OA\Property(property="sponsor_level", type="string", enum={"platinum", "gold", "silver", "bronze"}, example="gold", description="Sponsor seviyesi"),
@@ -724,6 +784,7 @@ namespace App\Http\Controllers\API;
  *     title="Sponsor Summary",
  *     description="Sponsor özet bilgileri",
  *     required={"id", "name", "sponsor_level"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Sponsor ID"),
  *     @OA\Property(property="name", type="string", example="Bayer Türk", description="Sponsor adı"),
  *     @OA\Property(property="sponsor_level", type="string", enum={"platinum", "gold", "silver", "bronze"}, example="gold", description="Sponsor seviyesi"),
@@ -737,6 +798,7 @@ namespace App\Http\Controllers\API;
  *     title="ProgramSession",
  *     description="Program Oturumu modeli",
  *     required={"id", "title", "venue_id", "start_time", "end_time"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Oturum ID"),
  *     @OA\Property(property="title", type="string", example="Kalp Yetersizliği", description="Oturum başlığı"),
  *     @OA\Property(property="session_type", type="string", enum={"plenary", "parallel", "workshop", "poster", "break", "lunch", "social"}, example="plenary", description="Oturum tipi"),
@@ -766,6 +828,7 @@ namespace App\Http\Controllers\API;
  *     title="Program Session Category",
  *     description="Program oturumu kategorisi",
  *     required={"id", "name", "event_id"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Kategori ID"),
  *     @OA\Property(property="name", type="string", example="Ana Oturumlar", description="Kategori adı"),
  *     @OA\Property(property="description", type="string", nullable=true, example="Ana konferans oturumları", description="Açıklama"),
@@ -784,6 +847,7 @@ namespace App\Http\Controllers\API;
  *     title="Participant",
  *     description="Katılımcı modeli",
  *     required={"id", "first_name", "last_name", "email"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Katılımcı ID"),
  *     @OA\Property(property="first_name", type="string", example="Ahmet", description="Ad"),
  *     @OA\Property(property="last_name", type="string", example="Yılmaz", description="Soyad"),
@@ -810,6 +874,7 @@ namespace App\Http\Controllers\API;
  *     title="Participant Summary",
  *     description="Katılımcı özet bilgileri",
  *     required={"id", "first_name", "last_name", "email"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Katılımcı ID"),
  *     @OA\Property(property="first_name", type="string", example="Ahmet", description="Ad"),
  *     @OA\Property(property="last_name", type="string", example="Yılmaz", description="Soyad"),
@@ -823,11 +888,26 @@ namespace App\Http\Controllers\API;
  * )
  *
  * @OA\Schema(
+ *     schema="ParticipantWithStats",
+ *     allOf={
+ *         @OA\Schema(ref="#/components/schemas/ParticipantSummary"),
+ *         @OA\Schema(
+ *             type="object",
+ *
+ *             @OA\Property(property="full_name", type="string", description="Tam ad"),
+ *             @OA\Property(property="total_participations", type="integer", description="Toplam katılım"),
+ *             @OA\Property(property="role_badge", type="array", @OA\Items(type="string"), description="Rol etiketleri")
+ *         )
+ *     }
+ * )
+ *
+ * @OA\Schema(
  *     schema="ParticipantDetail",
  *     allOf={
  *         @OA\Schema(ref="#/components/schemas/ParticipantSummary"),
  *         @OA\Schema(
  *             type="object",
+ *
  *             @OA\Property(property="bio", type="string", nullable=true, description="Biyografi"),
  *             @OA\Property(property="linkedin", type="string", nullable=true, description="LinkedIn profili"),
  *             @OA\Property(property="twitter", type="string", nullable=true, description="Twitter kullanıcı adı"),
@@ -845,6 +925,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Participant Detail With Statistics",
  *     description="İstatistikleri ile birlikte katılımcı detayları",
+ *
  *     @OA\Property(property="participant", ref="#/components/schemas/ParticipantDetail", description="Katılımcı detayları"),
  *     @OA\Property(
  *         property="statistics",
@@ -861,14 +942,18 @@ namespace App\Http\Controllers\API;
  *         property="participations_by_event",
  *         type="array",
  *         description="Etkinlik bazında katılımlar",
+ *
  *         @OA\Items(ref="#/components/schemas/ParticipantEventParticipation")
  *     ),
+ *
  *     @OA\Property(
  *         property="recent_activities",
  *         type="array",
  *         description="Son aktiviteler",
+ *
  *         @OA\Items(ref="#/components/schemas/ParticipantActivity")
  *     ),
+ *
  *     @OA\Property(
  *         property="permissions",
  *         type="object",
@@ -883,6 +968,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Participant Event Participation",
  *     description="Katılımcının etkinlik katılım bilgileri",
+ *
  *     @OA\Property(property="event_id", type="integer", example=1, description="Etkinlik ID"),
  *     @OA\Property(property="event_name", type="string", example="38. Ulusal Kardiyoloji Kongresi", description="Etkinlik adı"),
  *     @OA\Property(property="role", type="string", enum={"speaker", "moderator", "both", "none"}, example="speaker", description="Etkinlikteki rolü"),
@@ -895,6 +981,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Participant Activity",
  *     description="Katılımcı aktivite bilgisi",
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Aktivite ID"),
  *     @OA\Property(property="type", type="string", enum={"presentation", "moderation", "participation"}, example="presentation", description="Aktivite tipi"),
  *     @OA\Property(property="title", type="string", example="Kalp Yetersizliğinde Yeni Yaklaşımlar", description="Aktivite başlığı"),
@@ -908,6 +995,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Participant Search Result",
  *     description="Katılımcı arama sonucu",
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Katılımcı ID"),
  *     @OA\Property(property="name", type="string", example="Ahmet Yılmaz", description="Tam ad"),
  *     @OA\Property(property="title", type="string", nullable=true, example="Prof. Dr.", description="Unvan"),
@@ -918,114 +1006,80 @@ namespace App\Http\Controllers\API;
  * )
  *
  * @OA\Schema(
+ *     schema="ParticipationsByEvent",
+ *     type="object",
+ *     title="Participations by Event",
+ *     description="Katılımcının etkinlik bazında katılımları",
+ *
+ *     @OA\Property(property="event_id", type="integer", example=1, description="Etkinlik ID"),
+ *     @OA\Property(property="event_name", type="string", example="38. Ulusal Kardiyoloji Kongresi", description="Etkinlik adı"),
+ *     @OA\Property(property="participations", type="array", @OA\Items(ref="#/components/schemas/ParticipantActivity")),
+ *     @OA\Property(property="total_count", type="integer", example=3, description="Toplam katılım sayısı"),
+ *     @OA\Property(property="moderator_count", type="integer", example=1, description="Moderatör katılım sayısı"),
+ *     @OA\Property(property="speaker_count", type="integer", example=2, description="Konuşmacı katılım sayısı")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="ParticipantPermissions",
+ *     type="object",
+ *     title="Participant Permissions",
+ *     description="Katılımcı için kullanıcı yetkileri",
+ *
+ *     @OA\Property(property="can_edit", type="boolean", example=true, description="Düzenleme yetkisi"),
+ *     @OA\Property(property="can_delete", type="boolean", example=false, description="Silme yetkisi")
+ * )
+ *
+ * @OA\Schema(
  *     schema="ParticipantStatistics",
  *     type="object",
  *     title="Participant Statistics",
- *     description="Katılımcı istatistikleri",
- *     @OA\Property(
- *         property="overview",
- *         type="object",
- *         description="Genel istatistikler",
- *         @OA\Property(property="total_participants", type="integer", example=1250, description="Toplam katılımcı sayısı"),
- *         @OA\Property(property="active_speakers", type="integer", example=185, description="Aktif konuşmacı sayısı"),
- *         @OA\Property(property="active_moderators", type="integer", example=95, description="Aktif moderatör sayısı"),
- *         @OA\Property(property="registered_participants", type="integer", example=980, description="Kayıtlı katılımcı sayısı"),
- *         @OA\Property(property="confirmed_participants", type="integer", example=850, description="Onaylı katılımcı sayısı")
- *     ),
- *     @OA\Property(
- *         property="by_organization",
- *         type="array",
- *         description="Organizasyon bazında istatistikler",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="organization_id", type="integer", example=1, description="Organizasyon ID"),
- *             @OA\Property(property="organization_name", type="string", example="Türk Kardiyoloji Derneği", description="Organizasyon adı"),
- *             @OA\Property(property="participant_count", type="integer", example=125, description="Katılımcı sayısı"),
- *             @OA\Property(property="speaker_count", type="integer", example=25, description="Konuşmacı sayısı"),
- *             @OA\Property(property="moderator_count", type="integer", example=12, description="Moderatör sayısı")
- *         )
- *     ),
- *     @OA\Property(
- *         property="by_role",
- *         type="object",
- *         description="Rol bazında istatistikler",
- *         @OA\Property(property="speakers_only", type="integer", example=140, description="Sadece konuşmacı"),
- *         @OA\Property(property="moderators_only", type="integer", example=70, description="Sadece moderatör"),
- *         @OA\Property(property="both_roles", type="integer", example=45, description="Hem konuşmacı hem moderatör"),
- *         @OA\Property(property="no_role", type="integer", example=995, description="Rolü olmayan")
- *     ),
- *     @OA\Property(
- *         property="by_specialty",
- *         type="array",
- *         description="Uzmanlık alanı bazında istatistikler",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="specialty", type="string", example="Kardiyoloji", description="Uzmanlık alanı"),
- *             @OA\Property(property="count", type="integer", example=85, description="Bu alandaki katılımcı sayısı"),
- *             @OA\Property(property="percentage", type="number", format="float", example=6.8, description="Yüzde oranı")
- *         )
- *     ),
- *     @OA\Property(
- *         property="by_institution_type",
- *         type="array",
- *         description="Kurum tipi bazında istatistikler",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="type", type="string", example="Üniversite", description="Kurum tipi"),
- *             @OA\Property(property="count", type="integer", example=450, description="Bu tipteki katılımcı sayısı"),
- *             @OA\Property(property="percentage", type="number", format="float", example=36.0, description="Yüzde oranı")
- *         )
- *     ),
- *     @OA\Property(
- *         property="registration_trends",
- *         type="object",
- *         description="Kayıt trendleri",
- *         @OA\Property(
- *             property="by_month",
- *             type="array",
- *             description="Aylık kayıt sayıları",
- *             @OA\Items(
- *                 type="object",
- *                 @OA\Property(property="month", type="string", example="2024-10", description="Ay"),
- *                 @OA\Property(property="count", type="integer", example=125, description="O aydaki kayıt sayısı")
- *             )
- *         ),
- *         @OA\Property(
- *             property="by_week",
- *             type="array",
- *             description="Haftalık kayıt sayıları (son 8 hafta)",
- *             @OA\Items(
- *                 type="object",
- *                 @OA\Property(property="week", type="string", example="2024-W42", description="Hafta"),
- *                 @OA\Property(property="count", type="integer", example=35, description="O haftadaki kayıt sayısı")
- *             )
- *         )
- *     ),
- *     @OA\Property(
- *         property="top_institutions",
- *         type="array",
- *         description="En çok katılımcıya sahip kurumlar",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="institution", type="string", example="İstanbul Üniversitesi", description="Kurum adı"),
- *             @OA\Property(property="participant_count", type="integer", example=45, description="Katılımcı sayısı"),
- *             @OA\Property(property="speaker_count", type="integer", example=8, description="Konuşmacı sayısı"),
- *             @OA\Property(property="moderator_count", type="integer", example=3, description="Moderatör sayısı")
- *         )
- *     ),
- *     @OA\Property(
- *         property="most_active_participants",
- *         type="array",
- *         description="En aktif katılımcılar",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="participant_id", type="integer", example=1, description="Katılımcı ID"),
- *             @OA\Property(property="name", type="string", example="Prof. Dr. Ahmet Yılmaz", description="Katılımcı adı"),
- *             @OA\Property(property="total_presentations", type="integer", example=5, description="Toplam sunum sayısı"),
- *             @OA\Property(property="total_moderations", type="integer", example=3, description="Toplam moderasyon sayısı"),
- *             @OA\Property(property="activity_score", type="integer", example=8, description="Aktivite skoru")
- *         )
- *     )
+ *     description="Belirli bir katılımcı için detaylı istatistikler",
+ *
+ *     @OA\Property(property="total_sessions_moderated", type="integer", example=5, description="Toplam moderasyon sayısı"),
+ *     @OA\Property(property="total_presentations", type="integer", example=12, description="Toplam sunum sayısı"),
+ *     @OA\Property(property="primary_presentations", type="integer", example=8, description="Ana konuşmacı olduğu sunum sayısı"),
+ *     @OA\Property(property="co_speaker_presentations", type="integer", example=3, description="Ortak konuşmacı olduğu sunum sayısı"),
+ *     @OA\Property(property="discussant_presentations", type="integer", example=1, description="Tartışmacı olduğu sunum sayısı"),
+ *     @OA\Property(property="total_participations", type="integer", example=17, description="Toplam katılım sayısı")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="ParticipantGlobalStatistics",
+ *     type="object",
+ *     title="Global Participant Statistics",
+ *     description="Sistem genelinde katılımcı istatistikleri",
+ *
+ *     @OA\Property(property="total_participants", type="integer", example=1250, description="Toplam katılımcı sayısı"),
+ *     @OA\Property(property="speakers", type="integer", example=185, description="Konuşmacı sayısı"),
+ *     @OA\Property(property="moderators", type="integer", example=95, description="Moderatör sayısı"),
+ *     @OA\Property(property="both_roles", type="integer", example=45, description="Her iki role sahip katılımcı sayısı"),
+ *     @OA\Property(property="no_role", type="integer", example=920, description="Rol atanmamış katılımcı sayısı"),
+ *     @OA\Property(property="by_organization", type="array", @OA\Items(ref="#/components/schemas/ParticipantOrganizationStats")),
+ *     @OA\Property(property="top_affiliations", type="object", description="En sık kurumlar ve katılımcı sayıları"),
+ *     @OA\Property(property="recent_additions", type="array", @OA\Items(ref="#/components/schemas/RecentParticipant"))
+ * )
+ *
+ * @OA\Schema(
+ *     schema="ParticipantOrganizationStats",
+ *     type="object",
+ *     title="Participant Organization Statistics",
+ *     description="Organizasyon bazında katılımcı istatistikleri",
+ *
+ *     @OA\Property(property="organization", type="string", example="Türk Kardiyoloji Derneği", description="Organizasyon adı"),
+ *     @OA\Property(property="total", type="integer", example=125, description="Toplam katılımcı"),
+ *     @OA\Property(property="speakers", type="integer", example=25, description="Konuşmacı sayısı"),
+ *     @OA\Property(property="moderators", type="integer", example=12, description="Moderatör sayısı")
+ * )
+ *
+ * @OA\Schema(
+ *     schema="RecentParticipant",
+ *     type="object",
+ *     title="Recent Participant",
+ *     description="Son eklenen katılımcı özeti",
+ *
+ *     @OA\Property(property="id", type="integer", example=1, description="Katılımcı ID"),
+ *     @OA\Property(property="name", type="string", example="Prof. Dr. Ahmet Yılmaz", description="Tam ad"),
+ *     @OA\Property(property="created_at", type="string", format="date-time", description="Oluşturulma tarihi")
  * )
  *
  * @OA\Schema(
@@ -1034,6 +1088,7 @@ namespace App\Http\Controllers\API;
  *     title="Presentation",
  *     description="Sunum modeli",
  *     required={"id", "title", "program_session_id"},
+ *
  *     @OA\Property(property="id", type="integer", example=1, description="Sunum ID"),
  *     @OA\Property(property="title", type="string", example="Kalp Yetersizliğinde Yeni Yaklaşımlar", description="Sunum başlığı"),
  *     @OA\Property(property="abstract", type="string", nullable=true, example="Bu sunumda...", description="Özet"),
@@ -1054,6 +1109,7 @@ namespace App\Http\Controllers\API;
  *     title="API Response",
  *     description="Standart API yanıt formatı",
  *     required={"success", "message"},
+ *
  *     @OA\Property(property="success", type="boolean", example=true, description="İşlem başarı durumu"),
  *     @OA\Property(property="message", type="string", example="İşlem başarılı", description="Yanıt mesajı"),
  *     @OA\Property(property="data", type="object", description="Yanıt verisi"),
@@ -1061,8 +1117,10 @@ namespace App\Http\Controllers\API;
  *         property="errors",
  *         type="object",
  *         description="Doğrulama hataları",
+ *
  *         @OA\AdditionalProperties(
  *             type="array",
+ *
  *             @OA\Items(type="string")
  *         )
  *     )
@@ -1074,6 +1132,7 @@ namespace App\Http\Controllers\API;
  *     title="Paginated Response",
  *     description="Sayfalanmış API yanıt formatı",
  *     required={"current_page", "data", "total", "per_page"},
+ *
  *     @OA\Property(property="current_page", type="integer", example=1, description="Mevcut sayfa"),
  *     @OA\Property(property="data", type="array", @OA\Items(type="object"), description="Sayfa verisi"),
  *     @OA\Property(property="first_page_url", type="string", example="http://example.com/api/events?page=1", description="İlk sayfa URL"),
@@ -1094,6 +1153,7 @@ namespace App\Http\Controllers\API;
  *     title="Pagination Meta",
  *     description="Sayfalama meta bilgileri",
  *     required={"current_page", "total", "per_page", "last_page"},
+ *
  *     @OA\Property(property="current_page", type="integer", example=1, description="Mevcut sayfa"),
  *     @OA\Property(property="total", type="integer", example=150, description="Toplam kayıt sayısı"),
  *     @OA\Property(property="per_page", type="integer", example=15, description="Sayfa başına kayıt"),
@@ -1112,6 +1172,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Pagination Links",
  *     description="Sayfalama link bilgileri",
+ *
  *     @OA\Property(property="first", type="string", nullable=true, example="http://example.com/api/participants?page=1", description="İlk sayfa linki"),
  *     @OA\Property(property="last", type="string", nullable=true, example="http://example.com/api/participants?page=10", description="Son sayfa linki"),
  *     @OA\Property(property="prev", type="string", nullable=true, example=null, description="Önceki sayfa linki"),
@@ -1123,6 +1184,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Validation Error",
  *     description="Doğrulama hatası yanıtı",
+ *
  *     @OA\Property(property="success", type="boolean", example=false, description="İşlem başarı durumu"),
  *     @OA\Property(property="message", type="string", example="Doğrulama hatası", description="Hata mesajı"),
  *     @OA\Property(
@@ -1132,11 +1194,14 @@ namespace App\Http\Controllers\API;
  *         @OA\Property(
  *             property="name",
  *             type="array",
+ *
  *             @OA\Items(type="string", example="Name alanı zorunludur.")
  *         ),
+ *
  *         @OA\Property(
  *             property="email",
  *             type="array",
+ *
  *             @OA\Items(type="string", example="Geçerli bir e-posta adresi giriniz.")
  *         )
  *     )
@@ -1148,6 +1213,7 @@ namespace App\Http\Controllers\API;
  *     title="Error Response",
  *     description="Hata yanıtı",
  *     required={"success", "message"},
+ *
  *     @OA\Property(property="success", type="boolean", example=false, description="İşlem başarı durumu"),
  *     @OA\Property(property="message", type="string", example="Bir hata oluştu", description="Hata mesajı"),
  *     @OA\Property(property="error_code", type="string", nullable=true, example="ORG_001", description="Hata kodu"),
@@ -1160,6 +1226,7 @@ namespace App\Http\Controllers\API;
  *     title="Authentication Token",
  *     description="Kimlik doğrulama token yanıtı",
  *     required={"access_token", "token_type", "user"},
+ *
  *     @OA\Property(property="access_token", type="string", example="1|abc123def456...", description="Erişim token'ı"),
  *     @OA\Property(property="token_type", type="string", example="Bearer", description="Token tipi"),
  *     @OA\Property(property="expires_in", type="integer", example=3600, description="Token geçerlilik süresi (saniye)"),
@@ -1171,6 +1238,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Success Response",
  *     description="Başarılı işlem yanıtı",
+ *
  *     @OA\Property(property="success", type="boolean", example=true, description="İşlem başarı durumu"),
  *     @OA\Property(property="message", type="string", example="İşlem başarıyla tamamlandı", description="Başarı mesajı"),
  *     @OA\Property(property="data", type="object", description="Yanıt verisi")
@@ -1181,6 +1249,7 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Error Response",
  *     description="Hata yanıtı",
+ *
  *     @OA\Property(property="success", type="boolean", example=false, description="İşlem başarı durumu"),
  *     @OA\Property(property="message", type="string", example="Bir hata oluştu", description="Hata mesajı"),
  *     @OA\Property(property="error", type="string", example="Detaylı hata açıklaması", description="Hata detayı")
@@ -1191,13 +1260,16 @@ namespace App\Http\Controllers\API;
  *     type="object",
  *     title="Validation Error Response",
  *     description="Doğrulama hatası yanıtı",
+ *
  *     @OA\Property(property="message", type="string", example="The given data was invalid.", description="Ana hata mesajı"),
  *     @OA\Property(
  *         property="errors",
  *         type="object",
  *         description="Alan bazlı doğrulama hataları",
+ *
  *         @OA\AdditionalProperties(
  *             type="array",
+ *
  *             @OA\Items(type="string")
  *         )
  *     )

@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Organization;
 use App\Models\Participant;
-use App\Models\Venue;
 use App\Models\Sponsor;
-use App\Models\Presentation;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use App\Models\Venue;
+use App\Services\EventParticipantDirectoryBuilder;
+use App\Services\EventProgramBuilder;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PublicEventController extends Controller
 {
@@ -27,19 +30,19 @@ class PublicEventController extends Controller
                 ->select([
                     'id', 'name', 'slug', 'description', 'start_date', 'end_date',
                     'timezone', 'venue_address', 'website_url', 'organization_id',
-                    'created_at', 'updated_at'
+                    'created_at', 'updated_at',
                 ]);
 
             // Apply filters
-            if ($request->has('search') && !empty($request->search)) {
+            if ($request->has('search') && ! empty($request->search)) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
+                        ->orWhere('description', 'like', "%{$search}%");
                 });
             }
 
-            if ($request->has('organization') && !empty($request->organization)) {
+            if ($request->has('organization') && ! empty($request->organization)) {
                 $query->whereHas('organization', function ($q) use ($request) {
                     $q->where('name', 'like', "%{$request->organization}%");
                 });
@@ -50,14 +53,14 @@ class PublicEventController extends Controller
                 $query->where('start_date', '>=', Carbon::today());
             }
 
-            if ($request->has('year') && !empty($request->year)) {
+            if ($request->has('year') && ! empty($request->year)) {
                 $query->whereYear('start_date', $request->year);
             }
 
             // Sorting
             $sortBy = $request->get('sort_by', 'start_date');
             $sortDirection = $request->get('sort_direction', 'asc');
-            
+
             if (in_array($sortBy, ['start_date', 'name', 'created_at'])) {
                 $query->orderBy($sortBy, $sortDirection);
             } else {
@@ -71,7 +74,7 @@ class PublicEventController extends Controller
             // Transform data with safe URL generation
             $events->getCollection()->transform(function ($event) use ($request) {
                 $baseUrl = $request->getSchemeAndHttpHost();
-                
+
                 return [
                     'id' => $event->id,
                     'name' => $event->name,
@@ -88,16 +91,16 @@ class PublicEventController extends Controller
                     'organization' => $event->organization ? [
                         'id' => $event->organization->id,
                         'name' => $event->organization->name,
-                        'logo_url' => $event->organization->logo 
-                            ? asset('storage/' . $event->organization->logo) 
+                        'logo_url' => $event->organization->logo
+                            ? asset('storage/'.$event->organization->logo)
                             : null,
                     ] : null,
                     'api_endpoints' => [
-                        'self' => $baseUrl . '/api/v1/events/' . $event->slug,
-                        'speakers' => $baseUrl . '/api/v1/events/' . $event->slug . '/speakers',
-                        'venues' => $baseUrl . '/api/v1/events/' . $event->slug . '/venues',
-                        'sponsors' => $baseUrl . '/api/v1/events/' . $event->slug . '/sponsors',
-                        'statistics' => $baseUrl . '/api/v1/events/' . $event->slug . '/stats',
+                        'self' => $baseUrl.'/api/v1/events/'.$event->slug,
+                        'speakers' => $baseUrl.'/api/v1/events/'.$event->slug.'/speakers',
+                        'venues' => $baseUrl.'/api/v1/events/'.$event->slug.'/venues',
+                        'sponsors' => $baseUrl.'/api/v1/events/'.$event->slug.'/sponsors',
+                        'statistics' => $baseUrl.'/api/v1/events/'.$event->slug.'/stats',
                     ],
                 ];
             });
@@ -130,7 +133,7 @@ class PublicEventController extends Controller
     {
         try {
             // Check if event is published
-            if (!$event->is_published) {
+            if (! $event->is_published) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Etkinlik bulunamadı.',
@@ -190,8 +193,8 @@ class PublicEventController extends Controller
                         'description' => $event->organization->description ?? null,
                         'website_url' => $event->organization->website_url ?? null,
                         'contact_email' => $event->organization->contact_email ?? null,
-                        'logo_url' => $event->organization->logo 
-                            ? asset('storage/' . $event->organization->logo) 
+                        'logo_url' => $event->organization->logo
+                            ? asset('storage/'.$event->organization->logo)
                             : null,
                     ] : null,
                     'statistics' => $stats,
@@ -213,10 +216,10 @@ class PublicEventController extends Controller
                         ];
                     }),
                     'api_endpoints' => [
-                        'speakers' => $baseUrl . '/api/v1/events/' . $event->slug . '/speakers',
-                        'venues' => $baseUrl . '/api/v1/events/' . $event->slug . '/venues',
-                        'sponsors' => $baseUrl . '/api/v1/events/' . $event->slug . '/sponsors',
-                        'statistics' => $baseUrl . '/api/v1/events/' . $event->slug . '/stats',
+                        'speakers' => $baseUrl.'/api/v1/events/'.$event->slug.'/speakers',
+                        'venues' => $baseUrl.'/api/v1/events/'.$event->slug.'/venues',
+                        'sponsors' => $baseUrl.'/api/v1/events/'.$event->slug.'/sponsors',
+                        'statistics' => $baseUrl.'/api/v1/events/'.$event->slug.'/stats',
                     ],
                 ],
             ]);
@@ -236,7 +239,7 @@ class PublicEventController extends Controller
     public function speakers(Request $request, Event $event): JsonResponse
     {
         try {
-            if (!$event->is_published) {
+            if (! $event->is_published) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Etkinlik bulunamadı.',
@@ -303,7 +306,7 @@ class PublicEventController extends Controller
     public function venues(Request $request, Event $event): JsonResponse
     {
         try {
-            if (!$event->is_published) {
+            if (! $event->is_published) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Etkinlik bulunamadı.',
@@ -380,7 +383,7 @@ class PublicEventController extends Controller
     public function sponsors(Request $request, Event $event): JsonResponse
     {
         try {
-            if (!$event->is_published) {
+            if (! $event->is_published) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Etkinlik bulunamadı.',
@@ -447,7 +450,7 @@ class PublicEventController extends Controller
     public function statistics(Request $request, Event $event): JsonResponse
     {
         try {
-            if (!$event->is_published) {
+            if (! $event->is_published) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Etkinlik bulunamadı.',
@@ -506,7 +509,7 @@ class PublicEventController extends Controller
             $searchTerm = $request->get('q');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', "%{$searchTerm}%")
-                  ->orWhere('description', 'like', "%{$searchTerm}%");
+                    ->orWhere('description', 'like', "%{$searchTerm}%");
             });
 
             if ($request->get('upcoming_only', false)) {
@@ -514,8 +517,8 @@ class PublicEventController extends Controller
             }
 
             $events = $query->orderBy('start_date', 'desc')
-                          ->limit(50)
-                          ->get();
+                ->limit(50)
+                ->get();
 
             return response()->json([
                 'success' => true,
@@ -624,8 +627,8 @@ class PublicEventController extends Controller
                         'id' => $organization->id,
                         'name' => $organization->name,
                         'description' => $organization->description,
-                        'logo_url' => $organization->logo 
-                            ? asset('storage/' . $organization->logo) 
+                        'logo_url' => $organization->logo
+                            ? asset('storage/'.$organization->logo)
                             : null,
                     ],
                     'events' => $events->map(function ($event) {
@@ -677,8 +680,8 @@ class PublicEventController extends Controller
                     'id' => $organization->id,
                     'name' => $organization->name,
                     'description' => $organization->description,
-                    'logo_url' => $organization->logo 
-                        ? asset('storage/' . $organization->logo) 
+                    'logo_url' => $organization->logo
+                        ? asset('storage/'.$organization->logo)
                         : null,
                     'contact_email' => $organization->contact_email,
                     'contact_phone' => $organization->contact_phone,
@@ -730,23 +733,129 @@ class PublicEventController extends Controller
     private function getAppliedFilters(Request $request): array
     {
         $filters = [];
-        
-        if ($request->has('search') && !empty($request->search)) {
+
+        if ($request->has('search') && ! empty($request->search)) {
             $filters['search'] = $request->search;
         }
-        
-        if ($request->has('organization') && !empty($request->organization)) {
+
+        if ($request->has('organization') && ! empty($request->organization)) {
             $filters['organization'] = $request->organization;
         }
-        
+
         if ($request->has('upcoming') && $request->upcoming == 'true') {
             $filters['upcoming'] = true;
         }
-        
-        if ($request->has('year') && !empty($request->year)) {
+
+        if ($request->has('year') && ! empty($request->year)) {
             $filters['year'] = $request->year;
         }
-        
+
         return $filters;
+    }
+
+    /**
+     * Public web: list published events
+     */
+    public function indexPage(): Response
+    {
+        $events = Event::query()
+            ->with('organization:id,name')
+            ->where('is_published', true)
+            ->orderBy('start_date')
+            ->get(['id', 'name', 'slug', 'description', 'start_date', 'end_date', 'organization_id']);
+
+        return Inertia::render('Public/Events/Index', [
+            'events' => $events,
+        ]);
+    }
+
+    /**
+     * Public web: event detail
+     */
+    public function showPage(Event $event): Response
+    {
+        $event = $this->resolvePublishedEvent($event);
+        $event->load(['organization:id,name', 'eventDays']);
+
+        return Inertia::render('Public/Events/Show', [
+            'event' => $event,
+            'activeTab' => 'overview',
+        ]);
+    }
+
+    /**
+     * Public web: event program
+     */
+    public function programPage(Event $event): Response
+    {
+        $event = $this->resolvePublishedEvent($event);
+        $program = app(EventProgramBuilder::class)->build($event);
+
+        return Inertia::render('Public/Events/Program', [
+            'event' => $program['event'],
+            'statistics' => $program['statistics'],
+            'days' => $program['days'],
+            'activeTab' => 'program',
+        ]);
+    }
+
+    /**
+     * Public web: event speakers
+     */
+    public function speakersPage(Event $event): Response
+    {
+        $event = $this->resolvePublishedEvent($event);
+        $directory = app(EventParticipantDirectoryBuilder::class)->build($event);
+
+        return Inertia::render('Public/Events/Speakers', [
+            'event' => app(EventProgramBuilder::class)->build($event)['event'],
+            'participants' => $directory['participants'],
+            'total' => $directory['total'],
+            'activeTab' => 'speakers',
+        ]);
+    }
+
+    /**
+     * Public web: event venues
+     */
+    public function venuesPage(Event $event): Response
+    {
+        $event = $this->resolvePublishedEvent($event);
+        $event->load(['organization:id,name', 'venues']);
+
+        return Inertia::render('Public/Events/Show', [
+            'event' => $event,
+            'activeTab' => 'venues',
+        ]);
+    }
+
+    /**
+     * Public web: event sponsors
+     */
+    public function sponsorsPage(Event $event): Response
+    {
+        $event = $this->resolvePublishedEvent($event);
+        $event->load('organization:id,name');
+
+        $sponsors = Sponsor::query()
+            ->where('organization_id', $event->organization_id)
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get(['id', 'name', 'sponsor_level', 'logo', 'website_url']);
+
+        return Inertia::render('Public/Events/Show', [
+            'event' => $event,
+            'activeTab' => 'sponsors',
+            'sponsors' => $sponsors,
+        ]);
+    }
+
+    private function resolvePublishedEvent(Event $event): Event
+    {
+        if (! $event->is_published) {
+            abort(404);
+        }
+
+        return $event;
     }
 }

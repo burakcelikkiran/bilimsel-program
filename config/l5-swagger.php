@@ -9,18 +9,18 @@ return [
                 'description' => 'Etkinlik Yönetim Sistemi REST API Dokümantasyonu',
                 'version' => '1.0.0',
                 'contact' => [
-                    'email' => 'admin@eventmanagement.com'
+                    'email' => 'admin@eventmanagement.com',
                 ],
                 'license' => [
                     'name' => 'MIT',
-                    'url' => 'https://opensource.org/licenses/MIT'
+                    'url' => 'https://opensource.org/licenses/MIT',
                 ],
                 'servers' => [
                     [
                         'url' => env('APP_URL', 'http://127.0.0.1:8000'),
-                        'description' => 'Event Management API Server'
-                    ]
-                ]
+                        'description' => 'Event Management API Server',
+                    ],
+                ],
             ],
 
             'routes' => [
@@ -28,7 +28,7 @@ return [
                  * Route for accessing api documentation interface
                  */
                 'api' => 'api/documentation',
-                
+
                 /*
                  * Route for accessing parsed swagger annotations.
                  */
@@ -66,10 +66,11 @@ return [
                 'annotations' => [
                     base_path('app/Http/Controllers/Controller.php'),
                     base_path('app/Http/Controllers/API/Schemas.php'),
-                    base_path('app/Http/Controllers/API/Admin/SponsorController.php'),
-                    base_path('app/Http/Controllers/API/Admin/VenueController.php'),
-                    base_path('app/Http/Controllers/API/Admin/OrganizationController.php'),
                     base_path('app/Http/Controllers/API/PublicEventController.php'),
+                    base_path('app/Http/Controllers/API/EventProgramController.php'),
+                    base_path('app/Http/Controllers/API/Admin/VenueController.php'),
+                    base_path('app/Http/Controllers/API/Admin/EventController.php'),
+                    base_path('app/Http/Controllers/API/Admin/ParticipantController.php'),
                 ],
             ],
         ],
@@ -214,7 +215,7 @@ return [
             ],
             'security' => [
                 [
-                    'sanctum' => []
+                    'sanctum' => [],
                 ],
             ],
         ],

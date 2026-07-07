@@ -9,9 +9,9 @@
         <!-- Header Section -->
         <div class="mb-6">
             <div
-                class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
+                class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700"
             >
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="p-6 border-b border-slate-200 dark:border-slate-700">
                     <div class="flex items-center justify-between">
                         <!-- Title & Mode Info -->
                         <div class="flex items-center space-x-4">
@@ -24,7 +24,7 @@
                             </div>
                             <div>
                                 <h1
-                                    class="text-2xl font-bold text-gray-900 dark:text-white"
+                                    class="text-2xl font-bold text-slate-900 dark:text-white"
                                 >
                                     {{ event.name }}
                                 </h1>
@@ -45,7 +45,7 @@
                             <!-- View Only Mode -->
                             <Link
                                 :href="route('admin.timeline.show', event.slug)"
-                                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                             >
                                 <EyeIcon class="h-4 w-4 mr-2" />
                                 Sadece Görüntüle
@@ -58,7 +58,7 @@
                                 :class="[
                                     hasUnsavedChanges && !saving
                                         ? 'bg-green-600 hover:bg-green-700 text-white'
-                                        : 'bg-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-600 dark:text-gray-400',
+                                        : 'bg-slate-300 text-slate-500 cursor-not-allowed dark:bg-slate-600 dark:text-slate-400',
                                 ]"
                                 class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                             >
@@ -131,7 +131,7 @@
                 <div
                     class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"
                 ></div>
-                <span class="ml-3 text-gray-500 dark:text-gray-400"
+                <span class="ml-3 text-slate-500 dark:text-slate-400"
                     >Timeline yükleniyor...</span
                 >
             </div>
@@ -140,17 +140,17 @@
             <div v-else>
                 <div v-if="timelineData.length === 0" class="text-center py-12">
                     <div
-                        class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8"
+                        class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-8"
                     >
-                        <div class="mx-auto h-16 w-16 text-gray-400 mb-4">
+                        <div class="mx-auto h-16 w-16 text-slate-400 mb-4">
                             <CalendarDaysIcon class="h-full w-full" />
                         </div>
                         <h3
-                            class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2"
+                            class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2"
                         >
                             Program bulunamadı
                         </h3>
-                        <p class="text-gray-500 dark:text-gray-400">
+                        <p class="text-slate-500 dark:text-slate-400">
                             Bu etkinlik için henüz program oluşturulmamış.
                         </p>
                         <Link
@@ -260,7 +260,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import DraggableTimelineContainer from "@/Components/Timeline/DraggableTimelineContainer.vue";
 import {
@@ -340,151 +340,86 @@ const handleChangesPending = (changes) => {
     pendingChanges.value = changes;
 };
 
-const saveAllChanges = async () => {
-    if (!hasUnsavedChanges.value || saving.value) return;
+const saveForm = useForm({
+    changes: [],
+});
+
+const saveAllChanges = () => {
+    if (!hasUnsavedChanges.value || saving.value) {
+        return;
+    }
 
     saving.value = true;
 
-    try {
-        // Get CSRF token safely
-        let csrfToken = "";
-        const csrfMetaTag = document.querySelector('meta[name="csrf-token"]');
-        if (csrfMetaTag) {
-            csrfToken = csrfMetaTag.content;
-        } else {
-            // Try to get from Inertia page props
-            const page = usePage();
-            csrfToken = page.props.csrf_token || "";
-        }
+    const transformedChanges = [];
+    const processedSessions = new Set();
 
-        if (!csrfToken) {
-            throw new Error("CSRF token bulunamadı");
-        }
+    pendingChanges.value.forEach((change) => {
+        if (change.type === "session_reordered" && change.session_order) {
+            change.session_order.forEach((sessionId, index) => {
+                const sessionKey = `${sessionId}-${change.venue_id}`;
 
-        // Transform pending changes to backend format
-        const transformedChanges = [];
-        const processedSessions = new Set(); // Track processed sessions to avoid duplicates
-        
-        console.log("Pending changes before transform:", pendingChanges.value);
-        
-        // Process each pending change
-        pendingChanges.value.forEach(change => {
-            if (change.type === "session_reordered" && change.session_order) {
-                // For each session in the reordered list, create a change entry
-                change.session_order.forEach((sessionId, index) => {
-                    // Create unique key for this session in this venue
-                    const sessionKey = `${sessionId}-${change.venue_id}`;
-                    
-                    if (!processedSessions.has(sessionKey)) {
-                        transformedChanges.push({
-                            sessionId: sessionId,
-                            toVenueId: change.venue_id,
-                            toDayId: change.day_id,
-                            newSortOrder: index + 1,
-                        });
-                        processedSessions.add(sessionKey);
-                    }
-                });
-            } else if (change.type === "session_moved") {
-                // Handle session moved between venues
-                const sessionKey = `${change.session_id}-${change.to_venue_id}`;
-                
                 if (!processedSessions.has(sessionKey)) {
                     transformedChanges.push({
-                        sessionId: change.session_id,
-                        toVenueId: change.to_venue_id,
-                        toDayId: change.to_day_id,
-                        newSortOrder: change.new_sort_order || 1,
-                        newStartTime: change.new_start_time,
-                        newEndTime: change.new_end_time,
+                        sessionId: sessionId,
+                        toVenueId: change.venue_id,
+                        toDayId: change.day_id,
+                        newSortOrder: index + 1,
                     });
                     processedSessions.add(sessionKey);
                 }
+            });
+        } else if (change.type === "session_moved") {
+            const sessionKey = `${change.session_id}-${change.to_venue_id}`;
+
+            if (!processedSessions.has(sessionKey)) {
+                transformedChanges.push({
+                    sessionId: change.session_id,
+                    toVenueId: change.to_venue_id,
+                    toDayId: change.to_day_id,
+                    newSortOrder: change.new_sort_order || 1,
+                    newStartTime: change.new_start_time,
+                    newEndTime: change.new_end_time,
+                });
+                processedSessions.add(sessionKey);
             }
-        });
-
-        console.log("Transformed changes to send:", transformedChanges);
-
-        if (transformedChanges.length === 0) {
-            throw new Error("Kaydedilecek değişiklik bulunamadı");
         }
+    });
 
-        const response = await fetch(
-            route("admin.timeline.update-order", props.event.slug),
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": csrfToken,
-                    "Accept": "application/json",
-                },
-                body: JSON.stringify({
-                    changes: transformedChanges,
-                    timeline_data: props.timelineData,
-                }),
-            }
-        );
-
-        console.log("Response status:", response.status);
-        console.log("Response ok:", response.ok);
-        
-        let result;
-        try {
-            result = await response.json();
-        } catch (e) {
-            console.error("Failed to parse JSON response:", e);
-            const text = await response.text();
-            console.error("Response text:", text);
-            throw new Error("Backend yanıtı JSON formatında değil");
-        }
-        
-        console.log("Backend response:", result);
-
-        if (result.success) {
-            pendingChanges.value = [];
-            conflicts.value = result.data?.conflicts || [];
-
-            // Show success message
-            if (window.toast) {
-                window.toast.success("Tüm değişiklikler başarıyla kaydedildi!");
-            }
-
-            // Use updated data from response instead of reloading
-            if (result.data?.timelineData) {
-                // Update props with fresh data from server
-                Object.assign(props.timelineData, result.data.timelineData);
-                
-                // Clear timeline container's local state
-                if (timelineContainer.value) {
-                    timelineContainer.value.clearPendingChanges();
-                }
-                
-                // Force component update with cache busting
-                setTimeout(() => {
-                    router.reload({ 
-                        only: ["timelineData", "editableData"],
-                        preserveState: false,
-                        replace: true
-                    });
-                }, 100);
-            } else {
-                // Fallback to full reload if no timeline data in response
-                setTimeout(() => {
-                    router.reload({ only: ["timelineData", "editableData"] });
-                }, 1000);
-            }
-        } else {
-            console.error("Backend error:", result);
-            throw new Error(result.message || "Kaydetme sırasında hata oluştu");
-        }
-    } catch (error) {
-        console.error("Save error:", error);
-        if (window.toast) {
-            window.toast.error("Değişiklikler kaydedilemedi: " + error.message);
-        }
-    } finally {
+    if (transformedChanges.length === 0) {
         saving.value = false;
+        if (window.toast) {
+            window.toast.error("Kaydedilecek değişiklik bulunamadı");
+        }
+        return;
     }
+
+    saveForm.changes = transformedChanges;
+
+    saveForm.post(route("admin.timeline.update-order", props.event.slug), {
+        preserveScroll: true,
+        onSuccess: () => {
+            pendingChanges.value = [];
+
+            if (timelineContainer.value) {
+                timelineContainer.value.clearPendingChanges();
+            }
+
+            router.reload({
+                only: ["timelineData", "editableData"],
+                preserveState: true,
+            });
+        },
+        onError: (errors) => {
+            const message = errors.timeline || "Değişiklikler kaydedilemedi";
+            if (window.toast) {
+                window.toast.error(message);
+            }
+        },
+        onFinish: () => {
+            saving.value = false;
+        },
+    });
 };
 
 const discardChanges = () => {

@@ -9,7 +9,7 @@
 
     <div class="w-full space-y-8">
       <!-- Header Section -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
         <div class="relative">
           <!-- Banner -->
           <div class="h-48 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 relative overflow-hidden">
@@ -48,16 +48,16 @@
           </div>
 
           <!-- Meta Bar -->
-          <div class="px-8 py-6 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
             <div class="flex flex-wrap items-center gap-6">
               <!-- Status -->
               <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Durum:</span>
+                <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Durum:</span>
                 <span
                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
                   :class="eventDay.is_active 
                     ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'"
+                    : 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200'"
                 >
                   <component :is="eventDay.is_active ? CheckCircleIcon : XCircleIcon" class="w-4 h-4 mr-1" />
                   {{ eventDay.is_active ? 'Aktif' : 'Pasif' }}
@@ -66,40 +66,40 @@
 
               <!-- Event Info -->
               <div class="flex items-center space-x-2">
-                <CalendarDaysIcon class="h-5 w-5 text-gray-400" />
+                <CalendarDaysIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ event.name }}</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Ana Etkinlik</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ event.name }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Ana Etkinlik</div>
                 </div>
               </div>
 
               <!-- Date -->
               <div class="flex items-center space-x-2">
-                <ClockIcon class="h-5 w-5 text-gray-400" />
+                <ClockIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ formatFullDate(eventDay.date) }}</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">{{ getDayOfWeek(eventDay.date) }}</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ formatFullDate(eventDay.date) }}</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">{{ getDayOfWeek(eventDay.date) }}</div>
                 </div>
               </div>
 
               <!-- Sort Order -->
               <div v-if="eventDay.sort_order !== null" class="flex items-center space-x-2">
-                <HashtagIcon class="h-5 w-5 text-gray-400" />
+                <HashtagIcon class="h-5 w-5 text-slate-400" />
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">{{ eventDay.sort_order }}. Gün</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Sıra</div>
+                  <div class="text-sm font-medium text-slate-900 dark:text-white">{{ eventDay.sort_order }}. Gün</div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">Sıra</div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Actions Bar -->
-          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-gray-900">
+          <div class="px-8 py-4 flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-slate-800">
             <div class="flex items-center space-x-3">
               <!-- Back to List -->
               <Link
                 :href="route('admin.events.days.index', event.slug)"
-                class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm"
               >
                 <ArrowLeftIcon class="h-4 w-4 mr-2" />
                 Günler Listesi
@@ -129,7 +129,7 @@
               <div class="dropdown-container relative">
                 <button
                   @click="showActionsMenu = !showActionsMenu"
-                  class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm"
+                  class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors shadow-sm"
                 >
                   <EllipsisVerticalIcon class="h-4 w-4 mr-2" />
                   Diğer
@@ -147,32 +147,32 @@
                 >
                   <div
                     v-if="showActionsMenu"
-                    class="dropdown-menu absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border dark:border-gray-700"
+                    class="dropdown-menu absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 border dark:border-slate-700"
                     style="z-index: 9999 !important;"
                   >
                     <div class="py-1">
                       <button
                         @click="duplicateDay"
-                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        class="flex items-center w-full px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                       >
                         <DocumentDuplicateIcon class="h-4 w-4 mr-3" />
                         Günü Kopyala
                       </button>
                       <button
                         @click="exportSchedule"
-                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        class="flex items-center w-full px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                       >
                         <ArrowDownTrayIcon class="h-4 w-4 mr-3" />
                         Program Dışa Aktar
                       </button>
                       <button
                         @click="toggleStatus"
-                        class="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        class="flex items-center w-full px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                       >
                         <component :is="eventDay.is_active ? EyeSlashIcon : EyeIcon" class="h-4 w-4 mr-3" />
                         {{ eventDay.is_active ? 'Pasif Yap' : 'Aktif Yap' }}
                       </button>
-                      <hr class="my-1 border-gray-200 dark:border-gray-600" />
+                      <hr class="my-1 border-slate-200 dark:border-slate-600" />
                       <button
                         @click="deleteDay"
                         class="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/50 transition-colors"
@@ -194,17 +194,17 @@
         <!-- Main Content -->
         <div class="xl:col-span-3 space-y-8">
           <!-- Description -->
-          <div v-if="eventDay.description" class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Açıklama</h3>
+          <div v-if="eventDay.description" class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Açıklama</h3>
             <div class="prose dark:prose-invert max-w-none">
-              <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ eventDay.description }}</p>
+              <p class="text-slate-700 dark:text-slate-300 leading-relaxed">{{ eventDay.description }}</p>
             </div>
           </div>
 
           <!-- Program Schedule -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Günlük Program</h3>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Günlük Program</h3>
               <button
                 @click="addSession"
                 class="inline-flex items-center px-3 py-1.5 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
@@ -215,11 +215,11 @@
             </div>
 
             <!-- Time Slots -->
-            <div v-if="timeSlots && Object.keys(timeSlots).length > 0" class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div v-if="timeSlots && Object.keys(timeSlots).length > 0" class="divide-y divide-slate-200 dark:divide-slate-700">
               <div
                 v-for="(sessions, timeSlot) in timeSlots"
                 :key="timeSlot"
-                class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                class="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
               >
                 <div class="flex items-start space-x-6">
                   <!-- Time -->
@@ -234,14 +234,14 @@
                     <div
                       v-for="session in sessions"
                       :key="session.id"
-                      class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-purple-300 dark:hover:border-purple-600 transition-colors"
+                      class="border border-slate-200 dark:border-slate-700 rounded-lg p-4 hover:border-purple-300 dark:hover:border-purple-600 transition-colors"
                     >
                       <div class="flex items-start justify-between">
                         <div class="flex-1">
-                          <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+                          <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-1">
                             {{ session.title || 'Başlıksız Oturum' }}
                           </h4>
-                          <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                          <div class="flex items-center space-x-4 text-sm text-slate-500 dark:text-slate-400 mb-2">
                             <div class="flex items-center">
                               <BuildingOfficeIcon class="h-4 w-4 mr-1" />
                               {{ session.venue?.name || 'Salon Yok' }}
@@ -255,7 +255,7 @@
                               {{ session.presentations?.length || 0 }} sunum
                             </div>
                           </div>
-                          <div v-if="session.moderators?.length > 0" class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                          <div v-if="session.moderators?.length > 0" class="flex items-center text-sm text-slate-600 dark:text-slate-400">
                             <UserIcon class="h-4 w-4 mr-1" />
                             Moderatör: {{ session.moderators.map(m => m.name).join(', ') }}
                           </div>
@@ -265,14 +265,14 @@
                         <div class="flex items-center space-x-2 ml-4">
                           <button
                             @click="viewSession(session)"
-                            class="p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/50 transition-colors"
+                            class="p-1.5 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/50 transition-colors"
                             title="Görüntüle"
                           >
                             <EyeIcon class="h-4 w-4" />
                           </button>
                           <button
                             @click="editSession(session)"
-                            class="p-1.5 text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/50 transition-colors"
+                            class="p-1.5 text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/50 transition-colors"
                             title="Düzenle"
                           >
                             <PencilIcon class="h-4 w-4" />
@@ -287,11 +287,11 @@
 
             <!-- Empty Program State -->
             <div v-else class="text-center py-16">
-              <div class="mx-auto h-16 w-16 text-gray-400 mb-4">
+              <div class="mx-auto h-16 w-16 text-slate-400 mb-4">
                 <ClockIcon class="h-full w-full" />
               </div>
-              <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Henüz program yok</h4>
-              <p class="text-gray-500 dark:text-gray-400 mb-6">Bu gün için program oturumları oluşturmaya başlayın.</p>
+              <h4 class="text-lg font-medium text-slate-900 dark:text-slate-100 mb-2">Henüz program yok</h4>
+              <p class="text-slate-500 dark:text-slate-400 mb-6">Bu gün için program oturumları oluşturmaya başlayın.</p>
               <button
                 @click="addSession"
                 class="inline-flex items-center px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
@@ -306,82 +306,82 @@
         <!-- Sidebar -->
         <div class="space-y-6">
           <!-- Quick Stats -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">İstatistikler</h3>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">İstatistikler</h3>
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                   <ClockIcon class="h-5 w-5 text-blue-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Zaman Dilimi</span>
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Zaman Dilimi</span>
                 </div>
-                <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ timeSlots ? Object.keys(timeSlots).length : 0 }}</span>
+                <span class="text-lg font-semibold text-slate-900 dark:text-white">{{ timeSlots ? Object.keys(timeSlots).length : 0 }}</span>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                   <PresentationChartLineIcon class="h-5 w-5 text-green-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Toplam Oturum</span>
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Toplam Oturum</span>
                 </div>
-                <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ totalSessions }}</span>
+                <span class="text-lg font-semibold text-slate-900 dark:text-white">{{ totalSessions }}</span>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                   <DocumentTextIcon class="h-5 w-5 text-purple-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Toplam Sunum</span>
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Toplam Sunum</span>
                 </div>
-                <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ totalPresentations }}</span>
+                <span class="text-lg font-semibold text-slate-900 dark:text-white">{{ totalPresentations }}</span>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                   <BuildingOfficeIcon class="h-5 w-5 text-indigo-500" />
-                  <span class="text-sm text-gray-600 dark:text-gray-400">Kullanılan Salon</span>
+                  <span class="text-sm text-slate-600 dark:text-slate-400">Kullanılan Salon</span>
                 </div>
-                <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ usedVenues.length }}</span>
+                <span class="text-lg font-semibold text-slate-900 dark:text-white">{{ usedVenues.length }}</span>
               </div>
             </div>
           </div>
 
           <!-- Available Venues -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Mevcut Salonlar</h3>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Mevcut Salonlar</h3>
             <div class="space-y-3">
               <div
                 v-for="venue in venues"
                 :key="venue.id"
-                class="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg"
+                class="flex items-center justify-between p-3 border border-slate-200 dark:border-slate-700 rounded-lg"
               >
                 <div class="flex items-center space-x-3">
-                  <div class="w-3 h-3 rounded-full bg-gray-400"></div>
-                  <span class="text-sm font-medium text-gray-900 dark:text-white">{{ venue.name }}</span>
+                  <div class="w-3 h-3 rounded-full bg-slate-400"></div>
+                  <span class="text-sm font-medium text-slate-900 dark:text-white">{{ venue.name }}</span>
                 </div>
-                <span class="text-xs text-gray-500 dark:text-gray-400">{{ venue.capacity || '∞' }} kişi</span>
+                <span class="text-xs text-slate-500 dark:text-slate-400">{{ venue.capacity || '∞' }} kişi</span>
               </div>
             </div>
           </div>
 
           <!-- Quick Actions -->
-          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Hızlı İşlemler</h3>
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Hızlı İşlemler</h3>
             <div class="space-y-3">
               <button
                 @click="addSession"
-                class="flex items-center space-x-3 w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                class="flex items-center space-x-3 w-full p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
                 <PlusIcon class="h-5 w-5 text-purple-500" />
-                <span class="text-sm font-medium text-gray-900 dark:text-white">Oturum Ekle</span>
+                <span class="text-sm font-medium text-slate-900 dark:text-white">Oturum Ekle</span>
               </button>
               <Link
                 :href="route('admin.venues.index')"
-                class="flex items-center space-x-3 w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                class="flex items-center space-x-3 w-full p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
                 <BuildingOfficeIcon class="h-5 w-5 text-blue-500" />
-                <span class="text-sm font-medium text-gray-900 dark:text-white">Salon Yönetimi</span>
+                <span class="text-sm font-medium text-slate-900 dark:text-white">Salon Yönetimi</span>
               </Link>
               <Link
                 :href="route('admin.categories.index')"
-                class="flex items-center space-x-3 w-full p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                class="flex items-center space-x-3 w-full p-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
                 <TagIcon class="h-5 w-5 text-green-500" />
-                <span class="text-sm font-medium text-gray-900 dark:text-white">Kategori Yönetimi</span>
+                <span class="text-sm font-medium text-slate-900 dark:text-white">Kategori Yönetimi</span>
               </Link>
             </div>
           </div>
@@ -657,7 +657,7 @@ onUnmounted(() => {
 
 /* Ensure parent containers don't interfere */
 .bg-white,
-.bg-gray-900 {
+.bg-slate-900 {
   position: relative;
 }
 

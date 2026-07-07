@@ -14,12 +14,12 @@
         <template #content>
             <div v-if="venue" class="space-y-6">
                 <!-- Venue Info -->
-                <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                    <h4 class="font-medium text-gray-900 dark:text-white mb-2">
+                <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
+                    <h4 class="font-medium text-slate-900 dark:text-white mb-2">
                         {{ venue.display_name || venue.name }}
                     </h4>
                     <div
-                        class="text-sm text-gray-600 dark:text-gray-400 space-y-1"
+                        class="text-sm text-slate-600 dark:text-slate-400 space-y-1"
                     >
                         <div v-if="venue.capacity">
                             <span class="font-medium">Kapasite:</span>
@@ -31,21 +31,21 @@
                 <!-- Warning for sessions -->
                 <div v-if="sessionCount > 0" class="space-y-4">
                     <div
-                        class="flex items-start p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg"
+                        class="flex items-start p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
                     >
                         <div class="flex-shrink-0">
                             <ExclamationTriangleIcon
-                                class="h-5 w-5 text-gray-600 dark:text-gray-400"
+                                class="h-5 w-5 text-slate-600 dark:text-slate-400"
                             />
                         </div>
                         <div class="ml-3">
                             <h3
-                                class="text-sm font-medium text-gray-900 dark:text-white"
+                                class="text-sm font-medium text-slate-900 dark:text-white"
                             >
                                 Bu salon {{ sessionCount }} adet oturum içeriyor
                             </h3>
                             <p
-                                class="mt-2 text-sm text-gray-600 dark:text-gray-400"
+                                class="mt-2 text-sm text-slate-600 dark:text-slate-400"
                             >
                                 Bu salonu silmek için önce bu oturumları da
                                 silmeniz gerekir.
@@ -56,7 +56,7 @@
                     <!-- Sessions List -->
                     <div class="max-h-48 overflow-y-auto">
                         <div
-                            class="text-sm font-medium text-gray-900 dark:text-white mb-2"
+                            class="text-sm font-medium text-slate-900 dark:text-white mb-2"
                         >
                             İlişkili Oturumlar:
                         </div>
@@ -64,16 +64,16 @@
                             <div
                                 v-for="session in sessions"
                                 :key="session.id"
-                                class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg"
+                                class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
                             >
                                 <div class="flex-1">
                                     <div
-                                        class="font-medium text-gray-900 dark:text-white"
+                                        class="font-medium text-slate-900 dark:text-white"
                                     >
                                         {{ session.name }}
                                     </div>
                                     <div
-                                        class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                                        class="text-xs text-slate-500 dark:text-slate-400 mt-1"
                                     >
                                         <span v-if="session.event_day?.event">
                                             {{ session.event_day.event.name }}
@@ -104,28 +104,28 @@
                     <!-- Cascade Delete Option -->
                     <div v-if="canCascadeDelete" class="space-y-3">
                         <div
-                            class="border-t border-gray-200 dark:border-gray-700 pt-4"
+                            class="border-t border-slate-200 dark:border-slate-700 pt-4"
                         >
                             <label class="flex items-start space-x-3">
                                 <input
                                     type="checkbox"
                                     v-model="cascadeOption"
-                                    class="mt-1 h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300 rounded"
+                                    class="mt-1 h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
                                 />
                                 <div class="text-sm">
                                     <div
-                                        class="font-medium text-gray-900 dark:text-white"
+                                        class="font-medium text-slate-900 dark:text-white"
                                     >
                                         Oturumları da sil
                                     </div>
                                     <div
-                                        class="text-gray-600 dark:text-gray-400"
+                                        class="text-slate-600 dark:text-slate-400"
                                     >
                                         Bu seçeneği işaretlerseniz, salon ile
                                         birlikte {{ sessionCount }} adet oturum
                                         da silinecektir.
                                         <strong
-                                            class="text-gray-900 dark:text-white"
+                                            class="text-slate-900 dark:text-white"
                                             >Bu işlem geri alınamaz!</strong
                                         >
                                     </div>
@@ -136,14 +136,14 @@
                         <!-- Additional Warning -->
                         <div
                             v-if="cascadeOption"
-                            class="p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg"
+                            class="p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
                         >
                             <div class="flex items-center">
                                 <ExclamationTriangleIcon
-                                    class="h-4 w-4 text-gray-600 dark:text-gray-400 mr-2"
+                                    class="h-4 w-4 text-slate-600 dark:text-slate-400 mr-2"
                                 />
                                 <span
-                                    class="text-sm font-medium text-gray-900 dark:text-white"
+                                    class="text-sm font-medium text-slate-900 dark:text-white"
                                 >
                                     Dikkat: Bu işlem {{ sessionCount }} adet
                                     oturumu kalıcı olarak silecektir!
@@ -155,20 +155,20 @@
                     <!-- No Permission Warning -->
                     <div
                         v-else
-                        class="p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg"
+                        class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
                     >
                         <div class="flex items-start">
                             <ExclamationTriangleIcon
-                                class="h-5 w-5 text-gray-600 dark:text-gray-400 flex-shrink-0"
+                                class="h-5 w-5 text-slate-600 dark:text-slate-400 flex-shrink-0"
                             />
                             <div class="ml-3">
                                 <h3
-                                    class="text-sm font-medium text-gray-900 dark:text-white"
+                                    class="text-sm font-medium text-slate-900 dark:text-white"
                                 >
                                     Yetkisiz İşlem
                                 </h3>
                                 <p
-                                    class="mt-1 text-sm text-gray-600 dark:text-gray-400"
+                                    class="mt-1 text-sm text-slate-600 dark:text-slate-400"
                                 >
                                     Bu oturumları silmek için gerekli yetkiye
                                     sahip değilsiniz. Önce oturumları manuel
@@ -182,20 +182,20 @@
                 <!-- No sessions - safe to delete -->
                 <div
                     v-else
-                    class="p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg"
+                    class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg"
                 >
                     <div class="flex items-center">
                         <CheckCircleIcon
-                            class="h-5 w-5 text-gray-600 dark:text-gray-400 mr-3"
+                            class="h-5 w-5 text-slate-600 dark:text-slate-400 mr-3"
                         />
                         <div>
                             <h3
-                                class="text-sm font-medium text-gray-900 dark:text-white"
+                                class="text-sm font-medium text-slate-900 dark:text-white"
                             >
                                 Güvenli Silme
                             </h3>
                             <p
-                                class="mt-1 text-sm text-gray-600 dark:text-gray-400"
+                                class="mt-1 text-sm text-slate-600 dark:text-slate-400"
                             >
                                 Bu salon herhangi bir oturum içermediği için
                                 güvenle silinebilir.
@@ -205,14 +205,14 @@
                 </div>
 
                 <!-- Final Confirmation -->
-                <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4">
                     <label class="flex items-center space-x-3">
                         <input
                             type="checkbox"
                             v-model="finalConfirm"
-                            class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                            class="h-4 w-4 text-red-600 focus:ring-red-500 border-slate-300 rounded"
                         />
-                        <span class="text-sm text-gray-700 dark:text-gray-300">
+                        <span class="text-sm text-slate-700 dark:text-slate-300">
                             <strong
                                 >"{{
                                     venue.display_name || venue.name
@@ -231,9 +231,9 @@
             <!-- Loading State -->
             <div v-if="loading" class="flex items-center justify-center py-8">
                 <div
-                    class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600"
+                    class="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-600"
                 ></div>
-                <span class="ml-3 text-gray-600 dark:text-gray-400"
+                <span class="ml-3 text-slate-600 dark:text-slate-400"
                     >Silme işlemi gerçekleştiriliyor...</span
                 >
             </div>

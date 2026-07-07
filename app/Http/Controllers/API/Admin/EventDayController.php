@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\EventDay;
 use App\Models\Event;
-use App\Models\Venue;
-use App\Models\ProgramSession;
+use App\Models\EventDay;
 use App\Models\Presentation;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
+use App\Models\ProgramSession;
+use App\Models\Venue;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rule;
 
 /**
  * @OA\Tag(
@@ -30,50 +30,65 @@ class EventDayController extends Controller
      *     summary="Get all event days for a specific event",
      *     description="Returns a paginated list of event days with statistics for a specific event",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
      *         description="Search term for event day title or description",
      *         required=false,
+     *
      *         @OA\Schema(type="string")
      *     ),
+     *
      *     @OA\Parameter(
      *         name="is_active",
      *         in="query",
      *         description="Filter by active status",
      *         required=false,
+     *
      *         @OA\Schema(type="boolean")
      *     ),
+     *
      *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
      *         description="Number of items per page (max 100)",
      *         required=false,
+     *
      *         @OA\Schema(type="integer", minimum=1, maximum=100, default=15)
      *     ),
+     *
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
      *         description="Page number",
      *         required=false,
+     *
      *         @OA\Schema(type="integer", minimum=1, default=1)
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Event days retrieved successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
+     *
      *                 @OA\Items(
+     *
      *                     @OA\Property(property="id", type="integer", example=1),
      *                     @OA\Property(property="title", type="string", example="Gün 1"),
      *                     @OA\Property(property="date", type="string", format="date", example="2025-06-15"),
@@ -108,10 +123,13 @@ class EventDayController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=500,
      *         description="Internal server error",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Event günleri yüklenirken hata oluştu."),
      *             @OA\Property(property="error", type="string")
@@ -121,14 +139,16 @@ class EventDayController extends Controller
      */
     public function index(Request $request, Event $event): JsonResponse
     {
+        $this->authorize('view', $event);
+
         try {
             // Check venues table structure
             $hasEventDayId = Schema::hasColumn('venues', 'event_day_id');
-            
+
             $query = $event->eventDays()
                 ->when($request->search, function ($q, $search) {
                     $q->where('title', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
+                        ->orWhere('description', 'like', "%{$search}%");
                 })
                 ->when($request->is_active !== null, function ($q) use ($request) {
                     $q->where('is_active', $request->boolean('is_active'));
@@ -152,26 +172,26 @@ class EventDayController extends Controller
                             ->whereNull('deleted_at')
                             ->pluck('id');
                     }
-                    
+
                     $eventDay->venues_count = $venueIds->count();
                     $eventDay->program_sessions_count = ProgramSession::whereIn('venue_id', $venueIds)
                         ->whereNull('deleted_at')
                         ->count();
-                    
+
                     $sessionIds = ProgramSession::whereIn('venue_id', $venueIds)
                         ->whereNull('deleted_at')
                         ->pluck('id');
-                    
+
                     $eventDay->presentations_count = Presentation::whereIn('program_session_id', $sessionIds)
                         ->whereNull('deleted_at')
                         ->count();
-                        
+
                 } catch (\Exception $e) {
                     Log::error('Error calculating counts for event day API', [
                         'event_day_id' => $eventDay->id,
-                        'error' => $e->getMessage()
+                        'error' => $e->getMessage(),
                     ]);
-                    
+
                     $eventDay->venues_count = 0;
                     $eventDay->program_sessions_count = 0;
                     $eventDay->presentations_count = 0;
@@ -195,19 +215,19 @@ class EventDayController extends Controller
                     'slug' => $event->slug,
                     'start_date' => $event->start_date,
                     'end_date' => $event->end_date,
-                ]
+                ],
             ]);
 
         } catch (\Exception $e) {
             Log::error('API EventDay index error', [
                 'error' => $e->getMessage(),
-                'event_id' => $event->id
+                'event_id' => $event->id,
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Event günleri yüklenirken hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -219,31 +239,40 @@ class EventDayController extends Controller
      *     summary="Get a specific event day",
      *     description="Returns detailed information about a specific event day including venue information if requested",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Parameter(
      *         name="eventDay",
      *         in="path",
      *         description="Event Day ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Parameter(
      *         name="include_venues",
      *         in="query",
      *         description="Include venues information in response",
      *         required=false,
+     *
      *         @OA\Schema(type="boolean", default=false)
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Event day retrieved successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(
      *                 property="data",
@@ -265,7 +294,9 @@ class EventDayController extends Controller
      *                     property="venues",
      *                     type="array",
      *                     description="Only included if include_venues=true",
+     *
      *                     @OA\Items(
+     *
      *                         @OA\Property(property="id", type="integer", example=1),
      *                         @OA\Property(property="name", type="string", example="Ana Salon"),
      *                         @OA\Property(property="display_name", type="string", example="Ana Salon"),
@@ -284,10 +315,13 @@ class EventDayController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="Event day not found for this event",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Event day not found for this event.")
      *         )
@@ -296,12 +330,14 @@ class EventDayController extends Controller
      */
     public function show(Event $event, EventDay $eventDay): JsonResponse
     {
+        $this->authorize('view', $event);
+
         try {
             // Check if event day belongs to the event
             if ($eventDay->event_id !== $event->id) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Event day not found for this event.'
+                    'message' => 'Event day not found for this event.',
                 ], 404);
             }
 
@@ -353,19 +389,19 @@ class EventDayController extends Controller
                     'id' => $event->id,
                     'name' => $event->name,
                     'slug' => $event->slug,
-                ]
+                ],
             ]);
 
         } catch (\Exception $e) {
             Log::error('API EventDay show error', [
                 'event_day_id' => $eventDay->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Event günü yüklenirken hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -377,17 +413,22 @@ class EventDayController extends Controller
      *     summary="Create a new event day",
      *     description="Creates a new event day for a specific event with date validation",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"title", "date"},
+     *
      *             @OA\Property(property="title", type="string", maxLength=255, example="Gün 1"),
      *             @OA\Property(property="date", type="string", format="date", example="2025-06-15", description="Must be between event start and end dates"),
      *             @OA\Property(property="description", type="string", maxLength=1000, example="Conference opening day"),
@@ -395,10 +436,13 @@ class EventDayController extends Controller
      *             @OA\Property(property="sort_order", type="integer", minimum=0, example=1)
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=201,
      *         description="Event day created successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Event günü başarıyla oluşturuldu."),
      *             @OA\Property(
@@ -415,10 +459,13 @@ class EventDayController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
      *         description="Validation error",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Validation failed."),
      *             @OA\Property(
@@ -427,6 +474,7 @@ class EventDayController extends Controller
      *                 @OA\Property(
      *                     property="date",
      *                     type="array",
+     *
      *                     @OA\Items(type="string", example="The date has already been taken.")
      *                 )
      *             )
@@ -442,8 +490,8 @@ class EventDayController extends Controller
                 'date' => [
                     'required',
                     'date',
-                    'after_or_equal:' . $event->start_date,
-                    'before_or_equal:' . $event->end_date,
+                    'after_or_equal:'.$event->start_date,
+                    'before_or_equal:'.$event->end_date,
                     Rule::unique('event_days')->where('event_id', $event->id),
                 ],
                 'is_active' => 'boolean',
@@ -466,26 +514,26 @@ class EventDayController extends Controller
                     'sort_order' => $eventDay->sort_order,
                     'created_at' => $eventDay->created_at,
                     'updated_at' => $eventDay->updated_at,
-                ]
+                ],
             ], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed.',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             Log::error('API EventDay store error', [
                 'error' => $e->getMessage(),
                 'event_id' => $event->id,
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Event günü oluşturulurken hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -497,24 +545,31 @@ class EventDayController extends Controller
      *     summary="Update an event day",
      *     description="Updates an existing event day with validation",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Parameter(
      *         name="eventDay",
      *         in="path",
      *         description="Event Day ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"title", "date"},
+     *
      *             @OA\Property(property="title", type="string", maxLength=255, example="Gün 1 - Güncellendi"),
      *             @OA\Property(property="date", type="string", format="date", example="2025-06-15"),
      *             @OA\Property(property="description", type="string", maxLength=1000, example="Updated description"),
@@ -522,10 +577,13 @@ class EventDayController extends Controller
      *             @OA\Property(property="sort_order", type="integer", minimum=0, example=1)
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Event day updated successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Event günü başarıyla güncellendi."),
      *             @OA\Property(
@@ -542,10 +600,13 @@ class EventDayController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="Event day not found for this event",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Event day not found for this event.")
      *         )
@@ -559,7 +620,7 @@ class EventDayController extends Controller
             if ($eventDay->event_id !== $event->id) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Event day not found for this event.'
+                    'message' => 'Event day not found for this event.',
                 ], 404);
             }
 
@@ -568,8 +629,8 @@ class EventDayController extends Controller
                 'date' => [
                     'required',
                     'date',
-                    'after_or_equal:' . $event->start_date,
-                    'before_or_equal:' . $event->end_date,
+                    'after_or_equal:'.$event->start_date,
+                    'before_or_equal:'.$event->end_date,
                     Rule::unique('event_days')->where('event_id', $event->id)->ignore($eventDay->id),
                 ],
                 'is_active' => 'boolean',
@@ -589,26 +650,26 @@ class EventDayController extends Controller
                     'sort_order' => $eventDay->sort_order,
                     'created_at' => $eventDay->created_at,
                     'updated_at' => $eventDay->updated_at,
-                ]
+                ],
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed.',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             Log::error('API EventDay update error', [
                 'error' => $e->getMessage(),
                 'event_day_id' => $eventDay->id,
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Event günü güncellenirken hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -620,40 +681,53 @@ class EventDayController extends Controller
      *     summary="Delete an event day",
      *     description="Deletes an event day if it has no associated program sessions",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Parameter(
      *         name="eventDay",
      *         in="path",
      *         description="Event Day ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Event day deleted successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Event günü başarıyla silindi.")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="Event day not found for this event",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Event day not found for this event.")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
      *         description="Cannot delete event day with program sessions",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Bu günde program oturumları bulunduğu için silinemez.")
      *         )
@@ -667,14 +741,14 @@ class EventDayController extends Controller
             if ($eventDay->event_id !== $event->id) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Event day not found for this event.'
+                    'message' => 'Event day not found for this event.',
                 ], 404);
             }
 
             // Check if there are any program sessions
             $venueIds = $eventDay->venues()->pluck('id')->toArray();
             $hasPrograms = ProgramSession::whereIn('venue_id', $venueIds)->exists();
-            
+
             if ($hasPrograms) {
                 return response()->json([
                     'success' => false,
@@ -692,13 +766,13 @@ class EventDayController extends Controller
         } catch (\Exception $e) {
             Log::error('API EventDay destroy error', [
                 'error' => $e->getMessage(),
-                'event_day_id' => $eventDay->id
+                'event_day_id' => $eventDay->id,
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Event günü silinirken hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -710,24 +784,31 @@ class EventDayController extends Controller
      *     summary="Toggle event day status",
      *     description="Toggles the active status of an event day",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Parameter(
      *         name="eventDay",
      *         in="path",
      *         description="Event Day ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Event day status toggled successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Event günü durumu başarıyla değiştirildi."),
      *             @OA\Property(
@@ -739,10 +820,13 @@ class EventDayController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="Event day not found for this event",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Event day not found for this event.")
      *         )
@@ -756,11 +840,11 @@ class EventDayController extends Controller
             if ($eventDay->event_id !== $event->id) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Event day not found for this event.'
+                    'message' => 'Event day not found for this event.',
                 ], 404);
             }
 
-            $eventDay->update(['is_active' => !$eventDay->is_active]);
+            $eventDay->update(['is_active' => ! $eventDay->is_active]);
 
             return response()->json([
                 'success' => true,
@@ -768,20 +852,20 @@ class EventDayController extends Controller
                 'data' => [
                     'id' => $eventDay->id,
                     'is_active' => $eventDay->is_active,
-                    'status' => $eventDay->is_active ? 'active' : 'inactive'
-                ]
+                    'status' => $eventDay->is_active ? 'active' : 'inactive',
+                ],
             ]);
 
         } catch (\Exception $e) {
             Log::error('API EventDay toggle status error', [
                 'error' => $e->getMessage(),
-                'event_day_id' => $eventDay->id
+                'event_day_id' => $eventDay->id,
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Durum değiştirilirken hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -793,39 +877,52 @@ class EventDayController extends Controller
      *     summary="Update sort order for multiple event days",
      *     description="Updates the sort order for multiple event days in batch",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"event_days"},
+     *
      *             @OA\Property(
      *                 property="event_days",
      *                 type="array",
+     *
      *                 @OA\Items(
+     *
      *                     @OA\Property(property="id", type="integer", example=1),
      *                     @OA\Property(property="sort_order", type="integer", minimum=0, example=1)
      *                 )
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Sort order updated successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Event günleri sıralaması başarıyla güncellendi.")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
      *         description="Validation error",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Validation failed."),
      *             @OA\Property(
@@ -834,6 +931,7 @@ class EventDayController extends Controller
      *                 @OA\Property(
      *                     property="event_days.0.id",
      *                     type="array",
+     *
      *                     @OA\Items(type="string", example="The selected event_days.0.id is invalid.")
      *                 )
      *             )
@@ -865,19 +963,19 @@ class EventDayController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Validation failed.',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             Log::error('API EventDay sort order error', [
                 'error' => $e->getMessage(),
                 'event_id' => $event->id,
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Sıralama güncellenirken hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -889,24 +987,31 @@ class EventDayController extends Controller
      *     summary="Get event day schedule with program sessions",
      *     description="Returns detailed schedule information for a specific event day including all program sessions grouped by time slots",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Parameter(
      *         name="eventDay",
      *         in="path",
      *         description="Event Day ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Schedule retrieved successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(
      *                 property="data",
@@ -922,9 +1027,12 @@ class EventDayController extends Controller
      *                 @OA\Property(
      *                     property="time_slots",
      *                     type="object",
+     *
      *                     @OA\AdditionalProperties(
      *                         type="array",
+     *
      *                         @OA\Items(
+     *
      *                             @OA\Property(property="id", type="integer", example=1),
      *                             @OA\Property(property="title", type="string", example="Açılış Oturumu"),
      *                             @OA\Property(property="description", type="string", example="Conference opening session"),
@@ -957,7 +1065,9 @@ class EventDayController extends Controller
      *                 @OA\Property(
      *                     property="venues",
      *                     type="array",
+     *
      *                     @OA\Items(
+     *
      *                         @OA\Property(property="id", type="integer", example=1),
      *                         @OA\Property(property="name", type="string", example="Ana Salon"),
      *                         @OA\Property(property="display_name", type="string", example="Ana Salon"),
@@ -969,10 +1079,13 @@ class EventDayController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="Event day not found for this event",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Event day not found for this event.")
      *         )
@@ -986,7 +1099,7 @@ class EventDayController extends Controller
             if ($eventDay->event_id !== $event->id) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Event day not found for this event.'
+                    'message' => 'Event day not found for this event.',
                 ], 404);
             }
 
@@ -1001,11 +1114,11 @@ class EventDayController extends Controller
             $timeSlots = [];
             foreach ($sessions as $session) {
                 $timeKey = $session->start_time ? Carbon::parse($session->start_time)->format('H:i') : '00:00';
-                
-                if (!isset($timeSlots[$timeKey])) {
+
+                if (! isset($timeSlots[$timeKey])) {
                     $timeSlots[$timeKey] = [];
                 }
-                
+
                 $timeSlots[$timeKey][] = [
                     'id' => $session->id,
                     'title' => $session->title,
@@ -1054,19 +1167,19 @@ class EventDayController extends Controller
                             'sort_order' => $venue->sort_order,
                         ];
                     }),
-                ]
+                ],
             ]);
 
         } catch (\Exception $e) {
             Log::error('API EventDay schedule error', [
                 'error' => $e->getMessage(),
-                'event_day_id' => $eventDay->id
+                'event_day_id' => $eventDay->id,
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Program yüklenirken hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -1078,17 +1191,22 @@ class EventDayController extends Controller
      *     summary="Get event statistics",
      *     description="Returns comprehensive statistics for an event including counts of days, venues, sessions, and presentations",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Statistics retrieved successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(
      *                 property="data",
@@ -1101,10 +1219,13 @@ class EventDayController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=500,
      *         description="Internal server error",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="İstatistikler yüklenirken hata oluştu."),
      *             @OA\Property(property="error", type="string")
@@ -1116,7 +1237,7 @@ class EventDayController extends Controller
     {
         try {
             $hasEventDayId = Schema::hasColumn('venues', 'event_day_id');
-            
+
             if ($hasEventDayId) {
                 $allEventDayIds = $event->eventDays()->pluck('id');
                 $allVenueIds = Venue::whereIn('event_day_id', $allEventDayIds)
@@ -1127,7 +1248,7 @@ class EventDayController extends Controller
                     ->whereNull('deleted_at')
                     ->pluck('id');
             }
-            
+
             $allSessionIds = ProgramSession::whereIn('venue_id', $allVenueIds)
                 ->whereNull('deleted_at')
                 ->pluck('id');
@@ -1144,19 +1265,19 @@ class EventDayController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $stats
+                'data' => $stats,
             ]);
 
         } catch (\Exception $e) {
             Log::error('API EventDay statistics error', [
                 'error' => $e->getMessage(),
-                'event_id' => $event->id
+                'event_id' => $event->id,
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'İstatistikler yüklenirken hata oluştu.',
-                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+                'error' => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
         }
     }
@@ -1168,22 +1289,29 @@ class EventDayController extends Controller
      *     summary="Get event days for select dropdown",
      *     description="Returns a list of active event days for a specific event formatted for dropdowns",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Event days retrieved successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
+     *
      *                 @OA\Items(
+     *
      *                     @OA\Property(property="value", type="integer", example=1),
      *                     @OA\Property(property="label", type="string", example="Gün 1"),
      *                     @OA\Property(property="date", type="string", format="date", example="2025-06-15"),
@@ -1193,10 +1321,13 @@ class EventDayController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=403,
      *         description="Unauthorized to view event",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
@@ -1224,14 +1355,14 @@ class EventDayController extends Controller
                         'formatted_date' => $day->date ? $day->date->format('d.m.Y') : null,
                         'sort_order' => $day->sort_order,
                     ];
-                })
+                }),
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Event days could not be loaded.',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -1243,17 +1374,22 @@ class EventDayController extends Controller
      *     summary="Generate event days automatically",
      *     description="Automatically generates event days based on the specified criteria and date range",
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="event",
      *         in="path",
      *         description="Event ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"generate_type"},
+     *
      *             @OA\Property(
      *                 property="generate_type",
      *                 type="string",
@@ -1264,10 +1400,12 @@ class EventDayController extends Controller
      *             @OA\Property(
      *                 property="custom_dates",
      *                 type="array",
+     *
      *                 @OA\Items(type="string", format="date"),
      *                 example={"2025-06-15", "2025-06-16", "2025-06-17"},
      *                 description="Required if generate_type is 'custom'. Must be within event date range."
      *             ),
+     *
      *             @OA\Property(
      *                 property="title_format",
      *                 type="string",
@@ -1278,22 +1416,28 @@ class EventDayController extends Controller
      *             @OA\Property(
      *                 property="custom_titles",
      *                 type="array",
+     *
      *                 @OA\Items(type="string"),
      *                 example={"Açılış Günü", "Ana Program", "Kapanış Günü"},
      *                 description="Custom titles for each day (used with title_format=custom)"
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Event days generated successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="3 event days created successfully."),
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
+     *
      *                 @OA\Items(
+     *
      *                     @OA\Property(property="id", type="integer", example=1),
      *                     @OA\Property(property="title", type="string", example="Gün 1"),
      *                     @OA\Property(property="date", type="string", format="date", example="2025-06-15"),
@@ -1302,10 +1446,13 @@ class EventDayController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
      *         description="Validation error",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Validation failed."),
      *             @OA\Property(
@@ -1314,15 +1461,19 @@ class EventDayController extends Controller
      *                 @OA\Property(
      *                     property="generate_type",
      *                     type="array",
+     *
      *                     @OA\Items(type="string", example="The selected generate type is invalid.")
      *                 )
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=403,
      *         description="Unauthorized to update event",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="success", type="boolean", example=false),
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
@@ -1383,10 +1534,10 @@ class EventDayController extends Controller
                 }
 
                 $title = match ($request->title_format) {
-                    'day_number' => 'Gün ' . ($index + 1),
+                    'day_number' => 'Gün '.($index + 1),
                     'date' => $date->locale('tr')->isoFormat('D MMMM YYYY'),
-                    'custom' => $request->custom_titles[$index] ?? 'Gün ' . ($index + 1),
-                    default => 'Gün ' . ($index + 1),
+                    'custom' => $request->custom_titles[$index] ?? 'Gün '.($index + 1),
+                    default => 'Gün '.($index + 1),
                 };
 
                 $eventDay = $event->eventDays()->create([
@@ -1403,7 +1554,7 @@ class EventDayController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => count($createdDays) . ' event days created successfully.',
+                'message' => count($createdDays).' event days created successfully.',
                 'data' => $createdDays->map(function ($day) {
                     return [
                         'id' => $day->id,
@@ -1411,15 +1562,16 @@ class EventDayController extends Controller
                         'date' => $day->date,
                         'sort_order' => $day->sort_order,
                     ];
-                })
+                }),
             ]);
 
         } catch (\Exception $e) {
             \DB::rollBack();
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error generating event days',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
