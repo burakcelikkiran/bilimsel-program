@@ -232,7 +232,7 @@
                         <!-- Event Filter -->
                         <select
                             v-model="activeFilters.event_id"
-                            @change="applyFilters"
+                            @change="handleEventFilterChange"
                             class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                         >
                             <option value="">Tüm Etkinlikler</option>
@@ -245,19 +245,19 @@
                             </option>
                         </select>
 
-                        <!-- Venue Filter -->
+                        <!-- Event Day Filter -->
                         <select
-                            v-model="activeFilters.venue_id"
+                            v-model="activeFilters.event_day_id"
                             @change="applyFilters"
                             class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
                         >
-                            <option value="">Tüm Salonlar</option>
+                            <option value="">Tüm Günler</option>
                             <option
-                                v-for="venue in filterOptions?.venues || []"
-                                :key="venue.id"
-                                :value="venue.id"
+                                v-for="eventDay in filterOptions?.event_days || []"
+                                :key="eventDay.id"
+                                :value="eventDay.id"
                             >
-                                {{ venue.name }}
+                                {{ eventDay.name }}
                             </option>
                         </select>
 
@@ -716,7 +716,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import ConfirmDialog from "@/Components/UI/ConfirmDialog.vue";
@@ -794,21 +794,59 @@ const safeRoute = (routeName, fallback, param = null) => {
 const loading = ref(false);
 const showActionsMenu = ref(null);
 const selectedSessions = ref([]);
+
+const normalizeFilterValue = (value) => {
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value);
+};
+
+const resolveQuickFilterFromSessionType = (sessionType) => {
+    if (sessionType === "main" || sessionType === "oral_presentation") {
+        return sessionType;
+    }
+
+    return "all";
+};
+
 const searchQuery = ref(props.filters.search || "");
-const currentQuickFilter = ref("all");
+const currentQuickFilter = ref(
+    resolveQuickFilterFromSessionType(props.filters.session_type),
+);
 const sortField = ref(props.filters.sort || "start_time");
 const sortDirection = ref(props.filters.direction || "asc");
 const pageSize = ref(props.filters.per_page || 15);
 const viewMode = ref("list");
 
 const activeFilters = ref({
-    event_id: props.filters.event_id || "",
-    venue_id: props.filters.venue_id || "",
+    event_id: normalizeFilterValue(props.filters.event_id),
+    event_day_id: normalizeFilterValue(props.filters.event_day_id),
     session_type: props.filters.session_type || "",
-    category_id: props.filters.category_id || "",
+    category_id: normalizeFilterValue(props.filters.category_id),
     date_from: props.filters.date_from || "",
     date_to: props.filters.date_to || "",
 });
+
+const syncFiltersFromProps = () => {
+    searchQuery.value = props.filters.search || "";
+    sortField.value = props.filters.sort || "start_time";
+    sortDirection.value = props.filters.direction || "asc";
+    activeFilters.value = {
+        event_id: normalizeFilterValue(props.filters.event_id),
+        event_day_id: normalizeFilterValue(props.filters.event_day_id),
+        session_type: props.filters.session_type || "",
+        category_id: normalizeFilterValue(props.filters.category_id),
+        date_from: props.filters.date_from || "",
+        date_to: props.filters.date_to || "",
+    };
+    currentQuickFilter.value = resolveQuickFilterFromSessionType(
+        props.filters.session_type,
+    );
+};
+
+watch(() => props.filters, syncFiltersFromProps, { deep: true });
 
 const confirmDialog = ref({
     show: false,
@@ -1075,7 +1113,7 @@ const handleSearchDebounced = debounce(() => {
 }, 300);
 
 const handleSearch = () => {
-    updateUrl({ search: searchQuery.value, page: 1 });
+    updateUrl({ page: 1 });
 };
 
 const clearSearch = () => {
@@ -1093,14 +1131,19 @@ const quickFilter = (filter) => {
     applyFilters();
 };
 
+const handleEventFilterChange = () => {
+    activeFilters.value.event_day_id = "";
+    applyFilters();
+};
+
 const applyFilters = () => {
-    updateUrl({ ...activeFilters.value, page: 1 });
+    updateUrl({ page: 1 });
 };
 
 const clearFilters = () => {
     activeFilters.value = {
         event_id: "",
-        venue_id: "",
+        event_day_id: "",
         session_type: "",
         category_id: "",
         date_from: "",
@@ -1115,17 +1158,30 @@ const clearAllFilters = () => {
     clearFilters();
 };
 
-const updateUrl = (params) => {
-    const currentParams = new URLSearchParams(window.location.search);
-    const existingParams = Object.fromEntries(currentParams);
+const buildQueryParams = (overrides = {}) => {
+    const params = {
+        search: searchQuery.value || undefined,
+        event_id: activeFilters.value.event_id || undefined,
+        event_day_id: activeFilters.value.event_day_id || undefined,
+        session_type: activeFilters.value.session_type || undefined,
+        category_id: activeFilters.value.category_id || undefined,
+        sort: sortField.value || undefined,
+        direction: sortDirection.value || undefined,
+        ...overrides,
+    };
 
+    return Object.fromEntries(
+        Object.entries(params).filter(
+            ([, value]) =>
+                value !== "" && value !== null && value !== undefined,
+        ),
+    );
+};
+
+const updateUrl = (overrides = {}) => {
     router.get(
         safeRoute("admin.program-sessions.index", "/admin/program-sessions"),
-        {
-            ...existingParams,
-            ...params,
-            search: searchQuery.value || undefined,
-        },
+        buildQueryParams(overrides),
         {
             preserveState: true,
             preserveScroll: true,

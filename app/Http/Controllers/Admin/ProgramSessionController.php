@@ -31,6 +31,7 @@ class ProgramSessionController extends Controller
     public function index(Request $request): Response
     {
         $user = auth()->user();
+        $eventId = $this->resolveEventIdFromRequest($request, $user);
 
         $query = ProgramSession::with(['venue.eventDay.event.organization', 'sponsor', 'moderators', 'categories'])
             ->withCount(['presentations', 'moderators']);
@@ -44,15 +45,17 @@ class ProgramSessionController extends Controller
         }
 
         // Filter by event
-        if ($request->filled('event_id')) {
-            $query->whereHas('venue.eventDay', function ($dayQuery) use ($request) {
-                $dayQuery->where('event_id', $request->event_id);
+        if ($eventId) {
+            $query->whereHas('venue.eventDay', function ($dayQuery) use ($eventId) {
+                $dayQuery->where('event_id', $eventId);
             });
         }
 
-        // Filter by venue
-        if ($request->filled('venue_id')) {
-            $query->where('venue_id', $request->venue_id);
+        // Filter by event day
+        if ($request->filled('event_day_id')) {
+            $query->whereHas('venue', function ($venueQuery) use ($request) {
+                $venueQuery->where('event_day_id', $request->event_day_id);
+            });
         }
 
         // Filter by session type
@@ -151,15 +154,15 @@ class ProgramSessionController extends Controller
             });
 
         // Get filter options
-        $filterOptions = $this->getFilterOptions($user);
+        $filterOptions = $this->getFilterOptions($user, $eventId);
 
         return Inertia::render('Admin/ProgramSessions/Index', [
             'sessions' => $sessions,
             'filter_options' => $filterOptions,
             'filters' => [
                 'search' => $request->search,
-                'event_id' => $request->event_id,
-                'venue_id' => $request->venue_id,
+                'event_id' => $eventId,
+                'event_day_id' => $request->event_day_id,
                 'session_type' => $request->session_type,
                 'sponsor_id' => $request->sponsor_id,
                 'category_id' => $request->category_id,
@@ -556,13 +559,16 @@ class ProgramSessionController extends Controller
             },
         ]);
 
+        $startTime = $programSession->start_time ? $programSession->start_time->format('H:i') : null;
+        $endTime = $programSession->end_time ? $programSession->end_time->format('H:i') : null;
+
         return Inertia::render('Admin/ProgramSessions/Show', [
             'session' => [
                 'id' => $programSession->id,
                 'title' => $programSession->title,
                 'description' => $programSession->description,
-                'start_time' => $programSession->start_time,
-                'end_time' => $programSession->end_time,
+                'start_time' => $startTime,
+                'end_time' => $endTime,
                 'formatted_time_range' => $programSession->formatted_time_range,
                 'duration_in_minutes' => $programSession->duration_in_minutes,
                 'formatted_duration' => $programSession->formatted_duration,
@@ -932,13 +938,37 @@ class ProgramSessionController extends Controller
     }
 
     /**
+     * Resolve event ID from request query parameters.
+     */
+    private function resolveEventIdFromRequest(Request $request, $user): ?int
+    {
+        if ($request->filled('event_id')) {
+            return (int) $request->event_id;
+        }
+
+        if (! $request->filled('event')) {
+            return null;
+        }
+
+        $eventQuery = Event::query()->where('slug', $request->event);
+
+        if (! $user->isAdmin()) {
+            $organizationIds = $user->organizations()->pluck('organizations.id');
+            $eventQuery->whereIn('organization_id', $organizationIds);
+        }
+
+        return $eventQuery->value('id');
+    }
+
+    /**
      * Get filter options for index page
      */
-    private function getFilterOptions($user)
+    private function getFilterOptions($user, ?int $eventId = null): array
     {
         $eventsQuery = Event::orderBy('start_date', 'desc');
         $sponsorsQuery = Sponsor::active()->orderBy('name');
         $categoriesQuery = ProgramSessionCategory::orderBy('name');
+        $eventDaysQuery = EventDay::query()->orderBy('date');
 
         if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
@@ -947,13 +977,29 @@ class ProgramSessionController extends Controller
             $categoriesQuery->whereHas('event', function ($query) use ($organizationIds) {
                 $query->whereIn('organization_id', $organizationIds);
             });
+            $eventDaysQuery->whereHas('event', function ($query) use ($organizationIds) {
+                $query->whereIn('organization_id', $organizationIds);
+            });
+        }
+
+        if ($eventId) {
+            $eventDaysQuery->where('event_id', $eventId);
         }
 
         return [
-            'events' => $eventsQuery->get(['id', 'name'])->map(function ($event) {
+            'events' => $eventsQuery->get(['id', 'name', 'slug'])->map(function ($event) {
                 return [
-                    'value' => $event->id,
-                    'label' => $event->name,
+                    'id' => $event->id,
+                    'name' => $event->name,
+                    'slug' => $event->slug,
+                ];
+            }),
+            'event_days' => $eventDaysQuery->get(['id', 'display_name', 'date', 'event_id'])->map(function ($eventDay) {
+                return [
+                    'id' => $eventDay->id,
+                    'name' => $eventDay->display_name,
+                    'date' => $eventDay->date?->format('Y-m-d'),
+                    'event_id' => $eventDay->event_id,
                 ];
             }),
             'session_types' => collect(ProgramSession::getSessionTypes())->map(function ($label, $value) {
@@ -1009,7 +1055,7 @@ class ProgramSessionController extends Controller
         $events = $eventsQuery->orderBy('start_date', 'desc')->get();
 
         // Get event days with venues
-        $eventDaysQuery = \App\Models\EventDay::with(['venues', 'event']);
+        $eventDaysQuery = EventDay::with(['venues', 'event']);
 
         if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');

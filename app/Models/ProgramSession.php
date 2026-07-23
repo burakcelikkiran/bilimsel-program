@@ -3,19 +3,18 @@
 namespace App\Models;
 
 use App\Traits\LogsActivity;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ProgramSession extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'venue_id',
@@ -96,7 +95,7 @@ class ProgramSession extends Model
         return $this->belongsToMany(Participant::class, 'program_session_moderators')
             ->withPivot('sort_order')
             ->withTimestamps()
-            ->orderBy('sort_order'); 
+            ->orderBy('sort_order');
     }
 
     public function presentations(): HasMany
@@ -127,6 +126,7 @@ class ProgramSession extends Model
         if (is_array($categoryIds)) {
             return $query->whereIn('category_id', $categoryIds);
         }
+
         return $query->where('category_id', $categoryIds);
     }
 
@@ -164,7 +164,12 @@ class ProgramSession extends Model
     {
         return $query->where(function ($q) use ($term) {
             $q->where('title', 'like', "%{$term}%")
-                ->orWhere('description', 'like', "%{$term}%");
+                ->orWhere('description', 'like', "%{$term}%")
+                ->orWhereHas('moderators', function ($moderatorQuery) use ($term) {
+                    $moderatorQuery->where('first_name', 'like', "%{$term}%")
+                        ->orWhere('last_name', 'like', "%{$term}%")
+                        ->orWhere('affiliation', 'like', "%{$term}%");
+                });
         });
     }
 
@@ -190,40 +195,43 @@ class ProgramSession extends Model
      */
     public function getFormattedTimeRangeAttribute(): string
     {
-        if (!$this->start_time || !$this->end_time) {
+        if (! $this->start_time || ! $this->end_time) {
             return '';
         }
-        return $this->start_time->format('H:i') . ' - ' . $this->end_time->format('H:i');
+
+        return $this->start_time->format('H:i').' - '.$this->end_time->format('H:i');
     }
 
     public function getDurationInMinutesAttribute(): int
     {
-        if (!$this->start_time || !$this->end_time) {
+        if (! $this->start_time || ! $this->end_time) {
             return 0;
         }
+
         return $this->start_time->diffInMinutes($this->end_time);
     }
 
     public function getFormattedDurationAttribute(): string
     {
         $minutes = $this->duration_in_minutes;
-        
+
         if ($minutes <= 0) {
             return 'Süre belirsiz';
         }
-        
+
         $hours = intval($minutes / 60);
         $remainingMinutes = $minutes % 60;
 
         if ($hours > 0) {
-            $result = $hours . 'sa';
+            $result = $hours.'sa';
             if ($remainingMinutes > 0) {
-                $result .= ' ' . $remainingMinutes . 'dk';
+                $result .= ' '.$remainingMinutes.'dk';
             }
+
             return $result;
         }
 
-        return $remainingMinutes . 'dk';
+        return $remainingMinutes.'dk';
     }
 
     public function getSessionTypeDisplayAttribute(): string
@@ -246,12 +254,12 @@ class ProgramSession extends Model
 
     public function getFormattedModeratorsAttribute(): string
     {
-        if (!$this->relationLoaded('moderators')) {
+        if (! $this->relationLoaded('moderators')) {
             return '';
         }
 
         $moderators = $this->moderators->map(function ($moderator) {
-            return $moderator->first_name . ' ' . $moderator->last_name;
+            return $moderator->first_name.' '.$moderator->last_name;
         })->toArray();
 
         if (empty($moderators)) {
@@ -259,10 +267,10 @@ class ProgramSession extends Model
         }
 
         if (count($moderators) === 1) {
-            return ($this->moderator_title ?? 'Moderatör') . ': ' . $moderators[0];
+            return ($this->moderator_title ?? 'Moderatör').': '.$moderators[0];
         }
 
-        return ($this->moderator_title ?? 'Moderatör') . 'ları: ' . implode(', ', $moderators);
+        return ($this->moderator_title ?? 'Moderatör').'ları: '.implode(', ', $moderators);
     }
 
     public function setTitleAttribute($value)
@@ -310,10 +318,10 @@ class ProgramSession extends Model
 
     public function hasTimeConflict($excludeSessionId = null): bool
     {
-        if (!$this->venue) {
+        if (! $this->venue) {
             return false;
         }
-        
+
         return $this->venue->hasTimeConflict(
             $this->start_time,
             $this->end_time,
@@ -323,7 +331,7 @@ class ProgramSession extends Model
 
     public function isSponsored(): bool
     {
-        return !is_null($this->sponsor_id);
+        return ! is_null($this->sponsor_id);
     }
 
     public function canBeDeleted(): bool
@@ -342,7 +350,7 @@ class ProgramSession extends Model
             return false;
         }
 
-        if (!$this->start_time || !$this->end_time || !$otherSession->start_time || !$otherSession->end_time) {
+        if (! $this->start_time || ! $this->end_time || ! $otherSession->start_time || ! $otherSession->end_time) {
             return false;
         }
 
@@ -352,7 +360,7 @@ class ProgramSession extends Model
 
     public function getConflictingSessions(): array
     {
-        if (!$this->start_time || !$this->end_time) {
+        if (! $this->start_time || ! $this->end_time) {
             return [];
         }
 
@@ -374,17 +382,17 @@ class ProgramSession extends Model
     public function getAllCategories()
     {
         $allCategories = collect();
-        
+
         // Ana kategori varsa ekle
         if ($this->category) {
             $allCategories->push($this->category);
         }
-        
+
         // Many-to-many kategoriler varsa ekle
         if ($this->relationLoaded('categories')) {
             $allCategories = $allCategories->merge($this->categories);
         }
-        
+
         return $allCategories->unique('id');
     }
 
@@ -397,12 +405,12 @@ class ProgramSession extends Model
         if ($this->category_id == $categoryId) {
             return true;
         }
-        
+
         // Many-to-many kategoriler kontrolü
         if ($this->relationLoaded('categories')) {
             return $this->categories->contains('id', $categoryId);
         }
-        
+
         return false;
     }
 
@@ -454,7 +462,7 @@ class ProgramSession extends Model
      */
     public function moveToTimeSlot($newStartTime, $newEndTime): bool
     {
-        if (!$this->venue) {
+        if (! $this->venue) {
             return false;
         }
 
@@ -493,7 +501,7 @@ class ProgramSession extends Model
         if ($this->relationLoaded('moderators')) {
             foreach ($this->moderators as $moderator) {
                 $newSession->moderators()->attach($moderator->id, [
-                    'sort_order' => $moderator->pivot->sort_order ?? 0
+                    'sort_order' => $moderator->pivot->sort_order ?? 0,
                 ]);
             }
         }
@@ -520,7 +528,7 @@ class ProgramSession extends Model
             'event_id'     // event_days tablosundaki foreign key
         )->join('venues', function ($join) {
             $join->on('event_days.id', '=', 'venues.event_day_id')
-                 ->where('venues.id', '=', DB::raw('program_sessions.venue_id'));
+                ->where('venues.id', '=', DB::raw('program_sessions.venue_id'));
         });
     }
 
@@ -556,6 +564,7 @@ class ProgramSession extends Model
         $array['total_presentations'] = $this->getTotalPresentations();
         $array['total_moderators'] = $this->getTotalModerators();
         $array['is_sponsored'] = $this->isSponsored();
+
         return $array;
     }
 }
