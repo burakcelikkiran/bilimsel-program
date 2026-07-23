@@ -109,3 +109,31 @@ it('renders participant edit page via inertia', function () {
         ->component('Admin/Participants/Edit')
         ->has('participant'));
 });
+
+it('includes participant presentations and moderated sessions on show page', function () {
+    $data = fullEventProgram();
+    $participant = $data['participant'];
+    $presentation = $data['presentation'];
+
+    $participant->update(['is_speaker' => true]);
+    $presentation->speakers()->attach($participant->id, [
+        'speaker_role' => 'primary',
+        'sort_order' => 1,
+    ]);
+
+    $data['programSession']->moderators()->attach($participant->id, [
+        'sort_order' => 1,
+    ]);
+    $participant->update(['is_moderator' => true]);
+
+    $response = $this->actingAs($data['user'])->get(route('admin.participants.show', $participant));
+
+    $response->assertOk();
+    $response->assertInertia(fn ($page) => $page
+        ->component('Admin/Participants/Show')
+        ->has('participant.presentations', 1)
+        ->has('participant.moderated_sessions', 1)
+        ->where('participant.presentations.0.id', $presentation->id)
+        ->where('participant.presentations.0.title', $presentation->title)
+        ->where('participant.moderated_sessions.0.id', $data['programSession']->id));
+});
