@@ -56,9 +56,9 @@ class ProgramJsonExporter
     private function mapDay(EventDay $day): array
     {
         return [
-            'Tarih' => $this->formatTurkishDate($day->date),
-            'IsoTarih' => $day->date->toDateString(),
-            'Salonlar' => $day->venues
+            'Date' => $this->formatTurkishDate($day->date),
+            'IsoDate' => $day->date->toDateString(),
+            'Venues' => $day->venues
                 ->map(fn ($venue) => $this->mapVenue($venue, $day))
                 ->values()
                 ->all(),
@@ -71,8 +71,8 @@ class ProgramJsonExporter
     private function mapVenue($venue, EventDay $day): array
     {
         return [
-            'Salon' => $venue->display_name ?? $venue->name,
-            'Oturumlar' => $venue->programSessions
+            'Venue' => $venue->display_name ?? $venue->name,
+            'Sessions' => $venue->programSessions
                 ->map(fn (ProgramSession $session) => $this->mapSession($session, $day))
                 ->values()
                 ->all(),
@@ -88,22 +88,22 @@ class ProgramJsonExporter
         $endTime = $this->formatTime($session->end_time);
 
         return [
-            'OturumTipiID' => ProgramSessionTypeMapper::typeUuid($session->session_type),
-            'OturumTipi' => ProgramSessionTypeMapper::programJsonType($session->session_type),
-            'BaslangicTarihi' => $this->formatTurkishDate($day->date),
-            'BaslangicSaati' => $startTime,
-            'BaslangicTarihiJSON' => $this->formatDateTimeJson($day->date, $startTime),
-            'BitisTarihi' => $this->formatTurkishDate($day->date),
-            'BitisSaati' => $endTime,
-            'BitisTarihiJSON' => $this->formatDateTimeJson($day->date, $endTime),
-            'OturumID' => ProgramSessionTypeMapper::sessionUuid($session->id),
-            'LogoDurum' => false,
-            'SaatGosterim' => ! ($session->is_break ?? false),
-            'Oturum' => $session->title,
-            'Konu' => $session->description ?? '',
-            'ExtraBilgi' => '',
-            'GorevliListesi' => $this->mapSessionGorevliListesi($session),
-            'OturumIcerikBilgileri' => $session->presentations
+            'SessionTypeID' => ProgramSessionTypeMapper::typeUuid($session->session_type),
+            'SessionType' => ProgramSessionTypeMapper::programJsonType($session->session_type),
+            'StartDate' => $this->formatTurkishDate($day->date),
+            'StartTime' => $startTime,
+            'StartDateJSON' => $this->formatDateTimeJson($day->date, $startTime),
+            'EndDate' => $this->formatTurkishDate($day->date),
+            'EndTime' => $endTime,
+            'EndDateJSON' => $this->formatDateTimeJson($day->date, $endTime),
+            'SessionID' => ProgramSessionTypeMapper::sessionUuid($session->id),
+            'LogoStatus' => false,
+            'ShowTime' => ! ($session->is_break ?? false),
+            'Session' => $session->title,
+            'Topic' => $session->description ?? '',
+            'ExtraInfo' => '',
+            'StaffList' => $this->mapSessionStaffList($session),
+            'SessionContents' => $session->presentations
                 ->map(fn (Presentation $presentation) => $this->mapPresentation($presentation, $day))
                 ->values()
                 ->all(),
@@ -119,22 +119,22 @@ class ProgramJsonExporter
         $endTime = $this->formatTime($presentation->end_time);
 
         return [
-            'BaslangicTarihi' => $this->formatTurkishDate($day->date),
-            'BaslangicSaati' => $startTime,
-            'BaslangicTarihiJSON' => $this->formatDateTimeJson($day->date, $startTime),
-            'BitisTarihi' => $this->formatTurkishDate($day->date),
-            'BitisSaati' => $endTime,
-            'BitisTarihiJSON' => $this->formatDateTimeJson($day->date, $endTime),
-            'OturumIcerik' => $presentation->title,
-            'ExtraBilgi' => $presentation->abstract ?? '',
-            'GorevliListesi' => $this->mapPresentationGorevliListesi($presentation->speakers),
+            'StartDate' => $this->formatTurkishDate($day->date),
+            'StartTime' => $startTime,
+            'StartDateJSON' => $this->formatDateTimeJson($day->date, $startTime),
+            'EndDate' => $this->formatTurkishDate($day->date),
+            'EndTime' => $endTime,
+            'EndDateJSON' => $this->formatDateTimeJson($day->date, $endTime),
+            'SessionContent' => $presentation->title,
+            'ExtraInfo' => $presentation->abstract ?? '',
+            'StaffList' => $this->mapPresentationStaffList($presentation->speakers),
         ];
     }
 
     /**
      * @return array<int, array<string, mixed>>
      */
-    private function mapSessionGorevliListesi(ProgramSession $session): array
+    private function mapSessionStaffList(ProgramSession $session): array
     {
         if ($session->moderators->isEmpty()) {
             return [];
@@ -142,9 +142,9 @@ class ProgramJsonExporter
 
         return [
             [
-                'GorevliTipi' => $session->moderator_title ?: 'Oturum Başkanı',
-                'Gorevliler' => $session->moderators
-                    ->map(fn (Participant $moderator) => $this->mapGorevli($moderator))
+                'StaffType' => $session->moderator_title ?: 'Oturum Başkanı',
+                'Staff' => $session->moderators
+                    ->map(fn (Participant $moderator) => $this->mapStaff($moderator))
                     ->values()
                     ->all(),
             ],
@@ -155,19 +155,19 @@ class ProgramJsonExporter
      * @param  Collection<int, Participant>  $speakers
      * @return array<int, array<string, mixed>>
      */
-    private function mapPresentationGorevliListesi(Collection $speakers): array
+    private function mapPresentationStaffList(Collection $speakers): array
     {
         if ($speakers->isEmpty()) {
             return [];
         }
 
-        $gorevliTipi = $speakers->count() === 1 ? 'Konuşmacı' : 'Konuşmacılar';
+        $staffType = $speakers->count() === 1 ? 'Konuşmacı' : 'Konuşmacılar';
 
         return [
             [
-                'GorevliTipi' => $gorevliTipi,
-                'Gorevliler' => $speakers
-                    ->map(fn (Participant $speaker) => $this->mapGorevli($speaker))
+                'StaffType' => $staffType,
+                'Staff' => $speakers
+                    ->map(fn (Participant $speaker) => $this->mapStaff($speaker))
                     ->values()
                     ->all(),
             ],
@@ -177,12 +177,12 @@ class ProgramJsonExporter
     /**
      * @return array<string, string>
      */
-    private function mapGorevli(Participant $participant): array
+    private function mapStaff(Participant $participant): array
     {
         return [
-            'Unvan' => $participant->title ?? '',
-            'AdSoyad' => trim($participant->first_name.' '.$participant->last_name),
-            'Kurum' => $participant->affiliation ?? '',
+            'Title' => $participant->title ?? '',
+            'FullName' => trim($participant->first_name.' '.$participant->last_name),
+            'Institution' => $participant->affiliation ?? '',
         ];
     }
 

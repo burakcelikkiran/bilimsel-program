@@ -59,16 +59,16 @@ class ProgramJsonImporter
         foreach ($programData as $dayIndex => $dayData) {
             $result->days++;
 
-            foreach ($dayData['Salonlar'] ?? [] as $salonData) {
+            foreach ($dayData['Venues'] ?? [] as $venueData) {
                 $result->venues++;
 
-                foreach ($salonData['Oturumlar'] ?? [] as $sessionData) {
+                foreach ($venueData['Sessions'] ?? [] as $sessionData) {
                     $result->sessions++;
-                    $result->presentations += count($sessionData['OturumIcerikBilgileri'] ?? []);
-                    $result->moderatorLinks += $this->countGorevliler($sessionData['GorevliListesi'] ?? []);
+                    $result->presentations += count($sessionData['SessionContents'] ?? []);
+                    $result->moderatorLinks += $this->countStaff($sessionData['StaffList'] ?? []);
 
-                    foreach ($sessionData['OturumIcerikBilgileri'] ?? [] as $contentData) {
-                        $result->speakerLinks += $this->countGorevliler($contentData['GorevliListesi'] ?? []);
+                    foreach ($sessionData['SessionContents'] ?? [] as $contentData) {
+                        $result->speakerLinks += $this->countStaff($contentData['StaffList'] ?? []);
                     }
                 }
             }
@@ -78,18 +78,18 @@ class ProgramJsonImporter
 
         $participantKeys = [];
         foreach ($programData as $dayData) {
-            foreach ($dayData['Salonlar'] ?? [] as $salonData) {
-                foreach ($salonData['Oturumlar'] ?? [] as $sessionData) {
-                    foreach ($sessionData['GorevliListesi'] ?? [] as $gorevliGroup) {
-                        foreach ($gorevliGroup['Gorevliler'] ?? [] as $gorevli) {
-                            $participantKeys[$this->participantKey($gorevli)] = true;
+            foreach ($dayData['Venues'] ?? [] as $venueData) {
+                foreach ($venueData['Sessions'] ?? [] as $sessionData) {
+                    foreach ($sessionData['StaffList'] ?? [] as $staffGroup) {
+                        foreach ($staffGroup['Staff'] ?? [] as $staff) {
+                            $participantKeys[$this->participantKey($staff)] = true;
                         }
                     }
 
-                    foreach ($sessionData['OturumIcerikBilgileri'] ?? [] as $contentData) {
-                        foreach ($contentData['GorevliListesi'] ?? [] as $gorevliGroup) {
-                            foreach ($gorevliGroup['Gorevliler'] ?? [] as $gorevli) {
-                                $participantKeys[$this->participantKey($gorevli)] = true;
+                    foreach ($sessionData['SessionContents'] ?? [] as $contentData) {
+                        foreach ($contentData['StaffList'] ?? [] as $staffGroup) {
+                            foreach ($staffGroup['Staff'] ?? [] as $staff) {
+                                $participantKeys[$this->participantKey($staff)] = true;
                             }
                         }
                     }
@@ -107,42 +107,42 @@ class ProgramJsonImporter
      */
     private function collectParticipants(Event $event, array $programData): void
     {
-        $uniqueGorevliler = [];
+        $uniqueStaff = [];
 
         foreach ($programData as $dayData) {
-            foreach ($dayData['Salonlar'] ?? [] as $salonData) {
-                foreach ($salonData['Oturumlar'] ?? [] as $sessionData) {
-                    $this->collectGorevlilerFromList($sessionData['GorevliListesi'] ?? [], $uniqueGorevliler);
+            foreach ($dayData['Venues'] ?? [] as $venueData) {
+                foreach ($venueData['Sessions'] ?? [] as $sessionData) {
+                    $this->collectStaffFromList($sessionData['StaffList'] ?? [], $uniqueStaff);
 
-                    foreach ($sessionData['OturumIcerikBilgileri'] ?? [] as $contentData) {
-                        $this->collectGorevlilerFromList($contentData['GorevliListesi'] ?? [], $uniqueGorevliler);
+                    foreach ($sessionData['SessionContents'] ?? [] as $contentData) {
+                        $this->collectStaffFromList($contentData['StaffList'] ?? [], $uniqueStaff);
                     }
                 }
             }
         }
 
-        foreach ($uniqueGorevliler as $key => $gorevli) {
-            $participant = $this->findOrCreateParticipant($event, $gorevli);
+        foreach ($uniqueStaff as $key => $staff) {
+            $participant = $this->findOrCreateParticipant($event, $staff);
             $this->participantCache[$key] = $participant;
             $this->result->participants++;
         }
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $gorevliListesi
-     * @param  array<string, array<string, mixed>>  $uniqueGorevliler
+     * @param  array<int, array<string, mixed>>  $staffList
+     * @param  array<string, array<string, mixed>>  $uniqueStaff
      */
-    private function collectGorevlilerFromList(array $gorevliListesi, array &$uniqueGorevliler): void
+    private function collectStaffFromList(array $staffList, array &$uniqueStaff): void
     {
-        foreach ($gorevliListesi as $gorevliGroup) {
-            foreach ($gorevliGroup['Gorevliler'] ?? [] as $gorevli) {
-                $key = $this->participantKey($gorevli);
+        foreach ($staffList as $staffGroup) {
+            foreach ($staffGroup['Staff'] ?? [] as $staff) {
+                $key = $this->participantKey($staff);
 
                 if ($key === '') {
                     continue;
                 }
 
-                $uniqueGorevliler[$key] = $gorevli;
+                $uniqueStaff[$key] = $staff;
             }
         }
     }
@@ -155,23 +155,23 @@ class ProgramJsonImporter
         foreach ($programData as $dayIndex => $dayData) {
             $eventDay = EventDay::create([
                 'event_id' => $event->id,
-                'date' => $dayData['IsoTarih'],
-                'display_name' => $dayData['Tarih'] ?? ('Gün '.($dayIndex + 1)),
+                'date' => $dayData['IsoDate'],
+                'display_name' => $dayData['Date'] ?? ('Gün '.($dayIndex + 1)),
                 'sort_order' => $dayIndex + 1,
                 'is_active' => true,
             ]);
             $this->result->days++;
 
-            foreach ($dayData['Salonlar'] ?? [] as $venueIndex => $salonData) {
+            foreach ($dayData['Venues'] ?? [] as $venueIndex => $venueData) {
                 $venue = Venue::create([
                     'event_day_id' => $eventDay->id,
-                    'name' => $salonData['Salon'],
-                    'display_name' => $salonData['Salon'],
+                    'name' => $venueData['Venue'],
+                    'display_name' => $venueData['Venue'],
                     'sort_order' => $venueIndex + 1,
                 ]);
                 $this->result->venues++;
 
-                foreach ($salonData['Oturumlar'] ?? [] as $sessionIndex => $sessionData) {
+                foreach ($venueData['Sessions'] ?? [] as $sessionIndex => $sessionData) {
                     $this->importSession($venue, $sessionData, $sessionIndex + 1);
                 }
             }
@@ -183,32 +183,32 @@ class ProgramJsonImporter
      */
     private function importSession(Venue $venue, array $sessionData, int $sortOrder): void
     {
-        $sessionType = ProgramSessionTypeMapper::fromProgramJsonType($sessionData['OturumTipi'] ?? 'Oturum');
-        $programJsonType = $sessionData['OturumTipi'] ?? '';
+        $sessionType = ProgramSessionTypeMapper::fromProgramJsonType($sessionData['SessionType'] ?? 'Oturum');
+        $programJsonType = $sessionData['SessionType'] ?? '';
 
         if ($programJsonType !== '' && ! ProgramSessionTypeMapper::hasProgramJsonTypeMapping($programJsonType)) {
             $this->result->warnings[] = "Bilinmeyen oturum tipi: {$programJsonType}";
             Log::warning('ProgramJsonImporter: bilinmeyen oturum tipi', ['type' => $programJsonType]);
         }
 
-        $moderatorTitle = $this->resolveModeratorTitle($sessionData['GorevliListesi'] ?? []);
+        $moderatorTitle = $this->resolveModeratorTitle($sessionData['StaffList'] ?? []);
 
         $session = ProgramSession::create([
             'venue_id' => $venue->id,
-            'title' => $sessionData['Oturum'] ?? 'Oturum',
-            'description' => $sessionData['Konu'] ?? null,
-            'start_time' => $sessionData['BaslangicSaati'] ?? '00:00',
-            'end_time' => $sessionData['BitisSaati'] ?? '00:00',
+            'title' => $sessionData['Session'] ?? 'Oturum',
+            'description' => $sessionData['Topic'] ?? null,
+            'start_time' => $sessionData['StartTime'] ?? '00:00',
+            'end_time' => $sessionData['EndTime'] ?? '00:00',
             'session_type' => $sessionType,
             'moderator_title' => $moderatorTitle,
-            'is_break' => ! ($sessionData['SaatGosterim'] ?? true),
+            'is_break' => ! ($sessionData['ShowTime'] ?? true),
             'sort_order' => $sortOrder,
         ]);
         $this->result->sessions++;
 
-        $this->attachModerators($session, $sessionData['GorevliListesi'] ?? []);
+        $this->attachModerators($session, $sessionData['StaffList'] ?? []);
 
-        foreach ($sessionData['OturumIcerikBilgileri'] ?? [] as $contentIndex => $contentData) {
+        foreach ($sessionData['SessionContents'] ?? [] as $contentIndex => $contentData) {
             $this->importPresentation($session, $contentData, $contentIndex + 1);
         }
     }
@@ -220,28 +220,28 @@ class ProgramJsonImporter
     {
         $presentation = Presentation::create([
             'program_session_id' => $session->id,
-            'title' => $contentData['OturumIcerik'] ?? 'Sunum',
-            'abstract' => $contentData['ExtraBilgi'] ?? null,
-            'start_time' => $contentData['BaslangicSaati'] ?? null,
-            'end_time' => $contentData['BitisSaati'] ?? null,
+            'title' => $contentData['SessionContent'] ?? 'Sunum',
+            'abstract' => $contentData['ExtraInfo'] ?? null,
+            'start_time' => $contentData['StartTime'] ?? null,
+            'end_time' => $contentData['EndTime'] ?? null,
             'presentation_type' => 'oral',
             'sort_order' => $sortOrder,
         ]);
         $this->result->presentations++;
 
-        $this->attachSpeakers($presentation, $contentData['GorevliListesi'] ?? []);
+        $this->attachSpeakers($presentation, $contentData['StaffList'] ?? []);
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $gorevliListesi
+     * @param  array<int, array<string, mixed>>  $staffList
      */
-    private function attachModerators(ProgramSession $session, array $gorevliListesi): void
+    private function attachModerators(ProgramSession $session, array $staffList): void
     {
         $sortOrder = 1;
 
-        foreach ($gorevliListesi as $gorevliGroup) {
-            foreach ($gorevliGroup['Gorevliler'] ?? [] as $gorevli) {
-                $participant = $this->getCachedParticipant($gorevli);
+        foreach ($staffList as $staffGroup) {
+            foreach ($staffGroup['Staff'] ?? [] as $staff) {
+                $participant = $this->getCachedParticipant($staff);
 
                 if (! $participant) {
                     continue;
@@ -260,15 +260,15 @@ class ProgramJsonImporter
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $gorevliListesi
+     * @param  array<int, array<string, mixed>>  $staffList
      */
-    private function attachSpeakers(Presentation $presentation, array $gorevliListesi): void
+    private function attachSpeakers(Presentation $presentation, array $staffList): void
     {
         $sortOrder = 1;
 
-        foreach ($gorevliListesi as $gorevliGroup) {
-            foreach ($gorevliGroup['Gorevliler'] ?? [] as $gorevli) {
-                $participant = $this->getCachedParticipant($gorevli);
+        foreach ($staffList as $staffGroup) {
+            foreach ($staffGroup['Staff'] ?? [] as $staff) {
+                $participant = $this->getCachedParticipant($staff);
 
                 if (! $participant) {
                     continue;
@@ -290,13 +290,13 @@ class ProgramJsonImporter
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $gorevliListesi
+     * @param  array<int, array<string, mixed>>  $staffList
      */
-    private function resolveModeratorTitle(array $gorevliListesi): string
+    private function resolveModeratorTitle(array $staffList): string
     {
-        foreach ($gorevliListesi as $gorevliGroup) {
-            if (! empty($gorevliGroup['GorevliTipi'])) {
-                return $gorevliGroup['GorevliTipi'];
+        foreach ($staffList as $staffGroup) {
+            if (! empty($staffGroup['StaffType'])) {
+                return $staffGroup['StaffType'];
             }
         }
 
@@ -304,13 +304,13 @@ class ProgramJsonImporter
     }
 
     /**
-     * @param  array<string, mixed>  $gorevli
+     * @param  array<string, mixed>  $staff
      */
-    private function findOrCreateParticipant(Event $event, array $gorevli): Participant
+    private function findOrCreateParticipant(Event $event, array $staff): Participant
     {
-        [$firstName, $lastName] = $this->parseName($gorevli['AdSoyad'] ?? '');
-        $title = trim($gorevli['Unvan'] ?? '') ?: null;
-        $affiliation = trim($gorevli['Kurum'] ?? '') ?: null;
+        [$firstName, $lastName] = $this->parseName($staff['FullName'] ?? '');
+        $title = trim($staff['Title'] ?? '') ?: null;
+        $affiliation = trim($staff['Institution'] ?? '') ?: null;
 
         $existing = Participant::query()
             ->where('organization_id', $event->organization_id)
@@ -340,21 +340,21 @@ class ProgramJsonImporter
     }
 
     /**
-     * @param  array<string, mixed>  $gorevli
+     * @param  array<string, mixed>  $staff
      */
-    private function getCachedParticipant(array $gorevli): ?Participant
+    private function getCachedParticipant(array $staff): ?Participant
     {
-        $key = $this->participantKey($gorevli);
+        $key = $this->participantKey($staff);
 
         return $key !== '' ? ($this->participantCache[$key] ?? null) : null;
     }
 
     /**
-     * @param  array<string, mixed>  $gorevli
+     * @param  array<string, mixed>  $staff
      */
-    private function participantKey(array $gorevli): string
+    private function participantKey(array $staff): string
     {
-        [$firstName, $lastName] = $this->parseName($gorevli['AdSoyad'] ?? '');
+        [$firstName, $lastName] = $this->parseName($staff['FullName'] ?? '');
 
         if ($firstName === '' && $lastName === '') {
             return '';
@@ -398,14 +398,14 @@ class ProgramJsonImporter
     }
 
     /**
-     * @param  array<int, array<string, mixed>>  $gorevliListesi
+     * @param  array<int, array<string, mixed>>  $staffList
      */
-    private function countGorevliler(array $gorevliListesi): int
+    private function countStaff(array $staffList): int
     {
         $count = 0;
 
-        foreach ($gorevliListesi as $gorevliGroup) {
-            $count += count($gorevliGroup['Gorevliler'] ?? []);
+        foreach ($staffList as $staffGroup) {
+            $count += count($staffGroup['Staff'] ?? []);
         }
 
         return $count;

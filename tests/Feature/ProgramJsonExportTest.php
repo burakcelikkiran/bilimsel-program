@@ -87,33 +87,33 @@ class ProgramJsonExportTest extends TestCase
         $data = app(ProgramJsonExporter::class)->export($event->fresh());
 
         $this->assertCount(1, $data);
-        $this->assertSame('16.04.2026', $data[0]['Tarih']);
-        $this->assertSame('2026-04-16', $data[0]['IsoTarih']);
-        $this->assertSame('Ana Salon', $data[0]['Salonlar'][0]['Salon']);
+        $this->assertSame('16.04.2026', $data[0]['Date']);
+        $this->assertSame('2026-04-16', $data[0]['IsoDate']);
+        $this->assertSame('Ana Salon', $data[0]['Venues'][0]['Venue']);
 
-        $oturum = $data[0]['Salonlar'][0]['Oturumlar'][0];
-        $this->assertSame('Oturum', $oturum['OturumTipi']);
-        $this->assertSame('ACİL SERVİSTE SIK GÖRÜLEN ALERJİK HASTALIKLAR', $oturum['Oturum']);
-        $this->assertSame('13:30', $oturum['BaslangicSaati']);
-        $this->assertSame('14:30', $oturum['BitisSaati']);
-        $this->assertSame('"2026-04-16T13:30:00"', $oturum['BaslangicTarihiJSON']);
-        $this->assertTrue($oturum['SaatGosterim']);
-        $this->assertFalse($oturum['LogoDurum']);
+        $sessionPayload = $data[0]['Venues'][0]['Sessions'][0];
+        $this->assertSame('Oturum', $sessionPayload['SessionType']);
+        $this->assertSame('ACİL SERVİSTE SIK GÖRÜLEN ALERJİK HASTALIKLAR', $sessionPayload['Session']);
+        $this->assertSame('13:30', $sessionPayload['StartTime']);
+        $this->assertSame('14:30', $sessionPayload['EndTime']);
+        $this->assertSame('"2026-04-16T13:30:00"', $sessionPayload['StartDateJSON']);
+        $this->assertTrue($sessionPayload['ShowTime']);
+        $this->assertFalse($sessionPayload['LogoStatus']);
         $this->assertSame(
             ProgramSessionTypeMapper::sessionUuid($session->id),
-            $oturum['OturumID']
+            $sessionPayload['SessionID']
         );
 
-        $this->assertSame('Oturum Başkanları', $oturum['GorevliListesi'][0]['GorevliTipi']);
-        $this->assertSame('Prof. Dr.', $oturum['GorevliListesi'][0]['Gorevliler'][0]['Unvan']);
-        $this->assertSame('Haluk Çokuğraş', $oturum['GorevliListesi'][0]['Gorevliler'][0]['AdSoyad']);
-        $this->assertSame('Test Üniversitesi', $oturum['GorevliListesi'][0]['Gorevliler'][0]['Kurum']);
+        $this->assertSame('Oturum Başkanları', $sessionPayload['StaffList'][0]['StaffType']);
+        $this->assertSame('Prof. Dr.', $sessionPayload['StaffList'][0]['Staff'][0]['Title']);
+        $this->assertSame('Haluk Çokuğraş', $sessionPayload['StaffList'][0]['Staff'][0]['FullName']);
+        $this->assertSame('Test Üniversitesi', $sessionPayload['StaffList'][0]['Staff'][0]['Institution']);
 
-        $icerik = $oturum['OturumIcerikBilgileri'][0];
-        $this->assertSame('Çocuklarda Ne Zaman İlaç Alerjisi Düşünelim?', $icerik['OturumIcerik']);
-        $this->assertSame('Ek bilgi metni', $icerik['ExtraBilgi']);
-        $this->assertSame('Konuşmacı', $icerik['GorevliListesi'][0]['GorevliTipi']);
-        $this->assertSame('Emine Dibek Mısırlıoğlu', $icerik['GorevliListesi'][0]['Gorevliler'][0]['AdSoyad']);
+        $content = $sessionPayload['SessionContents'][0];
+        $this->assertSame('Çocuklarda Ne Zaman İlaç Alerjisi Düşünelim?', $content['SessionContent']);
+        $this->assertSame('Ek bilgi metni', $content['ExtraInfo']);
+        $this->assertSame('Konuşmacı', $content['StaffList'][0]['StaffType']);
+        $this->assertSame('Emine Dibek Mısırlıoğlu', $content['StaffList'][0]['Staff'][0]['FullName']);
     }
 
     public function test_public_api_returns_program_json_format(): void
@@ -146,11 +146,11 @@ class ProgramJsonExportTest extends TestCase
         $response = $this->getJson('/api/v1/events/'.$event->slug.'/program.json');
 
         $response->assertOk()
-            ->assertJsonPath('0.Tarih', '15.04.2026')
-            ->assertJsonPath('0.IsoTarih', '2026-04-15')
-            ->assertJsonPath('0.Salonlar.0.Salon', 'Workshop Salonu')
-            ->assertJsonPath('0.Salonlar.0.Oturumlar.0.OturumTipi', 'kurs')
-            ->assertJsonPath('0.Salonlar.0.Oturumlar.0.Oturum', 'Test Oturumu');
+            ->assertJsonPath('0.Date', '15.04.2026')
+            ->assertJsonPath('0.IsoDate', '2026-04-15')
+            ->assertJsonPath('0.Venues.0.Venue', 'Workshop Salonu')
+            ->assertJsonPath('0.Venues.0.Sessions.0.SessionType', 'kurs')
+            ->assertJsonPath('0.Venues.0.Sessions.0.Session', 'Test Oturumu');
     }
 
     public function test_unpublished_event_program_json_returns_404_for_guests(): void
@@ -184,7 +184,7 @@ class ProgramJsonExportTest extends TestCase
         $this->actingAs($user)
             ->getJson('/api/v1/events/'.$event->slug.'/program.json')
             ->assertOk()
-            ->assertJsonPath('0.Tarih', '01.06.2026');
+            ->assertJsonPath('0.Date', '01.06.2026');
     }
 
     public function test_admin_can_export_program_json_from_timeline(): void
@@ -224,8 +224,8 @@ class ProgramJsonExportTest extends TestCase
 
         $response->assertOk()
             ->assertHeader('content-disposition')
-            ->assertJsonPath('0.Tarih', '01.05.2026')
-            ->assertJsonPath('0.Salonlar.0.Oturumlar.0.OturumTipi', 'Ara')
-            ->assertJsonPath('0.Salonlar.0.Oturumlar.0.SaatGosterim', false);
+            ->assertJsonPath('0.Date', '01.05.2026')
+            ->assertJsonPath('0.Venues.0.Sessions.0.SessionType', 'Ara')
+            ->assertJsonPath('0.Venues.0.Sessions.0.ShowTime', false);
     }
 }

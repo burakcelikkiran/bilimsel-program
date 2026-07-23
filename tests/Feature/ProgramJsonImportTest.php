@@ -109,17 +109,17 @@ class ProgramJsonImportTest extends TestCase
         $exported = app(ProgramJsonExporter::class)->export($event->fresh());
 
         $this->assertCount(1, $exported);
-        $this->assertSame('16.04.2026', $exported[0]['Tarih']);
-        $this->assertSame('Test Salonu', $exported[0]['Salonlar'][0]['Salon']);
-        $this->assertSame('AÇILIŞ OTURUMU', $exported[0]['Salonlar'][0]['Oturumlar'][0]['Oturum']);
-        $this->assertSame('Özel Oturum', $exported[0]['Salonlar'][0]['Oturumlar'][0]['OturumTipi']);
-        $this->assertFalse($exported[0]['Salonlar'][0]['Oturumlar'][0]['SaatGosterim']);
+        $this->assertSame('16.04.2026', $exported[0]['Date']);
+        $this->assertSame('Test Salonu', $exported[0]['Venues'][0]['Venue']);
+        $this->assertSame('AÇILIŞ OTURUMU', $exported[0]['Venues'][0]['Sessions'][0]['Session']);
+        $this->assertSame('Özel Oturum', $exported[0]['Venues'][0]['Sessions'][0]['SessionType']);
+        $this->assertFalse($exported[0]['Venues'][0]['Sessions'][0]['ShowTime']);
 
-        $mainSession = $exported[0]['Salonlar'][0]['Oturumlar'][1];
-        $this->assertSame('Oturum', $mainSession['OturumTipi']);
-        $this->assertSame('Oturum Başkanları', $mainSession['GorevliListesi'][0]['GorevliTipi']);
-        $this->assertSame('Haluk Çokuğraş', $mainSession['GorevliListesi'][0]['Gorevliler'][0]['AdSoyad']);
-        $this->assertSame('Çocuklarda Ne Zaman İlaç Alerjisi Düşünelim?', $mainSession['OturumIcerikBilgileri'][0]['OturumIcerik']);
+        $mainSession = $exported[0]['Venues'][0]['Sessions'][1];
+        $this->assertSame('Oturum', $mainSession['SessionType']);
+        $this->assertSame('Oturum Başkanları', $mainSession['StaffList'][0]['StaffType']);
+        $this->assertSame('Haluk Çokuğraş', $mainSession['StaffList'][0]['Staff'][0]['FullName']);
+        $this->assertSame('Çocuklarda Ne Zaman İlaç Alerjisi Düşünelim?', $mainSession['SessionContents'][0]['SessionContent']);
     }
 
     public function test_public_api_returns_imported_program_json(): void
@@ -134,8 +134,8 @@ class ProgramJsonImportTest extends TestCase
 
         $this->getJson('/api/v1/events/public-import-event/program.json')
             ->assertOk()
-            ->assertJsonPath('0.Salonlar.0.Oturumlar.1.Oturum', 'ACİL SERVİSTE SIK GÖRÜLEN ALERJİK HASTALIKLAR')
-            ->assertJsonPath('0.Salonlar.0.Oturumlar.0.OturumTipi', 'Özel Oturum');
+            ->assertJsonPath('0.Venues.0.Sessions.1.Session', 'ACİL SERVİSTE SIK GÖRÜLEN ALERJİK HASTALIKLAR')
+            ->assertJsonPath('0.Venues.0.Sessions.0.SessionType', 'Özel Oturum');
     }
 
     public function test_participants_are_deduplicated_by_name(): void
@@ -144,10 +144,10 @@ class ProgramJsonImportTest extends TestCase
         $event = Event::factory()->create(['organization_id' => $organization->id]);
 
         $fixture = $this->loadFixture();
-        $fixture[0]['Salonlar'][0]['Oturumlar'][1]['GorevliListesi'][0]['Gorevliler'][] = [
-            'Unvan' => 'Prof. Dr.',
-            'AdSoyad' => 'Haluk Çokuğraş',
-            'Kurum' => 'Test Üniversitesi',
+        $fixture[0]['Venues'][0]['Sessions'][1]['StaffList'][0]['Staff'][] = [
+            'Title' => 'Prof. Dr.',
+            'FullName' => 'Haluk Çokuğraş',
+            'Institution' => 'Test Üniversitesi',
         ];
 
         app(ProgramJsonImporter::class)->import($event, $fixture);

@@ -1,74 +1,74 @@
 [
     {
-        "Tarih": "16.04.2026",
-        "IsoTarih": "2026-04-16",
-        "Salonlar": [
+        "Date": "16.04.2026",
+        "IsoDate": "2026-04-16",
+        "Venues": [
             {
-                "Salon": "Test Salonu",
-                "Oturumlar": [
+                "Venue": "Test Salonu",
+                "Sessions": [
                     {
-                        "OturumTipiID": "37561e12-5896-4d33-8901-d5bbcd762500",
-                        "OturumTipi": "AÇILIŞ",
-                        "BaslangicTarihi": "16.04.2026",
-                        "BaslangicSaati": "09:00",
-                        "BaslangicTarihiJSON": "\"2026-04-16T09:00:00\"",
-                        "BitisTarihi": "16.04.2026",
-                        "BitisSaati": "11:15",
-                        "BitisTarihiJSON": "\"2026-04-16T11:15:00\"",
-                        "OturumID": "e9719d88-9259-4995-9c55-0ddc82da1a52",
-                        "LogoDurum": false,
-                        "SaatGosterim": false,
-                        "Oturum": "AÇILIŞ OTURUMU",
-                        "Konu": "",
-                        "ExtraBilgi": "",
-                        "GorevliListesi": [],
-                        "OturumIcerikBilgileri": []
+                        "SessionTypeID": "37561e12-5896-4d33-8901-d5bbcd762500",
+                        "SessionType": "AÇILIŞ",
+                        "StartDate": "16.04.2026",
+                        "StartTime": "09:00",
+                        "StartDateJSON": "\"2026-04-16T09:00:00\"",
+                        "EndDate": "16.04.2026",
+                        "EndTime": "11:15",
+                        "EndDateJSON": "\"2026-04-16T11:15:00\"",
+                        "SessionID": "e9719d88-9259-4995-9c55-0ddc82da1a52",
+                        "LogoStatus": false,
+                        "ShowTime": false,
+                        "Session": "AÇILIŞ OTURUMU",
+                        "Topic": "",
+                        "ExtraInfo": "",
+                        "StaffList": [],
+                        "SessionContents": []
                     },
                     {
-                        "OturumTipiID": "cf38da30-ea9f-408f-92ff-6ff376edbdab",
-                        "OturumTipi": "Oturum",
-                        "BaslangicTarihi": "16.04.2026",
-                        "BaslangicSaati": "11:45",
-                        "BaslangicTarihiJSON": "\"2026-04-16T11:45:00\"",
-                        "BitisTarihi": "16.04.2026",
-                        "BitisSaati": "12:30",
-                        "BitisTarihiJSON": "\"2026-04-16T12:30:00\"",
-                        "OturumID": "30fe5c19-b80e-466f-ae38-347657817d3d",
-                        "LogoDurum": false,
-                        "SaatGosterim": true,
-                        "Oturum": "ACİL SERVİSTE SIK GÖRÜLEN ALERJİK HASTALIKLAR",
-                        "Konu": "Oturum konusu",
-                        "ExtraBilgi": "",
-                        "GorevliListesi": [
+                        "SessionTypeID": "cf38da30-ea9f-408f-92ff-6ff376edbdab",
+                        "SessionType": "Oturum",
+                        "StartDate": "16.04.2026",
+                        "StartTime": "11:45",
+                        "StartDateJSON": "\"2026-04-16T11:45:00\"",
+                        "EndDate": "16.04.2026",
+                        "EndTime": "12:30",
+                        "EndDateJSON": "\"2026-04-16T12:30:00\"",
+                        "SessionID": "30fe5c19-b80e-466f-ae38-347657817d3d",
+                        "LogoStatus": false,
+                        "ShowTime": true,
+                        "Session": "ACİL SERVİSTE SIK GÖRÜLEN ALERJİK HASTALIKLAR",
+                        "Topic": "Oturum konusu",
+                        "ExtraInfo": "",
+                        "StaffList": [
                             {
-                                "GorevliTipi": "Oturum Başkanları",
-                                "Gorevliler": [
+                                "StaffType": "Oturum Başkanları",
+                                "Staff": [
                                     {
-                                        "Unvan": "Prof. Dr.",
-                                        "AdSoyad": "Haluk Çokuğraş",
-                                        "Kurum": "Test Üniversitesi"
+                                        "Title": "Prof. Dr.",
+                                        "FullName": "Haluk Çokuğraş",
+                                        "Institution": "Test Üniversitesi"
                                     }
                                 ]
                             }
                         ],
-                        "OturumIcerikBilgileri": [
+                        "SessionContents": [
                             {
-                                "BaslangicTarihi": "16.04.2026",
-                                "BaslangicSaati": "11:45",
-                                "BaslangicTarihiJSON": "\"2026-04-16T11:45:00\"",
-                                "BitisTarihi": "16.04.2026",
-                                "BitisSaati": "12:00",
-                                "BitisTarihiJSON": "\"2026-04-16T12:00:00\"",
-                                "OturumIcerik": "Çocuklarda Ne Zaman İlaç Alerjisi Düşünelim?",
-                                "ExtraBilgi": "Ek bilgi metni",
-                                "GorevliListesi": [
+                                "StartDate": "16.04.2026",
+                                "StartTime": "11:45",
+                                "StartDateJSON": "\"2026-04-16T11:45:00\"",
+                                "EndDate": "16.04.2026",
+                                "EndTime": "12:00",
+                                "EndDateJSON": "\"2026-04-16T12:00:00\"",
+                                "SessionContent": "Çocuklarda Ne Zaman İlaç Alerjisi Düşünelim?",
+                                "ExtraInfo": "Ek bilgi metni",
+                                "StaffList": [
                                     {
-                                        "GorevliTipi": "Konuşmacı",
-                                        "Gorevliler": [
+                                        "StaffType": "Konuşmacı",
+                                        "Staff": [
                                             {
-                                                "Unvan": "",
-                                                "AdSoyad": "Emine Dibek Mısırlıoğlu",
-                                                "Kurum": "Örnek Hastane"
+                                                "Title": "",
+                                                "FullName": "Emine Dibek Mısırlıoğlu",
+                                                "Institution": "Örnek Hastane"
                                             }
                                         ]
                                     }
