@@ -2,22 +2,28 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\EventPageKey;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreEventRequest;
 use App\Http\Requests\Admin\UpdateEventRequest;
 use App\Models\Event;
 use App\Models\EventDay;
+use App\Models\EventPage;
 use App\Models\Organization;
 use App\Models\ProgramSession;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Rap2hpoutre\FastExcel\FastExcel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class EventController extends Controller
 {
@@ -369,6 +375,7 @@ class EventController extends Controller
 
         return Inertia::render('Admin/Events/Create', [
             'organizations' => $organizations,
+            'pageSections' => EventPageKey::sections(),
         ]);
     }
 
@@ -383,6 +390,8 @@ class EventController extends Controller
 
         try {
             $data = $request->validated();
+            $pages = $data['pages'] ?? [];
+            unset($data['pages']);
 
             // title'ı name'e dönüştür
             if (isset($data['title'])) {
@@ -399,6 +408,8 @@ class EventController extends Controller
             $data['created_by'] = auth()->id();
 
             $event = Event::create($data);
+
+            $this->upsertEventPages($event, $pages);
 
             // Auto create days if requested
             if (! empty($data['auto_create_days']) && $event->start_date && $event->end_date) {
@@ -458,6 +469,7 @@ class EventController extends Controller
         $event->load([
             'organization',
             'creator',
+            'eventPages',
             'eventDays' => function ($query) {
                 $query->orderBy('date')->with(['venues' => function ($venueQuery) {
                     $venueQuery->orderBy('sort_order')->withCount('programSessions');
@@ -540,7 +552,9 @@ class EventController extends Controller
                 'total_presentations' => $statistics['total_presentations'] ?? 0,
                 'total_venues' => $statistics['total_venues'] ?? 0,
                 'total_participants' => $statistics['total_participants'] ?? 0,
+                'pages' => $event->pagesMap(),
             ],
+            'pageSections' => EventPageKey::sections(),
             'statistics' => $statistics,
             'recent_activities' => $recentActivities,
             'timelineData' => $timelineData,
@@ -704,6 +718,8 @@ class EventController extends Controller
             : $user->organizations()->where('is_active', true)->orderBy('name')->get(['id', 'name']);
 
         // Event data array
+        $event->load('eventPages');
+
         $eventData = [
             'id' => $event->id,
             'name' => $event->name ?? '',
@@ -714,11 +730,13 @@ class EventController extends Controller
             'location' => $event->location ?? '',
             'organization_id' => $event->organization_id ?? null,
             'is_published' => (bool) $event->is_published,
+            'pages' => $event->pagesMap(),
         ];
 
         return Inertia::render('Admin/Events/Edit', [
             'event' => $eventData,
             'organizations' => $organizations,
+            'pageSections' => EventPageKey::sections(),
         ]);
     }
 
@@ -733,6 +751,8 @@ class EventController extends Controller
 
         try {
             $data = $request->validated();
+            $pages = $data['pages'] ?? [];
+            unset($data['pages']);
 
             if (isset($data['title'])) {
                 $data['name'] = $data['title'];
@@ -747,6 +767,8 @@ class EventController extends Controller
             $data = array_intersect_key($data, array_flip($event->getFillable()));
 
             $event->update($data);
+
+            $this->upsertEventPages($event, $pages);
 
             DB::commit();
 
@@ -1282,7 +1304,7 @@ class EventController extends Controller
     /**
      * Export event timeline in various formats
      *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|JsonResponse|RedirectResponse
+     * @return BinaryFileResponse|JsonResponse|RedirectResponse
      */
     public function exportTimeline(Request $request, Event $event)
     {
@@ -1337,7 +1359,7 @@ class EventController extends Controller
     /**
      * Detect time conflicts between sessions
      *
-     * @param  \Illuminate\Support\Collection|array  $sessions
+     * @param  Collection|array  $sessions
      */
     private function detectTimeConflicts($sessions): array
     {
@@ -1415,7 +1437,7 @@ class EventController extends Controller
      * Export timeline as PDF
      *
      * @param  \Illuminate\Database\Eloquent\Collection  $sessions
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
     private function exportTimelinePdf(Event $event, $sessions)
     {
@@ -1431,7 +1453,7 @@ class EventController extends Controller
         $groupedSessions = $this->groupSessionsForExport($sessions);
 
         try {
-            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.timeline-pdf', [
+            $pdf = Pdf::loadView('exports.timeline-pdf', [
                 'event' => $event,
                 'groupedSessions' => $groupedSessions,
                 'exportDate' => now(),
@@ -1457,7 +1479,7 @@ class EventController extends Controller
      * Export timeline as Excel
      *
      * @param  \Illuminate\Database\Eloquent\Collection  $sessions
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
     private function exportTimelineExcel(Event $event, $sessions)
     {
@@ -1492,7 +1514,7 @@ class EventController extends Controller
         $filename = Event::createSlugFromTurkish($event->name).'-program-'.now()->format('Y-m-d').'.xlsx';
 
         try {
-            return (new \Rap2hpoutre\FastExcel\FastExcel($data))->download($filename);
+            return (new FastExcel($data))->download($filename);
         } catch (\Exception $e) {
             Log::error('Excel export failed', [
                 'event_id' => $event->id,
@@ -1503,6 +1525,32 @@ class EventController extends Controller
                 'error' => 'Excel dosyası oluşturulurken hata oluştu: '.$e->getMessage(),
                 'format' => 'excel',
             ], 500);
+        }
+    }
+
+    /**
+     * @param  array<string, string|null>  $pages
+     */
+    private function upsertEventPages(Event $event, array $pages): void
+    {
+        foreach (EventPageKey::cases() as $pageKey) {
+            $content = $pages[$pageKey->value] ?? null;
+
+            if ($content === null) {
+                continue;
+            }
+
+            EventPage::updateOrCreate(
+                [
+                    'event_id' => $event->id,
+                    'key' => $pageKey->value,
+                ],
+                [
+                    'content' => $content,
+                    'sort_order' => $pageKey->sortOrder(),
+                    'is_published' => true,
+                ]
+            );
         }
     }
 }

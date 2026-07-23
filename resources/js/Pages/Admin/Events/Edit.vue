@@ -515,6 +515,12 @@
                             </div>
                         </div>
 
+                        <EventContentSections
+                            :page-sections="pageSections"
+                            :pages="form.pages"
+                            :errors="form.errors"
+                        />
+
                         <!-- Form Actions -->
                         <div
                             class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-700"
@@ -633,6 +639,7 @@
 import { computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import EventContentSections from "@/Components/Admin/Events/EventContentSections.vue";
 import {
     PencilSquareIcon,
     CalendarDaysIcon,
@@ -654,6 +661,10 @@ const props = defineProps({
         required: true,
     },
     organizations: {
+        type: Array,
+        default: () => [],
+    },
+    pageSections: {
         type: Array,
         default: () => [],
     },
@@ -685,6 +696,14 @@ const breadcrumbs = computed(() => [
     { label: "Düzenle", href: null },
 ]);
 
+const buildDefaultPages = () =>
+    Object.fromEntries(
+        props.pageSections.map((section) => [
+            section.key,
+            props.event?.pages?.[section.key] ?? "",
+        ])
+    );
+
 // Form state
 const initialFormState = () => ({
     title: props.event?.name || "",
@@ -694,6 +713,7 @@ const initialFormState = () => ({
     location: props.event?.location || "",
     organization_id: props.event?.organization_id ?? "",
     is_published: Boolean(props.event?.is_published),
+    pages: buildDefaultPages(),
 });
 
 const form = useForm(initialFormState());
@@ -708,7 +728,8 @@ const hasChanges = computed(() => {
         form.end_date !== initial.end_date ||
         form.location !== initial.location ||
         String(form.organization_id) !== String(initial.organization_id) ||
-        form.is_published !== initial.is_published
+        form.is_published !== initial.is_published ||
+        JSON.stringify(form.pages) !== JSON.stringify(initial.pages)
     );
 });
 
@@ -773,6 +794,7 @@ const resetForm = () => {
     form.location = initial.location;
     form.organization_id = initial.organization_id;
     form.is_published = initial.is_published;
+    form.pages = { ...initial.pages };
     form.clearErrors();
 };
 </script>

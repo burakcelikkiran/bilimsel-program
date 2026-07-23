@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\EventPageKey;
+use App\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreEventRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreEventRequest extends FormRequest
     public function authorize(): bool
     {
         $user = auth()->user();
-        
+
         if ($user->isAdmin()) {
             return true;
         }
@@ -37,7 +38,7 @@ class StoreEventRequest extends FormRequest
                 'exists:organizations,id',
                 function ($attribute, $value, $fail) {
                     $user = auth()->user();
-                    if (!$user->isAdmin() && !$user->organizations()->where('organizations.id', $value)->exists()) {
+                    if (! $user->isAdmin() && ! $user->organizations()->where('organizations.id', $value)->exists()) {
                         $fail('Bu organizasyona etkinlik ekleyemezsiniz.');
                     }
                 },
@@ -47,7 +48,7 @@ class StoreEventRequest extends FormRequest
                 'string',
                 'max:255',
                 function ($attribute, $value, $fail) {
-                    $exists = \App\Models\Event::where('organization_id', $this->organization_id)
+                    $exists = Event::where('organization_id', $this->organization_id)
                         ->where('title', $value)
                         ->exists();
                     if ($exists) {
@@ -62,7 +63,7 @@ class StoreEventRequest extends FormRequest
                 'regex:/^[a-z0-9-]+$/',
                 function ($attribute, $value, $fail) {
                     if ($value) {
-                        $exists = \App\Models\Event::where('organization_id', $this->organization_id)
+                        $exists = Event::where('organization_id', $this->organization_id)
                             ->where('slug', $value)
                             ->exists();
                         if ($exists) {
@@ -100,6 +101,22 @@ class StoreEventRequest extends FormRequest
             'settings.auto_generate_days' => 'boolean',
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:50',
+            'pages' => [
+                'nullable',
+                'array',
+                function ($attribute, $value, $fail) {
+                    if (! is_array($value)) {
+                        return;
+                    }
+
+                    foreach (array_keys($value) as $key) {
+                        if (! in_array($key, EventPageKey::values(), true)) {
+                            $fail("Geçersiz kongre içerik anahtarı: {$key}");
+                        }
+                    }
+                },
+            ],
+            'pages.*' => 'nullable|string|max:200000',
         ];
     }
 
@@ -108,7 +125,13 @@ class StoreEventRequest extends FormRequest
      */
     public function attributes(): array
     {
-        return [
+        $pageAttributes = [];
+
+        foreach (EventPageKey::cases() as $pageKey) {
+            $pageAttributes['pages.'.$pageKey->value] = $pageKey->label();
+        }
+
+        return array_merge([
             'organization_id' => 'organizasyon',
             'title' => 'etkinlik başlığı',
             'slug' => 'etkinlik kısa adı',
@@ -138,7 +161,7 @@ class StoreEventRequest extends FormRequest
             'settings.require_registration' => 'kayıt zorunlu',
             'settings.auto_generate_days' => 'otomatik gün oluştur',
             'tags' => 'etiketler',
-        ];
+        ], $pageAttributes);
     }
 
     /**
@@ -181,9 +204,9 @@ class StoreEventRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         // Auto-generate slug if not provided
-        if (empty($this->slug) && !empty($this->title)) {
+        if (empty($this->slug) && ! empty($this->title)) {
             $this->merge([
-                'slug' => \App\Models\Event::createSlugFromTurkish($this->title)
+                'slug' => Event::createSlugFromTurkish($this->title),
             ]);
         }
 
@@ -197,8 +220,8 @@ class StoreEventRequest extends FormRequest
 
         // Prepare social links
         if ($this->has('social_links')) {
-            $socialLinks = array_filter($this->social_links ?? [], function($value) {
-                return !empty($value);
+            $socialLinks = array_filter($this->social_links ?? [], function ($value) {
+                return ! empty($value);
             });
             $this->merge(['social_links' => $socialLinks]);
         }
@@ -209,14 +232,14 @@ class StoreEventRequest extends FormRequest
             $settings['allow_public_access'] = $this->boolean('settings.allow_public_access', true);
             $settings['require_registration'] = $this->boolean('settings.require_registration', false);
             $settings['auto_generate_days'] = $this->boolean('settings.auto_generate_days', true);
-            
+
             $this->merge(['settings' => $settings]);
         }
 
         // Prepare tags
         if ($this->has('tags')) {
-            $tags = array_filter(array_map('trim', $this->tags ?? []), function($value) {
-                return !empty($value);
+            $tags = array_filter(array_map('trim', $this->tags ?? []), function ($value) {
+                return ! empty($value);
             });
             $this->merge(['tags' => array_values($tags)]);
         }

@@ -454,6 +454,58 @@
             </div>
           </div>
 
+          <!-- Content Tab -->
+          <div v-if="activeTab === 'content'" class="space-y-8">
+            <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Kongre İçerikleri</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                  Web sitesinde yayınlanacak sayfa içerikleri
+                </p>
+              </div>
+              <Link
+                v-if="event?.can_edit"
+                :href="route('admin.events.edit', event?.slug)"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+              >
+                <PencilSquareIcon class="h-4 w-4 mr-2" />
+                İçerikleri Düzenle
+              </Link>
+            </div>
+
+            <div v-if="filledContentSections.length" class="space-y-8">
+              <div
+                v-for="section in filledContentSections"
+                :key="section.key"
+                class="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-6"
+              >
+                <h4 class="text-base font-semibold text-slate-900 dark:text-white mb-4">
+                  {{ section.label }}
+                </h4>
+                <div
+                  class="prose prose-sm dark:prose-invert max-w-none text-slate-700 dark:text-slate-300"
+                  v-html="section.content"
+                />
+              </div>
+            </div>
+
+            <div v-else class="text-center py-16">
+              <NewspaperIcon class="h-16 w-16 text-slate-400 mx-auto mb-4" />
+              <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">Henüz içerik girilmemiş</h3>
+              <p class="text-slate-500 dark:text-slate-400 mb-6">
+                Genel bilgiler, davet, kurullar ve diğer sayfa içeriklerini düzenleme ekranından ekleyebilirsiniz.
+              </p>
+              <Link
+                v-if="event?.can_edit"
+                :href="route('admin.events.edit', event?.slug)"
+                class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                <PencilSquareIcon class="h-5 w-5 mr-2" />
+                İçerik Ekle
+              </Link>
+            </div>
+          </div>
+
           <!-- Management Tab -->
           <div v-if="activeTab === 'management'">
             <div class="mb-6">
@@ -641,6 +693,7 @@ import {
   XMarkIcon,
   Cog6ToothIcon,
   CursorArrowRaysIcon,
+  NewspaperIcon,
 } from '@heroicons/vue/24/outline'
 
 // Props
@@ -665,6 +718,10 @@ const props = defineProps({
       sessions: [],
       conflicts: []
     })
+  },
+  pageSections: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -698,6 +755,19 @@ const activeTab = ref('overview')
 const selectedTimelineSession = ref(null)
 const timelineLoading = ref(false)
 
+const filledContentSections = computed(() => {
+  return props.pageSections
+    .map((section) => ({
+      ...section,
+      content: props.event?.pages?.[section.key] ?? '',
+    }))
+    .filter((section) => {
+      const stripped = section.content.replace(/<[^>]*>/g, '').trim()
+
+      return stripped.length > 0
+    })
+})
+
 // Tab configuration
 const tabs = computed(() => [
   {
@@ -705,6 +775,12 @@ const tabs = computed(() => [
     name: 'Genel Bakış',
     icon: DocumentTextIcon,
     count: undefined
+  },
+  {
+    id: 'content',
+    name: 'Kongre İçerikleri',
+    icon: NewspaperIcon,
+    count: filledContentSections.value.length || undefined
   },
   {
     id: 'timeline',

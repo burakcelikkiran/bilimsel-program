@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\EventPageKey;
 use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,16 +11,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class Event extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'organization_id',
         'name',
-        'title', 
+        'title',
         'slug',
         'description',
         'start_date',
@@ -34,7 +34,7 @@ class Event extends Model
         'registration_enabled',
         'max_attendees',
         'user_id',
-        'created_by'
+        'created_by',
     ];
 
     protected $casts = [
@@ -66,7 +66,7 @@ class Event extends Model
         });
 
         static::updating(function ($model) {
-            if ($model->isDirty('name') && !$model->isDirty('slug')) {
+            if ($model->isDirty('name') && ! $model->isDirty('slug')) {
                 $model->slug = static::generateUniqueSlug($model->name, $model->getOriginal('slug'));
             }
         });
@@ -93,6 +93,11 @@ class Event extends Model
     public function programSessionCategories(): HasMany
     {
         return $this->hasMany(ProgramSessionCategory::class)->orderBy('sort_order');
+    }
+
+    public function eventPages(): HasMany
+    {
+        return $this->hasMany(EventPage::class)->orderBy('sort_order');
     }
 
     /**
@@ -177,6 +182,7 @@ class Event extends Model
                 return 'upcoming';
             }
         }
+
         return 'draft';
     }
 
@@ -191,7 +197,7 @@ class Event extends Model
             return $this->start_date->format('d M Y');
         }
 
-        return $this->start_date->format('d M Y') . ' - ' . $this->end_date->format('d M Y');
+        return $this->start_date->format('d M Y').' - '.$this->end_date->format('d M Y');
     }
 
     public function setNameAttribute($value)
@@ -266,6 +272,33 @@ class Event extends Model
         return $moderatorIds->merge($speakerIds)->unique()->count();
     }
 
+    public function contentFor(EventPageKey $key): ?string
+    {
+        $this->loadMissing('eventPages');
+
+        return $this->eventPages->firstWhere('key', $key)?->content;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function pagesMap(): array
+    {
+        $this->loadMissing('eventPages');
+
+        $pages = [];
+
+        foreach (EventPageKey::cases() as $pageKey) {
+            $pages[$pageKey->value] = '';
+        }
+
+        foreach ($this->eventPages as $page) {
+            $pages[$page->key->value] = $page->content ?? '';
+        }
+
+        return $pages;
+    }
+
     /**
      * Route model binding
      */
@@ -284,10 +317,10 @@ class Event extends Model
         $counter = 1;
 
         while (static::where('slug', $slug)
-            ->when($currentSlug, fn($q) => $q->where('slug', '!=', $currentSlug))
+            ->when($currentSlug, fn ($q) => $q->where('slug', '!=', $currentSlug))
             ->exists()
         ) {
-            $slug = $originalSlug . '-' . $counter;
+            $slug = $originalSlug.'-'.$counter;
             $counter++;
         }
 
@@ -306,11 +339,11 @@ class Event extends Model
             'ü' => 'u', 'Ü' => 'U',
             'ö' => 'o', 'Ö' => 'O',
             'ı' => 'i', 'İ' => 'I',
-            'ç' => 'c', 'Ç' => 'C'
+            'ç' => 'c', 'Ç' => 'C',
         ];
 
         $text = strtr($text, $turkishChars);
-        
+
         // Laravel'in slug metodunu kullan
         return Str::slug($text);
     }
@@ -323,10 +356,10 @@ class Event extends Model
         $startDate = $this->start_date;
         $endDate = $this->end_date;
         $totalDays = $startDate->diffInDays($endDate) + 1;
-        
+
         $eventDays = [];
         $currentDate = $startDate->copy();
-        
+
         for ($dayNumber = 1; $dayNumber <= $totalDays; $dayNumber++) {
             $eventDays[] = [
                 'event_id' => $this->id,
@@ -337,10 +370,10 @@ class Event extends Model
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-            
+
             $currentDate->addDay();
         }
-        
+
         return $eventDays;
     }
 
@@ -357,6 +390,7 @@ class Event extends Model
         $array['total_presentations'] = $this->getTotalPresentations();
         $array['total_venues'] = $this->getTotalVenues();
         $array['total_participants'] = $this->getTotalParticipants();
+
         return $array;
     }
 

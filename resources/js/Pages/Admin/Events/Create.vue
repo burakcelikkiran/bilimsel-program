@@ -430,6 +430,12 @@
                             </div>
                         </div>
 
+                        <EventContentSections
+                            :page-sections="pageSections"
+                            :pages="form.pages"
+                            :errors="form.errors"
+                        />
+
                         <!-- Form Actions -->
                         <div
                             class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-700"
@@ -573,6 +579,7 @@
 import { ref, computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import EventContentSections from "@/Components/Admin/Events/EventContentSections.vue";
 import {
     CalendarIcon,
     CalendarDaysIcon,
@@ -593,11 +600,20 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    pageSections: {
+        type: Array,
+        default: () => [],
+    },
     errors: {
         type: Object,
         default: () => ({}),
     },
 });
+
+const buildDefaultPages = () =>
+    Object.fromEntries(
+        props.pageSections.map((section) => [section.key, ""])
+    );
 
 // Form
 const form = useForm({
@@ -608,6 +624,7 @@ const form = useForm({
     location: "",
     organization_id: "",
     auto_create_days: true,
+    pages: buildDefaultPages(),
 });
 
 const processing = ref(false);

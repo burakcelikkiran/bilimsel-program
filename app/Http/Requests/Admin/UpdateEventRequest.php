@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\EventPageKey;
+use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -72,10 +75,10 @@ class UpdateEventRequest extends FormRequest
                         return;
                     }
 
-                    $submittedDate = \Carbon\Carbon::parse($value)->toDateString();
+                    $submittedDate = Carbon::parse($value)->toDateString();
                     $currentDate = $event->start_date->toDateString();
 
-                    if ($submittedDate !== $currentDate && \Carbon\Carbon::parse($value)->isPast()) {
+                    if ($submittedDate !== $currentDate && Carbon::parse($value)->isPast()) {
                         $fail('Program oturumları olan etkinliğin tarihi geçmişe alınamaz.');
                     }
                 },
@@ -109,6 +112,22 @@ class UpdateEventRequest extends FormRequest
             'settings.auto_generate_days' => 'boolean',
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:50',
+            'pages' => [
+                'nullable',
+                'array',
+                function ($attribute, $value, $fail) {
+                    if (! is_array($value)) {
+                        return;
+                    }
+
+                    foreach (array_keys($value) as $key) {
+                        if (! in_array($key, EventPageKey::values(), true)) {
+                            $fail("Geçersiz kongre içerik anahtarı: {$key}");
+                        }
+                    }
+                },
+            ],
+            'pages.*' => 'nullable|string|max:200000',
         ];
     }
 
@@ -117,7 +136,13 @@ class UpdateEventRequest extends FormRequest
      */
     public function attributes(): array
     {
-        return [
+        $pageAttributes = [];
+
+        foreach (EventPageKey::cases() as $pageKey) {
+            $pageAttributes['pages.'.$pageKey->value] = $pageKey->label();
+        }
+
+        return array_merge([
             'organization_id' => 'organizasyon',
             'title' => 'etkinlik başlığı',
             'slug' => 'etkinlik kısa adı',
@@ -149,7 +174,7 @@ class UpdateEventRequest extends FormRequest
             'settings.require_registration' => 'kayıt zorunlu',
             'settings.auto_generate_days' => 'otomatik gün oluştur',
             'tags' => 'etiketler',
-        ];
+        ], $pageAttributes);
     }
 
     /**
@@ -221,7 +246,7 @@ class UpdateEventRequest extends FormRequest
             && $this->title !== $event->name
         ) {
             $this->merge([
-                'slug' => \App\Models\Event::createSlugFromTurkish($this->title),
+                'slug' => Event::createSlugFromTurkish($this->title),
             ]);
         }
 
