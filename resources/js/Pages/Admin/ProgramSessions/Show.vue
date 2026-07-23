@@ -744,18 +744,21 @@ const breadcrumbs = computed(() => {
 const formatTime = (timeString) => {
     if (!timeString) return "-";
 
-    try {
-        const date = new Date(timeString);
-        if (isNaN(date.getTime())) return "-";
+    if (typeof timeString === "string" && /^\d{1,2}:\d{2}$/.test(timeString)) {
+        const [hours, minutes] = timeString.split(":");
 
-        const hours = date.getHours().toString().padStart(2, "0");
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-
-        return `${hours}:${minutes}`;
-    } catch (error) {
-        console.error("Time formatting error:", error);
-        return "-";
+        return `${hours.padStart(2, "0")}:${minutes}`;
     }
+
+    if (typeof timeString === "string" && timeString.includes("T")) {
+        const match = timeString.match(/T(\d{2}):(\d{2})/);
+
+        if (match) {
+            return `${match[1]}:${match[2]}`;
+        }
+    }
+
+    return "-";
 };
 
 // Methods
