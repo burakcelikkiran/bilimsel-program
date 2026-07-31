@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -287,15 +288,7 @@ class ProgramSessionController extends Controller
             $venues = $selectedEventDay->venues()->ordered()->get(['id', 'name', 'display_name', 'color', 'event_day_id']);
         }
 
-        // Get participants for moderators
-        $participantsQuery = Participant::moderators();
-
-        if (! $user->isAdmin()) {
-            $organizationIds = $user->organizations()->pluck('organizations.id');
-            $participantsQuery->whereIn('organization_id', $organizationIds);
-        }
-
-        $participants = $participantsQuery->orderBy('first_name')->get(['id', 'first_name', 'last_name', 'title', 'affiliation']);
+        $participants = $this->getParticipantsForSelectedEvent($selectedEvent);
 
         // Get sponsors
         $sponsorsQuery = Sponsor::active();
@@ -1239,15 +1232,7 @@ class ProgramSessionController extends Controller
 
         $categories = $categoriesQuery->orderBy('name')->get();
 
-        // Get participants for moderator selection
-        $participantsQuery = Participant::query();
-
-        if (! $user->isAdmin()) {
-            $organizationIds = $user->organizations()->pluck('organizations.id');
-            $participantsQuery->whereIn('organization_id', $organizationIds);
-        }
-
-        $participants = $participantsQuery->orderBy('first_name')->orderBy('last_name')->get();
+        $participants = $this->getParticipantsForSelectedEvent($selectedEvent);
 
         // Breadcrumbs
         $breadcrumbs = [
@@ -2080,6 +2065,22 @@ class ProgramSessionController extends Controller
     }
 
     /**
+     * @return Collection<int, Participant>
+     */
+    private function getParticipantsForSelectedEvent(?Event $selectedEvent): Collection
+    {
+        if (! $selectedEvent) {
+            return collect();
+        }
+
+        return Participant::query()
+            ->where('organization_id', $selectedEvent->organization_id)
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get(['id', 'first_name', 'last_name', 'title', 'affiliation']);
+    }
+
+    /**
      * Get form data for create/edit forms - LEGACY METHOD (Backward compatibility)
      */
     private function getFormData($user, $venueId = null)
@@ -2110,15 +2111,7 @@ class ProgramSessionController extends Controller
             }
         }
 
-        // Get participants for moderators
-        $participantsQuery = Participant::moderators();
-
-        if (! $user->isAdmin()) {
-            $organizationIds = $user->organizations()->pluck('organizations.id');
-            $participantsQuery->whereIn('organization_id', $organizationIds);
-        }
-
-        $participants = $participantsQuery->orderBy('first_name')->get(['id', 'first_name', 'last_name', 'title', 'affiliation']);
+        $participants = $this->getParticipantsForSelectedEvent($selectedEvent);
 
         // Get sponsors - Use actual database column 'logo'
         $sponsorsQuery = Sponsor::active();

@@ -2,9 +2,13 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
+use App\Models\Participant;
 use App\Models\ProgramSession;
+use App\Models\ProgramSessionCategory;
+use App\Models\Sponsor;
+use App\Models\Venue;
+use Carbon\Carbon;
+use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProgramSessionRequest extends FormRequest
 {
@@ -27,19 +31,20 @@ class StoreProgramSessionRequest extends FormRequest
                 'required',
                 'exists:venues,id',
                 function ($attribute, $value, $fail) {
-                    $venue = \App\Models\Venue::with('eventDay.event')->find($value);
-                    if (!$venue) {
+                    $venue = Venue::with('eventDay.event')->find($value);
+                    if (! $venue) {
                         $fail('Seçilen salon bulunamadı.');
+
                         return;
                     }
-                    
+
                     // Check if user has access to this venue's organization
                     $user = $this->user();
-                    if (!$user->isAdmin()) {
+                    if (! $user->isAdmin()) {
                         $hasAccess = $user->organizations()
-                                         ->where('organizations.id', $venue->eventDay->event->organization_id)
-                                         ->exists();
-                        if (!$hasAccess) {
+                            ->where('organizations.id', $venue->eventDay->event->organization_id)
+                            ->exists();
+                        if (! $hasAccess) {
                             $fail('Bu salonu kullanamazsınız.');
                         }
                     }
@@ -49,16 +54,18 @@ class StoreProgramSessionRequest extends FormRequest
             'category_ids.*' => [
                 'exists:program_session_categories,id',
                 function ($attribute, $value, $fail) {
-                    $category = \App\Models\ProgramSessionCategory::with('event')->find($value);
-                    if (!$category) return;
-                    
+                    $category = ProgramSessionCategory::with('event')->find($value);
+                    if (! $category) {
+                        return;
+                    }
+
                     // Check if user has access to this category's organization
                     $user = $this->user();
-                    if (!$user->isAdmin()) {
+                    if (! $user->isAdmin()) {
                         $hasAccess = $user->organizations()
-                                         ->where('organizations.id', $category->event->organization_id)
-                                         ->exists();
-                        if (!$hasAccess) {
+                            ->where('organizations.id', $category->event->organization_id)
+                            ->exists();
+                        if (! $hasAccess) {
                             $fail('Bu kategoriyi kullanamazsınız.');
                         }
                     }
@@ -76,13 +83,13 @@ class StoreProgramSessionRequest extends FormRequest
                             ->where(function ($query) use ($value) {
                                 $query->where(function ($q) use ($value) {
                                     $q->where('start_time', '<=', $value)
-                                      ->where('end_time', '>', $value);
-                                })->orWhere(function ($q) use ($value) {
+                                        ->where('end_time', '>', $value);
+                                })->orWhere(function ($q) {
                                     $q->where('start_time', '<', $this->end_time)
-                                      ->where('end_time', '>=', $this->end_time);
+                                        ->where('end_time', '>=', $this->end_time);
                                 })->orWhere(function ($q) use ($value) {
                                     $q->where('start_time', '>=', $value)
-                                      ->where('end_time', '<=', $this->end_time);
+                                        ->where('end_time', '<=', $this->end_time);
                                 });
                             })
                             ->exists();
@@ -104,18 +111,22 @@ class StoreProgramSessionRequest extends FormRequest
                 'nullable',
                 'exists:sponsors,id',
                 function ($attribute, $value, $fail) {
-                    if (!$value) return;
-                    
-                    $sponsor = \App\Models\Sponsor::find($value);
-                    if (!$sponsor) return;
-                    
+                    if (! $value) {
+                        return;
+                    }
+
+                    $sponsor = Sponsor::find($value);
+                    if (! $sponsor) {
+                        return;
+                    }
+
                     // Check if user has access to this sponsor's organization
                     $user = $this->user();
-                    if (!$user->isAdmin()) {
+                    if (! $user->isAdmin()) {
                         $hasAccess = $user->organizations()
-                                         ->where('organizations.id', $sponsor->organization_id)
-                                         ->exists();
-                        if (!$hasAccess) {
+                            ->where('organizations.id', $sponsor->organization_id)
+                            ->exists();
+                        if (! $hasAccess) {
                             $fail('Bu sponsoru kullanamazsınız.');
                         }
                     }
@@ -126,17 +137,25 @@ class StoreProgramSessionRequest extends FormRequest
             'moderator_ids.*' => [
                 'exists:participants,id',
                 function ($attribute, $value, $fail) {
-                    $participant = \App\Models\Participant::find($value);
-                    if (!$participant) return;
-                    
-                    // Check if user has access to this participant's organization
+                    $participant = Participant::find($value);
+                    if (! $participant) {
+                        return;
+                    }
+
+                    $venue = Venue::with('eventDay.event')->find($this->venue_id);
+                    if ($venue && $participant->organization_id !== $venue->eventDay->event->organization_id) {
+                        $fail('Katılımcı oturumun organizasyonuna ait olmalıdır.');
+
+                        return;
+                    }
+
                     $user = $this->user();
-                    if (!$user->isAdmin()) {
+                    if (! $user->isAdmin()) {
                         $hasAccess = $user->organizations()
-                                         ->where('organizations.id', $participant->organization_id)
-                                         ->exists();
-                        if (!$hasAccess) {
-                            $fail('Bu katılımcıyı moderatör olarak seçemezsiniz.');
+                            ->where('organizations.id', $participant->organization_id)
+                            ->exists();
+                        if (! $hasAccess) {
+                            $fail('Bu katılımcıyı seçemezsiniz.');
                         }
                     }
                 },
@@ -207,15 +226,15 @@ class StoreProgramSessionRequest extends FormRequest
 
         // Filter out empty moderator_ids and category_ids
         if ($this->has('moderator_ids')) {
-            $moderatorIds = array_filter($this->moderator_ids ?? [], function($value) {
-                return !empty($value);
+            $moderatorIds = array_filter($this->moderator_ids ?? [], function ($value) {
+                return ! empty($value);
             });
             $this->merge(['moderator_ids' => array_values($moderatorIds)]);
         }
 
         if ($this->has('category_ids')) {
-            $categoryIds = array_filter($this->category_ids ?? [], function($value) {
-                return !empty($value);
+            $categoryIds = array_filter($this->category_ids ?? [], function ($value) {
+                return ! empty($value);
             });
             $this->merge(['category_ids' => array_values($categoryIds)]);
         }
@@ -234,32 +253,32 @@ class StoreProgramSessionRequest extends FormRequest
         $validator->after(function ($validator) {
             // Check if the session duration is reasonable (at least 15 minutes, max 8 hours)
             if ($this->start_time && $this->end_time) {
-                $start = \Carbon\Carbon::createFromFormat('H:i', $this->start_time);
-                $end = \Carbon\Carbon::createFromFormat('H:i', $this->end_time);
+                $start = Carbon::createFromFormat('H:i', $this->start_time);
+                $end = Carbon::createFromFormat('H:i', $this->end_time);
                 $duration = $start->diffInMinutes($end);
-                
+
                 if ($duration < 15) {
                     $validator->errors()->add('end_time', 'Oturum süresi en az 15 dakika olmalıdır.');
                 }
-                
+
                 if ($duration > 480) { // 8 hours
                     $validator->errors()->add('end_time', 'Oturum süresi en fazla 8 saat olabilir.');
                 }
             }
-            
+
             // If it's a break session, ensure title reflects this
             if ($this->is_break && $this->title) {
                 $breakKeywords = ['ara', 'break', 'mola', 'kahve', 'öğle', 'lunch'];
                 $hasBreakKeyword = false;
-                
+
                 foreach ($breakKeywords as $keyword) {
                     if (stripos($this->title, $keyword) !== false) {
                         $hasBreakKeyword = true;
                         break;
                     }
                 }
-                
-                if (!$hasBreakKeyword) {
+
+                if (! $hasBreakKeyword) {
                     $validator->errors()->add('title', 'Ara oturumu için başlık ara/mola belirtmeli.');
                 }
             }
@@ -272,8 +291,9 @@ class StoreProgramSessionRequest extends FormRequest
     public function getDurationMinutes(): ?int
     {
         if ($this->start_time && $this->end_time) {
-            $start = \Carbon\Carbon::createFromFormat('H:i', $this->start_time);
-            $end = \Carbon\Carbon::createFromFormat('H:i', $this->end_time);
+            $start = Carbon::createFromFormat('H:i', $this->start_time);
+            $end = Carbon::createFromFormat('H:i', $this->end_time);
+
             return $end->diffInMinutes($start);
         }
 

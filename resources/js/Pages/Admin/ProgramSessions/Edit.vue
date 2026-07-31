@@ -444,134 +444,15 @@
                         </div>
                     </div>
 
-                    <!-- Moderators Section -->
-                    <div class="p-6 space-y-6">
-                        <div>
-                            <h3
-                                class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
-                            >
-                                Moderatörler
-                            </h3>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Moderator Title -->
-                                <div class="md:col-span-2">
-                                    <label
-                                        for="moderator_title"
-                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-                                    >
-                                        Moderatör Unvanı
-                                    </label>
-                                    <select
-                                        id="moderator_title"
-                                        v-model="form.moderator_title"
-                                        class="block w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-md"
-                                        :class="
-                                            errors.moderator_title
-                                                ? 'border-red-300 focus:ring-red-500'
-                                                : ''
-                                        "
-                                    >
-                                        <option value="">
-                                            Moderatör unvanı seçin
-                                        </option>
-                                        <option
-                                            v-for="title in moderatorTitles"
-                                            :key="title.value"
-                                            :value="title.value"
-                                        >
-                                            {{ title.label }}
-                                        </option>
-                                    </select>
-                                    <p
-                                        v-if="errors.moderator_title"
-                                        class="mt-2 text-sm text-red-600"
-                                    >
-                                        {{ errors.moderator_title }}
-                                    </p>
-                                </div>
-
-                                <!-- Moderators Selection -->
-                                <div class="md:col-span-2">
-                                    <label
-                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-                                    >
-                                        Moderatörler
-                                    </label>
-
-                                    <div
-                                        v-if="participants.length > 0"
-                                        class="space-y-2 max-h-48 overflow-y-auto border border-slate-200 dark:border-slate-600 rounded-lg p-3"
-                                    >
-                                        <div
-                                            v-for="participant in participants"
-                                            :key="participant.id"
-                                            class="flex items-center space-x-3"
-                                        >
-                                            <input
-                                                :id="`moderator_${participant.id}`"
-                                                v-model="form.moderator_ids"
-                                                :value="participant.id"
-                                                type="checkbox"
-                                                class="h-4 w-4 text-slate-600 focus:ring-slate-500 border-slate-300 rounded"
-                                            />
-                                            <label
-                                                :for="`moderator_${participant.id}`"
-                                                class="text-sm text-slate-700 dark:text-slate-300 flex-1"
-                                            >
-                                                {{ participant.full_name }}
-                                                <span
-                                                    v-if="participant.title"
-                                                    class="text-slate-500"
-                                                >
-                                                    -
-                                                    {{
-                                                        participant.title
-                                                    }}</span
-                                                >
-                                                <span
-                                                    v-if="
-                                                        participant.affiliation
-                                                    "
-                                                    class="text-slate-400 text-xs block"
-                                                >
-                                                    {{
-                                                        participant.affiliation
-                                                    }}
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        v-else
-                                        class="text-center py-8 text-slate-500 dark:text-slate-400"
-                                    >
-                                        <UsersIcon
-                                            class="h-12 w-12 mx-auto mb-2"
-                                        />
-                                        <p>Henüz katılımcı eklenmemiş</p>
-                                        <Link
-                                            :href="
-                                                route(
-                                                    'admin.participants.create'
-                                                )
-                                            "
-                                            class="text-slate-600 dark:text-slate-400 hover:underline text-sm"
-                                        >
-                                            Yeni katılımcı ekle
-                                        </Link>
-                                    </div>
-
-                                    <p
-                                        v-if="errors.moderator_ids"
-                                        class="text-sm text-red-600 dark:text-red-400 mt-1"
-                                    >
-                                        {{ errors.moderator_ids }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Session Participants -->
+                    <div class="p-6">
+                        <ModeratorsSection
+                            :form="form"
+                            :participants="participants"
+                            :moderator-titles="moderatorTitles"
+                            :errors="errors"
+                            :has-event-selected="!!selectedEventId"
+                        />
                     </div>
 
                     <!-- Categories and Sponsor -->
@@ -821,6 +702,7 @@ import {
 } from "vue";
 import { Head, Link, router, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import ModeratorsSection from "@/Components/Forms/ModeratorsSection.vue";
 import {
     ArrowLeftIcon,
     PencilSquareIcon,
@@ -829,7 +711,6 @@ import {
     CheckIcon,
     ArrowPathIcon,
     ExclamationTriangleIcon,
-    UsersIcon,
     InformationCircleIcon,
 } from "@heroicons/vue/24/outline";
 
@@ -1242,6 +1123,7 @@ const cascadeOnly = [
     "selectedEventDay",
     "venues",
     "categories",
+    "participants",
     "selectedEventId",
     "selectedEventDayId",
     "selectedVenueId",
@@ -1299,6 +1181,8 @@ watch(
 );
 
 const onEventChange = () => {
+    form.moderator_ids = [];
+
     if (!selectedEventId.value) {
         availableEventDays.value = [];
         availableVenues.value = [];
