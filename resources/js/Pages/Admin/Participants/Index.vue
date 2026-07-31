@@ -172,6 +172,17 @@
                             </button>
                         </div>
 
+                        <!-- Import Button -->
+                        <button
+                            v-if="canImport"
+                            type="button"
+                            @click="openImportModal"
+                            class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200"
+                        >
+                            <ArrowUpTrayIcon class="h-4 w-4 mr-1.5" />
+                            İçe Aktar
+                        </button>
+
                         <!-- Create Button -->
                         <Link
                             :href="
@@ -231,7 +242,7 @@
                         >
                             <option value="">Tüm Organizasyonlar</option>
                             <option
-                                v-for="organization in filterOptions?.organizations || []"
+                                v-for="organization in organizationOptions"
                                 :key="organization.id"
                                 :value="organization.id"
                             >
@@ -259,8 +270,7 @@
                         >
                             <option value="">Tüm Kurumlar</option>
                             <option
-                                v-for="affiliation in filterOptions?.affiliations ||
-                                []"
+                                v-for="affiliation in affiliationOptions"
                                 :key="affiliation"
                                 :value="affiliation"
                             >
@@ -1004,6 +1014,86 @@
             </div>
         </div>
 
+        <!-- Import Modal -->
+        <Modal
+            :show="showImportModal"
+            title="Katılımcıları İçe Aktar"
+            subtitle="Excel veya CSV dosyası ile toplu katılımcı ekleyin."
+            max-width="lg"
+            :show-default-actions="true"
+            confirm-text="İçe Aktar"
+            :confirm-loading="importProcessing"
+            @close="closeImportModal"
+            @cancel="closeImportModal"
+            @confirm="submitImport"
+        >
+            <div class="space-y-4">
+                <div>
+                    <label
+                        for="import-organization"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+                    >
+                        Organizasyon
+                    </label>
+                    <select
+                        id="import-organization"
+                        v-model="importForm.organization_id"
+                        class="block w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+                    >
+                        <option value="" disabled>Organizasyon seçin</option>
+                        <option
+                            v-for="organization in organizationOptions"
+                            :key="organization.id"
+                            :value="organization.id"
+                        >
+                            {{ organization.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <label
+                        for="import-file"
+                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+                    >
+                        Dosya
+                    </label>
+                    <input
+                        id="import-file"
+                        type="file"
+                        accept=".xlsx,.xls,.csv"
+                        class="block w-full text-sm text-slate-700 dark:text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 dark:file:bg-slate-700 dark:file:text-slate-200"
+                        @change="handleImportFileChange"
+                    />
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                        Desteklenen formatlar: XLSX, XLS, CSV (maks. 10MB). Zorunlu kolonlar: ad, soyad.
+                    </p>
+                </div>
+
+                <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                    <input
+                        v-model="importForm.update_existing"
+                        type="checkbox"
+                        class="rounded border-slate-300 dark:border-slate-600 text-slate-800 focus:ring-slate-500"
+                    />
+                    Mevcut e-postaları güncelle
+                </label>
+
+                <a
+                    :href="
+                        safeRoute(
+                            'admin.import.templates',
+                            '/admin/import/templates/participants',
+                            'participants',
+                        )
+                    "
+                    class="inline-flex items-center text-sm text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+                >
+                    Örnek şablonu indir
+                </a>
+            </div>
+        </Modal>
+
         <!-- Confirm Dialog -->
         <ConfirmDialog
             v-model="confirmDialog.show"
@@ -1020,8 +1110,10 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import ConfirmDialog from "@/Components/UI/ConfirmDialog.vue";
+import Modal from "@/Components/UI/Modal.vue";
 import {
     PlusIcon,
+    ArrowUpTrayIcon,
     MagnifyingGlassIcon,
     XMarkIcon,
     ChevronUpIcon,
@@ -1074,6 +1166,18 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    organizations: {
+        type: Array,
+        default: () => [],
+    },
+    affiliations: {
+        type: Array,
+        default: () => [],
+    },
+    can_import: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 // Helper function to safely create routes
@@ -1113,7 +1217,19 @@ const confirmDialog = ref({
     callback: null,
 });
 
+const showImportModal = ref(false);
+const importProcessing = ref(false);
+const importForm = ref({
+    organization_id: "",
+    update_existing: false,
+    file: null,
+});
+
 // Computed
+const canImport = computed(() => props.can_import);
+const organizationOptions = computed(() => props.organizations || []);
+const affiliationOptions = computed(() => props.affiliations || []);
+
 const breadcrumbs = computed(() => [
     {
         label: "Ana Sayfa",
@@ -1125,6 +1241,70 @@ const breadcrumbs = computed(() => [
 const displayedParticipants = computed(() => props.participants?.data || []);
 
 const filterOptions = computed(() => props.filter_options || {});
+
+const openImportModal = () => {
+    importForm.value = {
+        organization_id:
+            activeFilters.value.organization_id ||
+            organizationOptions.value[0]?.id ||
+            "",
+        update_existing: false,
+        file: null,
+    };
+    showImportModal.value = true;
+};
+
+const closeImportModal = () => {
+    if (!importProcessing.value) {
+        showImportModal.value = false;
+    }
+};
+
+const handleImportFileChange = (event) => {
+    importForm.value.file = event.target.files[0] || null;
+};
+
+const submitImport = () => {
+    if (!importForm.value.file) {
+        alert("Lütfen bir dosya seçin.");
+        return;
+    }
+
+    if (!importForm.value.organization_id) {
+        alert("Lütfen bir organizasyon seçin.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", importForm.value.file);
+    formData.append("organization_id", importForm.value.organization_id);
+
+    if (importForm.value.update_existing) {
+        formData.append("update_existing", "1");
+    }
+
+    importProcessing.value = true;
+
+    router.post(
+        safeRoute(
+            "admin.participants.bulk-import",
+            "/admin/participants/bulk-import",
+        ),
+        formData,
+        {
+            forceFormData: true,
+            onSuccess: () => {
+                showImportModal.value = false;
+            },
+            onFinish: () => {
+                importProcessing.value = false;
+            },
+            onError: () => {
+                alert("İçe aktarma sırasında bir hata oluştu.");
+            },
+        },
+    );
+};
 
 const hasActiveFilters = computed(() => {
     return (

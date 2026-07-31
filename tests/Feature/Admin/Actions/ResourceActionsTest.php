@@ -81,5 +81,5 @@ it('rejects participant bulk import without file', function () {
     test()->actingAs($user)
         ->from(route('admin.import.index'))
         ->post(route('admin.import.participants'), [])
-        ->assertSessionHasErrors(['file']);
+        ->assertSessionHasErrors(['file', 'organization_id']);
 });

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\Participant;
+use App\Services\ParticipantImporter;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -129,6 +131,7 @@ class ParticipantController extends Controller
                 'direction' => $sortDirection,
             ],
             'can_create' => auth()->user()?->can('create', Participant::class) ?? false,
+            'can_import' => auth()->user()?->can('import', Participant::class) ?? false,
         ]);
     }
 
@@ -540,6 +543,54 @@ class ParticipantController extends Controller
 
             return back()->withErrors([
                 'error' => 'Katılımcı silinirken bir hata oluştu.',
+            ]);
+        }
+    }
+
+    /**
+     * Bulk import participants from Excel/CSV
+     */
+    public function bulkImport(Request $request, ParticipantImporter $participantImporter): RedirectResponse
+    {
+        $this->authorize('import', Participant::class);
+
+        $validated = $request->validate([
+            'file' => 'required|file|mimes:csv,xlsx,xls|max:10240',
+            'organization_id' => 'required|exists:organizations,id',
+            'update_existing' => 'boolean',
+        ]);
+
+        $user = auth()->user();
+
+        if (! $user->isAdmin()) {
+            $hasAccess = $user->organizations()
+                ->where('organizations.id', $validated['organization_id'])
+                ->exists();
+
+            if (! $hasAccess) {
+                abort(403);
+            }
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $result = $participantImporter->importFromFile(
+                $request->file('file'),
+                (int) $validated['organization_id'],
+                $request->boolean('update_existing')
+            );
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.participants.index')
+                ->with('success', $participantImporter->buildSummaryMessage($result));
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'İçe aktarma hatası: '.$e->getMessage(),
             ]);
         }
     }
