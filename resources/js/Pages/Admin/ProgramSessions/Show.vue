@@ -810,7 +810,7 @@ const deleteSession = () => {
     confirmDialog.value = {
         show: true,
         title: "Oturumu Sil",
-        message: `"${safeProgramSession.value.title}" oturumunu silmek istediğinize emin misiniz? Bu işlem geri alınamaz ve oturumdaki tüm sunumlar da silinecektir.`,
+        message: `"${safeProgramSession.value.title}" oturumunu silmek istediğinize emin misiniz? Bu işlem geri alınamaz; oturumdaki tüm sunumlar silinecek ve kişi ilişkilendirmeleri kaldırılacaktır.`,
         type: "danger",
         callback: () => {
             if (safeProgramSession.value.id) {

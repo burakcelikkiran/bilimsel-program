@@ -392,6 +392,12 @@ Route::middleware([
             Route::post('/bulk-reorder', [ProgramSessionController::class, 'bulkReorder'])
                 ->name('bulk-reorder');
 
+            Route::delete('/bulk-destroy', [ProgramSessionController::class, 'bulkDestroy'])
+                ->name('bulk-destroy');
+
+            Route::post('/bulk-duplicate', [ProgramSessionController::class, 'bulkDuplicate'])
+                ->name('bulk-duplicate');
+
             Route::post('/check-time-conflicts', [ProgramSessionController::class, 'checkTimeConflicts'])
                 ->name('check-time-conflicts');
 

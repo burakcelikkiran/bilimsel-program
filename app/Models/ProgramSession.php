@@ -336,7 +336,22 @@ class ProgramSession extends Model
 
     public function canBeDeleted(): bool
     {
-        return $this->presentations()->count() === 0;
+        return true;
+    }
+
+    /**
+     * Soft delete the session and clean up related records.
+     */
+    public function deleteWithRelations(): void
+    {
+        foreach ($this->presentations as $presentation) {
+            $presentation->speakers()->detach();
+            $presentation->delete();
+        }
+
+        $this->moderators()->detach();
+        $this->categories()->detach();
+        $this->delete();
     }
 
     public function hasValidTimeRange(): bool

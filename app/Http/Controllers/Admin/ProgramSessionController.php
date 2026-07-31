@@ -838,16 +838,11 @@ class ProgramSessionController extends Controller
         $this->authorize('delete', $programSession);
 
         try {
-            if (! $programSession->canBeDeleted()) {
-                return back()->withErrors([
-                    'error' => 'Sunumları olan oturum silinemez.',
-                ]);
-            }
-
             DB::beginTransaction();
 
             $sessionTitle = $programSession->title;
-            $programSession->delete();
+            $programSession->load('presentations');
+            $programSession->deleteWithRelations();
 
             DB::commit();
 
@@ -861,6 +856,64 @@ class ProgramSessionController extends Controller
                 'error' => 'Oturum silinirken bir hata oluştu.',
             ]);
         }
+    }
+
+    /**
+     * Remove multiple program sessions
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'session_ids' => 'required|array|min:1',
+            'session_ids.*' => 'integer|exists:program_sessions,id',
+        ]);
+
+        $sessions = ProgramSession::query()
+            ->with('presentations')
+            ->whereIn('id', $validated['session_ids'])
+            ->get();
+
+        $deletedCount = 0;
+        $skippedTitles = [];
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($sessions as $session) {
+                if (! auth()->user()?->can('delete', $session)) {
+                    $skippedTitles[] = $session->title;
+
+                    continue;
+                }
+
+                $session->deleteWithRelations();
+                $deletedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Oturumlar silinirken bir hata oluştu.',
+            ]);
+        }
+
+        if ($deletedCount === 0) {
+            return back()->withErrors([
+                'error' => 'Hiçbir oturum silinemedi.',
+            ]);
+        }
+
+        $message = "{$deletedCount} oturum başarıyla silindi.";
+
+        if ($skippedTitles !== []) {
+            $message .= ' Yetkiniz olmayan oturumlar atlandı.';
+        }
+
+        return redirect()
+            ->route('admin.program-sessions.index')
+            ->with('success', $message);
     }
 
     /**
@@ -935,6 +988,54 @@ class ProgramSessionController extends Controller
                 'error' => 'Oturum kopyalanırken hata oluştu: '.$e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Duplicate multiple program sessions
+     */
+    public function bulkDuplicate(Request $request)
+    {
+        $this->authorize('create', ProgramSession::class);
+
+        $validated = $request->validate([
+            'session_ids' => 'required|array|min:1',
+            'session_ids.*' => 'integer|exists:program_sessions,id',
+        ]);
+
+        $sessions = ProgramSession::query()
+            ->with(['moderators', 'categories'])
+            ->whereIn('id', $validated['session_ids'])
+            ->get();
+
+        $duplicatedCount = 0;
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($sessions as $session) {
+                $this->authorize('view', $session);
+
+                $session->duplicate([
+                    'title' => $session->title.' (Kopya)',
+                    'start_time' => $session->end_time->format('H:i'),
+                    'end_time' => $session->end_time->copy()->addMinutes($session->duration_in_minutes)->format('H:i'),
+                ]);
+
+                $duplicatedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Oturumlar kopyalanırken bir hata oluştu.',
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.program-sessions.index')
+            ->with('success', "{$duplicatedCount} oturum başarıyla kopyalandı.");
     }
 
     /**

@@ -21,7 +21,7 @@ it('denies editor from other organization to update program sessions', function 
     expect($this->policy->update($user, $hierarchy['programSession']))->toBeFalse();
 });
 
-it('prevents deleting session with presentations', function () {
+it('allows deleting session with presentations for admin', function () {
     $data = fullEventProgram();
-    expect($this->policy->delete($data['user'], $data['programSession']))->toBeFalse();
+    expect($this->policy->delete($data['user'], $data['programSession']))->toBeTrue();
 });

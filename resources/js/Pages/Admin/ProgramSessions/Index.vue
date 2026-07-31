@@ -1024,7 +1024,7 @@ const deleteSession = (session) => {
     confirmDialog.value = {
         show: true,
         title: "Oturumu Sil",
-        message: `"${session.title}" oturumunu silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`,
+        message: `"${session.title}" oturumunu silmek istediğinize emin misiniz? Bu işlem geri alınamaz; oturumdaki tüm sunumlar silinecek ve kişi ilişkilendirmeleri kaldırılacaktır.`,
         type: "danger",
         callback: () => {
             router.delete(
@@ -1077,7 +1077,7 @@ const bulkDelete = () => {
     confirmDialog.value = {
         show: true,
         title: "Oturumları Sil",
-        message: `Seçili ${selectedSessions.value.length} oturumu silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`,
+        message: `Seçili ${selectedSessions.value.length} oturumu silmek istediğinize emin misiniz? Bu işlem geri alınamaz; oturumlardaki tüm sunumlar silinecek ve kişi ilişkilendirmeleri kaldırılacaktır.`,
         type: "danger",
         callback: () => {
             router.delete(

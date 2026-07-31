@@ -2,6 +2,7 @@
 
 use App\Models\Event;
 use App\Models\Participant;
+use App\Models\Presentation;
 use App\Models\ProgramSession;
 use App\Models\Sponsor;
 
@@ -64,12 +65,26 @@ it('prevents deleting published event via policy', function () {
     expect(Event::find($event->id))->not->toBeNull();
 });
 
-it('prevents program session delete when presentations exist', function () {
+it('deletes program session with presentations and detaches participant relations', function () {
     $data = fullEventProgram();
+
+    $data['presentation']->speakers()->attach($data['participant']->id, [
+        'speaker_role' => 'primary',
+        'sort_order' => 1,
+    ]);
+
+    $data['programSession']->moderators()->attach($data['participant']->id, [
+        'sort_order' => 1,
+    ]);
 
     test()->actingAs($data['user'])
         ->delete(route('admin.program-sessions.destroy', $data['programSession']))
-        ->assertForbidden();
+        ->assertRedirect(route('admin.program-sessions.index'))
+        ->assertSessionHas('success');
 
-    expect(ProgramSession::find($data['programSession']->id))->not->toBeNull();
+    expect(ProgramSession::find($data['programSession']->id))->toBeNull()
+        ->and(Presentation::find($data['presentation']->id))->toBeNull()
+        ->and(Participant::find($data['participant']->id))->not->toBeNull()
+        ->and(DB::table('presentation_speakers')->where('presentation_id', $data['presentation']->id)->count())->toBe(0)
+        ->and(DB::table('program_session_moderators')->where('program_session_id', $data['programSession']->id)->count())->toBe(0);
 });

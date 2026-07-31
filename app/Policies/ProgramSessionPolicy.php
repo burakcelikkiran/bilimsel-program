@@ -31,9 +31,10 @@ class ProgramSessionPolicy
 
         // Kullanıcı bu oturumun etkinliğinin organizasyonuna bağlı mı?
         $event = $programSession->venue->eventDay->event;
+
         return $user->organizations()
-                   ->where('organizations.id', $event->organization_id)
-                   ->exists();
+            ->where('organizations.id', $event->organization_id)
+            ->exists();
     }
 
     /**
@@ -48,8 +49,8 @@ class ProgramSessionPolicy
 
         // Organizer ve editor oturum oluşturabilir
         return $user->organizations()
-                   ->whereIn('role', ['organizer', 'editor'])
-                   ->exists();
+            ->whereIn('role', ['organizer', 'editor'])
+            ->exists();
     }
 
     /**
@@ -68,22 +69,23 @@ class ProgramSessionPolicy
         // Admin tüm oturumları güncelleyebilir
         if ($user->isAdmin()) {
             \Log::info('✅ User is admin, allowing update');
+
             return true;
         }
 
         // Oturumun etkinliğinin organizasyonunda organizer veya editor rolü var mı?
         $event = $programSession->venue->eventDay->event;
         $hasRole = $user->organizations()
-                   ->where('organizations.id', $event->organization_id)
-                   ->whereIn('role', ['organizer', 'editor'])
-                   ->exists();
-                   
+            ->where('organizations.id', $event->organization_id)
+            ->whereIn('role', ['organizer', 'editor'])
+            ->exists();
+
         \Log::info('🔍 Organization role check', [
             'event_organization_id' => $event->organization_id,
             'user_organizations' => $user->organizations()->get()->toArray(),
-            'has_role' => $hasRole
+            'has_role' => $hasRole,
         ]);
-        
+
         return $hasRole;
     }
 
@@ -92,11 +94,6 @@ class ProgramSessionPolicy
      */
     public function delete(User $user, ProgramSession $programSession): bool
     {
-        // Sunumları olan oturum silinemez
-        if ($programSession->presentations()->exists()) {
-            return false;
-        }
-
         // Admin tüm oturumları silebilir
         if ($user->isAdmin()) {
             return true;
@@ -104,10 +101,11 @@ class ProgramSessionPolicy
 
         // Sadece organizer silebilir
         $event = $programSession->venue->eventDay->event;
+
         return $user->organizations()
-                   ->where('organizations.id', $event->organization_id)
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->where('organizations.id', $event->organization_id)
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 
     /**
@@ -154,10 +152,11 @@ class ProgramSessionPolicy
 
         // Sadece organizer sponsor ataması yapabilir
         $event = $programSession->venue->eventDay->event;
+
         return $user->organizations()
-                   ->where('organizations.id', $event->organization_id)
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->where('organizations.id', $event->organization_id)
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 
     /**
@@ -229,10 +228,11 @@ class ProgramSessionPolicy
 
         // Organizer kayıt yönetebilir
         $event = $programSession->venue->eventDay->event;
+
         return $user->organizations()
-                   ->where('organizations.id', $event->organization_id)
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->where('organizations.id', $event->organization_id)
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 
     /**
@@ -247,10 +247,11 @@ class ProgramSessionPolicy
 
         // Organizer bildirim gönderebilir
         $event = $programSession->venue->eventDay->event;
+
         return $user->organizations()
-                   ->where('organizations.id', $event->organization_id)
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->where('organizations.id', $event->organization_id)
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 
     /**
