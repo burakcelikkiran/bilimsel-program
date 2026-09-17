@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
+use App\Models\Organization;
 use App\Models\Participant;
 use App\Models\Presentation;
 use App\Models\ProgramSession;
@@ -252,6 +254,119 @@ class PresentationController extends Controller
         }
     }
 
+    /**
+     * Remove multiple presentations.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'presentation_ids' => 'required|array|min:1',
+            'presentation_ids.*' => 'integer|exists:presentations,id',
+        ]);
+
+        $presentations = Presentation::query()
+            ->whereIn('id', $validated['presentation_ids'])
+            ->get();
+
+        $deletedCount = 0;
+        $skippedTitles = [];
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($presentations as $presentation) {
+                if (! auth()->user()?->can('delete', $presentation)) {
+                    $skippedTitles[] = $presentation->title;
+
+                    continue;
+                }
+
+                $presentation->speakers()->detach();
+                $presentation->delete();
+                $deletedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Sunumlar silinirken bir hata oluştu.',
+            ]);
+        }
+
+        if ($deletedCount === 0) {
+            return back()->withErrors([
+                'error' => 'Hiçbir sunum silinemedi.',
+            ]);
+        }
+
+        $message = "{$deletedCount} sunum başarıyla silindi.";
+
+        if ($skippedTitles !== []) {
+            $message .= ' Yetkiniz olmayan sunumlar atlandı.';
+        }
+
+        return redirect()
+            ->route('admin.presentations.index')
+            ->with('success', $message);
+    }
+
+    /**
+     * Duplicate multiple presentations.
+     */
+    public function bulkDuplicate(Request $request): RedirectResponse
+    {
+        $this->authorize('create', Presentation::class);
+
+        $validated = $request->validate([
+            'presentation_ids' => 'required|array|min:1',
+            'presentation_ids.*' => 'integer|exists:presentations,id',
+        ]);
+
+        $presentations = Presentation::query()
+            ->with('speakers')
+            ->whereIn('id', $validated['presentation_ids'])
+            ->get();
+
+        $duplicatedCount = 0;
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($presentations as $presentation) {
+                $this->authorize('view', $presentation);
+
+                $newPresentation = $presentation->replicate();
+                $newPresentation->title = $presentation->title.' (Kopya)';
+                $newPresentation->save();
+
+                foreach ($presentation->speakers as $speaker) {
+                    $newPresentation->speakers()->attach($speaker->id, [
+                        'speaker_role' => $speaker->pivot->speaker_role,
+                        'sort_order' => $speaker->pivot->sort_order,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+
+                $duplicatedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Sunumlar kopyalanırken bir hata oluştu.',
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.presentations.index')
+            ->with('success', "{$duplicatedCount} sunum başarıyla kopyalandı.");
+    }
+
     // =================================================================
     // PRIVATE HELPER METHODS
     // =================================================================
@@ -271,7 +386,7 @@ class PresentationController extends Controller
         }
 
         if ($user->isAdmin()) {
-            $firstOrg = \App\Models\Organization::first();
+            $firstOrg = Organization::first();
 
             return $firstOrg ? $firstOrg->id : null;
         }
@@ -549,7 +664,7 @@ class PresentationController extends Controller
      */
     private function getEventsForFilter($organizationId): array
     {
-        return \App\Models\Event::where('organization_id', $organizationId)
+        return Event::where('organization_id', $organizationId)
             ->select('id', 'name')
             ->orderBy('created_at', 'desc')
             ->get()

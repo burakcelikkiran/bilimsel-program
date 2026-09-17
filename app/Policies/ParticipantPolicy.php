@@ -31,8 +31,8 @@ class ParticipantPolicy
 
         // Kullanıcı bu katılımcının organizasyonuna bağlı mı?
         return $user->organizations()
-                   ->where('organizations.id', $participant->organization_id)
-                   ->exists();
+            ->where('organizations.id', $participant->organization_id)
+            ->exists();
     }
 
     /**
@@ -47,8 +47,8 @@ class ParticipantPolicy
 
         // Organizer ve editor katılımcı oluşturabilir
         return $user->organizations()
-                   ->whereIn('role', ['organizer', 'editor'])
-                   ->exists();
+            ->whereIn('role', ['organizer', 'editor'])
+            ->exists();
     }
 
     /**
@@ -63,9 +63,9 @@ class ParticipantPolicy
 
         // Katılımcının organizasyonunda organizer veya editor rolü var mı?
         return $user->organizations()
-                   ->where('organizations.id', $participant->organization_id)
-                   ->whereIn('role', ['organizer', 'editor'])
-                   ->exists();
+            ->where('organizations.id', $participant->organization_id)
+            ->whereIn('role', ['organizer', 'editor'])
+            ->exists();
     }
 
     /**
@@ -73,21 +73,14 @@ class ParticipantPolicy
      */
     public function delete(User $user, Participant $participant): bool
     {
-        // Aktif katılımı olan participant silinemez
-        if ($participant->hasParticipations()) {
-            return false;
-        }
-
-        // Admin tüm katılımcıları silebilir
         if ($user->isAdmin()) {
             return true;
         }
 
-        // Sadece organizer silebilir
         return $user->organizations()
-                   ->where('organizations.id', $participant->organization_id)
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->where('organizations.id', $participant->organization_id)
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 
     /**
@@ -118,9 +111,9 @@ class ParticipantPolicy
 
         // Organizer ve editor iletişim bilgilerini görebilir
         return $user->organizations()
-                   ->where('organizations.id', $participant->organization_id)
-                   ->whereIn('role', ['organizer', 'editor'])
-                   ->exists();
+            ->where('organizations.id', $participant->organization_id)
+            ->whereIn('role', ['organizer', 'editor'])
+            ->exists();
     }
 
     /**
@@ -135,9 +128,9 @@ class ParticipantPolicy
 
         // Organizer iletişim bilgilerini düzenleyebilir
         return $user->organizations()
-                   ->where('organizations.id', $participant->organization_id)
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->where('organizations.id', $participant->organization_id)
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 
     /**
@@ -193,8 +186,8 @@ class ParticipantPolicy
 
         // Organizer import yapabilir
         return $user->organizations()
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 
     /**
@@ -218,9 +211,9 @@ class ParticipantPolicy
 
         // Organizer mesaj gönderebilir
         return $user->organizations()
-                   ->where('organizations.id', $participant->organization_id)
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->where('organizations.id', $participant->organization_id)
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 
     /**
@@ -251,9 +244,9 @@ class ParticipantPolicy
 
         // Organizer doküman yönetebilir
         return $user->organizations()
-                   ->where('organizations.id', $participant->organization_id)
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->where('organizations.id', $participant->organization_id)
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 
     /**
@@ -268,8 +261,8 @@ class ParticipantPolicy
 
         // Sadece organizer finansal bilgileri görebilir
         return $user->organizations()
-                   ->where('organizations.id', $participant->organization_id)
-                   ->wherePivot('role', 'organizer')
-                   ->exists();
+            ->where('organizations.id', $participant->organization_id)
+            ->wherePivot('role', 'organizer')
+            ->exists();
     }
 }

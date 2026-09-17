@@ -230,6 +230,10 @@ Route::middleware([
         |--------------------------------------------------------------------------
         */
 
+        Route::prefix('organizations')->name('organizations.')->group(function () {
+            Route::delete('/bulk-destroy', [OrganizationController::class, 'bulkDestroy'])->name('bulk-destroy');
+            Route::patch('/bulk-toggle-status', [OrganizationController::class, 'bulkToggleStatus'])->name('bulk-toggle-status');
+        });
         Route::resource('organizations', OrganizationController::class);
         Route::prefix('organizations/{organization}')->name('organizations.')->group(function () {
             // User management within organization
@@ -426,6 +430,10 @@ Route::middleware([
         |--------------------------------------------------------------------------
         */
 
+        Route::prefix('presentations')->name('presentations.')->group(function () {
+            Route::delete('/bulk-destroy', [PresentationController::class, 'bulkDestroy'])->name('bulk-destroy');
+            Route::post('/bulk-duplicate', [PresentationController::class, 'bulkDuplicate'])->name('bulk-duplicate');
+        });
         Route::resource('presentations', PresentationController::class);
         Route::prefix('presentations')->name('presentations.')->group(function () {
             // Mevcut route'lar
@@ -453,6 +461,8 @@ Route::middleware([
         Route::prefix('participants')->name('participants.')->group(function () {
             Route::get('/search', [ParticipantController::class, 'search'])->name('search');
             Route::post('/bulk-import', [ParticipantController::class, 'bulkImport'])->name('bulk-import');
+            Route::delete('/bulk-destroy', [ParticipantController::class, 'bulkDestroy'])->name('bulk-destroy');
+            Route::post('/bulk-duplicate', [ParticipantController::class, 'bulkDuplicate'])->name('bulk-duplicate');
         });
         Route::resource('participants', ParticipantController::class);
         Route::prefix('participants')->name('participants.')->group(function () {
@@ -466,6 +476,10 @@ Route::middleware([
         |--------------------------------------------------------------------------
         */
 
+        Route::prefix('venues')->name('venues.')->group(function () {
+            Route::delete('/bulk-destroy', [VenueController::class, 'bulkDestroy'])->name('bulk-destroy');
+            Route::post('/bulk-duplicate', [VenueController::class, 'bulkDuplicate'])->name('bulk-duplicate');
+        });
         Route::resource('venues', VenueController::class);
         Route::prefix('venues')->name('venues.')->group(function () {
             // Venue actions
@@ -495,6 +509,10 @@ Route::middleware([
         |--------------------------------------------------------------------------
         */
 
+        Route::prefix('sponsors')->name('sponsors.')->group(function () {
+            Route::delete('/bulk-destroy', [SponsorController::class, 'bulkDestroy'])->name('bulk-destroy');
+            Route::post('/bulk-duplicate', [SponsorController::class, 'bulkDuplicate'])->name('bulk-duplicate');
+        });
         Route::resource('sponsors', SponsorController::class);
         Route::prefix('sponsors')->name('sponsors.')->group(function () {
             Route::post('/{sponsor}/duplicate', [SponsorController::class, 'duplicate'])->name('duplicate');

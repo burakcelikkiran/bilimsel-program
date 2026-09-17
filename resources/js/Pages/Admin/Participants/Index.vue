@@ -1514,8 +1514,11 @@ const deleteParticipant = (participant) => {
                     onSuccess: () => {
                         confirmDialog.value.show = false;
                     },
-                    onError: () => {
-                        alert("Silme işlemi sırasında bir hata oluştu.");
+                    onError: (errors) => {
+                        alert(
+                            errors.error ||
+                                "Silme işlemi sırasında bir hata oluştu."
+                        );
                     },
                 }
             );
@@ -1562,8 +1565,11 @@ const bulkDelete = () => {
                         confirmDialog.value.show = false;
                         selectedParticipants.value = [];
                     },
-                    onError: () => {
-                        alert("Silme işlemi sırasında bir hata oluştu.");
+                    onError: (errors) => {
+                        alert(
+                            errors.error ||
+                                "Silme işlemi sırasında bir hata oluştu."
+                        );
                     },
                 }
             );

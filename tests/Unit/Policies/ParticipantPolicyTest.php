@@ -24,6 +24,17 @@ it('denies editor from other organization to update participants', function () {
     expect($this->policy->update($user, $participant))->toBeFalse();
 });
 
+it('allows admin to delete participants with presentations', function () {
+    $data = fullEventProgram();
+
+    $data['presentation']->speakers()->attach($data['participant']->id, [
+        'speaker_role' => 'primary',
+        'sort_order' => 1,
+    ]);
+
+    expect($this->policy->delete($data['user'], $data['participant']->fresh()))->toBeTrue();
+});
+
 it('allows editor with organization membership to create participants', function () {
     ['user' => $user] = editorContext();
     expect($this->policy->create($user))->toBeTrue();

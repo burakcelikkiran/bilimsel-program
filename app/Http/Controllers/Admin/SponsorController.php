@@ -6,11 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\Sponsor;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,7 +28,7 @@ class SponsorController extends Controller
             ->withCount(['programSessions', 'presentations']);
 
         // Apply user access restrictions
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $query->whereIn('organization_id', $organizationIds);
         }
@@ -121,7 +120,7 @@ class SponsorController extends Controller
                 'exists:organizations,id',
                 function ($attribute, $value, $fail) {
                     $user = auth()->user();
-                    if (!$user->isAdmin() && !$user->organizations()->where('organizations.id', $value)->exists()) {
+                    if (! $user->isAdmin() && ! $user->organizations()->where('organizations.id', $value)->exists()) {
                         $fail('Bu organizasyona sponsor ekleyemezsiniz.');
                     }
                 },
@@ -162,10 +161,9 @@ class SponsorController extends Controller
 
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'Sponsor oluşturulurken bir hata oluştu: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Sponsor oluşturulurken bir hata oluştu: '.$e->getMessage()]);
         }
     }
-
 
     /**
      * Display the specified sponsor
@@ -178,7 +176,7 @@ class SponsorController extends Controller
         $sponsor->load([
             'organization',
             'programSessions.venue.eventDay.event',
-            'presentations.programSession.venue.eventDay.event'
+            'presentations.programSession.venue.eventDay.event',
         ]);
 
         // Sponsor'un authorize edilebilir işlemlerini kontrol et
@@ -236,9 +234,9 @@ class SponsorController extends Controller
             'organization_id' => [
                 'required',
                 'exists:organizations,id',
-                function ($attribute, $value, $fail) use ($sponsor) {
+                function ($attribute, $value, $fail) {
                     $user = auth()->user();
-                    if (!$user->isAdmin() && !$user->organizations()->where('organizations.id', $value)->exists()) {
+                    if (! $user->isAdmin() && ! $user->organizations()->where('organizations.id', $value)->exists()) {
                         $fail('Bu organizasyona sponsor ekleyemezsiniz.');
                     }
                 },
@@ -295,7 +293,7 @@ class SponsorController extends Controller
 
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'Sponsor güncellenirken bir hata oluştu: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Sponsor güncellenirken bir hata oluştu: '.$e->getMessage()]);
         }
     }
 
@@ -309,7 +307,7 @@ class SponsorController extends Controller
         // Check if sponsor has any program sessions or presentations
         if ($sponsor->programSessions()->exists() || $sponsor->presentations()->exists()) {
             return back()->withErrors([
-                'error' => "'{$sponsor->name}' sponsoru silinemez çünkü bu sponsora ait program oturumları veya sunumları bulunmaktadır."
+                'error' => "'{$sponsor->name}' sponsoru silinemez çünkü bu sponsora ait program oturumları veya sunumları bulunmaktadır.",
             ]);
         }
 
@@ -335,7 +333,7 @@ class SponsorController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Sponsor silinirken bir hata oluştu: ' . $e->getMessage()
+                'error' => 'Sponsor silinirken bir hata oluştu: '.$e->getMessage(),
             ]);
         }
     }
@@ -361,9 +359,113 @@ class SponsorController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Sponsor kopyalanırken bir hata oluştu: ' . $e->getMessage()
+                'error' => 'Sponsor kopyalanırken bir hata oluştu: '.$e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Remove multiple sponsors.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'sponsor_ids' => 'required|array|min:1',
+            'sponsor_ids.*' => 'integer|exists:sponsors,id',
+        ]);
+
+        $sponsors = Sponsor::query()
+            ->whereIn('id', $validated['sponsor_ids'])
+            ->get();
+
+        $deletedCount = 0;
+        $skippedNames = [];
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($sponsors as $sponsor) {
+                if (! auth()->user()?->can('delete', $sponsor) || ! $sponsor->canBeDeleted()) {
+                    $skippedNames[] = $sponsor->name;
+
+                    continue;
+                }
+
+                $logoPath = $sponsor->logo_path ?? $sponsor->logo;
+                $sponsor->delete();
+
+                if ($logoPath) {
+                    Storage::disk('public')->delete($logoPath);
+                }
+
+                $deletedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Sponsorlar silinirken bir hata oluştu.',
+            ]);
+        }
+
+        if ($deletedCount === 0) {
+            return back()->withErrors([
+                'error' => 'Hiçbir sponsor silinemedi.',
+            ]);
+        }
+
+        $message = "{$deletedCount} sponsor başarıyla silindi.";
+
+        if ($skippedNames !== []) {
+            $message .= ' Bağlı kaydı olan sponsorlar atlandı.';
+        }
+
+        return redirect()
+            ->route('admin.sponsors.index')
+            ->with('success', $message);
+    }
+
+    /**
+     * Duplicate multiple sponsors.
+     */
+    public function bulkDuplicate(Request $request): RedirectResponse
+    {
+        $this->authorize('create', Sponsor::class);
+
+        $validated = $request->validate([
+            'sponsor_ids' => 'required|array|min:1',
+            'sponsor_ids.*' => 'integer|exists:sponsors,id',
+        ]);
+
+        $sponsors = Sponsor::query()
+            ->whereIn('id', $validated['sponsor_ids'])
+            ->get();
+
+        $duplicatedCount = 0;
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($sponsors as $sponsor) {
+                $this->authorize('view', $sponsor);
+                $sponsor->duplicate();
+                $duplicatedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Sponsorlar kopyalanırken bir hata oluştu.',
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.sponsors.index')
+            ->with('success', "{$duplicatedCount} sponsor başarıyla kopyalandı.");
     }
 
     /**
@@ -377,7 +479,7 @@ class SponsorController extends Controller
             DB::beginTransaction();
 
             $sponsor->update([
-                'is_active' => !$sponsor->is_active
+                'is_active' => ! $sponsor->is_active,
             ]);
 
             DB::commit();
@@ -389,7 +491,7 @@ class SponsorController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Durum değiştirilirken bir hata oluştu: ' . $e->getMessage()
+                'error' => 'Durum değiştirilirken bir hata oluştu: '.$e->getMessage(),
             ]);
         }
     }
@@ -422,7 +524,7 @@ class SponsorController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Sıralama güncellenirken bir hata oluştu: ' . $e->getMessage()
+                'error' => 'Sıralama güncellenirken bir hata oluştu: '.$e->getMessage(),
             ]);
         }
     }
@@ -437,7 +539,7 @@ class SponsorController extends Controller
         $query = Sponsor::query()->active();
 
         // Apply user access restrictions
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $query->whereIn('organization_id', $organizationIds);
         }
@@ -459,15 +561,12 @@ class SponsorController extends Controller
                     'value' => $sponsor->id,
                     'label' => $sponsor->name,
                     'level' => $sponsor->sponsor_level,
-                    'logo_url' => $sponsor->logo ? asset('storage/' . $sponsor->logo) : null,
+                    'logo_url' => $sponsor->logo ? asset('storage/'.$sponsor->logo) : null,
                 ];
             });
 
         return response()->json($sponsors);
     }
-
-
-
 
     /**
      * Get sponsor statistics
@@ -479,7 +578,7 @@ class SponsorController extends Controller
         $query = Sponsor::query();
 
         // Apply user access restrictions
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $organizationIds = $user->organizations()->pluck('organizations.id');
             $query->whereIn('organization_id', $organizationIds);
         }

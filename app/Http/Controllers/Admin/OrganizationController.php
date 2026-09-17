@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateOrganizationRequest;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +18,7 @@ use Inertia\Response;
 class OrganizationController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * Display a listing of organizations
      */
@@ -115,7 +117,7 @@ class OrganizationController extends Controller
             $organization = Organization::create($data);
 
             // If current user is not admin, attach them as organizer
-            if (!auth()->user()->isAdmin()) {
+            if (! auth()->user()->isAdmin()) {
                 $organization->users()->attach(auth()->id(), ['role' => 'organizer']);
             }
 
@@ -157,7 +159,7 @@ class OrganizationController extends Controller
             },
             'sponsors' => function ($query) {
                 $query->active()->latest();
-            }
+            },
         ]);
 
         // Get organization statistics
@@ -313,7 +315,7 @@ class OrganizationController extends Controller
             \Log::error('Organization update error:', [
                 'error' => $e->getMessage(),
                 'organization_id' => $organization->id,
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
             ]);
 
             // Clean up uploaded file if exists
@@ -322,7 +324,7 @@ class OrganizationController extends Controller
             }
 
             return back()
-                ->withErrors(['error' => 'Organizasyon güncellenirken bir hata oluştu: ' . $e->getMessage()])
+                ->withErrors(['error' => 'Organizasyon güncellenirken bir hata oluştu: '.$e->getMessage()])
                 ->withInput();
         }
     }
@@ -338,7 +340,7 @@ class OrganizationController extends Controller
             // Check if organization has active events
             if ($organization->events()->published()->exists()) {
                 return back()->withErrors([
-                    'error' => 'Yayınlanmış etkinlikleri olan organizasyon silinemez.'
+                    'error' => 'Yayınlanmış etkinlikleri olan organizasyon silinemez.',
                 ]);
             }
 
@@ -361,9 +363,167 @@ class OrganizationController extends Controller
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Organizasyon silinirken bir hata oluştu.'
+                'error' => 'Organizasyon silinirken bir hata oluştu.',
             ]);
         }
+    }
+
+    /**
+     * Duplicate the specified organization.
+     */
+    public function duplicate(Organization $organization): RedirectResponse
+    {
+        $this->authorize('create', Organization::class);
+        $this->authorize('view', $organization);
+
+        try {
+            DB::beginTransaction();
+
+            $newOrganization = $organization->replicate();
+            $newOrganization->name = $organization->name.' (Kopya)';
+            $newOrganization->slug = $this->uniqueOrganizationSlug($newOrganization->name);
+            $newOrganization->logo = null;
+            $newOrganization->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.organizations.edit', $newOrganization)
+                ->with('success', "'{$organization->name}' organizasyonu kopyalandı.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Organizasyon kopyalanırken bir hata oluştu.',
+            ]);
+        }
+    }
+
+    /**
+     * Toggle organization active status.
+     */
+    public function toggleStatus(Organization $organization): RedirectResponse
+    {
+        $this->authorize('update', $organization);
+
+        $organization->update([
+            'is_active' => ! $organization->is_active,
+        ]);
+
+        $status = $organization->is_active ? 'aktif' : 'pasif';
+
+        return back()->with('success', "'{$organization->name}' durumu {$status} olarak değiştirildi.");
+    }
+
+    /**
+     * Remove multiple organizations.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'organization_ids' => 'required|array|min:1',
+            'organization_ids.*' => 'integer|exists:organizations,id',
+        ]);
+
+        $organizations = Organization::query()
+            ->whereIn('id', $validated['organization_ids'])
+            ->get();
+
+        $deletedCount = 0;
+        $skippedNames = [];
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($organizations as $organization) {
+                if (! auth()->user()?->can('delete', $organization)) {
+                    $skippedNames[] = $organization->name;
+
+                    continue;
+                }
+
+                if ($organization->logo) {
+                    Storage::disk('public')->delete($organization->logo);
+                }
+
+                $organization->delete();
+                $deletedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Organizasyonlar silinirken bir hata oluştu.',
+            ]);
+        }
+
+        if ($deletedCount === 0) {
+            return back()->withErrors([
+                'error' => 'Hiçbir organizasyon silinemedi.',
+            ]);
+        }
+
+        $message = "{$deletedCount} organizasyon başarıyla silindi.";
+
+        if ($skippedNames !== []) {
+            $message .= ' Silinemeyen organizasyonlar atlandı.';
+        }
+
+        return redirect()
+            ->route('admin.organizations.index')
+            ->with('success', $message);
+    }
+
+    /**
+     * Toggle status for multiple organizations.
+     */
+    public function bulkToggleStatus(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'organization_ids' => 'required|array|min:1',
+            'organization_ids.*' => 'integer|exists:organizations,id',
+        ]);
+
+        $organizations = Organization::query()
+            ->whereIn('id', $validated['organization_ids'])
+            ->get();
+
+        $updatedCount = 0;
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($organizations as $organization) {
+                if (! auth()->user()?->can('update', $organization)) {
+                    continue;
+                }
+
+                $organization->update([
+                    'is_active' => ! $organization->is_active,
+                ]);
+                $updatedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Organizasyon durumları değiştirilirken bir hata oluştu.',
+            ]);
+        }
+
+        if ($updatedCount === 0) {
+            return back()->withErrors([
+                'error' => 'Hiçbir organizasyonun durumu değiştirilemedi.',
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.organizations.index')
+            ->with('success', "{$updatedCount} organizasyonun durumu değiştirildi.");
     }
 
     /**
@@ -384,7 +544,7 @@ class OrganizationController extends Controller
             // Check if user is already attached
             if ($organization->users()->where('user_id', $user->id)->exists()) {
                 return back()->withErrors([
-                    'error' => 'Kullanıcı zaten bu organizasyona bağlı.'
+                    'error' => 'Kullanıcı zaten bu organizasyona bağlı.',
                 ]);
             }
 
@@ -393,7 +553,7 @@ class OrganizationController extends Controller
             return back()->with('success', "'{$user->name}' organizasyona eklendi.");
         } catch (\Exception $e) {
             return back()->withErrors([
-                'error' => 'Kullanıcı eklenirken bir hata oluştu.'
+                'error' => 'Kullanıcı eklenirken bir hata oluştu.',
             ]);
         }
     }
@@ -412,7 +572,7 @@ class OrganizationController extends Controller
 
             if ($userRole === 'organizer' && $organizerCount <= 1) {
                 return back()->withErrors([
-                    'error' => 'Son organizatör kullanıcı çıkarılamaz.'
+                    'error' => 'Son organizatör kullanıcı çıkarılamaz.',
                 ]);
             }
 
@@ -421,7 +581,7 @@ class OrganizationController extends Controller
             return back()->with('success', "'{$user->name}' organizasyondan çıkarıldı.");
         } catch (\Exception $e) {
             return back()->withErrors([
-                'error' => 'Kullanıcı çıkarılırken bir hata oluştu.'
+                'error' => 'Kullanıcı çıkarılırken bir hata oluştu.',
             ]);
         }
     }
@@ -445,7 +605,7 @@ class OrganizationController extends Controller
                 $organizerCount = $organization->organizers()->count();
                 if ($organizerCount <= 1) {
                     return back()->withErrors([
-                        'error' => 'Son organizatör kullanıcının rolü değiştirilemez.'
+                        'error' => 'Son organizatör kullanıcının rolü değiştirilemez.',
                     ]);
                 }
             }
@@ -455,9 +615,26 @@ class OrganizationController extends Controller
             return back()->with('success', "'{$user->name}' kullanıcısının rolü güncellendi.");
         } catch (\Exception $e) {
             return back()->withErrors([
-                'error' => 'Kullanıcı rolü güncellenirken bir hata oluştu.'
+                'error' => 'Kullanıcı rolü güncellenirken bir hata oluştu.',
             ]);
         }
+    }
+
+    /**
+     * Generate a unique slug for a duplicated organization.
+     */
+    private function uniqueOrganizationSlug(string $name): string
+    {
+        $baseSlug = Organization::createSlugFromTurkish($name);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (Organization::withTrashed()->where('slug', $slug)->exists()) {
+            $slug = $baseSlug.'-'.$counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 
     /**

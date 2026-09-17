@@ -39,6 +39,12 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
+            'flash' => array_filter([
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+                'warning' => $request->session()->get('warning'),
+                'info' => $request->session()->get('info'),
+            ]),
             'notifications' => Inertia::defer(function () use ($request) {
                 if (! $request->user()) {
                     return [

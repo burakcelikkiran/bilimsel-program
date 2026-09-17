@@ -7,7 +7,9 @@ use App\Models\Event;
 use App\Models\EventDay;
 use App\Models\Organization;
 use App\Models\Venue;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -770,6 +772,142 @@ class VenueController extends Controller
     }
 
     /**
+     * Duplicate the specified venue.
+     */
+    public function duplicate(Venue $venue): RedirectResponse
+    {
+        $this->authorize('duplicate', $venue);
+
+        try {
+            DB::beginTransaction();
+
+            $newVenue = $this->makeVenueCopy($venue);
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.venues.edit', $newVenue)
+                ->with('success', "'{$venue->name}' salonu kopyalandı.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Salon kopyalanırken bir hata oluştu.',
+            ]);
+        }
+    }
+
+    /**
+     * Remove multiple venues.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'venue_ids' => 'required|array|min:1',
+            'venue_ids.*' => 'integer|exists:venues,id',
+        ]);
+
+        $venues = Venue::query()
+            ->withCount('programSessions')
+            ->whereIn('id', $validated['venue_ids'])
+            ->get();
+
+        $deletedCount = 0;
+        $skippedNames = [];
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($venues as $venue) {
+                if (! auth()->user()?->can('delete', $venue) || $venue->program_sessions_count > 0) {
+                    $skippedNames[] = $venue->name;
+
+                    continue;
+                }
+
+                $venue->delete();
+                $deletedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Salonlar silinirken bir hata oluştu.',
+            ]);
+        }
+
+        if ($deletedCount === 0) {
+            return back()->withErrors([
+                'error' => 'Hiçbir salon silinemedi. Oturumu olan salonlar toplu silinemez.',
+            ]);
+        }
+
+        $message = "{$deletedCount} salon başarıyla silindi.";
+
+        if ($skippedNames !== []) {
+            $message .= ' Oturumu olan salonlar atlandı.';
+        }
+
+        return redirect()
+            ->route('admin.venues.index')
+            ->with('success', $message);
+    }
+
+    /**
+     * Duplicate multiple venues.
+     */
+    public function bulkDuplicate(Request $request): RedirectResponse
+    {
+        $this->authorize('create', Venue::class);
+
+        $validated = $request->validate([
+            'venue_ids' => 'required|array|min:1',
+            'venue_ids.*' => 'integer|exists:venues,id',
+        ]);
+
+        $venues = Venue::query()
+            ->whereIn('id', $validated['venue_ids'])
+            ->get();
+
+        $duplicatedCount = 0;
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($venues as $venue) {
+                $this->authorize('view', $venue);
+                $this->makeVenueCopy($venue);
+                $duplicatedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Salonlar kopyalanırken bir hata oluştu.',
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.venues.index')
+            ->with('success', "{$duplicatedCount} salon başarıyla kopyalandı.");
+    }
+
+    private function makeVenueCopy(Venue $venue): Venue
+    {
+        $newVenue = $venue->replicate();
+        $newVenue->name = $venue->name.' (Kopya)';
+        $newVenue->display_name = ($venue->display_name ?: $venue->name).' (Kopya)';
+        $newVenue->sort_order = null;
+        $newVenue->save();
+
+        return $newVenue;
+    }
+
+    /**
      * Get user's accessible events
      */
     private function getUserAccessibleEvents($user)
@@ -1086,8 +1224,8 @@ class VenueController extends Controller
 
             // Calculate session duration
             if ($session->start_time && $session->end_time) {
-                $start = \Carbon\Carbon::parse($session->start_time);
-                $end = \Carbon\Carbon::parse($session->end_time);
+                $start = Carbon::parse($session->start_time);
+                $end = Carbon::parse($session->end_time);
                 $totalDuration += $start->diffInMinutes($end);
             }
         }

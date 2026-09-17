@@ -512,39 +512,154 @@ class ParticipantController extends Controller
         $this->authorize('delete', $participant);
 
         try {
-            // FIX: Use direct database query to check if can be deleted
-            $hasModeratedSessions = $participant->moderatedSessions()->exists();
-            $hasPresentations = $participant->presentations()->exists();
-
-            if ($hasModeratedSessions || $hasPresentations) {
-                return back()->withErrors([
-                    'error' => 'Oturum veya sunumu olan katılımcı silinemez.',
-                ]);
-            }
-
             DB::beginTransaction();
 
-            // Delete photo
-            if ($participant->photo) {
-                Storage::disk('public')->delete($participant->photo);
-            }
-
             $participantName = $participant->full_name;
-            $participant->delete();
+            $this->deleteParticipantRecord($participant);
 
             DB::commit();
 
             return redirect()
                 ->route('admin.participants.index')
                 ->with('success', "'{$participantName}' katılımcısı başarıyla silindi.");
+        } catch (\Exception $e) {
+            DB::rollBack();
 
+            return back()->with('error', 'Katılımcı silinirken bir hata oluştu.');
+        }
+    }
+
+    /**
+     * Duplicate the specified participant.
+     */
+    public function duplicate(Participant $participant): RedirectResponse
+    {
+        $this->authorize('duplicate', $participant);
+
+        try {
+            DB::beginTransaction();
+
+            $newParticipant = $participant->replicate();
+            $newParticipant->last_name = $participant->last_name.' (Kopya)';
+            $newParticipant->email = $participant->email
+                ? $this->uniqueParticipantEmail($participant->email, $participant->organization_id)
+                : null;
+            $newParticipant->photo = null;
+            $newParticipant->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.participants.edit', $newParticipant)
+                ->with('success', "'{$participant->full_name}' katılımcısı kopyalandı.");
         } catch (\Exception $e) {
             DB::rollBack();
 
             return back()->withErrors([
-                'error' => 'Katılımcı silinirken bir hata oluştu.',
+                'error' => 'Katılımcı kopyalanırken bir hata oluştu.',
             ]);
         }
+    }
+
+    /**
+     * Remove multiple participants.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'participant_ids' => 'required|array|min:1',
+            'participant_ids.*' => 'integer|exists:participants,id',
+        ]);
+
+        $participants = Participant::query()
+            ->whereIn('id', $validated['participant_ids'])
+            ->get();
+
+        $deletedCount = 0;
+        $skippedNames = [];
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($participants as $participant) {
+                if (! auth()->user()?->can('delete', $participant)) {
+                    $skippedNames[] = $participant->full_name;
+
+                    continue;
+                }
+
+                $this->deleteParticipantRecord($participant);
+                $deletedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', 'Katılımcılar silinirken bir hata oluştu.');
+        }
+
+        if ($deletedCount === 0) {
+            return back()->with('error', 'Hiçbir katılımcı silinemedi.');
+        }
+
+        $message = "{$deletedCount} katılımcı başarıyla silindi.";
+
+        if ($skippedNames !== []) {
+            $message .= ' Yetkiniz olmayan katılımcılar atlandı.';
+        }
+
+        return redirect()
+            ->route('admin.participants.index')
+            ->with('success', $message);
+    }
+
+    /**
+     * Duplicate multiple participants.
+     */
+    public function bulkDuplicate(Request $request): RedirectResponse
+    {
+        $this->authorize('create', Participant::class);
+
+        $validated = $request->validate([
+            'participant_ids' => 'required|array|min:1',
+            'participant_ids.*' => 'integer|exists:participants,id',
+        ]);
+
+        $participants = Participant::query()
+            ->whereIn('id', $validated['participant_ids'])
+            ->get();
+
+        $duplicatedCount = 0;
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($participants as $participant) {
+                $this->authorize('view', $participant);
+
+                $newParticipant = $participant->replicate();
+                $newParticipant->last_name = $participant->last_name.' (Kopya)';
+                $newParticipant->email = $participant->email
+                    ? $this->uniqueParticipantEmail($participant->email, $participant->organization_id)
+                    : null;
+                $newParticipant->photo = null;
+                $newParticipant->save();
+                $duplicatedCount++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors([
+                'error' => 'Katılımcılar kopyalanırken bir hata oluştu.',
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.participants.index')
+            ->with('success', "{$duplicatedCount} katılımcı başarıyla kopyalandı.");
     }
 
     /**
@@ -677,5 +792,34 @@ class ParticipantController extends Controller
                 ];
             }),
         ]);
+    }
+
+    private function deleteParticipantRecord(Participant $participant): void
+    {
+        $participant->presentations()->detach();
+        $participant->moderatedSessions()->detach();
+
+        if ($participant->photo) {
+            Storage::disk('public')->delete($participant->photo);
+        }
+
+        $participant->delete();
+    }
+
+    private function uniqueParticipantEmail(string $email, int $organizationId): string
+    {
+        [$local, $domain] = array_pad(explode('@', $email, 2), 2, 'example.com');
+        $candidate = $local.'+kopya@'.$domain;
+        $counter = 1;
+
+        while (Participant::withTrashed()
+            ->where('organization_id', $organizationId)
+            ->where('email', $candidate)
+            ->exists()) {
+            $candidate = $local.'+kopya'.$counter.'@'.$domain;
+            $counter++;
+        }
+
+        return $candidate;
     }
 }
