@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ImportProgramJsonRequest;
+use App\Models\Event;
 use App\Models\Participant;
 use App\Models\Presentation;
 use App\Models\ProgramSession;
 use App\Models\Sponsor;
 use App\Models\Venue;
 use App\Services\ParticipantImporter;
+use App\Services\ProgramJsonImporter;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +32,31 @@ class ImportController extends Controller
     public function index(): Response
     {
         return Inertia::render('Admin/Import/Index');
+    }
+
+    public function previewProgram(ImportProgramJsonRequest $request, Event $event, ProgramJsonImporter $importer): JsonResponse
+    {
+        $result = $importer->import($event, $request->programData(), dryRun: true);
+
+        return response()->json($result->toArray());
+    }
+
+    public function program(ImportProgramJsonRequest $request, Event $event, ProgramJsonImporter $importer): JsonResponse
+    {
+        try {
+            $result = $importer->import($event, $request->programData(), dryRun: false, fresh: true);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return response()->json([
+                'message' => 'İçe aktarma hatası: '.$exception->getMessage(),
+            ], 500);
+        }
+
+        return response()->json([
+            'message' => 'Program başarıyla içe aktarıldı.',
+            ...$result->toArray(),
+        ]);
     }
 
     /**

@@ -154,4 +154,41 @@ class ProgramJsonImportTest extends TestCase
 
         $this->assertSame(2, Participant::query()->where('organization_id', $organization->id)->count());
     }
+
+    public function test_importer_parses_date_when_iso_date_is_missing(): void
+    {
+        $organization = Organization::factory()->create();
+        $event = Event::factory()->create([
+            'organization_id' => $organization->id,
+            'start_date' => '2026-04-15',
+            'end_date' => '2026-04-19',
+        ]);
+
+        $fixture = $this->loadFixture();
+        unset($fixture[0]['IsoDate']);
+
+        $result = app(ProgramJsonImporter::class)->import($event, $fixture);
+
+        $this->assertSame(1, $result->days);
+        $this->assertSame(
+            '2026-04-16',
+            EventDay::query()->where('event_id', $event->id)->first()?->date?->toDateString()
+        );
+    }
+
+    public function test_dry_run_warns_when_dates_are_outside_event_range(): void
+    {
+        $event = Event::factory()->create([
+            'start_date' => '2026-01-01',
+            'end_date' => '2026-01-05',
+        ]);
+
+        $result = app(ProgramJsonImporter::class)->import($event, $this->loadFixture(), dryRun: true);
+
+        $this->assertNotEmpty($result->warnings);
+        $this->assertTrue(collect($result->warnings)->contains(
+            fn (string $warning) => str_contains($warning, '16.04.2026')
+        ));
+        $this->assertDatabaseCount('event_days', 0);
+    }
 }

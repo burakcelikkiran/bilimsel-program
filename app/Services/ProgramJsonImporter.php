@@ -9,6 +9,7 @@ use App\Models\Presentation;
 use App\Models\ProgramSession;
 use App\Models\Venue;
 use App\Support\ProgramSessionTypeMapper;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -40,6 +41,8 @@ class ProgramJsonImporter
         if ($dryRun) {
             return $this->countProgramData($event, $programData);
         }
+
+        $this->appendDateRangeWarnings($event, $programData, $this->result);
 
         DB::transaction(function () use ($event, $programData) {
             $this->collectParticipants($event, $programData);
@@ -98,6 +101,7 @@ class ProgramJsonImporter
         }
 
         $result->participants = count($participantKeys);
+        $this->appendDateRangeWarnings($event, $programData, $result);
 
         return $result;
     }
@@ -155,7 +159,7 @@ class ProgramJsonImporter
         foreach ($programData as $dayIndex => $dayData) {
             $eventDay = EventDay::create([
                 'event_id' => $event->id,
-                'date' => $dayData['IsoDate'],
+                'date' => $this->resolveDayDate($dayData),
                 'display_name' => $dayData['Date'] ?? ('Gün '.($dayIndex + 1)),
                 'sort_order' => $dayIndex + 1,
                 'is_active' => true,
@@ -409,6 +413,78 @@ class ProgramJsonImporter
         }
 
         return $count;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $programData
+     */
+    private function appendDateRangeWarnings(Event $event, array $programData, ProgramJsonImportResult $result): void
+    {
+        if ($event->start_date === null && $event->end_date === null) {
+            return;
+        }
+
+        foreach ($programData as $dayData) {
+            $isoDate = $this->resolveDayDateSafely($dayData);
+
+            if ($isoDate === null) {
+                continue;
+            }
+
+            $day = Carbon::parse($isoDate)->startOfDay();
+            $formattedDate = $day->format('d.m.Y');
+
+            if ($event->start_date && $day->lt($event->start_date->copy()->startOfDay())) {
+                $result->warnings[] = "Program tarihi {$formattedDate} etkinlik başlangıcından ({$event->start_date->format('d.m.Y')}) önce.";
+            }
+
+            if ($event->end_date && $day->gt($event->end_date->copy()->startOfDay())) {
+                $result->warnings[] = "Program tarihi {$formattedDate} etkinlik bitişinden ({$event->end_date->format('d.m.Y')}) sonra.";
+            }
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $dayData
+     */
+    private function resolveDayDate(array $dayData): string
+    {
+        $isoDate = $this->resolveDayDateSafely($dayData);
+
+        if ($isoDate === null) {
+            throw new \InvalidArgumentException('Gün tarihi çözümlenemedi.');
+        }
+
+        return $isoDate;
+    }
+
+    /**
+     * @param  array<string, mixed>  $dayData
+     */
+    private function resolveDayDateSafely(array $dayData): ?string
+    {
+        $isoDate = trim((string) ($dayData['IsoDate'] ?? ''));
+
+        if ($isoDate !== '') {
+            return $isoDate;
+        }
+
+        return $this->parseTurkishDate((string) ($dayData['Date'] ?? ''));
+    }
+
+    private function parseTurkishDate(string $date): ?string
+    {
+        $date = trim($date);
+
+        if ($date === '') {
+            return null;
+        }
+
+        try {
+            return Carbon::createFromFormat('d.m.Y', $date)?->toDateString();
+        } catch (\Throwable) {
+            return null;
+        }
     }
 
     private function clearEventProgram(Event $event): void

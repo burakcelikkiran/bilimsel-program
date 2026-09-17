@@ -4,31 +4,46 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
-use App\Models\ProgramSession;
 use App\Models\Participant;
-use App\Models\Presentation;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Browsershot\Browsershot;
+use App\Models\Sponsor;
+use App\Models\Venue;
+use App\Services\ProgramJsonExporter;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Spatie\Browsershot\Browsershot;
 
 class ExportController extends Controller
 {
     use AuthorizesRequests;
 
     /**
-     * Export event program as PDF
+     * Export event program as legacy program.json
      */
+    public function programJson(Event $event)
+    {
+        $this->authorize('view', $event);
+
+        $programData = app(ProgramJsonExporter::class)->export($event);
+        $fileName = Event::createSlugFromTurkish($event->name).'_program_'.now()->format('Y-m-d').'.json';
+
+        return response()->json($programData, 200, [
+            'Content-Type' => 'application/json',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
+        ]);
+    }
+
     /**
      * Export event program as PDF using Vue SSR approach
      */
@@ -50,9 +65,9 @@ class ExportController extends Controller
                     'presentations' => function ($q) {
                         $q->with(['speakers'])->orderBy('start_time')->orderBy('sort_order');
                     },
-                    'moderators'
+                    'moderators',
                 ])->orderBy('start_time')->orderBy('sort_order');
-            }
+            },
         ]);
 
         // Vue component data hazırla
@@ -84,19 +99,19 @@ class ExportController extends Controller
                                         'moderator_title' => $session->moderator_title,
                                         'is_break' => $session->is_break,
                                         'sponsor' => $session->sponsor ? [
-                                            'name' => $session->sponsor->name
+                                            'name' => $session->sponsor->name,
                                         ] : null,
                                         'categories' => $session->categories->map(function ($category) {
                                             return [
                                                 'name' => $category->name,
-                                                'color' => $category->color
+                                                'color' => $category->color,
                                             ];
                                         }),
                                         'moderators' => $session->moderators->map(function ($moderator) {
                                             return [
-                                                'full_name' => $moderator->first_name . ' ' . $moderator->last_name,
+                                                'full_name' => $moderator->first_name.' '.$moderator->last_name,
                                                 'title' => $moderator->title,
-                                                'affiliation' => $moderator->affiliation
+                                                'affiliation' => $moderator->affiliation,
                                             ];
                                         }),
                                         'presentations' => $session->presentations->map(function ($presentation) {
@@ -104,34 +119,34 @@ class ExportController extends Controller
                                                 'title' => $presentation->title,
                                                 'speakers' => $presentation->speakers->map(function ($speaker) {
                                                     return [
-                                                        'full_name' => $speaker->first_name . ' ' . $speaker->last_name,
+                                                        'full_name' => $speaker->first_name.' '.$speaker->last_name,
                                                         'title' => $speaker->title,
-                                                        'affiliation' => $speaker->affiliation
+                                                        'affiliation' => $speaker->affiliation,
                                                     ];
-                                                })
+                                                }),
                                             ];
-                                        })
+                                        }),
                                     ];
-                                })
+                                }),
                             ];
-                        })
+                        }),
                     ];
-                })
+                }),
             ],
             'meta' => [
                 'generated_at' => Carbon::now()->format('d.m.Y H:i'),
                 'generated_by' => auth()->user()->name,
-            ]
+            ],
         ];
 
         // HTML template oluştur - Vue component'ını simüle et
         $html = $this->generatePdfHtml($data);
 
-        $filename = "program-{$event->slug}-" . now()->format('Y-m-d') . ".pdf";
-        $tempPath = storage_path('app/temp/' . $filename);
+        $filename = "program-{$event->slug}-".now()->format('Y-m-d').'.pdf';
+        $tempPath = storage_path('app/temp/'.$filename);
 
         // Temp klasörü oluştur
-        if (!file_exists(storage_path('app/temp'))) {
+        if (! file_exists(storage_path('app/temp'))) {
             mkdir(storage_path('app/temp'), 0755, true);
         }
 
@@ -152,11 +167,10 @@ class ExportController extends Controller
             // Fallback: HTML response
             return response($html, 200, [
                 'Content-Type' => 'text/html',
-                'Content-Disposition' => 'inline; filename="' . $filename . '.html"'
+                'Content-Disposition' => 'inline; filename="'.$filename.'.html"',
             ]);
         }
     }
-
 
     /**
      * Export event program with hierarchical structure (Session Title + Presentations as sub-items)
@@ -180,9 +194,9 @@ class ExportController extends Controller
                     'presentations' => function ($q) {
                         $q->with(['speakers'])->orderBy('start_time')->orderBy('sort_order');
                     },
-                    'moderators'
+                    'moderators',
                 ])->orderBy('start_time')->orderBy('sort_order');
-            }
+            },
         ]);
 
         // Sessions'ları flatMap ile topla
@@ -191,6 +205,7 @@ class ExportController extends Controller
                 return $venue->programSessions->map(function ($session) use ($eventDay, $venue) {
                     $session->setRelation('eventDay', $eventDay);
                     $session->setRelation('venue', $venue);
+
                     return $session;
                 });
             });
@@ -201,13 +216,13 @@ class ExportController extends Controller
         foreach ($sessions as $session) {
             // Ana oturum başlığı (BÜYÜK BAŞLIK)
             $moderators = $session->moderators->map(function ($moderator) {
-                return $moderator->first_name . ' ' . $moderator->last_name;
+                return $moderator->first_name.' '.$moderator->last_name;
             })->join(', ');
 
             $data->push([
                 'Saat' => $session->formatted_time_range ?? '',
                 'İçerik' => strtoupper($session->title), // BÜYÜK HARFLERLE
-                'Moderatör/Konuşmacı' => 'Oturum Başkanları: ' . $moderators,
+                'Moderatör/Konuşmacı' => 'Oturum Başkanları: '.$moderators,
                 'Tip' => 'SESSION_HEADER',
                 'Salon' => $session->venue->display_name ?? $session->venue->name,
                 'Gün' => $session->eventDay->title,
@@ -216,7 +231,7 @@ class ExportController extends Controller
             // Alt sunumlar (Bold alt konular)
             foreach ($session->presentations as $presentation) {
                 $speakers = $presentation->speakers->map(function ($speaker) {
-                    return $speaker->first_name . ' ' . $speaker->last_name;
+                    return $speaker->first_name.' '.$speaker->last_name;
                 })->join(', ');
 
                 $data->push([
@@ -245,20 +260,16 @@ class ExportController extends Controller
             $data->push([
                 'Saat' => '',
                 'İçerik' => 'Bu etkinlik için henüz program verisi bulunmuyor.',
-                'Moderatör/Konuşmacı' => 'Etkinlik: ' . $event->name,
+                'Moderatör/Konuşmacı' => 'Etkinlik: '.$event->name,
                 'Tip' => 'EMPTY',
                 'Salon' => '',
                 'Gün' => now()->format('d.m.Y H:i'),
             ]);
         }
 
-        $filename = "program-hierarchical-{$event->slug}-" . now()->format('Y-m-d-H-i') . '.xlsx';
+        $filename = "program-hierarchical-{$event->slug}-".now()->format('Y-m-d-H-i').'.xlsx';
 
-        return Excel::download(new class($data) implements
-            \Maatwebsite\Excel\Concerns\FromCollection,
-            \Maatwebsite\Excel\Concerns\WithHeadings,
-            \Maatwebsite\Excel\Concerns\WithStyles,
-            \Maatwebsite\Excel\Concerns\WithColumnWidths
+        return Excel::download(new class($data) implements FromCollection, WithColumnWidths, WithHeadings, WithStyles
         {
             private $data;
 
@@ -286,7 +297,7 @@ class ExportController extends Controller
                 return ['Saat', 'İçerik', 'Moderatör/Konuşmacı', 'Salon', 'Gün'];
             }
 
-            public function styles(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet)
+            public function styles(Worksheet $sheet)
             {
                 $styles = [];
                 $rowIndex = 2; // Header'dan sonra başla
@@ -301,12 +312,12 @@ class ExportController extends Controller
                                 'color' => ['rgb' => 'FFFFFF'],
                             ],
                             'fill' => [
-                                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                                'fillType' => Fill::FILL_SOLID,
                                 'startColor' => ['rgb' => '4472C4'], // Mavi arka plan
                             ],
                             'alignment' => [
-                                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
-                                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                                'horizontal' => Alignment::HORIZONTAL_LEFT,
+                                'vertical' => Alignment::VERTICAL_CENTER,
                             ],
                         ];
                     } elseif ($item['Tip'] === 'PRESENTATION') {
@@ -336,7 +347,7 @@ class ExportController extends Controller
                         'size' => 11,
                     ],
                     'fill' => [
-                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'fillType' => Fill::FILL_SOLID,
                         'startColor' => ['rgb' => 'D9E1F2'],
                     ],
                 ];
@@ -357,7 +368,6 @@ class ExportController extends Controller
         }, $filename);
     }
 
-
     /**
      * Export speakers list as PDF
      */
@@ -367,7 +377,7 @@ class ExportController extends Controller
 
         // Event'in konuşmacılarını al
         $event->load([
-            'eventDays.venues.programSessions.presentations.speakers'
+            'eventDays.venues.programSessions.presentations.speakers',
         ]);
 
         // Tüm konuşmacıları topla
@@ -386,7 +396,7 @@ class ExportController extends Controller
 
         // Unique yap ve sırala
         $speakers = $speakers->unique('id')->sortBy(function ($speaker) {
-            return $speaker->last_name . ' ' . $speaker->first_name;
+            return $speaker->last_name.' '.$speaker->first_name;
         });
 
         $data = [
@@ -399,11 +409,11 @@ class ExportController extends Controller
         // HTML content oluştur
         $html = view('exports.speakers-pdf', $data)->render();
 
-        $filename = "speakers-{$event->slug}-" . now()->format('Y-m-d') . ".pdf";
-        $tempPath = storage_path('app/temp/' . $filename);
+        $filename = "speakers-{$event->slug}-".now()->format('Y-m-d').'.pdf';
+        $tempPath = storage_path('app/temp/'.$filename);
 
         // Temp klasörü oluştur
-        if (!file_exists(storage_path('app/temp'))) {
+        if (! file_exists(storage_path('app/temp'))) {
             mkdir(storage_path('app/temp'), 0755, true);
         }
 
@@ -423,11 +433,10 @@ class ExportController extends Controller
         } catch (\Exception $e) {
             return response($html, 200, [
                 'Content-Type' => 'text/html',
-                'Content-Disposition' => 'inline; filename="' . $filename . '.html"'
+                'Content-Disposition' => 'inline; filename="'.$filename.'.html"',
             ]);
         }
     }
-
 
     /**
      * Export sessions list as PDF
@@ -450,9 +459,9 @@ class ExportController extends Controller
                     'presentations' => function ($q) {
                         $q->with(['speakers'])->orderBy('start_time')->orderBy('sort_order');
                     },
-                    'moderators'
+                    'moderators',
                 ])->orderBy('start_time')->orderBy('sort_order');
-            }
+            },
         ]);
 
         // Sessions'ları flatMap ile topla
@@ -461,6 +470,7 @@ class ExportController extends Controller
                 return $venue->programSessions->map(function ($session) use ($eventDay, $venue) {
                     $session->setRelation('eventDay', $eventDay);
                     $session->setRelation('venue', $venue);
+
                     return $session;
                 });
             });
@@ -475,10 +485,10 @@ class ExportController extends Controller
 
         $html = view('exports.sessions-pdf', $data)->render();
 
-        $filename = "sessions-{$event->slug}-" . now()->format('Y-m-d') . ".pdf";
-        $tempPath = storage_path('app/temp/' . $filename);
+        $filename = "sessions-{$event->slug}-".now()->format('Y-m-d').'.pdf';
+        $tempPath = storage_path('app/temp/'.$filename);
 
-        if (!file_exists(storage_path('app/temp'))) {
+        if (! file_exists(storage_path('app/temp'))) {
             mkdir(storage_path('app/temp'), 0755, true);
         }
 
@@ -498,7 +508,7 @@ class ExportController extends Controller
         } catch (\Exception $e) {
             return response($html, 200, [
                 'Content-Type' => 'text/html',
-                'Content-Disposition' => 'inline; filename="' . $filename . '.html"'
+                'Content-Disposition' => 'inline; filename="'.$filename.'.html"',
             ]);
         }
     }
@@ -516,7 +526,7 @@ class ExportController extends Controller
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>' . htmlspecialchars($eventData['name']) . ' - Program</title>
+    <title>'.htmlspecialchars($eventData['name']).' - Program</title>
     <style>
         @page {
             margin: 15mm 10mm;
@@ -893,19 +903,19 @@ class ExportController extends Controller
 
         // Cover Page
         $html .= '<div class="cover-page">
-        <div class="cover-title">' . htmlspecialchars($eventData['name']) . '</div>
+        <div class="cover-title">'.htmlspecialchars($eventData['name']).'</div>
         <div class="cover-subtitle">Program Kitapçığı</div>';
 
         if ($eventData['start_date'] && $eventData['end_date']) {
-            $html .= '<div class="cover-dates">' . htmlspecialchars($eventData['start_date']) . ' - ' . htmlspecialchars($eventData['end_date']) . '</div>';
+            $html .= '<div class="cover-dates">'.htmlspecialchars($eventData['start_date']).' - '.htmlspecialchars($eventData['end_date']).'</div>';
         }
 
         if ($eventData['description']) {
-            $html .= '<div class="cover-description">' . nl2br(htmlspecialchars($eventData['description'])) . '</div>';
+            $html .= '<div class="cover-description">'.nl2br(htmlspecialchars($eventData['description'])).'</div>';
         }
 
         $html .= '<div class="cover-footer">
-            <p>Oluşturulma: ' . htmlspecialchars($meta['generated_at']) . ' - ' . htmlspecialchars($meta['generated_by']) . '</p>
+            <p>Oluşturulma: '.htmlspecialchars($meta['generated_at']).' - '.htmlspecialchars($meta['generated_by']).'</p>
         </div>
     </div>';
 
@@ -933,7 +943,7 @@ class ExportController extends Controller
                         $allSessions[] = [
                             'session' => $session,
                             'venue' => $venue,
-                            'day' => $eventDay
+                            'day' => $eventDay,
                         ];
                     }
                 }
@@ -962,13 +972,13 @@ class ExportController extends Controller
                         // Page header with current day and venue info
                         $html .= '<div class="page-header">
                         <div class="header-left">
-                            <span class="header-event">' . htmlspecialchars($eventData['name']) . '</span>
-                            <span class="header-day">' . htmlspecialchars($day['title']) . ' - ' . htmlspecialchars($day['date']) . '</span>
+                            <span class="header-event">'.htmlspecialchars($eventData['name']).'</span>
+                            <span class="header-day">'.htmlspecialchars($day['title']).' - '.htmlspecialchars($day['date']).'</span>
                         </div>
-                        <div class="header-venue">' . htmlspecialchars($venue['name']);
+                        <div class="header-venue">'.htmlspecialchars($venue['name']);
 
                         if ($venue['capacity']) {
-                            $html .= ' (Kapasite: ' . $venue['capacity'] . ')';
+                            $html .= ' (Kapasite: '.$venue['capacity'].')';
                         }
 
                         $html .= '</div>
@@ -979,12 +989,12 @@ class ExportController extends Controller
                     }
 
                     // Show venue change indicator if venue changed but not day
-                    if (!$dayChanged && $venueChanged && $index > 0) {
+                    if (! $dayChanged && $venueChanged && $index > 0) {
                         $html .= '<div class="venue-change">
-                        <div class="venue-name">' . htmlspecialchars($venue['name']) . '</div>';
+                        <div class="venue-name">'.htmlspecialchars($venue['name']).'</div>';
 
                         if ($venue['capacity']) {
-                            $html .= '<div class="venue-capacity">Kapasite: ' . $venue['capacity'] . '</div>';
+                            $html .= '<div class="venue-capacity">Kapasite: '.$venue['capacity'].'</div>';
                         }
 
                         $html .= '</div>';
@@ -996,13 +1006,13 @@ class ExportController extends Controller
                         $sessionClasses .= ' break-session';
                     }
 
-                    $html .= '<div class="' . $sessionClasses . '">
+                    $html .= '<div class="'.$sessionClasses.'">
                     <div class="session-header">
-                        <div class="session-title">' . htmlspecialchars($session['title']) . '</div>
+                        <div class="session-title">'.htmlspecialchars($session['title']).'</div>
                         <div class="session-meta">
-                            <span class="session-meta-item time">' . htmlspecialchars($session['formatted_time_range']) . '</span>
-                            <span class="session-meta-item duration">' . htmlspecialchars($session['formatted_duration']) . '</span>
-                            <span class="session-meta-item type">' . htmlspecialchars($session['session_type_display']) . '</span>';
+                            <span class="session-meta-item time">'.htmlspecialchars($session['formatted_time_range']).'</span>
+                            <span class="session-meta-item duration">'.htmlspecialchars($session['formatted_duration']).'</span>
+                            <span class="session-meta-item type">'.htmlspecialchars($session['session_type_display']).'</span>';
 
                     if ($session['is_break']) {
                         $html .= '<span class="session-meta-item break">Ara</span>';
@@ -1014,21 +1024,21 @@ class ExportController extends Controller
 
                     // Description
                     if ($session['description']) {
-                        $html .= '<div class="session-description">' . nl2br(htmlspecialchars($session['description'])) . '</div>';
+                        $html .= '<div class="session-description">'.nl2br(htmlspecialchars($session['description'])).'</div>';
                     }
 
                     // Moderators
-                    if (!empty($session['moderators'])) {
+                    if (! empty($session['moderators'])) {
                         $html .= '<div class="moderators">
-                        <div class="moderators-title">' . htmlspecialchars($session['moderator_title'] ?? 'Moderatörler') . '</div>';
+                        <div class="moderators-title">'.htmlspecialchars($session['moderator_title'] ?? 'Moderatörler').'</div>';
 
                         foreach ($session['moderators'] as $moderator) {
-                            $html .= '<div class="moderator-item">' . htmlspecialchars($moderator['full_name']);
+                            $html .= '<div class="moderator-item">'.htmlspecialchars($moderator['full_name']);
                             if ($moderator['title']) {
-                                $html .= ' - ' . htmlspecialchars($moderator['title']);
+                                $html .= ' - '.htmlspecialchars($moderator['title']);
                             }
                             if ($moderator['affiliation']) {
-                                $html .= ' (' . htmlspecialchars($moderator['affiliation']) . ')';
+                                $html .= ' ('.htmlspecialchars($moderator['affiliation']).')';
                             }
                             $html .= '</div>';
                         }
@@ -1037,24 +1047,24 @@ class ExportController extends Controller
                     }
 
                     // Presentations
-                    if (!empty($session['presentations'])) {
+                    if (! empty($session['presentations'])) {
                         $html .= '<div class="presentations">
                         <div class="presentations-title">Sunumlar</div>';
 
                         foreach ($session['presentations'] as $presentation) {
                             $html .= '<div class="presentation">
-                            <div class="presentation-title">' . htmlspecialchars($presentation['title']) . '</div>';
+                            <div class="presentation-title">'.htmlspecialchars($presentation['title']).'</div>';
 
-                            if (!empty($presentation['speakers'])) {
+                            if (! empty($presentation['speakers'])) {
                                 $speakerNames = [];
                                 foreach ($presentation['speakers'] as $speaker) {
                                     $speakerName = htmlspecialchars($speaker['full_name']);
                                     if ($speaker['title']) {
-                                        $speakerName .= ' (' . htmlspecialchars($speaker['title']) . ')';
+                                        $speakerName .= ' ('.htmlspecialchars($speaker['title']).')';
                                     }
                                     $speakerNames[] = $speakerName;
                                 }
-                                $html .= '<div class="speakers">' . implode(', ', $speakerNames) . '</div>';
+                                $html .= '<div class="speakers">'.implode(', ', $speakerNames).'</div>';
                             }
 
                             $html .= '</div>';
@@ -1064,17 +1074,17 @@ class ExportController extends Controller
                     }
 
                     // Categories
-                    if (!empty($session['categories'])) {
+                    if (! empty($session['categories'])) {
                         $html .= '<div class="categories">';
                         foreach ($session['categories'] as $category) {
-                            $html .= '<span class="category-tag">' . htmlspecialchars($category['name']) . '</span>';
+                            $html .= '<span class="category-tag">'.htmlspecialchars($category['name']).'</span>';
                         }
                         $html .= '</div>';
                     }
 
                     // Sponsor
                     if ($session['sponsor']) {
-                        $html .= '<div class="sponsor">Sponsor: ' . htmlspecialchars($session['sponsor']['name']) . '</div>';
+                        $html .= '<div class="sponsor">Sponsor: '.htmlspecialchars($session['sponsor']['name']).'</div>';
                     }
 
                     $html .= '</div></div>'; // session-content, session
@@ -1090,7 +1100,6 @@ class ExportController extends Controller
         return $html;
     }
 
-
     /**
      * Get Chrome executable path based on OS
      */
@@ -1101,7 +1110,7 @@ class ExportController extends Controller
             $paths = [
                 'C:\Program Files\Google\Chrome\Application\chrome.exe',
                 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
-                'C:\Users\\' . get_current_user() . '\AppData\Local\Google\Chrome\Application\chrome.exe',
+                'C:\Users\\'.get_current_user().'\AppData\Local\Google\Chrome\Application\chrome.exe',
             ];
         }
         // macOS
@@ -1131,15 +1140,15 @@ class ExportController extends Controller
         // Node modules'den puppeteer chrome'u dene
         $puppeteerChrome = base_path('node_modules/puppeteer/.local-chromium');
         if (is_dir($puppeteerChrome)) {
-            $chromeVersions = glob($puppeteerChrome . '/*/');
-            if (!empty($chromeVersions)) {
+            $chromeVersions = glob($puppeteerChrome.'/*/');
+            if (! empty($chromeVersions)) {
                 $latestVersion = end($chromeVersions);
                 if (PHP_OS_FAMILY === 'Windows') {
-                    $chromePath = $latestVersion . 'chrome-win/chrome.exe';
+                    $chromePath = $latestVersion.'chrome-win/chrome.exe';
                 } elseif (PHP_OS_FAMILY === 'Darwin') {
-                    $chromePath = $latestVersion . 'chrome-mac/Chromium.app/Contents/MacOS/Chromium';
+                    $chromePath = $latestVersion.'chrome-mac/Chromium.app/Contents/MacOS/Chromium';
                 } else {
-                    $chromePath = $latestVersion . 'chrome-linux/chrome';
+                    $chromePath = $latestVersion.'chrome-linux/chrome';
                 }
 
                 if (file_exists($chromePath)) {
@@ -1193,15 +1202,16 @@ class ExportController extends Controller
             $data = collect([
                 [
                     'Bilgi' => 'Bu organizasyon için henüz katılımcı bulunmuyor.',
-                    'Açıklama' => 'Organizasyon: ' . auth()->user()->currentOrganization->name,
+                    'Açıklama' => 'Organizasyon: '.auth()->user()->currentOrganization->name,
                     'Tarih' => now()->format('d.m.Y H:i'),
-                ]
+                ],
             ]);
         }
 
-        $filename = 'participants-' . now()->format('Y-m-d-H-i') . '.xlsx';
+        $filename = 'participants-'.now()->format('Y-m-d-H-i').'.xlsx';
 
-        return Excel::download(new class($data) implements FromCollection, WithHeadings {
+        return Excel::download(new class($data) implements FromCollection, WithHeadings
+        {
             private $data;
 
             public function __construct($data)
@@ -1217,11 +1227,11 @@ class ExportController extends Controller
             public function headings(): array
             {
                 $firstRow = $this->data->first();
+
                 return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
     }
-
 
     /**
      * Export event program as Excel
@@ -1245,9 +1255,9 @@ class ExportController extends Controller
                     'presentations' => function ($q) {
                         $q->with(['speakers'])->orderBy('start_time')->orderBy('sort_order');
                     },
-                    'moderators'
+                    'moderators',
                 ])->orderBy('start_time')->orderBy('sort_order');
-            }
+            },
         ]);
 
         // Sessions'ları flatMap ile topla
@@ -1256,6 +1266,7 @@ class ExportController extends Controller
                 return $venue->programSessions->map(function ($session) use ($eventDay, $venue) {
                     $session->setRelation('eventDay', $eventDay);
                     $session->setRelation('venue', $venue);
+
                     return $session;
                 });
             });
@@ -1264,13 +1275,14 @@ class ExportController extends Controller
         $data = $sessions->map(function ($session) {
             $presentations = $session->presentations->map(function ($presentation) {
                 $speakers = $presentation->speakers->map(function ($speaker) {
-                    return $speaker->first_name . ' ' . $speaker->last_name;
+                    return $speaker->first_name.' '.$speaker->last_name;
                 })->join(', ');
-                return $presentation->title . ($speakers ? " - {$speakers}" : '');
+
+                return $presentation->title.($speakers ? " - {$speakers}" : '');
             })->join(' | ');
 
             $moderators = $session->moderators->map(function ($moderator) {
-                return $moderator->first_name . ' ' . $moderator->last_name;
+                return $moderator->first_name.' '.$moderator->last_name;
             })->join(', ');
 
             $categories = $session->categories->pluck('name')->join(', ');
@@ -1300,15 +1312,16 @@ class ExportController extends Controller
             $data = collect([
                 [
                     'Bilgi' => 'Bu etkinlik için henüz program verisi bulunmuyor.',
-                    'Açıklama' => 'Etkinlik: ' . $event->name,
+                    'Açıklama' => 'Etkinlik: '.$event->name,
                     'Tarih' => now()->format('d.m.Y H:i'),
-                ]
+                ],
             ]);
         }
 
-        $filename = "program-{$event->slug}-" . now()->format('Y-m-d-H-i') . '.xlsx';
+        $filename = "program-{$event->slug}-".now()->format('Y-m-d-H-i').'.xlsx';
 
-        return Excel::download(new class($data) implements FromCollection, WithHeadings {
+        return Excel::download(new class($data) implements FromCollection, WithHeadings
+        {
             private $data;
 
             public function __construct($data)
@@ -1324,11 +1337,11 @@ class ExportController extends Controller
             public function headings(): array
             {
                 $firstRow = $this->data->first();
+
                 return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
     }
-
 
     /**
      * Export presentations as Excel
@@ -1339,7 +1352,7 @@ class ExportController extends Controller
 
         // Event'in tüm presentations'larını al
         $event->load([
-            'eventDays.venues.programSessions.presentations.speakers'
+            'eventDays.venues.programSessions.presentations.speakers',
         ]);
 
         // Presentations'ları topla
@@ -1359,7 +1372,7 @@ class ExportController extends Controller
 
         $data = $presentations->map(function ($presentation) {
             $speakers = $presentation->speakers->map(function ($speaker) {
-                return $speaker->first_name . ' ' . $speaker->last_name . ' (' . ($speaker->pivot->speaker_role ?? 'speaker') . ')';
+                return $speaker->first_name.' '.$speaker->last_name.' ('.($speaker->pivot->speaker_role ?? 'speaker').')';
             })->join(', ');
 
             return [
@@ -1384,15 +1397,16 @@ class ExportController extends Controller
             $data = collect([
                 [
                     'Bilgi' => 'Bu etkinlik için henüz sunum verisi bulunmuyor.',
-                    'Açıklama' => 'Etkinlik: ' . $event->name,
+                    'Açıklama' => 'Etkinlik: '.$event->name,
                     'Tarih' => now()->format('d.m.Y H:i'),
-                ]
+                ],
             ]);
         }
 
-        $filename = "presentations-{$event->slug}-" . now()->format('Y-m-d-H-i') . '.xlsx';
+        $filename = "presentations-{$event->slug}-".now()->format('Y-m-d-H-i').'.xlsx';
 
-        return Excel::download(new class($data) implements FromCollection, WithHeadings {
+        return Excel::download(new class($data) implements FromCollection, WithHeadings
+        {
             private $data;
 
             public function __construct($data)
@@ -1408,6 +1422,7 @@ class ExportController extends Controller
             public function headings(): array
             {
                 $firstRow = $this->data->first();
+
                 return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
@@ -1421,7 +1436,7 @@ class ExportController extends Controller
         $organizationId = auth()->user()->currentOrganization->id;
 
         // Venues'ları organization üzerinden al
-        $venues = \App\Models\Venue::whereHas('eventDay.event', function ($query) use ($organizationId) {
+        $venues = Venue::whereHas('eventDay.event', function ($query) use ($organizationId) {
             $query->where('organization_id', $organizationId);
         })
             ->withCount('programSessions')
@@ -1449,15 +1464,16 @@ class ExportController extends Controller
             $data = collect([
                 [
                     'Bilgi' => 'Bu organizasyon için henüz salon verisi bulunmuyor.',
-                    'Açıklama' => 'Organizasyon: ' . auth()->user()->currentOrganization->name,
+                    'Açıklama' => 'Organizasyon: '.auth()->user()->currentOrganization->name,
                     'Tarih' => now()->format('d.m.Y H:i'),
-                ]
+                ],
             ]);
         }
 
-        $filename = 'venues-' . now()->format('Y-m-d-H-i') . '.xlsx';
+        $filename = 'venues-'.now()->format('Y-m-d-H-i').'.xlsx';
 
-        return Excel::download(new class($data) implements FromCollection, WithHeadings {
+        return Excel::download(new class($data) implements FromCollection, WithHeadings
+        {
             private $data;
 
             public function __construct($data)
@@ -1473,6 +1489,7 @@ class ExportController extends Controller
             public function headings(): array
             {
                 $firstRow = $this->data->first();
+
                 return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
@@ -1485,7 +1502,7 @@ class ExportController extends Controller
     {
         $organizationId = auth()->user()->currentOrganization->id;
 
-        $sponsors = \App\Models\Sponsor::where('organization_id', $organizationId)
+        $sponsors = Sponsor::where('organization_id', $organizationId)
             ->withCount(['programSessions', 'presentations'])
             ->orderBy('name')
             ->get();
@@ -1508,15 +1525,16 @@ class ExportController extends Controller
             $data = collect([
                 [
                     'Bilgi' => 'Bu organizasyon için henüz sponsor verisi bulunmuyor.',
-                    'Açıklama' => 'Organizasyon: ' . auth()->user()->currentOrganization->name,
+                    'Açıklama' => 'Organizasyon: '.auth()->user()->currentOrganization->name,
                     'Tarih' => now()->format('d.m.Y H:i'),
-                ]
+                ],
             ]);
         }
 
-        $filename = 'sponsors-' . now()->format('Y-m-d-H-i') . '.xlsx';
+        $filename = 'sponsors-'.now()->format('Y-m-d-H-i').'.xlsx';
 
-        return Excel::download(new class($data) implements FromCollection, WithHeadings {
+        return Excel::download(new class($data) implements FromCollection, WithHeadings
+        {
             private $data;
 
             public function __construct($data)
@@ -1532,6 +1550,7 @@ class ExportController extends Controller
             public function headings(): array
             {
                 $firstRow = $this->data->first();
+
                 return $firstRow ? array_keys($firstRow) : ['Bilgi'];
             }
         }, $filename);
@@ -1546,7 +1565,7 @@ class ExportController extends Controller
 
         // Event'i yükle
         $event->load([
-            'eventDays.venues.programSessions.presentations.speakers'
+            'eventDays.venues.programSessions.presentations.speakers',
         ]);
 
         // Prepare different sheets of data
@@ -1598,7 +1617,7 @@ class ExportController extends Controller
             'Başlangıç Tarihi' => $event->start_date?->format('d.m.Y') ?? '',
             'Bitiş Tarihi' => $event->end_date?->format('d.m.Y') ?? '',
             'Gün Sayısı' => $event->eventDays->count(),
-            'Salon Sayısı' => $event->eventDays->sum(fn($day) => $day->venues->count()),
+            'Salon Sayısı' => $event->eventDays->sum(fn ($day) => $day->venues->count()),
             'Toplam Oturum' => $totalSessions,
             'Toplam Sunum' => $totalPresentations,
             'Toplam Konuşmacı' => $totalSpeakers,
@@ -1607,9 +1626,9 @@ class ExportController extends Controller
 
         // Daily Statistics
         $dailyStats = $event->eventDays->map(function ($day) {
-            $sessionsCount = $day->venues->sum(fn($venue) => $venue->programSessions->count());
+            $sessionsCount = $day->venues->sum(fn ($venue) => $venue->programSessions->count());
             $presentationsCount = $day->venues->sum(function ($venue) {
-                return $venue->programSessions->sum(fn($session) => $session->presentations->count());
+                return $venue->programSessions->sum(fn ($session) => $session->presentations->count());
             });
 
             return [
@@ -1630,6 +1649,7 @@ class ExportController extends Controller
                     if ($session->start_time && $session->end_time) {
                         return $session->start_time->diffInMinutes($session->end_time);
                     }
+
                     return 0;
                 });
 
@@ -1643,9 +1663,10 @@ class ExportController extends Controller
         }
         $sheets['Salon İstatistikleri'] = $venueStats;
 
-        $filename = "statistics-{$event->slug}-" . now()->format('Y-m-d-H-i') . '.xlsx';
+        $filename = "statistics-{$event->slug}-".now()->format('Y-m-d-H-i').'.xlsx';
 
-        return Excel::download(new class($sheets) implements \Maatwebsite\Excel\Concerns\WithMultipleSheets {
+        return Excel::download(new class($sheets) implements WithMultipleSheets
+        {
             private $sheets;
 
             public function __construct($sheets)
@@ -1658,8 +1679,10 @@ class ExportController extends Controller
                 $excelSheets = [];
 
                 foreach ($this->sheets as $title => $data) {
-                    $excelSheets[] = new class($title, $data) implements FromCollection, WithHeadings, \Maatwebsite\Excel\Concerns\WithTitle {
+                    $excelSheets[] = new class($title, $data) implements FromCollection, WithHeadings, WithTitle
+                    {
                         private $title;
+
                         private $data;
 
                         public function __construct($title, $data)
@@ -1676,6 +1699,7 @@ class ExportController extends Controller
                         public function headings(): array
                         {
                             $firstRow = $this->data->first();
+
                             return $firstRow ? array_keys($firstRow) : ['Bilgi'];
                         }
 

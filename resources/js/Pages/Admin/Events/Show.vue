@@ -111,15 +111,17 @@
                 <ClockIcon class="h-4 w-4 mr-2" />
                 Timeline Görünümü
                 </Link>
-
-                <!-- Drag & Drop Editor Button -->
-                <Link v-if="event?.can_edit" :href="route('admin.drag-drop.event-editor', event?.slug)"
-                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-medium rounded-lg hover:from-orange-700 hover:to-red-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl">
-                <CursorArrowRaysIcon class="h-4 w-4 mr-2" />
-                <span>Editör</span>
-                <span class="ml-1 px-1.5 py-0.5 bg-white dark:bg-slate-800/20 text-xs rounded-full">Beta</span>
-                </Link>
               </div>
+
+              <button
+                v-if="event?.can_edit"
+                type="button"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors shadow-sm"
+                @click="openImportModal"
+              >
+                <DocumentArrowUpIcon class="h-4 w-4 mr-2" />
+                İçe Aktar
+              </button>
 
               <!-- Export Dropdown -->
               <div class="relative" :ref="bindExportMenuTrigger" data-floating-menu>
@@ -146,7 +148,7 @@
                     </button>
                     <button @click="exportTimeline('json')"
                       class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                      JSON olarak dışa aktar
+                      Program JSON olarak dışa aktar
                     </button>
                   </div>
                 </div>
@@ -305,6 +307,16 @@
                 </div>
 
                 <div class="flex items-center space-x-3">
+                  <button
+                    v-if="event?.can_edit"
+                    type="button"
+                    class="inline-flex items-center px-4 py-2 border border-slate-300 text-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-sm font-medium rounded-lg transition-colors"
+                    @click="openImportModal"
+                  >
+                    <DocumentArrowUpIcon class="h-4 w-4 mr-2" />
+                    İçe Aktar
+                  </button>
+
                   <!-- Export Dropdown -->
                   <div class="relative" :ref="bindTimelineTabExportMenuTrigger" data-floating-menu>
                     <button type="button" @click.stop="openExclusiveMenu(timelineTabExportMenu)"
@@ -330,7 +342,7 @@
                         </button>
                         <button @click="exportTimeline('json')"
                           class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                          JSON olarak dışa aktar
+                          Program JSON olarak dışa aktar
                         </button>
                       </div>
                     </div>
@@ -661,6 +673,12 @@
           </div>
         </div>
       </teleport>
+
+      <ProgramJsonImportModal
+        :show="showImportModal"
+        :event-slug="event?.slug"
+        @close="showImportModal = false"
+      />
     </div>
   </AdminLayout>
 </template>
@@ -670,6 +688,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Head, Link, router } from '@inertiajs/vue3'
 import { useFloatingMenu } from '@/Composables/useFloatingMenu'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
+import ProgramJsonImportModal from '@/Components/Import/ProgramJsonImportModal.vue'
 import {
   ArrowLeftIcon,
   PencilSquareIcon,
@@ -677,6 +696,7 @@ import {
   ChevronDownIcon,
   DocumentDuplicateIcon,
   DocumentArrowDownIcon,
+  DocumentArrowUpIcon,
   TrashIcon,
   EyeIcon,
   EyeSlashIcon,
@@ -692,7 +712,6 @@ import {
   ArrowTopRightOnSquareIcon,
   XMarkIcon,
   Cog6ToothIcon,
-  CursorArrowRaysIcon,
   NewspaperIcon,
 } from '@heroicons/vue/24/outline'
 
@@ -751,6 +770,7 @@ const floatingMenus = [exportMenu, actionsMenu, timelineTabExportMenu]
 
 // State
 const processing = ref(false)
+const showImportModal = ref(false)
 const activeTab = ref('overview')
 const selectedTimelineSession = ref(null)
 const timelineLoading = ref(false)
@@ -914,15 +934,13 @@ const exportTimeline = (format) => {
   } else if (format === 'excel') {
     window.location.href = route('admin.export.events.program-excel', event.value.slug)
   } else {
-    router.post(route('admin.timeline.export', event.value.slug), {
-      format: format,
-    }, {
-      onError: (errors) => {
-        console.error('Export error:', errors)
-        alert('Dışa aktarma işlemi sırasında hata oluştu.')
-      },
-    })
+    window.location.href = route('admin.export.events.program-json', event.value.slug)
   }
+}
+
+const openImportModal = () => {
+  closeAllMenus()
+  showImportModal.value = true
 }
 
 const togglePublishStatus = () => {

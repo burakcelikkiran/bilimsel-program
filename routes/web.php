@@ -255,6 +255,8 @@ Route::middleware([
             Route::post('/duplicate', [EventController::class, 'duplicate'])->name('duplicate');
             Route::get('/export', [EventController::class, 'export'])->name('export');
             Route::get('/public-program', [EventController::class, 'publicProgram'])->name('public-program');
+            Route::post('/import-program/preview', [ImportController::class, 'previewProgram'])->name('import-program.preview');
+            Route::post('/import-program', [ImportController::class, 'program'])->name('import-program');
 
             // *** YENİ EKLENEN TIMELINE SHORTCUTS ***
             // Event içinden timeline'a direkt erişim
@@ -539,6 +541,7 @@ Route::middleware([
         Route::prefix('export')->name('export.')->group(function () {
             // Event specific exports
             Route::get('/events/{event}/program-pdf', [ExportController::class, 'programPdf'])->name('events.program-pdf');
+            Route::get('/events/{event}/program-json', [ExportController::class, 'programJson'])->name('events.program-json');
             Route::get('/events/{event}/speakers-pdf', [ExportController::class, 'speakersPdf'])->name('events.speakers-pdf');
             Route::get('/events/{event}/sessions-pdf', [ExportController::class, 'sessionsPdf'])->name('events.sessions-pdf');
             Route::get('/events/{event}/program-excel', [ExportController::class, 'programExcel'])->name('events.program-excel');

@@ -30,6 +30,16 @@
                 Filtreler
               </button>
 
+              <button
+                v-if="event.can_edit"
+                type="button"
+                class="inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                @click="showImportModal = true"
+              >
+                <DocumentArrowUpIcon class="h-4 w-4 mr-2" />
+                İçe Aktar
+              </button>
+
               <!-- Export Dropdown -->
               <div class="relative">
                 <button @click="showExportMenu = !showExportMenu"
@@ -53,7 +63,7 @@
                     </button>
                     <button @click="exportTimeline('json')"
                       class="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                      JSON olarak dışa aktar
+                      Program JSON olarak dışa aktar
                     </button>
                   </div>
                 </div>
@@ -173,6 +183,12 @@
         </button>
       </div>
     </div>
+
+    <ProgramJsonImportModal
+      :show="showImportModal"
+      :event-slug="event.slug"
+      @close="showImportModal = false"
+    />
   </AdminLayout>
 </template>
 
@@ -181,10 +197,12 @@ import { ref, computed, onMounted } from 'vue'
 import { Head, Link, router } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import TimelineContainer from '@/Components/Timeline/TimelineContainer.vue'
+import ProgramJsonImportModal from '@/Components/Import/ProgramJsonImportModal.vue'
 import {
   ClockIcon,
   PencilSquareIcon,
   DocumentArrowDownIcon,
+  DocumentArrowUpIcon,
   FunnelIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/24/outline'
@@ -217,6 +235,7 @@ const props = defineProps({
 const loading = ref(false)
 const showFilters = ref(false)
 const showExportMenu = ref(false)
+const showImportModal = ref(false)
 const activeFilters = ref({
   day_id: props.activeFilters?.day_id || '',
   venue_id: props.activeFilters?.venue_id || '',
@@ -259,24 +278,13 @@ const clearFilters = () => {
 
 const exportTimeline = (format) => {
   showExportMenu.value = false
-  
+
   if (format === 'pdf') {
     window.location.href = route('admin.export.events.program-pdf', props.event.slug)
   } else if (format === 'excel') {
     window.location.href = route('admin.export.events.program-excel', props.event.slug)
   } else {
-    // JSON export için Inertia router kullan
-    router.post(route('admin.timeline.export', props.event.slug), {
-      format: format,
-      filters: activeFilters.value
-    }, {
-      onSuccess: () => {
-        console.log('JSON export başarılı')
-      },
-      onError: (errors) => {
-        console.error('Export error:', errors)
-      }
-    })
+    window.location.href = route('admin.export.events.program-json', props.event.slug)
   }
 }
 
