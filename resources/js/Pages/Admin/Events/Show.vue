@@ -541,6 +541,18 @@
               </div>
               </Link>
 
+              <Link :href="route('admin.events.announcements.index', event?.slug)"
+                class="group p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
+                <div class="flex items-center justify-between mb-4">
+                  <BellIcon class="h-8 w-8 text-amber-600" />
+                  <ArrowTopRightOnSquareIcon
+                    class="h-5 w-5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+                </div>
+                <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Duyurular</h4>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Mobil uygulamaya duyuru ve push gönderin</p>
+                <div class="text-sm font-medium text-indigo-600">Yönet</div>
+              </Link>
+
               <!-- Venues Management -->
               <Link :href="route('admin.venues.index') + '?event=' + event?.slug"
                 class="group p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:shadow-md hover:border-indigo-300 transition-all">
@@ -702,6 +714,7 @@ import {
   EyeSlashIcon,
   CalendarIcon,
   CalendarDaysIcon,
+  BellIcon,
   MapPinIcon,
   SpeakerWaveIcon,
   ClockIcon,

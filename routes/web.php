@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DragDropController;
 use App\Http\Controllers\Admin\EventController;
@@ -287,6 +288,8 @@ Route::middleware([
                 Route::patch('/sort-order', [VenueController::class, 'updateSortOrder'])->name('update-sort-order');
                 Route::patch('/{venue}/toggle-status', [VenueController::class, 'toggleStatus'])->name('toggle-status');
             });
+
+            Route::resource('announcements', AnnouncementController::class)->except(['show', 'edit', 'update']);
         });
 
         /*

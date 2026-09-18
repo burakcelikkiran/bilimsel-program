@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Admin\EventDayController as AdminEventDayApiController;
 use App\Http\Controllers\API\Admin\ParticipantController as AdminParticipantApiController;
 use App\Http\Controllers\API\EventProgramController;
+use App\Http\Controllers\API\MobilePushController;
 use App\Http\Controllers\API\ProgramSessionApiController;
 use App\Http\Controllers\API\PublicEventController;
 use Illuminate\Http\Request;
@@ -108,6 +109,10 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // Test endpoint
     Route::get('/test', [PublicEventController::class, 'test'])->name('test');
 
+    Route::post('/devices/register', [MobilePushController::class, 'register'])
+        ->middleware('throttle:30,1')
+        ->name('devices.register');
+
     // Events API - KAPSAMLI VERSİYON
     Route::prefix('events')->name('events.')->group(function () {
 
@@ -120,6 +125,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         // Legacy program.json export format
         Route::get('/{event:slug}/program.json', [EventProgramController::class, 'exportProgramJson'])
             ->name('program.export-json');
+
+        Route::get('/{event:slug}/announcements.json', [MobilePushController::class, 'announcements'])
+            ->name('announcements.export-json');
 
         // Event speakers
         Route::prefix('{event:slug}/speakers')->name('speakers.')->group(function () {
@@ -241,7 +249,7 @@ Route::get('/debug/event/{slug}', function ($slug) {
     }
 
     try {
-        $event = \App\Models\Event::where('slug', $slug)->first();
+        $event = Event::where('slug', $slug)->first();
 
         if (! $event) {
             return response()->json(['error' => 'Event not found']);
@@ -262,37 +270,37 @@ Route::get('/debug/event/{slug}', function ($slug) {
         try {
             $debug['relationships']['organization'] = $event->organization ?
                 ['id' => $event->organization->id, 'name' => $event->organization->name] : null;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $debug['relationships']['organization'] = 'ERROR: '.$e->getMessage();
         }
 
         try {
             $debug['relationships']['eventDays'] = $event->eventDays->count();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $debug['relationships']['eventDays'] = 'ERROR: '.$e->getMessage();
         }
 
         try {
             $debug['relationships']['venues'] = $event->venues->count();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $debug['relationships']['venues'] = 'ERROR: '.$e->getMessage();
         }
 
         // Check table structures
         try {
-            $debug['table_structures']['organizations'] = \Schema::getColumnListing('organizations');
-        } catch (\Exception $e) {
+            $debug['table_structures']['organizations'] = Schema::getColumnListing('organizations');
+        } catch (Exception $e) {
             $debug['table_structures']['organizations'] = 'ERROR: '.$e->getMessage();
         }
 
         try {
-            $debug['table_structures']['events'] = \Schema::getColumnListing('events');
-        } catch (\Exception $e) {
+            $debug['table_structures']['events'] = Schema::getColumnListing('events');
+        } catch (Exception $e) {
             $debug['table_structures']['events'] = 'ERROR: '.$e->getMessage();
         }
 
         return response()->json($debug);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         return response()->json([
             'error' => $e->getMessage(),
             'trace' => config('app.debug') ? $e->getTraceAsString() : null,

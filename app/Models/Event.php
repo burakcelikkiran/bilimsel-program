@@ -100,6 +100,16 @@ class Event extends Model
         return $this->hasMany(EventPage::class)->orderBy('sort_order');
     }
 
+    public function announcements(): HasMany
+    {
+        return $this->hasMany(Announcement::class)->latest('published_at');
+    }
+
+    public function devices(): HasMany
+    {
+        return $this->hasMany(EventDevice::class);
+    }
+
     /**
      * Get all venues through event days
      */
