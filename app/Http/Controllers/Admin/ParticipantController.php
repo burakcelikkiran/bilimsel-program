@@ -69,7 +69,9 @@ class ParticipantController extends Controller
             $query->orderBy($sortField, $sortDirection);
         }
 
-        $participants = $query->paginate(20)
+        $perPage = min((int) $request->get('per_page', 20), 200);
+
+        $participants = $query->paginate($perPage)
             ->withQueryString()
             ->through(function ($participant) {
                 return [
@@ -129,6 +131,7 @@ class ParticipantController extends Controller
                 'affiliation' => $request->affiliation,
                 'sort' => $sortField,
                 'direction' => $sortDirection,
+                'per_page' => $perPage,
             ],
             'can_create' => auth()->user()?->can('create', Participant::class) ?? false,
             'can_import' => auth()->user()?->can('import', Participant::class) ?? false,
