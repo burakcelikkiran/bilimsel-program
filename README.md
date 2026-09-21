@@ -32,7 +32,9 @@ npm install
 composer run dev
 ```
 
-Bu komut eşzamanlı çalıştırır: `php artisan serve`, queue, `pail`, `npm run dev`.
+Bu komut eşzamanlı çalıştırır: `php artisan serve`, Horizon (`php artisan horizon`), `pail`, `npm run dev`.
+
+Kuyruk paneli: `/horizon` (yalnızca `role=admin` kullanıcılar). Redis çalışır durumda olmalı (`QUEUE_CONNECTION=redis`).
 
 Herd kullanıyorsanız site genelde `https://bilimsel-program.test` adresinde açılır.
 

@@ -15,6 +15,7 @@ return [
 
     'except' => [
         'api.*',
+        'horizon*',
         'log-viewer.*',
         'l5-swagger.*',
         'docs',
