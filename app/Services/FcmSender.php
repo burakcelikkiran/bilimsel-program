@@ -47,24 +47,36 @@ class FcmSender
 
         $projectId = config('firebase.project_id');
         $endpoint = "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send";
+        $androidNotification = $this->androidNotificationPayload();
 
         foreach ($tokens as $token) {
             try {
+                $message = [
+                    'token' => $token,
+                    'notification' => [
+                        'title' => $title,
+                        'body' => $body,
+                    ],
+                    'data' => $data,
+                    'android' => [
+                        'priority' => 'high',
+                    ],
+                ];
+
+                if ($androidNotification !== []) {
+                    $message['android']['notification'] = $androidNotification;
+                }
+
+                $imageUrl = config('firebase.notification_image_url');
+                if (is_string($imageUrl) && $imageUrl !== '') {
+                    $message['notification']['image'] = $imageUrl;
+                }
+
                 $response = Http::withToken($accessToken)
                     ->acceptJson()
                     ->timeout(15)
                     ->post($endpoint, [
-                        'message' => [
-                            'token' => $token,
-                            'notification' => [
-                                'title' => $title,
-                                'body' => $body,
-                            ],
-                            'data' => $data,
-                            'android' => [
-                                'priority' => 'high',
-                            ],
-                        ],
+                        'message' => $message,
                     ]);
 
                 if ($response->successful()) {
@@ -92,6 +104,29 @@ class FcmSender
         }
 
         return ['sent' => $sent, 'failed' => $failed];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function androidNotificationPayload(): array
+    {
+        $payload = [
+            'channel_id' => 'tpk2026_default',
+            'color' => '#c41e3a',
+        ];
+
+        $icon = config('firebase.android_notification_icon');
+        if (is_string($icon) && $icon !== '') {
+            $payload['icon'] = $icon;
+        }
+
+        $imageUrl = config('firebase.notification_image_url');
+        if (is_string($imageUrl) && $imageUrl !== '') {
+            $payload['image'] = $imageUrl;
+        }
+
+        return $payload;
     }
 
     private function isInvalidToken(int $status, ?string $errorStatus): bool

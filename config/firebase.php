@@ -22,4 +22,8 @@ return [
         'tpk2026' => env('MOBILE_EVENT_SLUG', 'turkpediatri-kongresi-2026'),
     ],
 
+    'android_notification_icon' => env('FCM_ANDROID_NOTIFICATION_ICON', 'ic_stat_tpk'),
+
+    'notification_image_url' => env('FCM_NOTIFICATION_IMAGE_URL'),
+
 ];
